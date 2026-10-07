@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1.0",
+  "id": "magnetic.example-transformer",
+  "kind": "transformer",
+  "name": "Synthetic transformer record structure",
+  "synthetic": true,
+  "properties": {
+    "description": "Identity-only schema example. No material, core, turns ratio, inductance or loss data supplied."
+  },
+  "evidence_refs": [
+    "evidence.example"
+  ],
+  "evidence": [
+    {
+      "id": "evidence.example",
+      "kind": "assumption",
+      "reference": "AIPE Ecosystem v0.1 WP3B scaffold example",
+      "description": "Synthetic record only; not a real product or a validated transformer design.",
+      "created_at": "2026-10-07T00:00:00Z",
+      "review_status": "unreviewed",
+      "license": "NOASSERTION"
+    }
+  ]
+}

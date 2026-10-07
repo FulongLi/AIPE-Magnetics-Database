@@ -1,0 +1,88 @@
+{
+  "schema_version": "0.1.0",
+  "id": "aipe.magnetics-database",
+  "name": "AIPE Magnetics Database",
+  "type": "database",
+  "domains": [
+    "power-electronics"
+  ],
+  "description": "Evidence-first magnetic material, geometry, winding, component, loss-model and measurement record scaffold with explicit SI units.",
+  "status": "experimental",
+  "maturity": "scaffold",
+  "repository": "https://github.com/FulongLi/AIPE-Magnetics-Database",
+  "license": "NOASSERTION",
+  "capabilities": [
+    "magnetics-record-schema",
+    "magnetics-data-import",
+    "magnetics-data-validation"
+  ],
+  "inputs": [
+    {
+      "name": "magnetic-record",
+      "description": "Already normalized magnetic records with explicit evidence and SI units."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "validated-import-candidate",
+      "description": "Review candidate with original-byte checksum and importer version."
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "aipe.core",
+      "version": "0.1.x",
+      "optional": false
+    }
+  ],
+  "compatibility": {
+    "core": "0.1.x",
+    "engineering_state": "0.1.x",
+    "integration": "mapped"
+  },
+  "tools": [
+    {
+      "id": "python",
+      "name": "Python",
+      "capabilities": [
+        "magnetics-data-validation",
+        "magnetics-data-import"
+      ],
+      "licence_class": "open_source",
+      "optional": false,
+      "interfaces": [
+        "cli",
+        "python"
+      ],
+      "platforms": [
+        "linux",
+        "windows",
+        "macos"
+      ],
+      "url": "https://www.python.org/",
+      "limitations": [
+        "Physical models require separate validation."
+      ]
+    }
+  ],
+  "connectors": [],
+  "validation": {
+    "status": "tested",
+    "evidence": [
+      "tests/test_records.py",
+      ".github/workflows/validate.yml"
+    ],
+    "limitations": [
+      "No real manufacturer or measurement records bundled.",
+      "Core integration is documented mapping only; no executed Core export.",
+      "No field solver or measurement validation claimed.",
+      "Repository licence remains NOASSERTION pending owner decision."
+    ]
+  },
+  "documentation": [
+    "README.md",
+    "docs/core-integration.md",
+    "references/README.md",
+    "LICENSING.md"
+  ]
+}
