@@ -101,6 +101,23 @@ def test_migration_rejects_non_dict():
         migrate_record(["not", "a", "record"])  # type: ignore[arg-type]
 
 
+def test_migration_applies_the_per_record_v01_rules_so_invalid_input_is_not_healed():
+    """A synthetic v0.1 measurement without measurement evidence is invalid under v0.1 and must stay rejected."""
+    measurement = copy.deepcopy(v01_fixture_records()["measurement"])
+    for item in measurement["evidence"]:
+        item["kind"] = "assumption"
+    assert any("measurement requires measurement evidence" in e for e in validate_legacy_records([measurement]))
+    with pytest.raises(DataIntegrityError, match="measurement requires measurement evidence"):
+        migrate_record(measurement)
+    real_without_source = copy.deepcopy(v01_fixture_records()["winding"])
+    real_without_source["synthetic"] = False
+    with pytest.raises(DataIntegrityError, match="non-assumption source evidence"):
+        migrate_record(real_without_source)
+    # cross-record references are not a per-record rule: a referencing record migrates on its own
+    alone = v01_fixture_records()["measurement"]
+    assert migrate_record(alone)["properties"]["component_ref"] == "inductor.fixture-v01-synthetic"
+
+
 def test_migrate_file_records_source_digest_and_never_overwrites(tmp_path: Path, v01_example_path: Path):
     destination = tmp_path / "out" / "migrated.json"
     written = migrate_file(v01_example_path, destination)

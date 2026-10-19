@@ -1,0 +1,31 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Core family identity as used in the TDK datasheets.",
+      "id": "evidence.tdk-u-family",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "reference": "TDK Electronics ferrite core datasheets (October 2024)",
+      "review_status": "unreviewed",
+      "url": "https://www.tdk-electronics.tdk.com/"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.tdk-u-family"
+  ],
+  "extensions": {},
+  "id": "core-family.tdk-u",
+  "kind": "core_family",
+  "license": "NOASSERTION",
+  "name": "TDK U cores",
+  "properties": {
+    "manufacturer_ref": "manufacturer.tdk",
+    "shape": "U",
+    "standard": "IEC 63093"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": []
+}

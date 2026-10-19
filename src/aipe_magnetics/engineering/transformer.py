@@ -124,7 +124,8 @@ def design_transformer(request: TransformerDesignRequest, catalog: Any | None = 
 
     # material-level quantities
     try:
-        bsat, bsat_status, _ = saturation_flux_density_at(material, request.temperature)
+        bsat_q, bsat_status, _ = saturation_flux_density_at(material, request.temperature)
+        bsat = bsat_q.to("T").value
     except AIPEMagneticsError as error:
         return EngineeringResult.rejected(CAP_TRANSFORMER, error, inputs=inputs)
     b_policy, flux_assumption = flux_limit_from_policy(request.flux_limit, bsat)

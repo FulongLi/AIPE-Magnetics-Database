@@ -1,0 +1,655 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Per-material constants published in the Princeton MagNet repository (MIT): manufacturer, initial permeability mu_r_0 and recommended frequency range; the repository's own Steinmetz/iGSE coefficients are documented there as (k_i, alpha, beta).",
+      "id": "evidence.princeton-magnet-constants",
+      "kind": "source",
+      "license": "MIT",
+      "locator": "lines 14-53",
+      "reference": "PrincetonUniversity/magnet, src/magnet/constants.py (material_steinmetz_param, material_extra, material_manufacturers)",
+      "review_status": "unreviewed",
+      "url": "https://github.com/PrincetonUniversity/magnet/blob/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/constants.py",
+      "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Classical Steinmetz parameter sets fitted by ordinary least squares in log space on sinusoidal, zero-DC-bias rows of the Princeton MagNet scalar databases, per measured temperature, 50-500 kHz, 10-300 mT. Fit metrics are stored with each set. These are AIPE-derived values, not manufacturer data.",
+      "id": "evidence.aipe-steinmetz-fit-magnet",
+      "kind": "analytical",
+      "license": "NOASSERTION",
+      "locator": "src/aipe_magnetics/data/derived/princeton-magnet-steinmetz-fits.json",
+      "reference": "benchmarks/fit_steinmetz_from_magnet.py (aipe-magnetics 0.2.0)",
+      "review_status": "unreviewed"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Measured sinusoidal/triangular/trapezoidal core-loss points on core R34.0X20.5X12.5 (Ae 8.26e-05 m^2, le 0.08206 m, Ve 6.778e-06 m^3, N1=N2=5), temperatures [25.0, 50.0, 70.0, 90.0] degC; Princeton Power Electronics Research Lab 2022 setup (see embedded metadata).",
+      "id": "evidence.princeton-magnet-database-n87",
+      "kind": "measurement",
+      "license": "MIT",
+      "reference": "PrincetonUniversity/magnet, src/magnet/data/N87_database.h5 (scalar core-loss database, 142871 points)",
+      "review_status": "unreviewed",
+      "sha256": "263c0087f6f43ccfd1b338d105abb6b9432be2cb85c59528539317f99b25bd63",
+      "url": "https://github.com/PrincetonUniversity/magnet/blob/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/N87_database.h5",
+      "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Manufacturer datasheet; values transcribed from the material table and the 'Relative core losses PV (typical values)' table. Typical values measured by TDK on R34 toroids; not AIPE measurements.",
+      "id": "evidence.tdk-n87-datasheet-2025-06",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "locator": "material table p.1-2; PV typical values table",
+      "reference": "TDK Electronics, 'Ferrites and accessories - SIFERRIT material N87', datasheet, Date: June 2025 (release 2024-02)",
+      "review_status": "unreviewed",
+      "url": "https://www.tdk-electronics.tdk.com/download/528882/71e02c7b9384de1331b3f625ce4b2123/pdf-n87.pdf",
+      "version": "June 2025"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "log(Pv) = log(k) + alpha log(f) + beta log(B) fitted to (25 kHz, 200 mT, 57 kW/m3), (100 kHz, 200 mT, 375 kW/m3), (300 kHz, 100 mT, 390 kW/m3), (500 kHz, 50 mT, 215 kW/m3); residuals +1.0 %, -3.2 %, +4.7 %, -2.3 %. Derived data, valid only as a 100 degC interpolation over 25-500 kHz and 50-200 mT.",
+      "id": "evidence.aipe-datasheet-fit-n87-100c",
+      "kind": "analytical",
+      "license": "NOASSERTION",
+      "locator": "see fit note",
+      "reference": "Least-squares Steinmetz fit of the four TDK N87 datasheet loss points at 100 degC (aipe-magnetics 0.2.0)",
+      "review_status": "unreviewed"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Table I: iGSE parameters of EPCOS N87 (R42 toroid, 25 degC, symmetric triangular flux, 20-100 kHz): k_i = 8.41, alpha = 1.09, beta = 2.16 (SI: W/m3, Hz, T). Converted to the classical k by the exact k_i relation for storage.",
+      "id": "evidence.muhlethaler-2012-tpel",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "locator": "Table I, p. 970; Sec. IX validity",
+      "reference": "J. Muhlethaler, J. Biela, J. W. Kolar, A. Ecklebe, 'Improved core-loss calculation for magnetic components employed in power electronic systems', IEEE Trans. Power Electron., vol. 27, no. 2, pp. 964-973, Feb. 2012, doi:10.1109/TPEL.2011.2162252",
+      "review_status": "unreviewed",
+      "url": "https://doi.org/10.1109/TPEL.2011.2162252"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.princeton-magnet-constants",
+    "evidence.aipe-steinmetz-fit-magnet",
+    "evidence.princeton-magnet-database-n87",
+    "evidence.tdk-n87-datasheet-2025-06",
+    "evidence.aipe-datasheet-fit-n87-100c",
+    "evidence.muhlethaler-2012-tpel"
+  ],
+  "extensions": {},
+  "id": "material.tdk-n87",
+  "kind": "magnetic_material",
+  "license": "NOASSERTION",
+  "name": "N87",
+  "properties": {
+    "coercivity": [
+      {
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 10.0
+          },
+          "unit": "Hz",
+          "value": 10000.0
+        },
+        "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 25.0
+          },
+          "unit": "K",
+          "value": 298.15
+        },
+        "value": {
+          "unit": "A/m",
+          "value": 21.0
+        }
+      },
+      {
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 10.0
+          },
+          "unit": "Hz",
+          "value": 10000.0
+        },
+        "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        },
+        "value": {
+          "unit": "A/m",
+          "value": 13.0
+        }
+      }
+    ],
+    "curie_temperature": {
+      "note": "datasheet states TC > 210 degC (lower bound); stored as the bound",
+      "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+      "value": {
+        "original": {
+          "unit": "degC",
+          "value": 210.0
+        },
+        "unit": "K",
+        "value": 483.15
+      }
+    },
+    "density": {
+      "note": "typical value",
+      "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+      "value": {
+        "unit": "kg/m^3",
+        "value": 4850.0
+      }
+    },
+    "description": "TDK/EPCOS SIFERRIT N87, MnZn power ferrite for power transformers (RM, P, PM, ETD, EFD, E, ER, EP, EQ, ELP, U, toroid shapes).",
+    "grade": "N87",
+    "initial_permeability": {
+      "note": "datasheet: mu_i = 2200 +-25 % at 25 degC",
+      "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+      "temperature": {
+        "original": {
+          "unit": "degC",
+          "value": 25.0
+        },
+        "unit": "K",
+        "value": 298.15
+      },
+      "value": {
+        "unit": "1",
+        "value": 2200.0
+      }
+    },
+    "loss_reference_points": [
+      {
+        "basis": "datasheet_typical",
+        "flux_density_peak": {
+          "original": {
+            "unit": "mT",
+            "value": 200.0
+          },
+          "unit": "T",
+          "value": 0.2
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 25.0
+          },
+          "unit": "Hz",
+          "value": 25000.0
+        },
+        "loss_density": {
+          "original": {
+            "unit": "kW/m^3",
+            "value": 57.0
+          },
+          "unit": "W/m^3",
+          "value": 57000.0
+        },
+        "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        }
+      },
+      {
+        "basis": "datasheet_typical",
+        "flux_density_peak": {
+          "original": {
+            "unit": "mT",
+            "value": 200.0
+          },
+          "unit": "T",
+          "value": 0.2
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 100.0
+          },
+          "unit": "Hz",
+          "value": 100000.0
+        },
+        "loss_density": {
+          "original": {
+            "unit": "kW/m^3",
+            "value": 375.0
+          },
+          "unit": "W/m^3",
+          "value": 375000.0
+        },
+        "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        }
+      },
+      {
+        "basis": "datasheet_typical",
+        "flux_density_peak": {
+          "original": {
+            "unit": "mT",
+            "value": 100.0
+          },
+          "unit": "T",
+          "value": 0.1
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 300.0
+          },
+          "unit": "Hz",
+          "value": 300000.0
+        },
+        "loss_density": {
+          "original": {
+            "unit": "kW/m^3",
+            "value": 390.0
+          },
+          "unit": "W/m^3",
+          "value": 390000.0
+        },
+        "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        }
+      },
+      {
+        "basis": "datasheet_typical",
+        "flux_density_peak": {
+          "original": {
+            "unit": "mT",
+            "value": 50.0
+          },
+          "unit": "T",
+          "value": 0.05
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 500.0
+          },
+          "unit": "Hz",
+          "value": 500000.0
+        },
+        "loss_density": {
+          "original": {
+            "unit": "kW/m^3",
+            "value": 215.0
+          },
+          "unit": "W/m^3",
+          "value": 215000.0
+        },
+        "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        }
+      }
+    ],
+    "manufacturer_ref": "manufacturer.tdk",
+    "material_class": "ferrite_mnzn",
+    "recommended_frequency_range": {
+      "max": 500000.0,
+      "min": 25000.0,
+      "unit": "Hz"
+    },
+    "resistivity": {
+      "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+      "value": {
+        "unit": "Ohm*m",
+        "value": 10.0
+      }
+    },
+    "saturation_flux_density": [
+      {
+        "field": {
+          "unit": "A/m",
+          "value": 1200.0
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 10.0
+          },
+          "unit": "Hz",
+          "value": 10000.0
+        },
+        "note": "BS (25 degC) at H = 1200 A/m, f = 10 kHz",
+        "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 25.0
+          },
+          "unit": "K",
+          "value": 298.15
+        },
+        "value": {
+          "original": {
+            "unit": "mT",
+            "value": 490.0
+          },
+          "unit": "T",
+          "value": 0.49
+        }
+      },
+      {
+        "field": {
+          "unit": "A/m",
+          "value": 1200.0
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 10.0
+          },
+          "unit": "Hz",
+          "value": 10000.0
+        },
+        "note": "BS (100 degC) at H = 1200 A/m, f = 10 kHz",
+        "source_ref": "evidence.tdk-n87-datasheet-2025-06",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        },
+        "value": {
+          "original": {
+            "unit": "mT",
+            "value": 390.0
+          },
+          "unit": "T",
+          "value": 0.39
+        }
+      }
+    ],
+    "steinmetz_parameter_sets": [
+      {
+        "alpha": 1.3286,
+        "basis": "datasheet_fit",
+        "beta": 1.9368,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.047,
+          "mean_abs_rel_error": 0.028,
+          "n_points": 4
+        },
+        "flux_density_range": {
+          "max": 0.2,
+          "min": 0.05,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 500000.0,
+          "min": 25000.0,
+          "unit": "Hz"
+        },
+        "id": "set.tdk-datasheet-fit-n87-100c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 1.865
+        },
+        "note": "Four TDK datasheet typical points at 100 degC; validity window 95-105 degC (policy), 25-500 kHz, 50-200 mT.",
+        "source_ref": "evidence.aipe-datasheet-fit-n87-100c",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        },
+        "temperature_range": {
+          "max": 378.15,
+          "min": 368.15,
+          "unit": "K"
+        }
+      },
+      {
+        "alpha": 1.3452409107313201,
+        "basis": "measurement_fit",
+        "beta": 2.5748590090007264,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.23493764814113494,
+          "mean_abs_rel_error": 0.08145859697402331,
+          "n_points": 338,
+          "rms_log10_residual": 0.04389239190088061
+        },
+        "flux_density_range": {
+          "max": 0.1509,
+          "min": 0.011,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 446690.0,
+          "min": 50020.0,
+          "unit": "Hz"
+        },
+        "id": "set.magnet-fit-n87-25c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 12.821928181918144
+        },
+        "note": "AIPE least-squares fit on Princeton MagNet sinusoidal zero-bias points at 25 degC; mean |rel. error| 8.1%, max 23.5%. Validity window: the measured temperature +-5 K (selection policy), stated f and B ranges.",
+        "source_ref": "evidence.princeton-magnet-database-n87",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 25.0
+          },
+          "unit": "K",
+          "value": 298.15
+        }
+      },
+      {
+        "alpha": 1.5169512304658186,
+        "basis": "measurement_fit",
+        "beta": 2.578746117605005,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.37069062316089085,
+          "mean_abs_rel_error": 0.1073287801906936,
+          "n_points": 357,
+          "rms_log10_residual": 0.058524900660204444
+        },
+        "flux_density_range": {
+          "max": 0.1659,
+          "min": 0.0112,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 446690.0,
+          "min": 50020.0,
+          "unit": "Hz"
+        },
+        "id": "set.magnet-fit-n87-50c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 1.190515236628182
+        },
+        "note": "AIPE least-squares fit on Princeton MagNet sinusoidal zero-bias points at 50 degC; mean |rel. error| 10.7%, max 37.1%. Validity window: the measured temperature +-5 K (selection policy), stated f and B ranges.",
+        "source_ref": "evidence.princeton-magnet-database-n87",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 50.0
+          },
+          "unit": "K",
+          "value": 323.15
+        }
+      },
+      {
+        "alpha": 1.7308690909123214,
+        "basis": "measurement_fit",
+        "beta": 2.603340820287618,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.4797514790838603,
+          "mean_abs_rel_error": 0.15670803888704052,
+          "n_points": 364,
+          "rms_log10_residual": 0.08384248731378399
+        },
+        "flux_density_range": {
+          "max": 0.1695,
+          "min": 0.0115,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 446690.0,
+          "min": 50020.0,
+          "unit": "Hz"
+        },
+        "id": "set.magnet-fit-n87-70c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 0.08292093281480084
+        },
+        "note": "AIPE least-squares fit on Princeton MagNet sinusoidal zero-bias points at 70 degC; mean |rel. error| 15.7%, max 48.0%. Validity window: the measured temperature +-5 K (selection policy), stated f and B ranges.",
+        "source_ref": "evidence.princeton-magnet-database-n87",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 70.0
+          },
+          "unit": "K",
+          "value": 343.15
+        }
+      },
+      {
+        "alpha": 1.952339908481615,
+        "basis": "measurement_fit",
+        "beta": 2.6172609522778516,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.4812711294013049,
+          "mean_abs_rel_error": 0.19859149332583872,
+          "n_points": 367,
+          "rms_log10_residual": 0.10324160621987769
+        },
+        "flux_density_range": {
+          "max": 0.1693,
+          "min": 0.0117,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 446690.0,
+          "min": 50010.0,
+          "unit": "Hz"
+        },
+        "id": "set.magnet-fit-n87-90c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 0.005543281878155995
+        },
+        "note": "AIPE least-squares fit on Princeton MagNet sinusoidal zero-bias points at 90 degC; mean |rel. error| 19.9%, max 48.1%. Validity window: the measured temperature +-5 K (selection policy), stated f and B ranges.",
+        "source_ref": "evidence.princeton-magnet-database-n87",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 90.0
+          },
+          "unit": "K",
+          "value": 363.15
+        }
+      },
+      {
+        "alpha": 1.09,
+        "basis": "publication",
+        "beta": 2.16,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "n_points": 3
+        },
+        "flux_density_range": {
+          "max": 0.1,
+          "min": 0.05,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 100000.0,
+          "min": 20000.0,
+          "unit": "Hz"
+        },
+        "id": "set.muhlethaler-2012-n87-25c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 81.12
+        },
+        "note": "Published iGSE k_i = 8.41 (W/m3, Hz, T) converted to classical k = k_i (2 pi)^(alpha-1) 2^(beta-alpha) Int_0^2pi |cos|^alpha = 81.12 W/m3; fitted on an R42 toroid at 25 degC with symmetric triangular flux, dB = 0.1-0.2 T peak-to-peak.",
+        "source_ref": "evidence.muhlethaler-2012-tpel",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 25.0
+          },
+          "unit": "K",
+          "value": 298.15
+        }
+      }
+    ]
+  },
+  "provenance": {
+    "activity": "transcribed from cited sources and derived fits by tools/build_catalog.py",
+    "created_at": "2026-10-19T00:00:00Z",
+    "inputs": [
+      "evidence.princeton-magnet-constants",
+      "evidence.aipe-steinmetz-fit-magnet",
+      "evidence.princeton-magnet-database-n87",
+      "evidence.tdk-n87-datasheet-2025-06",
+      "evidence.aipe-datasheet-fit-n87-100c",
+      "evidence.muhlethaler-2012-tpel"
+    ],
+    "normalization": "all quantities converted to SI by aipe_magnetics.common.units with original units retained",
+    "tool": {
+      "id": "aipe.magnetics",
+      "version": "0.2.0"
+    }
+  },
+  "quality": {
+    "flags": [],
+    "notes": [
+      "review_status unreviewed: awaiting owner review of the transcriptions"
+    ],
+    "status": "normalized"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": [
+    "ferrite",
+    "mnzn",
+    "power"
+  ]
+}

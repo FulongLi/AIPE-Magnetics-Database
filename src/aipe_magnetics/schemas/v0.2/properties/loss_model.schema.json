@@ -1,0 +1,42 @@
+{
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Magnetics-Database/v0.2.0/schemas/v0.2/properties/loss_model.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The 'properties' object of a 'loss_model' record (LossModelProperties). v0.1 ``loss_model`` kind kept for compatibility.",
+  "properties": {
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "method": {
+      "title": "Method",
+      "type": "string"
+    },
+    "model_artifact": {
+      "format": "uri-reference",
+      "title": "Model Artifact",
+      "type": "string"
+    },
+    "operating_condition_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Operating Condition Refs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "method",
+    "model_artifact"
+  ],
+  "title": "AIPE magnetic record v0.2 - loss_model properties",
+  "type": "object"
+}

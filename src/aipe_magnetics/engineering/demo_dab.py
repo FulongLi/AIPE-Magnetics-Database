@@ -80,10 +80,18 @@ def run_dab_demo(*, output: Path | None = None, temperature: dict[str, Any] | No
         try:
             from aipe_magnetics.integrations.aipe_core.bridge import component_summary_from_design
             from aipe_magnetics.integrations.aipe_core.export import to_engineering_state
-            summary = component_summary_from_design(design, role="dab-transformer", created_at="2026-10-19T00:00:00Z")
-            core_state = to_engineering_state(summary, created_at="2026-10-19T00:00:00Z", project_id="project.dab-10kw-demo",
+            created = "2026-10-19T00:00:00Z"
+            summary = component_summary_from_design(design, role="dab-transformer", created_at=created)
+            brief = {"id": "evidence.dab-10kw-demo-brief", "kind": "assumption",
+                     "description": "Demonstration design brief: 10 kW, 800 V to 400 V, 100 kHz dual active bridge (task specification; not a measurement).",
+                     "source": {"type": "user_requirement", "reference": "AIPE Magnetics v0.2 task brief, section 13 (docs/demo-dab-10kw.md)"},
+                     "provenance": {"created_at": created, "activity": "Record the demonstration operating point", "inputs": []}}
+            core_state = to_engineering_state(summary, created_at=created, project_id="project.dab-10kw-demo",
+                                              project_name="AIPE Magnetics demonstration: 10 kW DAB transformer",
+                                              converter_topology="dual-active-bridge",
                                               requirements={"nominal_power": SPEC["power"], "input_voltage": SPEC["primary_voltage"],
-                                                            "output_voltage": SPEC["secondary_voltage"], "switching_frequency": SPEC["frequency"]})
+                                                            "output_voltage": SPEC["secondary_voltage"], "switching_frequency": SPEC["frequency"],
+                                                            "evidence": [brief]})
         except Exception as error:  # noqa: BLE001 - the export is optional for the demonstration
             print(f"(AIPE-Core export not available: {type(error).__name__}: {error})")
 

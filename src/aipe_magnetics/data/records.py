@@ -185,8 +185,8 @@ class Quality(BaseModel):
 # --------------------------------------------------------------------------------------------------
 class RangeSI(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    min: float | None = None
-    max: float | None = None
+    min: float | None = Field(default=None, allow_inf_nan=False)
+    max: float | None = Field(default=None, allow_inf_nan=False)
     unit: str
 
     @model_validator(mode="after")
@@ -232,8 +232,8 @@ class SteinmetzParameterSet(BaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     k: Quantity = Field(description="W/m^3 with f in Hz and B in T")
-    alpha: float = Field(gt=0)
-    beta: float = Field(gt=0)
+    alpha: float = Field(gt=0, allow_inf_nan=False)
+    beta: float = Field(gt=0, allow_inf_nan=False)
     temperature: Quantity | None = Field(default=None, description="temperature at which the set was fitted")
     frequency_range: RangeSI | None = None
     flux_density_range: RangeSI | None = None
@@ -251,9 +251,12 @@ class SteinmetzParameterSet(BaseModel):
 
     @model_validator(mode="after")
     def _si_units(self) -> "SteinmetzParameterSet":
-        _si(self.k, "W/m^3", "k")
+        _positive(_si(self.k, "W/m^3", "k"), "k")
         if self.temperature is not None:
-            _si(self.temperature, "K", "temperature")
+            _positive(_si(self.temperature, "K", "temperature"), "temperature")
+        for key, value in self.fit_metrics.items():
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or value != value or value in (float("inf"), float("-inf")):
+                raise ValueError(f"fit_metrics[{key!r}] must be a finite number")
         return self
 
 
@@ -570,9 +573,10 @@ class ExcitationWaveformProperties(BaseModel):
             if q is not None:
                 _si(q, expected, name)
         if self.breakpoints is not None:
+            import math
             for pair in self.breakpoints:
-                if len(pair) != 2 or not (0 <= pair[0] <= 1):
-                    raise ValueError("breakpoints must be [t_fraction, value_fraction] with 0<=t_fraction<=1")
+                if len(pair) != 2 or not all(isinstance(x, (int, float)) and math.isfinite(x) for x in pair) or not (0 <= pair[0] <= 1):
+                    raise ValueError("breakpoints must be finite [t_fraction, value_fraction] pairs with 0<=t_fraction<=1")
         return self
 
 

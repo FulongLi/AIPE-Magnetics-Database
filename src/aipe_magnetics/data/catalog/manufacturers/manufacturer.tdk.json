@@ -1,0 +1,35 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Manufacturer identity from the public website.",
+      "id": "evidence.tdk-website",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "reference": "https://www.tdk-electronics.tdk.com/",
+      "review_status": "unreviewed",
+      "url": "https://www.tdk-electronics.tdk.com/"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.tdk-website"
+  ],
+  "extensions": {},
+  "id": "manufacturer.tdk",
+  "kind": "manufacturer",
+  "license": "NOASSERTION",
+  "name": "TDK Electronics",
+  "properties": {
+    "brand_names": [
+      "EPCOS",
+      "SIFERRIT"
+    ],
+    "country": "DE",
+    "legal_name": "TDK Electronics AG",
+    "website": "https://www.tdk-electronics.tdk.com/"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": []
+}

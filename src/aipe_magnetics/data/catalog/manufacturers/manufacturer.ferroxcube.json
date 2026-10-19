@@ -1,0 +1,34 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Manufacturer identity from the public website.",
+      "id": "evidence.ferroxcube-website",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "reference": "https://www.ferroxcube.com/",
+      "review_status": "unreviewed",
+      "url": "https://www.ferroxcube.com/"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.ferroxcube-website"
+  ],
+  "extensions": {},
+  "id": "manufacturer.ferroxcube",
+  "kind": "manufacturer",
+  "license": "NOASSERTION",
+  "name": "Ferroxcube",
+  "properties": {
+    "brand_names": [
+      "Ferroxcube"
+    ],
+    "country": "NL",
+    "legal_name": "Ferroxcube International Holding B.V.",
+    "website": "https://www.ferroxcube.com/"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": []
+}

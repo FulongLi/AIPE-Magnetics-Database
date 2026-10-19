@@ -1,0 +1,358 @@
+{
+  "$defs": {
+    "ArrayLayout": {
+      "additionalProperties": false,
+      "description": "Description of one array inside an HDF5 waveform file.",
+      "properties": {
+        "axis_semantics": {
+          "description": "meaning of each axis",
+          "items": {
+            "type": "string"
+          },
+          "title": "Axis Semantics",
+          "type": "array"
+        },
+        "dtype": {
+          "default": "float64",
+          "title": "Dtype",
+          "type": "string"
+        },
+        "missing_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "sentinel description, e.g. 'NaN'",
+          "title": "Missing Value"
+        },
+        "original_unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Original Unit"
+        },
+        "path": {
+          "description": "HDF5 dataset path, e.g. /sequences/flux_density",
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "quantity": {
+          "description": "physical meaning, e.g. flux_density, field, time, voltage",
+          "minLength": 1,
+          "title": "Quantity",
+          "type": "string"
+        },
+        "shape": {
+          "description": "[n_sequences, n_samples] or [n_samples]",
+          "items": {
+            "type": "integer"
+          },
+          "title": "Shape",
+          "type": "array"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "quantity",
+        "unit"
+      ],
+      "title": "ArrayLayout",
+      "type": "object"
+    },
+    "Original": {
+      "additionalProperties": false,
+      "description": "The value as supplied before unit normalisation.",
+      "properties": {
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Original",
+      "type": "object"
+    },
+    "Quantity": {
+      "additionalProperties": false,
+      "description": "``{value, unit}`` with optional provenance of the original unit and an uncertainty statement.",
+      "properties": {
+        "original": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Original"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uncertainty"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Quantity",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "additionalProperties": false,
+      "description": "Uncertainty statement attached to a quantity.\n\n``kind='unknown'`` is the honest default when no quantitative basis exists.",
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "how the uncertainty was obtained",
+          "title": "Basis"
+        },
+        "coverage_factor": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "k for expanded uncertainty",
+          "title": "Coverage Factor"
+        },
+        "kind": {
+          "default": "unknown",
+          "enum": [
+            "standard",
+            "expanded",
+            "bounds",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "lower bound (kind='bounds')",
+          "title": "Lower"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "upper bound (kind='bounds')",
+          "title": "Upper"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "standard/expanded uncertainty in the quantity unit",
+          "title": "Value"
+        }
+      },
+      "title": "Uncertainty",
+      "type": "object"
+    }
+  },
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Magnetics-Database/v0.2.0/schemas/v0.2/properties/waveform_dataset.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The 'properties' object of a 'waveform_dataset' record (WaveformDatasetProperties). Metadata for an HDF5 waveform container (large numerical arrays never go into JSON).",
+  "properties": {
+    "arrays": {
+      "items": {
+        "$ref": "#/$defs/ArrayLayout"
+      },
+      "minItems": 1,
+      "title": "Arrays",
+      "type": "array"
+    },
+    "conditions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "scalar per-sequence condition arrays: name -> HDF5 path",
+      "title": "Conditions",
+      "type": "object"
+    },
+    "coordinate_definition": {
+      "default": "scalar quantities along the magnetic path; no vector components",
+      "title": "Coordinate Definition",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "format": {
+      "const": "hdf5",
+      "default": "hdf5",
+      "title": "Format",
+      "type": "string"
+    },
+    "layout_version": {
+      "default": "aipe.magnetics.waveforms/0.2",
+      "title": "Layout Version",
+      "type": "string"
+    },
+    "material_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Material Ref"
+    },
+    "n_sequences": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "N Sequences"
+    },
+    "samples_per_sequence": {
+      "anyOf": [
+        {
+          "minimum": 2,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Samples Per Sequence"
+    },
+    "sampling_rate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Hz; omit if per-sequence time arrays exist"
+    },
+    "sign_convention": {
+      "default": "B, H, v, i positive along the winding reference direction (right-hand rule)",
+      "title": "Sign Convention",
+      "type": "string"
+    },
+    "source_dataset_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "dataset record of the upstream source",
+      "title": "Source Dataset Ref"
+    },
+    "timebase": {
+      "default": "uniform_per_period",
+      "enum": [
+        "uniform_per_period",
+        "explicit_time_array",
+        "uniform_absolute"
+      ],
+      "title": "Timebase",
+      "type": "string"
+    }
+  },
+  "required": [
+    "arrays"
+  ],
+  "title": "AIPE magnetic record v0.2 - waveform_dataset properties",
+  "type": "object"
+}

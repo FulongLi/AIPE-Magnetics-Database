@@ -49,7 +49,8 @@ def design_inductor(request: InductorDesignRequest, catalog: Any | None = None) 
     try:
         material_record, material = lookup_material(request.material, cat)
         cores = candidate_cores(material_record, [request.core] if request.core else None, cat)
-        bsat, bsat_status, _ = saturation_flux_density_at(material, request.temperature)
+        bsat_q, bsat_status, _ = saturation_flux_density_at(material, request.temperature)
+        bsat = bsat_q.to("T").value
         if material.initial_permeability is None:
             raise DataNotFoundError(f"{material_record.id} has no initial permeability; the ungapped reluctance cannot be evaluated")
     except AIPEMagneticsError as error:

@@ -1,0 +1,138 @@
+{
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Magnetics-Database/v0.2.0/schemas/v0.2/properties/model_metadata.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The 'properties' object of a 'model_metadata' record (ModelMetadataProperties). Identity, architecture, parameters and provenance of a model (empirical, physics, ODE or data-driven).",
+  "properties": {
+    "architecture": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "e.g. steinmetz, igse, jiles_atherton, mlp, lstm",
+      "title": "Architecture"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "family": {
+      "enum": [
+        "empirical",
+        "physics",
+        "dynamic",
+        "data_driven"
+      ],
+      "title": "Family",
+      "type": "string"
+    },
+    "implementation_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Implementation Version"
+    },
+    "inference_config": {
+      "additionalProperties": true,
+      "title": "Inference Config",
+      "type": "object"
+    },
+    "material_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Material Refs",
+      "type": "array"
+    },
+    "method_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Method Version"
+    },
+    "model_id": {
+      "description": "e.g. aipe.magnetics.model.igse",
+      "minLength": 1,
+      "title": "Model Id",
+      "type": "string"
+    },
+    "parameter_set_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parameter Set Ref"
+    },
+    "training_data_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Training Data Refs",
+      "type": "array"
+    },
+    "validity": {
+      "additionalProperties": true,
+      "description": "ValidityDomain JSON",
+      "title": "Validity",
+      "type": "object"
+    },
+    "verification_refs": {
+      "description": "evidence record ids",
+      "items": {
+        "type": "string"
+      },
+      "title": "Verification Refs",
+      "type": "array"
+    },
+    "weights_artifact": {
+      "anyOf": [
+        {
+          "format": "uri-reference",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "artifact uri of trained parameters",
+      "title": "Weights Artifact"
+    }
+  },
+  "required": [
+    "model_id",
+    "family"
+  ],
+  "title": "AIPE magnetic record v0.2 - model_metadata properties",
+  "type": "object"
+}

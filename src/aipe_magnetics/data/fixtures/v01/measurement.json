@@ -1,0 +1,41 @@
+{
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Synthetic structure fixture for migration and validator tests; not a real product, material or measurement. ",
+      "id": "evidence.fixture-v01-synthetic",
+      "kind": "assumption",
+      "license": "NOASSERTION",
+      "reference": "AIPE Magnetics v0.2 synthetic v0.1 fixture (aipe_magnetics/data/fixtures/v01)",
+      "review_status": "unreviewed"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Synthetic structure fixture for migration and validator tests; not a real product, material or measurement. Placeholder measurement evidence item required by the v0.1 rule for the measurement kind; no measurement was performed and no data exist.",
+      "id": "evidence.fixture-v01-synthetic-measurement",
+      "kind": "measurement",
+      "license": "NOASSERTION",
+      "reference": "AIPE Magnetics v0.2 synthetic v0.1 fixture (aipe_magnetics/data/fixtures/v01)",
+      "review_status": "unreviewed"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.fixture-v01-synthetic",
+    "evidence.fixture-v01-synthetic-measurement"
+  ],
+  "id": "measurement.fixture-v01-synthetic",
+  "kind": "measurement",
+  "name": "Synthetic v0.1 measurement fixture",
+  "properties": {
+    "artifact": "data/synthetic-placeholder-no-measurement-performed.csv",
+    "component_ref": "inductor.fixture-v01-synthetic",
+    "description": "Structure-only synthetic measurement record; no measurement was performed.",
+    "operating_condition_ref": "operating-condition.fixture-v01-synthetic",
+    "tool": {
+      "name": "synthetic-acquisition-tool",
+      "version": "0.0.0"
+    }
+  },
+  "schema_version": "0.1.0",
+  "synthetic": true
+}

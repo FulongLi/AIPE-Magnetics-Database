@@ -1,0 +1,79 @@
+{
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Magnetics-Database/v0.2.0/schemas/v0.2/properties/core_family.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The 'properties' object of a 'core_family' record (CoreFamilyProperties).",
+  "properties": {
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "manufacturer_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Manufacturer Ref"
+    },
+    "shape": {
+      "anyOf": [
+        {
+          "enum": [
+            "E",
+            "EE",
+            "EI",
+            "ETD",
+            "EFD",
+            "ER",
+            "EQ",
+            "PQ",
+            "PM",
+            "RM",
+            "P",
+            "U",
+            "UU",
+            "UI",
+            "toroid",
+            "planar_E",
+            "block",
+            "other"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Shape"
+    },
+    "standard": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "e.g. IEC 62317",
+      "title": "Standard"
+    }
+  },
+  "title": "AIPE magnetic record v0.2 - core_family properties",
+  "type": "object"
+}

@@ -17,6 +17,7 @@ from aipe_magnetics.data.hdf5 import (
     CONDITION_QUANTITIES,
     LAYOUT_VERSION,
     SEQUENCE_QUANTITIES,
+    PreparedWaveforms,
     WaveformMeta,
     WaveformStore,
     array_sha256,
@@ -183,8 +184,15 @@ def test_explicit_time_array_and_uniform_absolute(tmp_path: Path):
     meta = WaveformMeta(source_id="aipe.test", dataset_version="t1", timebase="uniform_absolute", sampling_rate=Quantity.si(10, "MHz"))
     props = store.write(tmp_path / "u.h5", {"current": (b, "mA")}, None, meta=meta)
     assert props.sampling_rate is not None and props.sampling_rate.unit == "Hz" and props.sampling_rate.value == 1e7
-    assert store.describe(tmp_path / "u.h5").sampling_rate == Quantity(value=1e7, unit="Hz")
-    assert store.read(tmp_path / "u.h5").attrs["sampling_rate_hz"] == 1e7
+    assert props.sampling_rate.original is not None and props.sampling_rate.original.unit == "MHz"
+    described = store.describe(tmp_path / "u.h5")
+    assert described == props, "describe() reproduces the write result, original sampling-rate unit included"
+    assert described.sampling_rate == props.sampling_rate and described.sampling_rate.original.value == 10.0
+    attrs = store.read(tmp_path / "u.h5").attrs
+    assert attrs["sampling_rate_hz"] == 1e7 and attrs["sampling_rate_original_unit"] == "MHz" and attrs["sampling_rate_original_value"] == 10.0
+    plain = WaveformMeta(source_id="aipe.test", dataset_version="t1", timebase="uniform_absolute", sampling_rate=Quantity(value=2e6, unit="Hz"))
+    props = store.write(tmp_path / "v.h5", {"current": (b, "mA")}, None, meta=plain)
+    assert store.describe(tmp_path / "v.h5") == props and "sampling_rate_original_unit" not in store.read(tmp_path / "v.h5").attrs
 
 
 def test_conditions_accept_column_vectors_and_all_quantities(tmp_path: Path):
@@ -193,8 +201,9 @@ def test_conditions_accept_column_vectors_and_all_quantities(tmp_path: Path):
     conditions = {name: (np.array([[1.0], [2.0], [np.nan]]) * (0.25 if name == "duty" else 1.0), unit)
                   for name, unit in CONDITION_QUANTITIES.items()}
     conditions["dc_bias_field"] = (np.array([-10.0, 0.0, 10.0]), "Oe")
-    props = WaveformStore().write(tmp_path / "c.h5", {q: (b, u) for q, u in SEQUENCE_QUANTITIES.items() if q != "time"},
-                                  conditions, meta=WaveformMeta(source_id="aipe.test", dataset_version="t1"))
+    # uniform_absolute: the frequency condition is an excitation condition, not the timebase, so a NaN entry is allowed
+    meta = WaveformMeta(source_id="aipe.test", dataset_version="t1", timebase="uniform_absolute", sampling_rate=Quantity(value=16.0, unit="Hz"))
+    props = WaveformStore().write(tmp_path / "c.h5", {q: (b, u) for q, u in SEQUENCE_QUANTITIES.items() if q != "time"}, conditions, meta=meta)
     assert set(props.conditions) == set(CONDITION_QUANTITIES)
     data = WaveformStore().read(tmp_path / "c.h5")
     assert data.conditions["dc_bias_field"][2] == convert(10.0, "Oe", "A/m")
@@ -206,12 +215,134 @@ def test_meta_validation():
         WaveformMeta(source_id="aipe.test", dataset_version="t1", sampling_rate=Quantity(value=1.0, unit="T"))
     with pytest.raises(ValueError):
         WaveformMeta(source_id="aipe.test", dataset_version="t1", sampling_rate=Quantity(value=-1.0, unit="Hz"))
+    with pytest.raises(ValueError, match="uncertainty"):
+        WaveformMeta(source_id="aipe.test", dataset_version="t1",
+                     sampling_rate=Quantity(value=1.0, unit="Hz", uncertainty={"kind": "standard", "value": 0.1}))  # type: ignore[arg-type]
     with pytest.raises(ValueError):
         WaveformMeta(source_id="", dataset_version="t1")
     with pytest.raises(InvalidInputError):
         WaveformStore(compression_level=12)
     with pytest.raises(InvalidInputError):
+        WaveformStore(compression_level=True)  # type: ignore[arg-type]
+    with pytest.raises(InvalidInputError, match="compression must be one of"):
+        WaveformStore(compression="zip")
+    with pytest.raises(InvalidInputError):
+        WaveformStore(max_chunk_bytes=0)
+    with pytest.raises(InvalidInputError):
         WaveformStore().write("x.h5", {"flux_density": (np.zeros((2, 4)), "T")}, None, meta={"source_id": "x"})  # type: ignore[arg-type]
+    with pytest.raises(InvalidInputError):
+        WaveformStore().prepare({"flux_density": (np.zeros((2, 4)), "T")}, None, meta={"source_id": "x"})  # type: ignore[arg-type]
+
+
+def test_compression_options_all_produce_valid_files(tmp_path: Path, sample):
+    for compression in ("gzip", "lzf", None):
+        store = WaveformStore(compression=compression)
+        path = tmp_path / f"{compression}.h5"
+        props = store.write(path, sample["arrays"], sample["conditions"], meta=sample["meta"])
+        assert WaveformStore().verify_checksums(path) == [] and WaveformStore().describe(path) == props
+
+
+def test_overflow_during_unit_conversion_is_rejected_not_stored(tmp_path: Path):
+    import warnings
+
+    meta = WaveformMeta(source_id="aipe.test", dataset_version="t1")
+    freq = (np.array([1e3, 2e3, 3e3]), "Hz")
+    big = np.zeros((3, 8))
+    big[0, 0] = 1e306
+    with pytest.raises(InvalidInputError, match="overflow float64 when converted from 'kA/m' to 'A/m'"):
+        WaveformStore().write(tmp_path / "x.h5", {"field": (big, "kA/m")}, {"frequency": freq}, meta=meta)
+    with pytest.raises(InvalidInputError, match="dc_bias_field: 1 value\\(s\\) overflow"):
+        WaveformStore().write(tmp_path / "x.h5", {"field": (np.zeros((3, 8)), "A/m")},
+                              {"dc_bias_field": (np.array([1e306, 1.0, 1.0]), "kA/m"), "frequency": freq}, meta=meta)
+    assert not (tmp_path / "x.h5").exists()
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")  # the helper reports the overflow as inf without a numpy RuntimeWarning
+        assert np.isinf(convert_array([1e306], "kA/m", "A/m")).all()
+
+
+def test_integers_beyond_2_53_and_ragged_inputs_are_rejected(tmp_path: Path):
+    meta = WaveformMeta(source_id="aipe.test", dataset_version="t1", timebase="uniform_absolute", sampling_rate=Quantity(value=1.0, unit="Hz"))
+    store = WaveformStore()
+    big = np.array([[2 ** 53 + 1, 2 ** 53 + 3], [1, 2]], dtype=np.int64)
+    with pytest.raises(InvalidInputError, match=r"exceed 2\*\*53"):
+        store.write(tmp_path / "i.h5", {"current": (big, "A")}, None, meta=meta)
+    exact = np.array([[2 ** 53, -(2 ** 53)], [1, 2]], dtype=np.int64)
+    store.write(tmp_path / "i.h5", {"current": (exact, "A")}, None, meta=meta)
+    assert store.read(tmp_path / "i.h5").arrays["current"][0].tolist() == [float(2 ** 53), -float(2 ** 53)]
+    with pytest.raises(InvalidInputError, match="rectangular numeric array"):
+        store.write(tmp_path / "r.h5", {"flux_density": ([[1.0, 2.0, 3.0], [1.0, 2.0]], "T")}, None, meta=meta)
+    with pytest.raises(InvalidInputError, match="numeric array required"):
+        store.write(tmp_path / "r.h5", {"flux_density": ([[1.0, "x"], [1.0, 2.0]], "T")}, None, meta=meta)
+    assert not (tmp_path / "r.h5").exists()
+
+
+def test_timebase_consistency_rules(tmp_path: Path):
+    b = np.stack([np.sin(2 * np.pi * np.arange(64) / 64) for _ in range(3)])
+    store = WaveformStore()
+    per_period = WaveformMeta(source_id="aipe.test", dataset_version="t1")
+    with pytest.raises(InvalidInputError, match="only timebase information"):
+        store.write(tmp_path / "n.h5", {"flux_density": (b, "T")}, {"frequency": (np.array([1e3, np.nan, 3e3]), "Hz")}, meta=per_period)
+    both = WaveformMeta(source_id="aipe.test", dataset_version="t1", sampling_rate=Quantity(value=64e3, unit="Hz"))
+    with pytest.raises(InvalidInputError, match=r"frequency \* n_samples == sampling_rate"):
+        store.write(tmp_path / "n.h5", {"flux_density": (b, "T")}, {"frequency": (np.array([1e3, 2e3, 3e3]), "Hz")}, meta=both)
+    assert not (tmp_path / "n.h5").exists()
+    props = store.write(tmp_path / "ok.h5", {"flux_density": (b, "T")}, {"frequency": (np.array([1e3, 1e3, np.nan]), "Hz")}, meta=both)
+    assert props.sampling_rate.value == 64e3, "1 kHz * 64 samples == 64 kHz is consistent; a missing row frequency is fine when fs is given"
+    absolute = WaveformMeta(source_id="aipe.test", dataset_version="t1", timebase="uniform_absolute", sampling_rate=Quantity(value=1.0, unit="Hz"))
+    store.write(tmp_path / "abs.h5", {"flux_density": (b, "T")}, {"frequency": (np.array([1e3, 2e3, np.nan]), "Hz")}, meta=absolute)
+    assert store.describe(tmp_path / "abs.h5").timebase == "uniform_absolute", "no f/fs coupling in absolute time"
+
+
+def test_malformed_layout_files_raise_data_integrity_errors(tmp_path: Path):
+    import h5py
+
+    store = WaveformStore()
+
+    def make(name, builder):
+        path = tmp_path / name
+        with h5py.File(path, "w") as handle:
+            handle.attrs["layout_version"] = LAYOUT_VERSION
+            builder(handle)
+        return path
+
+    def no_unit(h):
+        h.create_dataset("sequences/flux_density", data=np.zeros((2, 4)))
+
+    def one_dimensional(h):
+        h.create_dataset("sequences/flux_density", data=np.zeros(4)).attrs["unit"] = "T"
+
+    def wrong_condition_length(h):
+        h.create_dataset("sequences/flux_density", data=np.zeros((2, 4))).attrs["unit"] = "T"
+        h.create_dataset("conditions/frequency", data=np.zeros(3)).attrs["unit"] = "Hz"
+
+    def sequences_not_a_group(h):
+        h.create_dataset("sequences", data=np.zeros((2, 4)))
+
+    cases = [(make("a.h5", lambda h: None), "sequences"), (make("b.h5", no_unit), "unit"), (make("c.h5", one_dimensional), "2-D"),
+             (make("d.h5", wrong_condition_length), "entries"), (make("e.h5", sequences_not_a_group), "sequences")]
+    for path, fragment in cases:
+        with pytest.raises(DataIntegrityError, match=fragment):
+            store.read(path, verify=False)
+        with pytest.raises(DataIntegrityError, match=fragment):
+            store.describe(path)
+        with pytest.raises(DataIntegrityError):
+            store.verify_checksums(path)
+
+
+def test_prepare_writes_nothing_and_write_prepared_reuses_it(tmp_path: Path, sample):
+    store = WaveformStore()
+    prepared = store.prepare(sample["arrays"], sample["conditions"], meta=sample["meta"])
+    assert isinstance(prepared, PreparedWaveforms) and prepared.n_sequences == N_SEQ and prepared.n_samples == N_SAMP
+    assert list(tmp_path.iterdir()) == [], "prepare() touches no files"
+    props = store.write(tmp_path / "w.h5", sample["arrays"], sample["conditions"], meta=sample["meta"])
+    assert prepared.properties == props
+    assert store.write_prepared(tmp_path / "p.h5", prepared) == props
+    assert sha256_file(tmp_path / "w.h5") == sha256_file(tmp_path / "p.h5")
+    with pytest.raises(FileExistsError):
+        store.write_prepared(tmp_path / "p.h5", prepared)
+    with pytest.raises(InvalidInputError):
+        store.write_prepared(tmp_path / "q.h5", {"not": "prepared"})  # type: ignore[arg-type]
+    assert not (tmp_path / "q.h5").exists()
 
 
 def test_reading_foreign_or_missing_files_fails_loudly(tmp_path: Path):

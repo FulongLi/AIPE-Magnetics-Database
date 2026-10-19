@@ -1,0 +1,53 @@
+{
+  "description": "Fictional manufacturer identity so that manufacturer_ref resolves inside the bundled catalogue. Not a real company.",
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Clearly synthetic placeholder authored to give the catalogue loader content. No real company is described.",
+      "id": "evidence.example-synthetic-fixture",
+      "kind": "assumption",
+      "license": "NOASSERTION",
+      "reference": "AIPE Magnetics v0.2 bundled synthetic catalogue fixture (aipe_magnetics/data/catalog)",
+      "review_status": "unreviewed"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.example-synthetic-fixture"
+  ],
+  "id": "manufacturer.example-synthetic",
+  "kind": "manufacturer",
+  "license": "NOASSERTION",
+  "name": "Example Synthetic Magnetics (fictional)",
+  "properties": {
+    "brand_names": [
+      "ExampleSynth"
+    ],
+    "description": "Fictional; exists only as a reference target for the synthetic material and core.",
+    "legal_name": "Example Synthetic Magnetics (fictional)"
+  },
+  "provenance": {
+    "activity": "authored as a synthetic catalogue fixture for AIPE Magnetics v0.2",
+    "inputs": [],
+    "normalization": "none; values authored directly in SI",
+    "tool": {
+      "id": "aipe.magnetics",
+      "name": "AIPE Magnetics",
+      "version": "0.2.0"
+    }
+  },
+  "quality": {
+    "flags": [
+      "synthetic_fixture"
+    ],
+    "notes": [
+      "Illustrative round-number values; not datasheet or measured data."
+    ],
+    "status": "normalized"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": true,
+  "tags": [
+    "synthetic",
+    "fixture"
+  ]
+}

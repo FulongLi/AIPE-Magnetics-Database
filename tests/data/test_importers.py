@@ -19,12 +19,13 @@ from aipe_magnetics.data.importers import (
     ImportResult,
     import_csv_loss_table,
     import_json_record,
+    import_record,
     import_waveform_sequences,
     parse_loss_table,
 )
 from aipe_magnetics.data.importers import hdf5_waveforms as hdf5_waveforms_module
 from aipe_magnetics.data.importers import json_record as json_record_module
-from aipe_magnetics.data.importers.base import coerce_evidence
+from aipe_magnetics.data.importers.base import coerce_evidence, explicit_null_paths, relative_uri
 from aipe_magnetics.data.migrate import migrate_record
 from aipe_magnetics.data.records import MagneticRecord
 from aipe_magnetics.data.schema import validate_catalogue, validate_record
@@ -107,6 +108,49 @@ def test_json_import_cli(tmp_path: Path, v01_example_path: Path, capsys):
     assert json_record_module.main([str(v01_example_path), str(out), "--migrate-v01"]) == 1
 
 
+def test_json_import_rejects_explicit_nulls_without_writing(tmp_path: Path):
+    record = Catalog.default().get("manufacturer.example-synthetic").to_json_dict()
+    record["id"] = "manufacturer.test-null"
+    record["properties"]["country"] = None
+    record["description"] = None
+    record["extensions"] = {"aipe.test": {"free_form": None}}
+    source, destination = tmp_path / "manufacturer.json", tmp_path / "out.json"
+    dump(record, source)
+    assert set(explicit_null_paths(record)) == {"$.description", "$.properties.country"}, "extensions are free-form and not inspected"
+    with pytest.raises(InvalidInputError, match=r"explicit null values are not allowed.*\$\.properties\.country"):
+        import_json_record(source, destination)
+    assert not destination.exists()
+    del record["properties"]["country"], record["description"]
+    dump(record, source, overwrite=True)
+    assert import_json_record(source, destination).written == [str(destination)]
+    written = load(destination)
+    assert explicit_null_paths(written) == [], "no null outside the free-form extensions"
+    assert written["extensions"]["aipe.test"] == {"free_form": None}, "extensions are copied verbatim (opaque, namespaced)"
+
+
+def test_import_record_shim_accepts_path_catalogues_for_cli_consumers(tmp_path: Path, v01_example_path: Path, evidence_assumption):
+    result = import_record(v01_example_path, tmp_path / "r.json", catalogue=[], migrate=True)
+    assert result.written == [str(tmp_path / "r.json")] and validate_record(load(tmp_path / "r.json")) == []
+    with pytest.raises(InvalidInputError, match="migrate_v01=True"):
+        import_record(v01_example_path, tmp_path / "again.json")
+    assert not (tmp_path / "again.json").exists()
+    user_dir = tmp_path / "user"
+    for kind, record in v01_fixture_records().items():  # the whole set, so the fixture core's family_ref resolves
+        dump(migrate_record(record), user_dir / f"{kind}.json")
+    transformer = {
+        "schema_version": "0.2.0", "id": "transformer.test-shim", "kind": "transformer", "name": "shim", "synthetic": True,
+        "properties": {"core_ref": "core.fixture-v01-synthetic", "material_ref": "material.example-synthetic-ferrite"},
+        "evidence_refs": [evidence_assumption["id"]], "evidence": [evidence_assumption],
+    }
+    source = tmp_path / "transformer.json"
+    dump(transformer, source)
+    with pytest.raises(DataIntegrityError, match="unknown record reference core.fixture-v01-synthetic"):
+        import_record(source)
+    assert import_record(source, catalogue=[user_dir]).record.id == "transformer.test-shim", "path catalogue + bundled context"
+    with pytest.raises(DataIntegrityError, match="unknown record reference material.example-synthetic-ferrite"):
+        import_record(source, catalogue=[user_dir], bundled=False)
+
+
 # -- CSV loss tables ---------------------------------------------------------------------------------
 def test_csv_import_converts_explicit_units_and_keeps_originals(tmp_path: Path, evidence_measurement):
     csv = tmp_path / "losses.csv"
@@ -172,8 +216,17 @@ def test_csv_import_synthetic_tables_accept_assumption_evidence(tmp_path: Path, 
     ("zero frequency", "f_kHz,B_mT,T_C,Pv\n0,100,100,1\n", COLUMNS, {}, InvalidInputError, "must be positive"),
     ("negative temperature", "f_kHz,B_mT,T_C,Pv\n100,100,-300,1\n", COLUMNS, {}, InvalidInputError, "must be positive"),
     ("short row", "f_kHz,B_mT,T_C,Pv\n100,100\n", COLUMNS, {}, InvalidInputError, "cells but"),
+    ("long row", "f_kHz,B_mT,T_C,Pv\n100,100,100,100,999,888\n", COLUMNS, {}, InvalidInputError, "6 cells but 4 header columns"),
+    ("trailing delimiter", "f_kHz,B_mT,T_C,Pv\n100,100,100,100,\n", COLUMNS, {}, InvalidInputError, "5 cells but 4 header columns"),
+    ("digit separator", "f_kHz,B_mT,T_C,Pv\n1_00,100,100,100\n", COLUMNS, {}, InvalidInputError, "not a plain decimal numeral"),
+    ("hex token", "f_kHz,B_mT,T_C,Pv\n0x10,100,100,100\n", COLUMNS, {}, InvalidInputError, "not a number"),
+    ("overflow after conversion", "f_kHz,B_mT,T_C,Pv\n100,100,100,1e307\n", COLUMNS, {}, InvalidInputError, "overflows float64 when converted to W/m^3"),
+    ("empty licence", CSV_TEXT, COLUMNS, {"license": ""}, InvalidInputError, "license must be a non-empty"),
+    ("blank licence", CSV_TEXT, COLUMNS, {"license": "   "}, InvalidInputError, "license must be a non-empty"),
     ("source evidence", CSV_TEXT, COLUMNS, {"evidence": "SOURCE"}, InvalidInputError, "kind 'measurement'"),
     ("invalid evidence", CSV_TEXT, COLUMNS, {"evidence": {"id": "evidence.x"}}, InvalidInputError, "invalid evidence"),
+    # rejected by the normative Evidence model (RFC 3339 validator) and, for records built from dicts, by the JSON Schema format
+    ("non-RFC3339 created_at", CSV_TEXT, COLUMNS, {"evidence": "BAD_TIME"}, InvalidInputError, "date-time"),
     ("unknown material", CSV_TEXT, COLUMNS, {"material_ref": "material.nope"}, DataIntegrityError, "unknown record reference"),
     ("wrong material kind", CSV_TEXT, COLUMNS, {"material_ref": "core.example-synthetic-e42"}, DataIntegrityError, "wrong record kind"),
     ("bad record id", CSV_TEXT, COLUMNS, {"record_id": "Bad Id"}, InvalidInputError, "invalid record"),
@@ -185,11 +238,25 @@ def test_csv_import_rejects_bad_tables_and_arguments(tmp_path: Path, evidence_me
                 evidence=evidence_measurement, destination=tmp_path / "never.json")
     if kwargs.get("evidence") == "SOURCE":
         kwargs = dict(kwargs, evidence=evidence_source)
+    if kwargs.get("evidence") == "BAD_TIME":
+        kwargs = dict(kwargs, evidence=dict(evidence_measurement, created_at="yesterday afternoon"))
     args.update(kwargs)
     with pytest.raises(error) as info:
         import_csv_loss_table(csv, **args)
     assert fragment in str(info.value), (label, str(info.value))
     assert not (tmp_path / "never.json").exists()
+
+
+def test_csv_import_output_passes_every_validation_layer_and_loads_as_catalogue(tmp_path: Path, evidence_measurement):
+    csv = tmp_path / "losses.csv"
+    csv.write_text("﻿" + CSV_TEXT, encoding="utf-8")  # a UTF-8 BOM in front of the header is removed and reported
+    result = import_csv_loss_table(csv, columns=COLUMNS, record_id="measurement.test-layers", name="layers",
+                                   material_ref="material.example-synthetic-ferrite", evidence=evidence_measurement,
+                                   destination=tmp_path / "out" / "losses.json")
+    assert any("byte-order mark" in w for w in result.warnings)
+    written = load(tmp_path / "out" / "losses.json")
+    assert validate_record(written) == [], "schema + semantic + physical layers"
+    assert Catalog.load([tmp_path / "out"]).get("measurement.test-layers").kind == "core_loss_measurement"
 
 
 def test_parse_loss_table_direct():
@@ -299,11 +366,84 @@ def test_waveform_import_rejections_leave_nothing_behind(tmp_path: Path, wavefor
     with pytest.raises(InvalidInputError, match="source not found"):
         import_waveform_sequences(tmp_path / "missing_dir", target, arrays={"flux_density": ("B.csv", "mT")}, source_format="csv", **common)
     assert not target.exists()
-    # cross-reference failure after the HDF5 file was written: the file is removed again
+    # cross-reference failure: detected before the HDF5 file is written
     with pytest.raises(DataIntegrityError, match="unknown dataset_ref"):
         import_waveform_sequences(waveform_source["npz"], target, arrays={"flux_density": ("B_mT", "mT")},
                                   conditions={"frequency": ("f_kHz", "kHz")}, dataset_ref="dataset.nope", **common)
     assert not target.exists()
+
+
+@pytest.mark.usefixtures("require_h5py")
+@pytest.mark.parametrize("label, overrides, error, fragment", [
+    ("bad record id", {"record_id": "Bad Id"}, InvalidInputError, "must match"),
+    ("empty name", {"name": ""}, InvalidInputError, "name"),
+    ("assumption evidence on a real record", {"evidence": "ASSUMPTION"}, InvalidInputError, "non-assumption source evidence"),
+    ("non-RFC3339 created_at", {"evidence": "BAD_TIME"}, InvalidInputError, "date-time"),
+    ("unknown material_ref in meta", {"meta": "BAD_MATERIAL"}, DataIntegrityError, "unknown record reference material.nope"),
+])
+def test_waveform_import_validates_the_record_before_writing_anything(tmp_path: Path, waveform_source, evidence_source, evidence_assumption,
+                                                                      label, overrides, error, fragment):
+    out = tmp_path / "out"
+    args = dict(arrays={"flux_density": ("B_mT", "mT")}, conditions={"frequency": ("f_kHz", "kHz")}, meta=waveform_source["meta"],
+                record_id="waveform-dataset.late", name="late failure", evidence=evidence_source, destination_record=out / "late.json",
+                catalogue=())
+    if overrides.get("evidence") == "ASSUMPTION":
+        overrides = dict(overrides, evidence=evidence_assumption)
+    if overrides.get("evidence") == "BAD_TIME":
+        overrides = dict(overrides, evidence=dict(evidence_source, created_at="nope"))
+    if overrides.get("meta") == "BAD_MATERIAL":
+        overrides = dict(overrides, meta=WaveformMeta(source_id="user.upload", dataset_version="1", material_ref="material.nope"))
+    args.update(overrides)
+    with pytest.raises(error, match=fragment):
+        import_waveform_sequences(waveform_source["npz"], out / "late.h5", **args)
+    assert not (out / "late.h5").exists(), f"{label}: no orphan waveform file"
+    assert not (out / "late.json").exists(), f"{label}: no record written"
+
+
+@pytest.mark.usefixtures("require_h5py")
+def test_waveform_import_refuses_taken_destinations_before_doing_any_work(tmp_path: Path, waveform_source, evidence_source):
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / "taken.json").write_text("{}", encoding="utf-8")
+    common = dict(arrays={"flux_density": ("B_mT", "mT")}, conditions={"frequency": ("f_kHz", "kHz")}, meta=waveform_source["meta"],
+                  record_id="waveform-dataset.taken", name="taken", evidence=evidence_source, catalogue=())
+    with pytest.raises(FileExistsError, match="taken.json"):
+        import_waveform_sequences(waveform_source["npz"], out / "new.h5", destination_record=out / "taken.json", **common)
+    assert not (out / "new.h5").exists()
+    (out / "taken.h5").write_bytes(b"not hdf5")
+    with pytest.raises(FileExistsError, match="overwrite_h5=True"):
+        import_waveform_sequences(waveform_source["npz"], out / "taken.h5", destination_record=out / "fresh.json", **common)
+    assert (out / "taken.h5").read_bytes() == b"not hdf5" and not (out / "fresh.json").exists()
+    result = import_waveform_sequences(waveform_source["npz"], out / "taken.h5", destination_record=out / "fresh.json", overwrite_h5=True, **common)
+    assert WaveformStore().verify_checksums(out / "taken.h5") == [] and validate_record(load(out / "fresh.json")) == []
+    assert result.record.artifacts[0].sha256 == sha256_file(out / "taken.h5")
+
+
+@pytest.mark.usefixtures("require_h5py")
+def test_waveform_import_rolls_back_the_waveform_file_when_the_record_cannot_be_written(tmp_path: Path, waveform_source, evidence_source, monkeypatch):
+    out = tmp_path / "out"
+    common = dict(arrays={"flux_density": ("B_mT", "mT")}, conditions={"frequency": ("f_kHz", "kHz")}, meta=waveform_source["meta"],
+                  record_id="waveform-dataset.rollback", name="rollback", evidence=evidence_source, catalogue=())
+
+    def failing_write_record(record, destination):
+        raise OSError("disk full (simulated)")
+
+    monkeypatch.setattr(hdf5_waveforms_module, "write_record", failing_write_record)
+    with pytest.raises(OSError, match="disk full"):
+        import_waveform_sequences(waveform_source["npz"], out / "wf.h5", destination_record=out / "wf.json", **common)
+    assert not (out / "wf.h5").exists() and not (out / "wf.json").exists()
+
+
+def test_relative_uri_falls_back_to_a_file_uri_across_drives(tmp_path: Path):
+    import os
+
+    assert relative_uri(tmp_path / "data" / "wf.h5", tmp_path / "records" / "r.json") == "../data/wf.h5"
+    assert relative_uri(tmp_path / "wf.h5", None) == "wf.h5"
+    uri = relative_uri(Path("Z:/data/x.h5"), Path("D:/records/r.json"))
+    if os.name == "nt":
+        assert uri == "file:///Z:/data/x.h5", "no relative path exists between drives: absolute file URI instead of a ValueError"
+    else:
+        assert uri.endswith("Z:/data/x.h5") and not uri.startswith("file:")
 
 
 def test_waveform_import_without_h5py_is_an_explicit_unsupported_operation(monkeypatch, tmp_path: Path, waveform_source, evidence_source):

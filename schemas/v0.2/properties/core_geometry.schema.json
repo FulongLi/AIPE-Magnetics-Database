@@ -1,0 +1,378 @@
+{
+  "$defs": {
+    "CoreDimensions": {
+      "additionalProperties": false,
+      "description": "Named outline dimensions in metres (datasheet letter designations).",
+      "properties": {
+        "values": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Quantity"
+          },
+          "title": "Values",
+          "type": "object"
+        }
+      },
+      "title": "CoreDimensions",
+      "type": "object"
+    },
+    "Original": {
+      "additionalProperties": false,
+      "description": "The value as supplied before unit normalisation.",
+      "properties": {
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Original",
+      "type": "object"
+    },
+    "Quantity": {
+      "additionalProperties": false,
+      "description": "``{value, unit}`` with optional provenance of the original unit and an uncertainty statement.",
+      "properties": {
+        "original": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Original"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uncertainty"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Quantity",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "additionalProperties": false,
+      "description": "Uncertainty statement attached to a quantity.\n\n``kind='unknown'`` is the honest default when no quantitative basis exists.",
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "how the uncertainty was obtained",
+          "title": "Basis"
+        },
+        "coverage_factor": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "k for expanded uncertainty",
+          "title": "Coverage Factor"
+        },
+        "kind": {
+          "default": "unknown",
+          "enum": [
+            "standard",
+            "expanded",
+            "bounds",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "lower bound (kind='bounds')",
+          "title": "Lower"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "upper bound (kind='bounds')",
+          "title": "Upper"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "standard/expanded uncertainty in the quantity unit",
+          "title": "Value"
+        }
+      },
+      "title": "Uncertainty",
+      "type": "object"
+    }
+  },
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Magnetics-Database/v0.2.0/schemas/v0.2/properties/core_geometry.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The 'properties' object of a 'core_geometry' record (CoreGeometryProperties). Effective magnetic parameters of a core (set or single part) per IEC 60205 conventions.",
+  "properties": {
+    "air_gap_options": {
+      "items": {
+        "$ref": "#/$defs/Quantity"
+      },
+      "title": "Air Gap Options",
+      "type": "array"
+    },
+    "bobbin_window_area": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "usable winding area with bobbin"
+    },
+    "core_constant_c1": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "sum(l/A), 1/m"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "dimensions": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CoreDimensions"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "effective_area": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Ae"
+    },
+    "effective_length": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "le"
+    },
+    "effective_volume": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Ve"
+    },
+    "family_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Family Ref"
+    },
+    "manufacturer_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Manufacturer Ref"
+    },
+    "mass": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "mass of the core set"
+    },
+    "material_refs": {
+      "description": "materials this core is offered in",
+      "items": {
+        "type": "string"
+      },
+      "title": "Material Refs",
+      "type": "array"
+    },
+    "mean_turn_length": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "minimum_area": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Amin"
+    },
+    "part_number": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Part Number"
+    },
+    "set_description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "e.g. 'core set of 2 halves', 'single E'",
+      "title": "Set Description"
+    },
+    "surface_area": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "window_area": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "core window area (per datasheet definition)"
+    }
+  },
+  "title": "AIPE magnetic record v0.2 - core_geometry properties",
+  "type": "object"
+}
