@@ -68,6 +68,7 @@ where = ["src"]
   "schemas/**/*.md",
   "data/catalog/**/*.json",
   "data/catalog/**/*.md",
+  "data/derived/**/*.json",
   "data/fixtures/**/*",
   "models/datadriven/reference/**/*",
   "verification/evidence/**/*.json",

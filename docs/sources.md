@@ -5,7 +5,10 @@ adapter in `aipe_magnetics.data.sources` that performs discovery, metadata inspe
 format conversion, unit normalisation, integrity validation (SHA-256), original-source attribution,
 version tracking (pinned commit), licence / redistribution checks, local caching and explicit error
 handling. Where the licence permits, the adapter downloads on demand from a pinned upstream commit;
-otherwise it only reads a checkout or files the user supplies.
+otherwise it only reads a checkout or files the user supplies. Usage, exact unit mappings, cache
+behaviour and the executable import examples (`examples/import_princeton_magnet_db.py`,
+`examples/import_magnet_hub_fixture.py`) are documented in [sources-adapters.md](sources-adapters.md).
+The Paderborn materialdatabase licence is recorded with the SPDX identifier `GPL-3.0-only`.
 
 | Source | Pinned commit | Licence | What it provides | AIPE adapter policy |
 | --- | --- | --- | --- | --- |
