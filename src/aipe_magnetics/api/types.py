@@ -121,10 +121,16 @@ class HysteresisRequest(_Spec):
     periods: int = Field(default=10, ge=1, le=50, description="maximum periods integrated to reach periodic steady state")
     steady_state_tol: float = Field(default=1e-4, gt=0, lt=1, description="relative change of the state at period boundaries accepted as steady")
     parameters: dict[str, float] | None = Field(default=None, description="Ms, a, alpha, k, c in SI; default illustrative set")
-    rtol: float = Field(default=1e-7, gt=0, lt=1e-2)
-    atol: float = Field(default=1e-3, gt=0)
+    rtol: float = Field(default=1e-8, gt=0, lt=1e-2, description="solver relative tolerance (default matches the model's own)")
+    atol: float = Field(default=1e-3, gt=0, description="solver absolute tolerance on M (A/m)")
     samples_per_period: int = Field(default=400, ge=50, le=20000)
     policy: DomainPolicy = "reject"
+
+    @model_validator(mode="after")
+    def _tolerances(self) -> "HysteresisRequest":
+        if self.steady_state_tol < 100 * self.rtol:
+            raise ValueError("steady_state_tol must be at least 100 x rtol so that the steady-state test is not dominated by solver noise")
+        return self
 
     @field_validator("field_peak", mode="before")
     @classmethod
