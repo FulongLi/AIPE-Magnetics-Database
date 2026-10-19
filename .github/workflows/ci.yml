@@ -14,6 +14,8 @@ jobs:
         python: ['3.10', '3.12']
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # tests/test_release_integrity.py compares the v0.1 files with commit f73b0cd
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
@@ -27,10 +29,13 @@ jobs:
       - name: Unit, model, API, MCP, plugin and integration tests
         run: python -m pytest -q
       - name: Verification suite (machine- and human-readable reports)
+        # fails until the maintainer's bundled evidence file src/aipe_magnetics/verification/evidence/v<version>.json is committed
         run: python -m aipe_magnetics.cli.main verify --output reports/verification --check-bundled
       - name: DAB 10 kW transformer demonstration (offline)
+        if: always()
         run: python -m aipe_magnetics.cli.main demo dab-10kw --output reports/demo
       - name: Upload reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: reports-${{ matrix.os }}-py${{ matrix.python }}
@@ -91,7 +96,7 @@ jobs:
         run: |
           if command -v claude >/dev/null 2>&1; then
             claude plugin validate plugins/claude/aipe-magnetics
-            claude plugin validate plugins/claude
+            claude plugin validate .   # repository-root marketplace (.claude-plugin/marketplace.json)
           else
             echo "::notice::claude CLI not installed on the runner; manifest validation executed locally only (see docs/plugins.md)"
           fi

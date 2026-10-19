@@ -3,12 +3,12 @@
   "evidence": [
     {
       "created_at": "2026-10-19T00:00:00Z",
-      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight), coil-former table (AN winding cross section, lN average length of turn) and outline drawing.",
+      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight) and outline drawing; the datasheet lists no coil former (no AN/lN).",
       "id": "evidence.tdk-u-93-76-30-datasheet-2024-10",
       "kind": "source",
       "license": "NOASSERTION",
-      "locator": "Magnetic characteristics table; coil former table; drawing",
-      "reference": "TDK Electronics, 'Ferrites and accessories - UU 93/152/30', core and accessories datasheet, Date: October 2024",
+      "locator": "Magnetic characteristics (per set) table; outline drawing",
+      "reference": "TDK Electronics, 'Ferrites and accessories - U 93/76/30 with I 93/28/30', core and accessories datasheet, Date: October 2024",
       "review_status": "unreviewed",
       "url": "https://www.tdk-electronics.tdk.com/inf/80/db/fer/u_93_76_30.pdf",
       "version": "October 2024"
@@ -20,7 +20,12 @@
   "extensions": {
     "aipe.datasheet": {
       "coil_former": null,
+      "coil_former_AR_uOhm": null,
       "core_constant_sum_l_over_A_per_mm": 0.42,
+      "derived": {
+        "note": "UU 93/152/30 window height = 2 x 48 mm (single-U window height from the outline drawing, p.2); derived by hand, not printed in the datasheet. window_width is the drawing's '34.6 min.'",
+        "window_height_uu_mm": 96.0
+      },
       "ungapped_N87": {
         "AL_nH": 5700,
         "PV_W_per_set_max": 5.5,
@@ -70,13 +75,13 @@
           "unit": "m",
           "value": 0.093
         },
-        "window_height": {
+        "window_height_single_u": {
           "original": {
             "unit": "mm",
-            "value": 96.0
+            "value": 48.0
           },
           "unit": "m",
-          "value": 0.096
+          "value": 0.048
         },
         "window_width": {
           "original": {

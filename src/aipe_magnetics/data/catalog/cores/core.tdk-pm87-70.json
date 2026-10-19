@@ -3,11 +3,11 @@
   "evidence": [
     {
       "created_at": "2026-10-19T00:00:00Z",
-      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight), coil-former table (AN winding cross section, lN average length of turn) and outline drawing.",
+      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight) and outline drawing; coil-former table (AN winding cross section, lN average length of turn, AR resistance factor) for the ordering code named in the record.",
       "id": "evidence.tdk-pm-87-70-datasheet-2024-10",
       "kind": "source",
       "license": "NOASSERTION",
-      "locator": "Magnetic characteristics table; coil former table; drawing",
+      "locator": "Magnetic characteristics (per set) table; outline drawing; coil former table, row B65714K1020T001",
       "reference": "TDK Electronics, 'Ferrites and accessories - PM 87/70', core and accessories datasheet, Date: October 2024",
       "review_status": "unreviewed",
       "url": "https://www.tdk-electronics.tdk.com/inf/80/db/fer/pm_87_70.pdf",
@@ -19,7 +19,8 @@
   ],
   "extensions": {
     "aipe.datasheet": {
-      "coil_former": "B65714K1020T001: AN 657 mm2, lN 158 mm",
+      "coil_former": "B65714K1020T001: AN 657 mm2, lN 158 mm, AR 8.27 uOhm",
+      "coil_former_AR_uOhm": 8.27,
       "core_constant_sum_l_over_A_per_mm": 0.16,
       "ungapped_N87": {
         "AL_nH": 14000,

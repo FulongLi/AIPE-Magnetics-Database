@@ -3,7 +3,7 @@
   "evidence": [
     {
       "created_at": "2026-10-19T00:00:00Z",
-      "description": "Core family identity as used in the TDK datasheets.",
+      "description": "Core family identity as used in the TDK datasheets. No dimensional standard is printed on the datasheet.",
       "id": "evidence.tdk-e-family",
       "kind": "source",
       "license": "NOASSERTION",
@@ -22,8 +22,7 @@
   "name": "TDK E cores",
   "properties": {
     "manufacturer_ref": "manufacturer.tdk",
-    "shape": "E",
-    "standard": "IEC 63093 / IEC 62317"
+    "shape": "E"
   },
   "schema_version": "0.2.0",
   "synthetic": false,

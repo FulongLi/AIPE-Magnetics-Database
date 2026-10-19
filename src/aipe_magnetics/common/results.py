@@ -16,7 +16,9 @@ from pydantic import BaseModel, ConfigDict, Field
 from aipe_magnetics import TOOL_ID, TOOL_NAME, __version__
 from aipe_magnetics.common.quantity import Quantity
 
-ValueStatus = Literal["calculated", "assumed", "estimated", "measured", "looked_up"]
+ValueStatus = Literal["calculated", "assumed", "estimated", "measured", "looked_up", "specified"]
+"""``specified`` marks a value the caller supplied as an input (echoed for traceability); ``looked_up`` is reserved for
+transcribed catalogue/datasheet data with source references."""
 VerificationLevel = Literal["L0", "L1", "L2", "L3"]
 VerificationState = Literal["not_run", "verified", "partially_verified", "out_of_range", "unverified", "failed"]
 AssumptionBasis = Literal["user_input", "default", "datasheet", "engineering_judgement", "model_assumption"]

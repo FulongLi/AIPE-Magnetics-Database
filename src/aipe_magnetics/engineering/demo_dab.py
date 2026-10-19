@@ -30,9 +30,9 @@ SPEC: dict[str, Any] = {
 
 
 def _print(title: str, result: EngineeringResult) -> None:
-    from aipe_magnetics.cli.main import _summary
+    from aipe_magnetics.common.format import summary
     print(f"\n=== {title} ===")
-    print(_summary(result))
+    print(summary(result))
 
 
 def run_dab_demo(*, output: Path | None = None, temperature: dict[str, Any] | None = None, as_json: bool = False) -> int:

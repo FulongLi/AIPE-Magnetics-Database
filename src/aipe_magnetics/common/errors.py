@@ -90,3 +90,9 @@ class AuthorizationError(AIPEMagneticsError, PermissionError):
     """An operation that modifies user files was requested without explicit authorization."""
 
     code = "authorization_required"
+
+
+class DestinationExistsError(AIPEMagneticsError, FileExistsError):
+    """An output file already exists and overwriting it was not requested (``overwrite=True``)."""
+
+    code = "destination_exists"

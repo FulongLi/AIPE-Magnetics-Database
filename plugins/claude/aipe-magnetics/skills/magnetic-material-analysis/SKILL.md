@@ -16,7 +16,8 @@ values yourself.
 1. **Identify the materials.** Call `list_materials` (optionally with a query such as `N87` or a
    class such as `ferrite_mnzn`). If the user names a material that is not in the catalogue, say so
    explicitly and offer the closest catalogue entries; do not invent parameters. The user may import
-   their own records (`aipe-magnetics import json <file>`) or supply a datasheet value with its source.
+   their own records (`aipe-magnetics import json <source.json> <destination.json> [--migrate]`) or supply a
+   datasheet value with its source.
 2. **Inspect parameters.** Call `get_material` for each candidate. Report values *with units and the
    stated conditions* (temperature, field strength, frequency) and with the evidence reference
    (datasheet title, table, review status). Distinguish `datasheet_typical`, `measurement`,
@@ -29,9 +30,10 @@ values yourself.
 4. **Explain the ranking** in engineering terms: loss density at the operating point, saturation
    headroom at the maximum temperature, Curie margin, frequency range, and any missing data. Always
    quote the `limitations` and `warnings` arrays of the result.
-5. **State what is not verified.** Repeat the `verification` block of each result (level L1-L3, state
-   `verified`, `partially_verified`, `out_of_range`, `unverified`). An `out_of_range` status means the
-   model was evaluated outside its verified operating range; say so.
+5. **State what is not verified.** Repeat the `verification` block of each result (level L0-L3, state
+   `verified`, `partially_verified`, `out_of_range`, `unverified`, `failed`). An `out_of_range` status means the
+   model was evaluated outside its verified operating range; `L0 unverified` with a statement naming a
+   missing bundled evidence file means no evidence is available at all; say so.
 
 ## Rules
 

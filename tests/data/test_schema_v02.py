@@ -323,10 +323,11 @@ def _fixture_v02(kind: str) -> dict:
     ("operating_condition", lambda p: p.__setitem__("current_rms", {"value": -1.0, "unit": "A"}), "$.properties.current_rms.value", True),
     ("winding", lambda p: p.__setitem__("conductor_area", {"value": -1e-6, "unit": "m^2"}), "$.properties.conductor_area.value", True),
     ("core_material", lambda p: p.__setitem__("relative_permeability", {"value": 0.0, "unit": "1"}), "$.properties.relative_permeability.value", True),
-    # rules only the data layer states (the normative model leaves these quantities unconstrained)
+    # Steinmetz k: enforced by both layers since records.py gained _positive(k)
     ("magnetic_material", lambda p: p.__setitem__("steinmetz_parameter_sets", [{"id": "set.neg", "k": {"value": -1.0, "unit": "W/m^3"}, "alpha": 1.5,
                                                                                 "beta": 2.5, "basis": "synthetic"}]),
-     "$.properties.steinmetz_parameter_sets[0].k.value", False),
+     "$.properties.steinmetz_parameter_sets[0].k.value", True),
+    # rules only the data layer states (the normative model leaves these quantities unconstrained)
     ("magnetic_material", lambda p: p.__setitem__("curie_temperature", {"value": {"value": 483.15, "unit": "K"}, "frequency": {"value": 0.0, "unit": "Hz"}}),
      "$.properties.curie_temperature.frequency.value", False),
     ("magnetic_material", lambda p: p.__setitem__("permeability_vs_temperature", [{"temperature": {"value": -1.0, "unit": "K"}, "value": {"value": 2000.0, "unit": "1"}}]),
@@ -395,7 +396,9 @@ def test_physical_layer_rejects_non_finite_numbers_anywhere(v01_example):
         errors = validate_record(broken)
         assert any(e.startswith(f"[physical] {path}: value must be finite") for e in errors), (path, errors)
         assert any(f"[physical] {path}: value must be finite" in e for e in validate_catalogue([broken])), "catalogue validation applies the same layer"
-        assert semantic_errors(broken) == [] or path.endswith("leakage_inductance.value"), "the normative model does not check non-Quantity floats"
+        # the normative model rejects non-finite floats where it declares them (RangeSI bounds, alpha/beta, fit_metrics);
+        # the data layer's [physical] walk is the catch-all for everything else (e.g. extensions)
+        assert semantic_errors(broken) == [] or any("finite" in e for e in semantic_errors(broken)), semantic_errors(broken)
     migrated = migrate_record(v01_example)
     migrated["properties"]["leakage_inductance"] = {"value": float("nan"), "unit": "H"}
     assert any("must be finite" in e for e in validate_record(migrated))

@@ -19,7 +19,7 @@ repository ships a fully executable reference: `aipe-magnetics demo dab-10kw` (1
 | secondary voltage(s) | V | gives the turns ratio |
 | switching frequency | Hz | |
 | duty / phase shift | - | for DAB the flux is triangular (square voltage); the tool derives the flux waveform |
-| material, core candidates | ids | or `cores: null` to let the tool screen catalogue cores by area product |
+| material, core candidates | ids | or `cores: null` to let the tool evaluate every catalogue core offered in the material and rank the feasible ones by total estimated loss (no area-product pre-screening) |
 | flux density policy | T or fraction | default 70 % of Bsat(T_max) *and* a loss-density target; both recorded as assumptions |
 | temperature | degC | selects Bsat(T) and the Steinmetz set |
 | winding: conductor type (foil, litz, round), current density, fill factor | - | explicit assumptions |
@@ -32,7 +32,11 @@ version stated; iGSE for non-sinusoidal flux), winding DC/AC resistance and copp
 model), total estimated loss, window fill estimate, and a ranked comparison table in `data`.
 
 Report *all* candidates the user asked about, including rejected ones with the reason (saturation,
-window overflow, no parameter set at the operating point).
+window overflow, no parameter set at the operating point). A candidate marked `evaluation: incomplete`
+(core record without mean turn length / window area, or a winding the Dowell model could not evaluate)
+has no copper loss and no total: it is *not feasible*, never a cheaper option. Repeat the top-level
+`warnings` of the result (turns-ratio deviation, loss-model extrapolation, high AC resistance factor).
+With several secondaries the tool splits the throughput power equally unless `power_share` is given.
 
 ## 3. Validate and document
 
@@ -47,5 +51,7 @@ window overflow, no parameter set at the operating point).
   manufacturing or hardware qualification. Say so whenever a user asks for "final" numbers.
 - Core loss under DC bias or with minor loops is outside the Steinmetz/iGSE validity; the tool flags
   this - repeat the flag.
-- Verification levels: results are typically L2 (equations verified against analytical references);
-  they are not measured values.
+- Verification: quote the level/state of the `verification` block as returned (`L0 unverified` with an
+  explicit statement while no bundled evidence file is available; L2 means the loss-model equations were
+  checked against analytical references). The closed-form sizing relations carry no separate evidence
+  record. Results are never measured values.

@@ -3,11 +3,11 @@
   "evidence": [
     {
       "created_at": "2026-10-19T00:00:00Z",
-      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight), coil-former table (AN winding cross section, lN average length of turn) and outline drawing.",
+      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight) and outline drawing; coil-former table (AN winding cross section, lN average length of turn, AR resistance factor) for the ordering code named in the record.",
       "id": "evidence.tdk-e-65-32-27-datasheet-2024-10",
       "kind": "source",
       "license": "NOASSERTION",
-      "locator": "Magnetic characteristics table; coil former table; drawing",
+      "locator": "Magnetic characteristics (per set) table; outline drawing; coil former table p.4, row B66388B1000T001 (requires 1 core set)",
       "reference": "TDK Electronics, 'Ferrites and accessories - E 65/32/27', core and accessories datasheet, Date: October 2024",
       "review_status": "unreviewed",
       "url": "https://www.tdk-electronics.tdk.com/inf/80/db/fer/e_65_32_27.pdf",
@@ -19,7 +19,8 @@
   ],
   "extensions": {
     "aipe.datasheet": {
-      "coil_former": "B66388B1000T001 (one core set): AN 426 mm2, lN 188 mm",
+      "coil_former": "B66388B1000T001 (one core set): AN 426 mm2, lN 188 mm, AR 15.2 uOhm",
+      "coil_former_AR_uOhm": 15.2,
       "core_constant_sum_l_over_A_per_mm": 0.27,
       "ungapped_N87": {
         "AL_nH": 7900,

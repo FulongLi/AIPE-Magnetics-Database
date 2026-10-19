@@ -40,8 +40,10 @@ def test_cli_import_json_with_migration_and_catalogue_files(tmp_path: Path, v01_
     printed = capsys.readouterr().out
     assert "imported" in printed and "warning: record migrated" in printed
     assert validate_record(load(destination)) == []
-    with pytest.raises(FileExistsError):
-        main(["import", "json", str(v01_example_path), str(destination), "--migrate"])
+    # an existing destination is a one-line user error (exit 1), never a traceback and never an overwrite
+    before = destination.read_bytes()
+    assert main(["import", "json", str(v01_example_path), str(destination), "--migrate"]) == 1
+    assert destination.read_bytes() == before
     # --catalogue FILE supplies the reference context
     core = tmp_path / "core.json"
     dump(load(destination) | {"id": "core.cli-context", "kind": "core_geometry", "properties": {}, "extensions": {}}, core)

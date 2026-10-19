@@ -10,9 +10,9 @@ engineering logic of its own.
 | transport | stdio only (no network listener) |
 | credentials | none; no API keys, no cloud services |
 | default mode | read-only data queries and deterministic calculations |
-| file writes | only `generate_report` with `output_path`, only when started with `--allow-write --output-dir <dir>` (or `AIPE_MAGNETICS_MCP_ALLOW_WRITE=1`, `AIPE_MAGNETICS_MCP_OUTPUT_DIR`), only inside that directory, never overwriting without `overwrite=true` |
+| file writes | only `generate_report` with `output_path`, only when started with `--allow-write --output-dir <dir>` (or `AIPE_MAGNETICS_MCP_ALLOW_WRITE=1|true|yes` plus `AIPE_MAGNETICS_MCP_OUTPUT_DIR`; any other spelling of the flag is an error), only inside that directory, never overwriting without `overwrite=true` (`destination_exists`) |
 | code execution | the server never executes repository content or shell commands |
-| validation | every tool has a JSON input schema (pydantic) and a structured output schema; invalid arguments return `isError` results with the validation message |
+| validation | every tool has a JSON input schema (pydantic) and a structured output schema; invalid argument types return `isError` results with the validation message; unknown or misspelled argument names are refused (`isError`, naming the accepted arguments) instead of being ignored; quantity parameters are free-form objects in the schema whose `{value, unit}` shape, dimension and sign are validated by the engine |
 
 ## Tools
 
@@ -23,17 +23,17 @@ engineering logic of its own.
 | `get_material(material)` | read-only | datasheet parameters, Steinmetz sets, sources |
 | `compare_materials(materials, frequency?, flux_density_peak?, temperature?)` | read-only | ranked comparison |
 | `estimate_core_loss(material, frequency, flux_density_peak, temperature?, waveform?, model?, core?, parameter_set?, model_parameters?, policy?)` | read-only | loss density, core loss, model identity, domain check |
-| `evaluate_hysteresis(field_peak, frequency?, field_dc?, waveform?, periods?, parameters?, samples_per_period?, policy?)` | read-only | Jiles-Atherton loop quantities and solver diagnostics |
-| `design_inductor(...)` | read-only | turns, gap, flux density, losses, candidates |
-| `design_transformer(...)` | read-only | turns, flux density, losses, ranked candidates |
+| `evaluate_hysteresis(field_peak, frequency?, field_dc?, waveform?, periods?=10, parameters?, samples_per_period?, steady_state_tol?, policy?)` | read-only | Jiles-Atherton loop quantities and solver diagnostics (defaults identical to the Python API) |
+| `design_inductor(..., ripple_duty?=0.5)` | read-only | turns, gap, flux density, losses, candidates (every catalogue core offered in the material when `core` is null) |
+| `design_transformer(...)` (secondaries may carry `power_share`) | read-only | turns, flux density, losses, ranked feasible candidates; incompletely evaluable cores are reported as not feasible |
 | `validate_design(...)` | read-only | saturation and operating-point checks |
 | `generate_report(results, title?, format?, output_path?, overwrite?, include_inputs?)` | non-destructive write (gated) | report text, written path when authorised |
 | `verification_status(capability?, frequency?, temperature?, flux_density_peak?, material?, excitation?)` | read-only | evidence per capability / range |
 
-Every result is an `aipe.magnetics.result/0.2` envelope: `status` (`ok`/`rejected`), `values` with
-units and status (`calculated`, `estimated`, `looked_up`, `assumed`), `assumptions`, `model`
-(id, version, family), `sources`, `verification` (level and state), `warnings`, `limitations`,
-`errors`. Quantities are passed as `{"value": 100, "unit": "kHz"}`; any registered unit is accepted
+Every result is an `aipe.magnetics.result/0.2` envelope: `status` (`ok`/`rejected`/`error`), `values` with
+units and status (`calculated`, `estimated`, `looked_up`, `specified`, `assumed`), `assumptions`, `model`
+(id, version, family), `sources`, `verification` (level and state: `not_run`, `verified`, `partially_verified`,
+`out_of_range`, `unverified`, `failed`), `warnings`, `limitations`, `errors`. Quantities are passed as `{"value": 100, "unit": "kHz"}`; any registered unit is accepted
 and normalised.
 
 ## Running and registering

@@ -9,9 +9,10 @@ Conventions
 -----------
 * ``frequency`` in Hz, lengths in m, areas in m^2, flux density in T, field in A/m, current in A,
   voltage in V, resistivity in Ohm*m, temperatures in K.
-* A *square* voltage wave of amplitude ``V`` applied for a fraction ``duty`` of each half period
-  (``duty = 0.5`` is a full 50 % square wave) produces a symmetric triangular/trapezoidal flux swing
-  ``2*B_pk = V * duty * T / (N * A_e)`` (Faraday's law, no resistive drop).
+* A bipolar *square* voltage wave of amplitude ``V`` with ``duty`` the fraction of the **full** period
+  during which +V is applied (``duty = 0.5`` is a full square wave; smaller values leave zero-voltage
+  intervals): the flux rises linearly for ``duty * T``, is flat for ``(0.5 - duty) * T``, falls and is
+  flat again, so ``2*B_pk = V * duty * T / (N * A_e)`` (Faraday's law, no resistive drop).
 * Fringing, leakage, winding capacitance and thermal effects are **not** modelled here.
 
 References
@@ -34,6 +35,7 @@ from aipe_magnetics.common.errors import InvalidInputError
 from aipe_magnetics.common.units import COPPER_RESISTIVITY_20C, COPPER_TEMPERATURE_COEFFICIENT, MU_0
 
 SQRT2 = math.sqrt(2.0)
+COPPER_RESISTIVITY_MODEL_RANGE_K = (223.15, 473.15)  # -50..200 degC: stated validity of the linear rho(T) model
 
 
 def _positive(name: str, value: float) -> float:
@@ -153,7 +155,11 @@ def transformer_area_product(apparent_power_total: float, frequency: float, flux
 # -------------------------------------------------------------------------------------------------
 def copper_resistivity(temperature: float, rho_20: float = COPPER_RESISTIVITY_20C,
                        alpha: float = COPPER_TEMPERATURE_COEFFICIENT) -> float:
-    """Linear temperature model ``rho(T) = rho_20 (1 + alpha (T - 293.15 K))``; valid roughly -50..200 degC."""
+    """Linear temperature model ``rho(T) = rho_20 (1 + alpha (T - 293.15 K))``.
+
+    Stated validity :data:`COPPER_RESISTIVITY_MODEL_RANGE_K` (-50..200 degC); the function itself only rejects a
+    non-positive resistivity, so callers must flag use outside that range.
+    """
     t = _positive("temperature", temperature)
     rho = rho_20 * (1.0 + alpha * (t - 293.15))
     if rho <= 0:

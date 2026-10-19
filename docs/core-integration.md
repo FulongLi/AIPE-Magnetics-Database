@@ -59,5 +59,10 @@ analytical evidence is supplied. The demonstration writes the exported state to
 `tests/integrations` contain optional tests (marker `external`) that run AIPE-Core's
 `scripts/validate.py` and AIPE-Registry's `scripts/validate.py` as subprocesses when
 `AIPE_ECOSYSTEM_CHECKOUTS=<dir containing AIPE-Core and AIPE-Registry>` is set. They are skipped with
-an explicit reason otherwise. The release check for v0.2.0 was executed with both checkouts
-(see `docs/release-verification-v0.2.0.md`).
+an explicit reason otherwise. Nothing in this repository's offline checks executes them: whether the
+real validators were run for v0.2.0, with which Core/Registry checkout commits and with what output, is
+recorded only in the maintainer's release record `docs/release-verification-v0.2.0.md` (items that were
+not run are marked as such there; the command is
+`AIPE_ECOSYSTEM_CHECKOUTS=<dir> python -m pytest -m external tests/integrations`). The offline
+re-implementation of the Registry acceptance check (`integration.registry-manifest-accepted`) fails
+closed until the bundled evidence file and every referenced document exist.

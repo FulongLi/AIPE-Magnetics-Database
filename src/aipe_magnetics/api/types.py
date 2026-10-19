@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, field_validator, model_validator
 
 from aipe_magnetics.common.errors import InvalidInputError
 from aipe_magnetics.common.quantity import Quantity
@@ -46,22 +46,34 @@ class WaveformSpec(_Spec):
     """Periodic flux-density waveform shape for loss estimation (amplitude comes from the operating point)."""
 
     kind: Literal["sinusoidal", "triangular", "trapezoidal", "piecewise_linear", "sampled"] = "sinusoidal"
-    duty: float | None = Field(default=None, gt=0, lt=1, description="triangular: fraction of the period with rising flux")
-    duty_rise: float | None = Field(default=None, gt=0, lt=1, description="trapezoidal: rising fraction")
-    duty_flat: float | None = Field(default=None, ge=0, lt=1, description="trapezoidal: flat fraction after the rise")
+    duty: float | None = Field(default=None, gt=0, lt=1, strict=True, description="triangular: fraction of the period with rising flux")
+    duty_rise: float | None = Field(default=None, gt=0, le=0.5, strict=True,
+                                    description="trapezoidal (symmetric: rise, flat, fall, flat): rising fraction of the period")
+    duty_flat: float | None = Field(default=None, ge=0, lt=0.5, strict=True,
+                                    description="trapezoidal: flat fraction after the rise; must equal 0.5 - duty_rise (derived when omitted)")
     breakpoints: list[list[float]] | None = Field(default=None,
                                                   description="piecewise_linear: [[t_fraction, B_fraction_of_peak], ...]")
-    samples: list[float] | None = Field(default=None, description="sampled: one period of B(t) in tesla")
+    samples: list[float] | None = Field(default=None,
+                                        description="sampled: one period of B(t) in tesla; with endpoint_included=true (default) the samples "
+                                                    "span [0, T] and the last must equal the first (closed period), with false they span [0, T)")
+    endpoint_included: bool | None = Field(default=None, strict=True,
+                                           description="sampled: whether samples[-1] is B(T) (closed period; the default when omitted) or "
+                                                       "the samples span [0, T) (false)")
     dc_bias_field: Quantity | None = Field(default=None, description="H_dc (A/m), reported to models that support it")
 
     @model_validator(mode="after")
     def _consistent(self) -> "WaveformSpec":
         if self.kind == "triangular" and self.duty is None:
             object.__setattr__(self, "duty", 0.5)
-        if self.kind == "trapezoidal" and (self.duty_rise is None or self.duty_flat is None):
-            raise ValueError("trapezoidal waveform needs duty_rise and duty_flat")
-        if self.kind == "trapezoidal" and 2 * (self.duty_rise + self.duty_flat) > 1 + 1e-12:  # type: ignore[operator]
-            raise ValueError("trapezoidal: 2*(duty_rise + duty_flat) must not exceed 1")
+        if self.kind == "trapezoidal":
+            if self.duty_rise is None:
+                raise ValueError("trapezoidal waveform needs duty_rise (duty_flat = 0.5 - duty_rise is derived when omitted)")
+            if self.duty_flat is None:
+                object.__setattr__(self, "duty_flat", 0.5 - self.duty_rise)
+            if abs(2 * (self.duty_rise + self.duty_flat) - 1) > 1e-9:  # type: ignore[operator]
+                raise ValueError("trapezoidal: the engine implements the symmetric trapezoid (rise, flat, fall, flat), which requires "
+                                 f"2*(duty_rise + duty_flat) == 1; got duty_rise={self.duty_rise}, duty_flat={self.duty_flat} "
+                                 "(omit duty_flat to derive it)")
         if self.kind == "piecewise_linear" and not self.breakpoints:
             raise ValueError("piecewise_linear waveform needs breakpoints")
         if self.kind == "sampled" and (not self.samples or len(self.samples) < 8):
@@ -87,7 +99,8 @@ class OperatingPointSpec(_Spec):
     @field_validator("flux_density_peak", mode="before")
     @classmethod
     def _b(cls, v: Any) -> Quantity:
-        return _q(v, "T", "flux_density_peak", nonnegative=True)  # type: ignore[return-value]
+        # zero excitation is not a loss query (the waveform constructors need a positive amplitude): rejected explicitly
+        return _q(v, "T", "flux_density_peak", positive=True)  # type: ignore[return-value]
 
     @field_validator("temperature", mode="before")
     @classmethod
@@ -104,7 +117,7 @@ class CoreLossRequest(_Spec):
     model: LossModelName = "auto"
     core: str | None = Field(default=None, description="core id to convert loss density into total core loss")
     parameter_set: str | None = Field(default=None, description="force a specific Steinmetz parameter set id")
-    model_parameters: dict[str, float] | None = Field(
+    model_parameters: dict[str, StrictFloat] | None = Field(
         default=None,
         description="user-supplied SI model coefficients (steinmetz/igse: k, alpha, beta; bertotti: k_h, beta_h, k_c, k_e); "
                     "recorded as a user_input assumption and bypasses the catalogue parameter sets")
@@ -118,12 +131,13 @@ class HysteresisRequest(_Spec):
                                 description="excitation frequency; the model is rate independent")
     field_dc: Quantity | None = None
     waveform: Literal["sinusoidal", "triangular"] = "sinusoidal"
-    periods: int = Field(default=10, ge=1, le=50, description="maximum periods integrated to reach periodic steady state")
-    steady_state_tol: float = Field(default=1e-4, gt=0, lt=1, description="relative change of the state at period boundaries accepted as steady")
-    parameters: dict[str, float] | None = Field(default=None, description="Ms, a, alpha, k, c in SI; default illustrative set")
-    rtol: float = Field(default=1e-8, gt=0, lt=1e-2, description="solver relative tolerance (default matches the model's own)")
-    atol: float = Field(default=1e-3, gt=0, description="solver absolute tolerance on M (A/m)")
-    samples_per_period: int = Field(default=400, ge=50, le=20000)
+    periods: int = Field(default=10, ge=1, le=50, strict=True, description="maximum periods integrated to reach periodic steady state")
+    steady_state_tol: float = Field(default=1e-4, gt=0, lt=1, strict=True,
+                                    description="relative change of the state at period boundaries accepted as steady")
+    parameters: dict[str, StrictFloat] | None = Field(default=None, description="Ms, a, alpha, k, c in SI; default illustrative set")
+    rtol: float = Field(default=1e-8, gt=0, lt=1e-2, strict=True, description="solver relative tolerance (default matches the model's own)")
+    atol: float = Field(default=1e-3, gt=0, strict=True, description="solver absolute tolerance on M (A/m)")
+    samples_per_period: int = Field(default=400, ge=50, le=20000, strict=True)
     policy: DomainPolicy = "reject"
 
     @model_validator(mode="after")
@@ -151,10 +165,10 @@ class HysteresisRequest(_Spec):
 class WindingSpec(_Spec):
     conductor_type: Literal["round", "foil", "litz"] = "round"
     current_density: Quantity | None = Field(default=None, description="target J (A/m^2); default 4 A/mm^2 assumption")
-    fill_factor: float = Field(default=0.4, gt=0, le=1, description="usable fraction of the window area")
+    fill_factor: float = Field(default=0.4, gt=0, le=1, strict=True, description="usable fraction of the window area")
     strand_diameter: Quantity | None = Field(default=None, description="litz strand diameter (m)")
     foil_thickness: Quantity | None = None
-    layers: int | None = Field(default=None, ge=1, description="number of layers; estimated from turns when omitted")
+    layers: int | None = Field(default=None, ge=1, strict=True, description="number of layers; estimated from turns when omitted")
     conductor_temperature: Quantity | None = Field(default=None, description="winding temperature for resistivity")
 
     @field_validator("current_density", mode="before")
@@ -177,7 +191,7 @@ class FluxLimitSpec(_Spec):
     """How the allowed peak flux density is chosen."""
 
     mode: Literal["fraction_of_saturation", "absolute"] = "fraction_of_saturation"
-    fraction: float = Field(default=0.7, gt=0, le=1)
+    fraction: float = Field(default=0.7, gt=0, le=1, strict=True)
     absolute: Quantity | None = None
 
     @field_validator("absolute", mode="before")
@@ -197,14 +211,16 @@ class InductorDesignRequest(_Spec):
     current_peak: Quantity
     current_rms: Quantity
     current_ripple_peak_to_peak: Quantity | None = Field(default=None, description="AC ripple for core-loss estimation")
+    ripple_duty: float = Field(default=0.5, gt=0, lt=1, strict=True,
+                               description="rising fraction of the period of the triangular ripple flux used for core loss (0.5 = symmetric)")
     frequency: Quantity
     material: str
-    core: str | None = Field(default=None, description="core id; None = screen catalogue cores")
+    core: str | None = Field(default=None, description="core id; None = evaluate every catalogue core offered in the material")
     temperature: Quantity = Field(default_factory=lambda: Quantity(value=373.15, unit="K"))
     flux_limit: FluxLimitSpec = Field(default_factory=FluxLimitSpec)
     winding: WindingSpec = Field(default_factory=WindingSpec)
     loss_model: LossModelName = "auto"
-    max_candidates: int = Field(default=5, ge=1, le=50)
+    max_candidates: int = Field(default=5, ge=1, le=50, strict=True)
     policy: DomainPolicy = "warn"
 
     @field_validator("inductance", mode="before")
@@ -236,6 +252,8 @@ class InductorDesignRequest(_Spec):
     def _currents(self) -> "InductorDesignRequest":
         if self.current_rms.value > self.current_peak.value * (1 + 1e-9):
             raise ValueError("current_rms cannot exceed current_peak")
+        if self.current_ripple_peak_to_peak is not None and self.current_ripple_peak_to_peak.value > 2 * self.current_peak.value * (1 + 1e-9):
+            raise ValueError("current_ripple_peak_to_peak cannot exceed 2 x current_peak (the AC flux amplitude would exceed the peak flux density)")
         return self
 
 
@@ -243,6 +261,9 @@ class TransformerWindingSpec(_Spec):
     name: str = Field(min_length=1)
     voltage: Quantity = Field(description="winding voltage amplitude (peak of the square/trapezoidal wave, or RMS for sinusoidal)")
     current_rms: Quantity | None = Field(default=None, description="winding RMS current; derived from power when omitted")
+    power_share: float | None = Field(default=None, gt=0, le=1, strict=True,
+                                      description="secondaries only: fraction of the throughput power carried by this winding when its "
+                                                  "current is derived from power; omitted = equal split between the secondaries")
     winding: WindingSpec = Field(default_factory=WindingSpec)
 
     @field_validator("voltage", mode="before")
@@ -262,15 +283,33 @@ class TransformerDesignRequest(_Spec):
     primary: TransformerWindingSpec
     secondaries: list[TransformerWindingSpec] = Field(min_length=1)
     voltage_waveform: Literal["square", "sinusoidal", "trapezoidal"] = "square"
-    duty: float = Field(default=0.5, gt=0, le=0.5, description="square/trapezoidal: positive half-cycle fraction (0.5 = full square)")
+    duty: float = Field(default=0.5, gt=0, le=0.5, strict=True,
+                        description="square/trapezoidal: fraction of the full period during which +V is applied; the flux rises for "
+                                    "duty*T and is flat for (0.5 - duty)*T (0.5 = full square wave without zero-voltage intervals)")
     material: str
-    cores: list[str] | None = Field(default=None, description="candidate core ids; None = screen the catalogue")
+    cores: list[str] | None = Field(default=None, description="candidate core ids; None = evaluate every catalogue core offered in the material")
     temperature: Quantity = Field(default_factory=lambda: Quantity(value=373.15, unit="K"))
     flux_limit: FluxLimitSpec = Field(default_factory=FluxLimitSpec)
     loss_density_target: Quantity | None = Field(default=None, description="optional core-loss density ceiling (W/m^3)")
     loss_model: LossModelName = "auto"
-    max_candidates: int = Field(default=5, ge=1, le=50)
+    max_candidates: int = Field(default=5, ge=1, le=50, strict=True)
     policy: DomainPolicy = "warn"
+
+    @model_validator(mode="after")
+    def _power_shares(self) -> "TransformerDesignRequest":
+        if self.primary.power_share is not None:
+            raise ValueError("power_share applies to secondaries only (the primary carries the full throughput power)")
+        names = [w.name for w in [self.primary, *self.secondaries]]
+        if len(set(names)) != len(names):
+            raise ValueError("winding names must be unique")
+        shares = [w.power_share for w in self.secondaries]
+        if any(s is not None for s in shares):
+            if any(s is None for s in shares):
+                raise ValueError("when power_share is given for one secondary it must be given for every secondary")
+            total = sum(shares)  # type: ignore[arg-type]
+            if abs(total - 1.0) > 1e-6:
+                raise ValueError(f"secondary power shares must sum to 1 (got {total:g})")
+        return self
 
     @field_validator("power", mode="before")
     @classmethod
@@ -298,12 +337,13 @@ class DesignValidationRequest(_Spec):
 
     material: str
     core: str
-    turns: int = Field(ge=1, description="turns of the winding that sets the flux (primary)")
+    turns: int = Field(ge=1, strict=True, description="turns of the winding that sets the flux (primary)")
     frequency: Quantity
     temperature: Quantity = Field(default_factory=lambda: Quantity(value=373.15, unit="K"))
     voltage_peak: Quantity | None = Field(default=None, description="square/trapezoidal voltage amplitude applied to 'turns'")
     voltage_waveform: Literal["square", "sinusoidal", "trapezoidal"] = "square"
-    duty: float = Field(default=0.5, gt=0, le=0.5)
+    duty: float = Field(default=0.5, gt=0, le=0.5, strict=True,
+                        description="square/trapezoidal: fraction of the full period during which +V is applied (0.5 = full square wave)")
     current_peak: Quantity | None = Field(default=None, description="peak magnetising/DC current for H-based saturation check")
     air_gap: Quantity | None = None
     flux_density_peak: Quantity | None = Field(default=None, description="directly specified peak flux density")

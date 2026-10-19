@@ -48,17 +48,19 @@ def validate_operating_point(*, material: MaterialProperties, frequency: float, 
     # temperature versus Curie point
     if material.curie_temperature is not None:
         tc = material.curie_temperature.value.value
+        # datasheets often state only a bound (e.g. TC > 210 degC); the record note says so and is repeated here
+        note = f" (record note: {material.curie_temperature.note})" if material.curie_temperature.note else ""
         if temperature >= tc:
             checks.append(OperatingPointCheck(id="curie_temperature", status="fail", severity="error",
-                                              message=f"operating temperature {temperature - 273.15:.0f} degC is at or above the Curie "
-                                                      f"temperature {tc - 273.15:.0f} degC"))
+                                              message=f"operating temperature {temperature - 273.15:.0f} degC is at or above the recorded Curie "
+                                                      f"temperature value {tc - 273.15:.0f} degC{note}"))
         elif temperature >= tc - CURIE_MARGIN_K:
             checks.append(OperatingPointCheck(id="curie_temperature", status="warning",
-                                              message=f"operating temperature within {CURIE_MARGIN_K:.0f} K of the Curie temperature "
-                                                      f"({tc - 273.15:.0f} degC)"))
+                                              message=f"operating temperature within {CURIE_MARGIN_K:.0f} K of the recorded Curie temperature "
+                                                      f"value ({tc - 273.15:.0f} degC){note}"))
         else:
             checks.append(OperatingPointCheck(id="curie_temperature", status="pass", severity="info",
-                                              message=f"{tc - temperature:.0f} K below the Curie temperature"))
+                                              message=f"{tc - temperature:.0f} K below the recorded Curie temperature value{note}"))
     else:
         checks.append(OperatingPointCheck(id="curie_temperature", status="not_evaluated", severity="info",
                                           message="material record has no Curie temperature"))

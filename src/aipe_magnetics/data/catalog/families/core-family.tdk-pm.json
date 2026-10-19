@@ -3,7 +3,7 @@
   "evidence": [
     {
       "created_at": "2026-10-19T00:00:00Z",
-      "description": "Core family identity as used in the TDK datasheets.",
+      "description": "Core family identity as used in the TDK datasheets. Dimensional standard: PM 87/70 datasheet header 'To IEC 63093-10'.",
       "id": "evidence.tdk-pm-family",
       "kind": "source",
       "license": "NOASSERTION",

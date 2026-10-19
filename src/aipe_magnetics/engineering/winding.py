@@ -133,9 +133,16 @@ def design_winding(*, turns: int, current_rms: float, frequency: float, mean_tur
                                       basis="default", affects=["conductor_area", "copper_loss"]))
     area = F.conductor_area_for_current_density(i_rms, j)
     rho = F.copper_resistivity(t_cond)
+    lo_k, hi_k = F.COPPER_RESISTIVITY_MODEL_RANGE_K
     assumptions.append(Assumption(id="copper_resistivity_model",
-                                  statement=f"Annealed copper, rho(T) = 1.68e-8 Ohm*m * (1 + 0.00393/K * (T - 20 degC)) at {t_cond - 273.15:.0f} degC.",
+                                  statement=f"Annealed copper, rho(T) = 1.68e-8 Ohm*m * (1 + 0.00393/K * (T - 20 degC)) at {t_cond - 273.15:.0f} degC "
+                                            f"(linear model, stated validity {lo_k - 273.15:.0f}..{hi_k - 273.15:.0f} degC).",
                                   basis="default", affects=["resistance_dc", "copper_loss"]))
+    if not (lo_k <= t_cond <= hi_k):
+        warnings.append(Warning_(code="resistivity_model_extrapolated",
+                                 message=f"Conductor temperature {t_cond - 273.15:.0f} degC is outside the stated validity "
+                                         f"{lo_k - 273.15:.0f}..{hi_k - 273.15:.0f} degC of the linear copper resistivity model; "
+                                         "DC resistance and copper loss are extrapolations."))
     delta = F.skin_depth(f, rho)
     breadth, breadth_note = _window_breadth(window_area, dimensions)
     if breadth_note:
@@ -161,7 +168,9 @@ def design_winding(*, turns: int, current_rms: float, frequency: float, mean_tur
             assumptions.append(Assumption(id="layers_sqrt_estimate", statement="Layers estimated as ceil(sqrt(N)) (no window dimensions available).",
                                           basis="engineering_judgement", affects=["ac_resistance_factor"]))
         h = F.round_wire_equivalent_thickness(conductor_diameter)
-        porosity = min(1.0, conductor_diameter / pitch)
+        # Dowell's layer transformation: porosity = equivalent square-conductor width h / pitch, so that
+        # Delta = (pi/4)^(3/4) (d/delta) sqrt(d/pitch) (Erickson & Maksimovic, Fundamentals of Power Electronics, ch. 13)
+        porosity = min(1.0, h / pitch)
         f_r = F.dowell_ac_resistance_factor(layers, h, delta, porosity)
         copper_area = area
     elif spec.conductor_type == "litz":

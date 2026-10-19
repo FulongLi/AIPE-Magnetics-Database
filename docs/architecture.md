@@ -70,9 +70,10 @@ that API.
 ## Separation of AI logic from mathematics
 
 `models/`, `engineering/`, `data/` and `verification/` import nothing from `mcp/`, `cli/` or
-`plugins/`. The MCP server and the plugin skills are documentation and transport only; the test suite
-asserts that `aipe_magnetics.mcp` is importable without any API key and that every tool call maps to
-an `api` function.
+`plugins/` (the plain-text summary shared by the CLI and the executable demonstration lives in
+`common/format.py`). The MCP server and the plugin skills are documentation and transport only;
+`tests/mcp/test_server.py` asserts that the server builds without any API key or network access and
+that its tool set equals `api.CAPABILITIES` plus `list_capabilities`, one tool per API function.
 
 ## Repository layout
 

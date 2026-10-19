@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -104,3 +105,47 @@ def test_marketplaces_point_at_existing_plugins(manifest: Path, expected_source:
 def test_no_numerical_code_inside_plugins():
     for plugin in (CLAUDE_PLUGIN, CODEX_PLUGIN):
         assert not list(plugin.rglob("*.py")), "plugins must not duplicate numerical implementations"
+
+
+def test_skill_model_names_are_accepted_by_the_engine():
+    """Every `model=` value the loss-modelling skill offers must be a LossModelName (or an MCP tool it points to)."""
+    from typing import get_args
+
+    from aipe_magnetics.api.types import LossModelName
+
+    accepted = set(get_args(LossModelName))
+    tools = {"estimate_core_loss", "evaluate_hysteresis", "verification_status", "get_material", "list_capabilities"}
+    text = (ROOT / "skills" / "magnetic-loss-modelling" / "SKILL.md").read_text(encoding="utf-8")
+    table = text.split("## Model selection guide", 1)[1].split("\n\n")[1]
+    rows = [line for line in table.splitlines() if line.startswith("|") and not line.startswith("| ---") and "`model=`" not in line]
+    assert rows
+    for row in rows:
+        column = row.split("|")[2]
+        tokens = re.findall(r"`([^`]+)`", column)
+        assert tokens, row
+        assert all(token in accepted or token in tools for token in tokens), (row, tokens)
+    assert "data_driven:" not in text and "not available through `estimate_core_loss`" in text
+
+
+def test_skill_cli_commands_match_the_parser():
+    """CLI invocations quoted in the skills must parse (e.g. `import json` takes a source and a destination)."""
+    from aipe_magnetics.cli.main import build_parser
+
+    parser = build_parser()
+    text = (ROOT / "skills" / "magnetic-material-analysis" / "SKILL.md").read_text(encoding="utf-8")
+    assert "aipe-magnetics import json <source.json> <destination.json>" in text
+    args = parser.parse_args(["import", "json", "source.json", "destination.json"])
+    assert args.command == "import" and args.action == "json"
+    with pytest.raises(SystemExit):
+        parser.parse_args(["import", "json", "source.json"])
+
+
+@pytest.mark.hosts
+def test_claude_plugin_validate_with_the_host_cli():
+    """Runs `claude plugin validate` on the plugin and on the repository-root marketplace when the host CLI is installed."""
+    claude = shutil.which("claude")
+    if claude is None:
+        pytest.skip("Claude Code CLI ('claude') is not installed on this machine; host validation not executed (hosts marker)")
+    for target in (CLAUDE_PLUGIN, ROOT):
+        result = subprocess.run([claude, "plugin", "validate", str(target)], capture_output=True, text=True, timeout=180)
+        assert result.returncode == 0, f"claude plugin validate {target}: {result.stdout}{result.stderr}"

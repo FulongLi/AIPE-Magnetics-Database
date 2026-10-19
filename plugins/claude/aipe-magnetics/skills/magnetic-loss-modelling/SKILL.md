@@ -1,6 +1,6 @@
 ---
 name: magnetic-loss-modelling
-description: Core-loss and hysteresis modelling with the AIPE Magnetics model framework - classical Steinmetz, iGSE for non-sinusoidal flux waveforms (triangular, trapezoidal, piecewise-linear, sampled), Bertotti loss separation, Jiles-Atherton hysteresis loops via the ODE framework, and data-driven surrogate inference. Use when a user asks to estimate core loss for a waveform, choose a loss model, evaluate a B-H loop, understand model validity ranges, or run a trained loss model. Guides model selection and interpretation of validity domain and verification status; never computes losses outside the tools.
+description: Core-loss and hysteresis modelling with the AIPE Magnetics model framework - classical Steinmetz, iGSE for non-sinusoidal flux waveforms (triangular, trapezoidal, piecewise-linear, sampled), Bertotti loss separation with user coefficients, and Jiles-Atherton hysteresis loops via the ODE framework. Use when a user asks to estimate core loss for a waveform, choose a loss model, evaluate a B-H loop, or understand model validity ranges and verification status. Guides model selection and interpretation of validity domain and verification status; never computes losses outside the tools. Trained data-driven surrogates are reachable only through the Python adapter API, not through these tools.
 ---
 
 # Magnetic loss modelling
@@ -14,9 +14,9 @@ Tools: `estimate_core_loss`, `evaluate_hysteresis`, `get_material`, `verificatio
 | --- | --- | --- |
 | sinusoidal flux, datasheet-type estimate | `steinmetz` | Pv = k f^α B^β; valid only inside the parameter set's f/B/T ranges |
 | square-wave voltage (triangular flux), trapezoidal or PWL flux, no DC bias | `igse` | Venkatachalam et al. 2002; reduces exactly to Steinmetz for sinusoids; ignores DC bias and minor loops (flagged) |
-| laminated / conductive materials, loss separation | `bertotti` | hysteresis + classical eddy + excess terms; requires the three coefficients |
-| hysteresis loop shape, remanence, coercivity, loop energy | `jiles_atherton` via `evaluate_hysteresis` | scalar, rate-independent; parameters must be identified per material (an illustrative set is shipped, not a material fit) |
-| trained surrogate (ANN/LSTM/Neural ODE) | `data_driven:<model-id>` | only the shipped synthetic reference and user-provided weights; verification status states what was checked |
+| laminated / conductive materials, loss separation | `bertotti` | hysteresis + classical eddy + excess terms; requires `model_parameters` {k_h, beta_h, k_c, k_e} in SI (no catalogue material carries them); sinusoidal flux only |
+| hysteresis loop shape, remanence, coercivity, loop energy | n/a - use the tool `evaluate_hysteresis` | Jiles-Atherton, scalar, rate-independent; parameters must be identified per material (an illustrative set is shipped, not a material fit) |
+| trained surrogate (ANN/LSTM/Neural ODE) | not available through `estimate_core_loss` | data-driven inference runs only through the Python adapter API (`aipe_magnetics.models.datadriven`) on the shipped synthetic reference or user-provided weights; `model=` accepts exactly `auto`, `steinmetz`, `igse`, `bertotti` |
 
 `model="auto"` picks Steinmetz for sinusoidal and iGSE for other waveforms when a parameter set
 covers the operating point; otherwise the call is rejected with the reason.
@@ -24,8 +24,10 @@ covers the operating point; otherwise the call is rejected with the reason.
 ## Workflow
 
 1. Define the operating point: frequency, peak flux density (or peak-to-peak), temperature, waveform
-   (`sinusoidal`, `triangular` with duty, `trapezoidal` with rise/flat fractions, `piecewise_linear`
-   breakpoints, or sampled B(t) from a user file), DC bias if any.
+   (`sinusoidal`, `triangular` with duty, `trapezoidal` with `duty_rise` - the symmetric trapezoid needs
+   `2*(duty_rise + duty_flat) == 1`, so omit `duty_flat` to have it derived -, `piecewise_linear`
+   breakpoints, or sampled B(t) from a user file: samples span one closed period `[0, T]` unless
+   `endpoint_included: false` is passed for `[0, T)` data), DC bias if any.
 2. Call `estimate_core_loss`. Read `model` (identity, version), `values.loss_density` (W/m^3), and,
    when a core is given, `values.core_loss` (W). Report `assumptions`, `limitations`, `warnings`
    (e.g. `sampling_sensitivity`, `minor_loops_ignored`, `out_of_domain`) and the `verification` block.
@@ -38,8 +40,10 @@ covers the operating point; otherwise the call is rejected with the reason.
 
 ## Interpretation rules
 
-- A verified model (L2) means the implementation reproduces analytical/independent references; it
-  does not validate the *parameters* for the user's specific core.
+- Quote the `verification` block as returned. `L0 unverified` with a statement naming a missing bundled
+  evidence file means no evidence is available to the result at all; a verified model (L2) means the
+  implementation reproduces analytical/independent references; neither validates the *parameters* for
+  the user's specific core.
 - Uncertainty: when the tool reports `unknown`, do not invent a tolerance band.
 - Temperature: Steinmetz sets are temperature specific; a set is selected only if its temperature
   range contains the request. The tool will not silently use a 100 degC set at 25 degC.

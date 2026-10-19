@@ -1,7 +1,12 @@
 """``aipe-magnetics`` command line interface.
 
 Every subcommand prints an engineering result envelope (JSON) or a human summary; exit code 0 for
-``status == ok``, 2 for ``rejected``, 1 for errors.
+``status == ok``, 2 for ``rejected`` (including a design that fails validation checks), 1 for errors.
+Ordinary user errors (unreadable files, malformed options, non-envelope inputs) are reported as one
+``ERROR <code>: <message>`` line on stderr with exit code 1, never as a traceback. The data layer's
+never-overwrite contract is kept as an exception: ``import json`` / ``schema migrate`` into an existing
+destination report ``destination_exists`` and exit 1 without touching the file; ``report --output`` into an
+existing file is a rejected result (``destination_exists``, exit 2).
 """
 
 from __future__ import annotations
@@ -12,7 +17,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from aipe_magnetics import __version__
+from aipe_magnetics.common.errors import AIPEMagneticsError, InvalidInputError
+from aipe_magnetics.common.format import summary as _summary
 from aipe_magnetics.common.results import EngineeringResult
 
 
@@ -40,37 +49,36 @@ def _emit(result: EngineeringResult, args: argparse.Namespace) -> int:
     return 0 if result.status == "ok" else 2
 
 
-def _summary(result: EngineeringResult) -> str:
-    lines = [f"[{result.status}] {result.capability}" + (f"  model={result.model.id}@{result.model.version}" if result.model else "")]
-    for key, v in result.values.items():
-        lines.append(f"  {v.label} ({key}): {v.quantity.value:.6g} {v.quantity.unit}  [{v.status}]")
-    for e in result.errors:
-        lines.append(f"  ERROR {e.code}: {e.message}")
-    for w in result.warnings:
-        lines.append(f"  {w.severity}: {w.code}: {w.message}")
-    if result.data.get("materials") is not None:
-        for item in result.data["materials"]:
-            lines.append(f"  - {item['id']}  grade={item.get('grade')}  class={item.get('material_class')}  sets={item.get('steinmetz_sets')}"
-                         f"  synthetic={item.get('synthetic')}")
-    if result.data.get("comparison") is not None:
-        for row in result.data["comparison"]:
-            pv = row.get("loss_density_W_per_m3")
-            margin = row.get("saturation_margin")
-            pv_text = "n/a" if pv is None else "%.1f kW/m^3" % (pv / 1e3)
-            margin_text = "n/a" if margin is None else "%.1f%%" % (margin * 100)
-            lines.append("  - %s: Pv=%s  margin=%s  %s" % (row["id"], pv_text, margin_text, "; ".join(row.get("notes", []))))
-    if result.data.get("candidates") is not None:
-        for c in result.data["candidates"]:
-            total = c.get("total_loss_W")
-            bpk = c.get("flux_density_peak_T")
-            bpk_text = "n/a" if bpk is None else "%.3f T" % bpk
-            total_text = "n/a" if total is None else "%.1f W" % total
-            lines.append("  - %s: feasible=%s Bpk=%s total=%s %s" % (c.get("core_name", c.get("core")), c.get("feasible"), bpk_text,
-                                                                     total_text, "; ".join(c.get("reasons", []))))
-    lines.append(f"  verification: {result.verification.level} {result.verification.state} - {result.verification.statement}")
-    for lim in result.limitations:
-        lines.append(f"  limitation: {lim.statement}")
-    return "\n".join(lines)
+def _parameters(items: list[str]) -> dict[str, float] | None:
+    """Parse repeated ``--param NAME=VALUE`` options with explicit errors."""
+    params: dict[str, float] = {}
+    for item in items:
+        name, sep, value = item.partition("=")
+        if not sep or not name.strip():
+            raise InvalidInputError(f"--param expects NAME=VALUE, got {item!r}")
+        try:
+            params[name.strip()] = float(value)
+        except ValueError:
+            raise InvalidInputError(f"--param {name.strip()}: {value!r} is not a number") from None
+    return params or None
+
+
+def _load_envelopes(path: Path) -> list[EngineeringResult]:
+    """Result envelopes from a file: one envelope, a JSON report (``results``) or the demo wrapper (``steps[].result``)."""
+    from aipe_magnetics.common.jsonio import load
+    data = load(path)
+    if isinstance(data, dict) and "steps" in data and isinstance(data["steps"], list):
+        items = [step.get("result") for step in data["steps"] if isinstance(step, dict)]
+    elif isinstance(data, dict) and "results" in data and isinstance(data["results"], list):
+        items = data["results"]
+    elif isinstance(data, list):
+        items = data
+    else:
+        items = [data]
+    try:
+        return [EngineeringResult.model_validate(item) for item in items]
+    except ValidationError as error:
+        raise InvalidInputError(f"{path} does not contain aipe.magnetics.result/0.2 envelopes: {error.errors()[0]['msg']}") from None
 
 
 def _add_json_flag(p: argparse.ArgumentParser) -> None:
@@ -106,7 +114,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     d = sub.add_parser("design", help="inductor / transformer design").add_subparsers(dest="action", required=True)
     p = d.add_parser("inductor"); p.add_argument("--inductance", "-L", required=True); p.add_argument("--current-peak", required=True)
-    p.add_argument("--current-rms", required=True); p.add_argument("--ripple"); p.add_argument("--frequency", "-f", required=True)
+    p.add_argument("--current-rms", required=True); p.add_argument("--ripple"); p.add_argument("--ripple-duty", type=float)
+    p.add_argument("--frequency", "-f", required=True)
     p.add_argument("--material", required=True); p.add_argument("--core"); p.add_argument("--temperature", "-t")
     p.add_argument("--conductor", default="round", choices=["round", "litz", "foil"]); p.add_argument("--flux-fraction", type=float); _add_json_flag(p)
     p = d.add_parser("transformer"); p.add_argument("--power", "-P", required=True); p.add_argument("--frequency", "-f", required=True)
@@ -121,7 +130,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--voltage-peak"); p.add_argument("--flux"); p.add_argument("--current-peak"); p.add_argument("--air-gap")
     p.add_argument("--waveform", default="square", choices=["square", "sinusoidal", "trapezoidal"]); _add_json_flag(p)
 
-    p = sub.add_parser("report", help="render result JSON files into a report"); p.add_argument("results", nargs="+", type=Path)
+    p = sub.add_parser("report", help="render result JSON files (envelopes, JSON reports or demo output) into a report")
+    p.add_argument("results", nargs="+", type=Path)
     p.add_argument("--format", default="markdown", choices=["markdown", "json"]); p.add_argument("--output", type=Path); p.add_argument("--overwrite", action="store_true")
     p.add_argument("--title", default="AIPE Magnetics engineering report")
 
@@ -142,7 +152,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--migrate", action="store_true", help="accept 0.1.0 records and migrate them")
 
     p = sub.add_parser("mcp", help="MCP server").add_subparsers(dest="action", required=True)
-    q = p.add_parser("serve"); q.add_argument("--allow-write", action="store_true"); q.add_argument("--output-dir")
+    q = p.add_parser("serve"); q.add_argument("--allow-write", action="store_true", help="requires --output-dir")
+    q.add_argument("--output-dir", help="directory that written reports must stay inside")
     q = p.add_parser("self-test")
     return parser
 
@@ -154,6 +165,28 @@ def _winding(conductor: str) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    try:
+        return _dispatch(parser, args)
+    except AIPEMagneticsError as error:
+        print(f"ERROR {error.code}: {error.message}", file=sys.stderr)
+        return 1
+    except ValidationError as error:
+        first = error.errors()[0]
+        print(f"ERROR invalid_input: {'.'.join(str(p) for p in first['loc'])}: {first['msg']}", file=sys.stderr)
+        return 1
+    except FileExistsError as error:
+        # never-overwrite contract of importers/migrations: report, leave the destination untouched, exit 1
+        print(f"ERROR destination_exists: {error} (pass --overwrite where supported or choose another destination)", file=sys.stderr)
+        return 1
+    except OSError as error:
+        print(f"ERROR {type(error).__name__}: {error}", file=sys.stderr)
+        return 1
+    except ValueError as error:
+        print(f"ERROR invalid_input: {error}", file=sys.stderr)
+        return 1
+
+
+def _dispatch(parser: argparse.ArgumentParser, args: argparse.Namespace) -> int:
     import aipe_magnetics.api as api
 
     if args.command == "info":
@@ -163,7 +196,12 @@ def main(argv: list[str] | None = None) -> int:
         reg = load_bundled_registry()
         print(f"aipe-magnetics {__version__}")
         print(f"catalogue: {len(cat.materials())} materials, {len(cat.cores())} cores, {len(cat.manufacturers())} manufacturers")
-        print(f"verification evidence: {bundled_evidence_path()} ({len(reg.records)} records, {len(reg.capabilities())} capabilities)")
+        path = bundled_evidence_path()
+        if not path.exists():
+            print(f"verification evidence: MISSING - {path} does not exist; every result reports L0 unverified until a maintainer "
+                  "runs 'aipe-magnetics verify --update-bundled'")
+        else:
+            print(f"verification evidence: {path} ({len(reg.records)} records, {len(reg.capabilities())} capabilities)")
         for cap, info in reg.summary().items():
             print(f"  {cap}: highest passing level {info['highest_passing_level']} (pass {info['pass']}, fail {info['fail']})")
         return 0
@@ -180,14 +218,18 @@ def main(argv: list[str] | None = None) -> int:
         if args.duty is not None:
             waveform["duty"] = args.duty
         if args.duty_rise is not None:
-            waveform.update(duty_rise=args.duty_rise, duty_flat=args.duty_flat if args.duty_flat is not None else 0.0)
+            waveform["duty_rise"] = args.duty_rise
+            if args.duty_flat is not None:
+                waveform["duty_flat"] = args.duty_flat  # otherwise derived as 0.5 - duty_rise (symmetric trapezoid)
+        elif args.duty_flat is not None:
+            raise InvalidInputError("--duty-flat needs --duty-rise")
         op: dict[str, Any] = {"frequency": _qty(args.frequency, "frequency"), "flux_density_peak": _qty(args.flux, "flux"), "waveform": waveform}
         if args.temperature:
             op["temperature"] = _qty(args.temperature, "temperature")
         return _emit(api.estimate_core_loss({"material": args.material, "operating_point": op, "model": args.model, "core": args.core,
                                              "parameter_set": args.parameter_set, "policy": args.policy}), args)
     if args.command == "hysteresis":
-        params = {k: float(v) for k, v in (item.split("=", 1) for item in args.param)} or None
+        params = _parameters(args.param)
         payload: dict[str, Any] = {"field_peak": _qty(args.field_peak, "field-peak"), "frequency": _qty(args.frequency, "frequency"),
                                    "periods": args.periods, "waveform": args.waveform, "parameters": params}
         if args.field_dc:
@@ -199,9 +241,11 @@ def main(argv: list[str] | None = None) -> int:
                    "core": args.core, "winding": _winding(args.conductor)}
         if args.ripple:
             payload["current_ripple_peak_to_peak"] = _qty(args.ripple, "ripple")
+        if args.ripple_duty is not None:
+            payload["ripple_duty"] = args.ripple_duty
         if args.temperature:
             payload["temperature"] = _qty(args.temperature, "temperature")
-        if args.flux_fraction:
+        if args.flux_fraction is not None:  # an explicit 0 must reach validation and be rejected there, never dropped
             payload["flux_limit"] = {"mode": "fraction_of_saturation", "fraction": args.flux_fraction}
         return _emit(api.design_inductor(payload), args)
     if args.command == "design" and args.action == "transformer":
@@ -212,7 +256,7 @@ def main(argv: list[str] | None = None) -> int:
                    "material": args.material, "cores": args.core, "voltage_waveform": args.waveform, "duty": args.duty}
         if args.temperature:
             payload["temperature"] = _qty(args.temperature, "temperature")
-        if args.flux_fraction:
+        if args.flux_fraction is not None:
             payload["flux_limit"] = {"mode": "fraction_of_saturation", "fraction": args.flux_fraction}
         if args.loss_target:
             payload["loss_density_target"] = _qty(args.loss_target, "loss-target")
@@ -226,8 +270,7 @@ def main(argv: list[str] | None = None) -> int:
                 payload[key] = _qty(value, key)
         return _emit(api.validate_design(payload), args)
     if args.command == "report":
-        from aipe_magnetics.common.jsonio import load
-        results = [EngineeringResult.model_validate(load(p)) for p in args.results]
+        results = [r for p in args.results for r in _load_envelopes(p)]
         res = api.generate_report(results, {"title": args.title, "format": args.format, "output_path": str(args.output) if args.output else None,
                                             "allow_write": bool(args.output), "overwrite": args.overwrite})
         if res.status != "ok":
@@ -282,7 +325,11 @@ def main(argv: list[str] | None = None) -> int:
             return srv.main(["--self-test"])
         argv2 = []
         if args.allow_write:
-            argv2 += ["--allow-write", "--output-dir", args.output_dir or "."]
+            if not args.output_dir:
+                parser.error("mcp serve --allow-write requires --output-dir (the directory written reports must stay inside)")
+            argv2 += ["--allow-write", "--output-dir", args.output_dir]
+        elif args.output_dir:
+            argv2 += ["--output-dir", args.output_dir]
         return srv.main(argv2)
     parser.error("unknown command")  # pragma: no cover
     return 1

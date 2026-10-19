@@ -13,7 +13,7 @@ no commercial software and no LLM API credentials (the hosts bring their own mod
 | marketplace (repository root) | `.claude-plugin/marketplace.json` | `.agents/plugins/marketplace.json` |
 | skills | `skills/<name>/SKILL.md` (×5) | `skills/<name>/SKILL.md` (×5, identical) |
 | MCP server | `.mcp.json` → `python -m aipe_magnetics.mcp.server` | `.mcp.json` → same command |
-| validated with | `claude plugin validate` (Claude Code 2.1.80; newer versions add `--strict`) | `codex plugin marketplace add` + `codex plugin add` (codex-cli 0.163.0) |
+| host validation | `claude plugin validate plugins/claude/aipe-magnetics` and `claude plugin validate .` (repository-root marketplace); run by the opt-in test `tests/plugins/test_packaging.py::test_claude_plugin_validate_with_the_host_cli` (marker `hosts`) whenever the `claude` CLI is installed, skipped with an explicit reason otherwise | executed manually for the release with codex-cli 0.163.0 (installed into a scratch directory, scratch `CODEX_HOME`): `codex plugin marketplace add <repo root>` → marketplace `aipe-magnetics` added; `codex plugin add aipe-magnetics@aipe-magnetics --json` → installed to `plugins/cache/aipe-magnetics/aipe-magnetics/0.2.0`; `codex mcp list` → `aipe-magnetics  python -m aipe_magnetics.mcp.server ... enabled`; all five skills copied. The Codex CLI is not part of the automated test environment, so this run is recorded in `docs/release-verification-v0.2.0.md` rather than in a test |
 
 Skills: `magnetic-material-analysis`, `inductor-design`, `transformer-design`,
 `magnetic-loss-modelling`, `magnetic-engineering-review`. The canonical sources live in `skills/`;
@@ -36,8 +36,8 @@ absolute interpreter path (e.g. `C:\\venvs\\aipe\\Scripts\\python.exe` or `/opt/
 ## 2. Claude Code
 
 ```text
-/plugin marketplace add FulongLi/AIPE-Magnetics-Database        # GitHub (default branch) ...
-/plugin marketplace add /path/to/AIPE-Magnetics-Database         # ... or a local checkout
+/plugin marketplace add FulongLi/AIPE-Magnetics-Database        # GitHub default branch: works once v0.2 is merged ...
+/plugin marketplace add /path/to/AIPE-Magnetics-Database         # ... until then use a local checkout of the feature branch
 /plugin install aipe-magnetics@aipe-magnetics                    # opens the details panel; choose a scope
 ```
 

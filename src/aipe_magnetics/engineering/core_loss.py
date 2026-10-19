@@ -41,7 +41,7 @@ def build_waveform(spec: WaveformSpec, frequency: float, flux_density_peak: floa
         points = [(float(t), float(b) * flux_density_peak) for t, b in spec.breakpoints or []]
         return Waveform.piecewise_linear(frequency, points)
     if spec.kind == "sampled":
-        return Waveform.sampled(frequency, spec.samples or [])
+        return Waveform.sampled(frequency, spec.samples or [], endpoint_included=spec.endpoint_included is not False)
     raise InvalidInputError(f"unsupported waveform kind {spec.kind}")  # pragma: no cover
 
 
@@ -72,8 +72,16 @@ def select_model(request: CoreLossRequest, props, material_id: str, sources: lis
         if not request.model_parameters:
             raise UnsupportedOperationError("Bertotti loss separation needs model_parameters (k_h, beta_h, k_c, k_e); "
                                             "catalogue materials carry no Bertotti coefficients")
-        model = BertottiLossModel.from_parameters(request.model_parameters, material_id=material_id, sources=sources)
-        notes.append("Bertotti coefficients supplied by the user")
+        params = request.model_parameters
+        required = ("k_h", "beta_h", "k_c", "k_e")
+        missing = [k for k in required if k not in params]
+        unknown = sorted(k for k in params if k not in required)
+        if missing or unknown:
+            raise InvalidInputError("model_parameters for bertotti need exactly k_h, beta_h, k_c, k_e (SI: Pv in W/m^3 with f in Hz, "
+                                    f"B in T); missing {missing}, unknown {unknown}")
+        model = BertottiLossModel(float(params["k_h"]), float(params["beta_h"]), float(params["k_c"]), float(params["k_e"]),
+                                  material=material_id)
+        notes.append("Bertotti coefficients supplied by the user (no validity ranges declared; sinusoidal flux only)")
         return model, None, notes
     if request.model_parameters:
         pset = _user_parameter_set(request.model_parameters, t_k)

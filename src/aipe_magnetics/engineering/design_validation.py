@@ -47,7 +47,7 @@ def validate_design(request: DesignValidationRequest, catalog: Any | None = None
     # peak flux density: from voltage/turns (Faraday) or directly specified
     if request.flux_density_peak is not None:
         b_pk = request.flux_density_peak.value
-        result.add_value("flux_density_peak", "Peak flux density (specified)", Quantity(value=b_pk, unit="T"), status="looked_up")
+        result.add_value("flux_density_peak", "Peak flux density (specified by the caller)", Quantity(value=b_pk, unit="T"), status="specified")
     else:
         v = request.voltage_peak.value  # type: ignore[union-attr]
         if request.voltage_waveform == "sinusoidal":
@@ -99,12 +99,21 @@ def validate_design(request: DesignValidationRequest, catalog: Any | None = None
             result.warn(w.code, f"core loss: {w.message}", w.severity)
         for lim in loss.limitations:
             result.limit(lim.code, lim.statement)
-        result.verification = loss.verification
+        from aipe_magnetics.engineering._verification import capability_status, combine
+        result.verification = combine(
+            capability_status(None, CAP_VALIDATE, frequency=f, temperature=t_k, flux_density_peak=b_pk, material=material_record.id),
+            loss.verification, design_label="Saturation screening and operating-point checks", model_label="Core-loss model")
     else:
         result.warn("core_loss_unavailable", "core loss not evaluated: " + "; ".join(e.message for e in loss.errors), "warning")
     failed = [c.id for c in validation.checks if c.status == "fail"]
-    result.data["passed"] = not failed
+    not_evaluated = [c.id for c in validation.checks if c.status == "not_evaluated"]
+    # verdict: False when a check failed, None (inconclusive) when a check could not be evaluated, True otherwise
+    result.data["passed"] = False if failed else (None if not_evaluated else True)
     result.data["failed_checks"] = failed
+    result.data["inconclusive_checks"] = not_evaluated
+    if not failed and not_evaluated:
+        result.warn("validation_inconclusive", "checks not evaluated: " + ", ".join(not_evaluated) +
+                    "; the design cannot be declared valid (data.passed is null)", "warning")
     if failed:
         result.status = "rejected"
         from aipe_magnetics.common.results import ErrorRecord

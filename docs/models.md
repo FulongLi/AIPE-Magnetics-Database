@@ -40,5 +40,6 @@ not identified for any catalogue material. Data-driven inference is demonstrated
 reference only; running the Paderborn/Sydney challenge models requires the optional `magnethub`
 package (upstream requires Python ≥ 3.13 with torch/jax/equinox, so it cannot be an install extra
 for Python 3.10-3.12) and the user's own download of its weights. PyTorch is not installed in the
-release environment; the torch backend's "present" branch was exercised by the reviewer in a
-throwaway environment with torch 2.5.1+cpu.
+release environment and no CI job installs it, so the torch backend's "present" branch is not exercised
+by any recorded test run; `tests/models/test_datadriven.py` holds the opt-in path for environments
+where torch is available.

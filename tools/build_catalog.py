@@ -2,7 +2,9 @@
 """Generate the bundled catalogue records (manufacturers, materials, cores) with explicit provenance.
 
 Every number below is transcribed from a cited source (datasheet PDF, repository file at a pinned
-commit, peer-reviewed table) or derived by a documented script. Nothing is estimated by hand.
+commit, peer-reviewed table) or derived by a documented script. The only hand-derived value is marked
+as such inside its record (the UU 93/152/30 window height, 2 x the drawn 48 mm single-U window height,
+stored under ``extensions['aipe.datasheet']['derived']``); nothing is estimated.
 Records are written one per file under ``src/aipe_magnetics/data/catalog/<kind>/<id>.json`` and
 validated against the v0.2 record standard (``aipe_magnetics.data.records``) before writing.
 
@@ -53,10 +55,11 @@ MAGNET_COMMIT = "8a6892e91ac622e42f8b9182a6dfe9094ceea97a"
 EV_MAGNET_CONSTANTS = evidence(
     "evidence.princeton-magnet-constants", "source",
     "PrincetonUniversity/magnet, src/magnet/constants.py (material_steinmetz_param, material_extra, material_manufacturers)",
-    "Per-material constants published in the Princeton MagNet repository (MIT): manufacturer, initial permeability mu_r_0 and "
-    "recommended frequency range; the repository's own Steinmetz/iGSE coefficients are documented there as (k_i, alpha, beta).",
+    "Per-material constants published in the Princeton MagNet repository (MIT): manufacturer, initial permeability mu_r_0, "
+    "recommended frequency range and the one-line application statement (material_applications); the repository's own "
+    "Steinmetz/iGSE coefficients are documented there as (k_i, alpha, beta).",
     license="MIT", url="https://github.com/PrincetonUniversity/magnet/blob/" + MAGNET_COMMIT + "/src/magnet/constants.py",
-    version=MAGNET_COMMIT, locator="lines 14-53")
+    version=MAGNET_COMMIT, locator="material_steinmetz_param, material_extra, material_manufacturers, material_applications")
 EV_AIPE_FIT = evidence(
     "evidence.aipe-steinmetz-fit-magnet", "analytical",
     "benchmarks/fit_steinmetz_from_magnet.py (aipe-magnetics " + __version__ + ")",
@@ -82,19 +85,29 @@ EV_MUHLETHALER = evidence(
     "evidence.muhlethaler-2012-tpel", "source",
     "J. Muhlethaler, J. Biela, J. W. Kolar, A. Ecklebe, 'Improved core-loss calculation for magnetic components employed in power "
     "electronic systems', IEEE Trans. Power Electron., vol. 27, no. 2, pp. 964-973, Feb. 2012, doi:10.1109/TPEL.2011.2162252",
-    "Table I: iGSE parameters of EPCOS N87 (R42 toroid, 25 degC, symmetric triangular flux, 20-100 kHz): k_i = 8.41, alpha = 1.09, "
-    "beta = 2.16 (SI: W/m3, Hz, T). Converted to the classical k by the exact k_i relation for storage.",
+    "Table I: iGSE parameters of EPCOS N87 (R42 toroid, 25 degC, symmetric triangular flux) fitted on three operating points "
+    "(dB 0.1 T at 20 kHz, 0.1 T at 50 kHz, 0.2 T at 50 kHz; dB peak-to-peak): k_i = 8.41, alpha = 1.09, beta = 2.16 (SI: W/m3, Hz, T). "
+    "Sec. IX reports triangular-waveform measurements over 20-100 kHz, which is wider than the fit span. Converted to the classical k "
+    "by the exact k_i relation for storage.",
     url="https://doi.org/10.1109/TPEL.2011.2162252", locator="Table I, p. 970; Sec. IX validity")
 
 
-def tdk_core_evidence(core: str, slug: str) -> dict[str, Any]:
+def tdk_core_evidence(core: str, slug: str, *, title: str | None = None, coil_former_locator: str | None = None) -> dict[str, Any]:
+    """Evidence item for one TDK core datasheet (October 2024 editions).
+
+    ``title`` is the document title when it differs from the core name (the U-core sheet is titled
+    'U 93/76/30 with I 93/28/30'); ``coil_former_locator`` names the coil-former table row used for AN/lN/AR,
+    or ``None`` when the datasheet lists no coil former.
+    """
+    description = ("Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight) "
+                   "and outline drawing" + ("; coil-former table (AN winding cross section, lN average length of turn, AR resistance "
+                                            "factor) for the ordering code named in the record." if coil_former_locator else
+                                            "; the datasheet lists no coil former (no AN/lN)."))
+    locator = "Magnetic characteristics (per set) table; outline drawing" + (f"; {coil_former_locator}" if coil_former_locator else "")
     return evidence(
         f"evidence.tdk-{slug.replace('_', '-')}-datasheet-2024-10", "source",
-        f"TDK Electronics, 'Ferrites and accessories - {core}', core and accessories datasheet, Date: October 2024",
-        "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight), "
-        "coil-former table (AN winding cross section, lN average length of turn) and outline drawing.",
-        url=f"https://www.tdk-electronics.tdk.com/inf/80/db/fer/{slug}.pdf", version="October 2024",
-        locator="Magnetic characteristics table; coil former table; drawing")
+        f"TDK Electronics, 'Ferrites and accessories - {title or core}', core and accessories datasheet, Date: October 2024",
+        description, url=f"https://www.tdk-electronics.tdk.com/inf/80/db/fer/{slug}.pdf", version="October 2024", locator=locator)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -131,6 +144,19 @@ MAGNET_MATERIALS: dict[str, dict[str, Any]] = {
     "N87": {"manufacturer": "manufacturer.tdk", "mu": 2200, "fmin": 25e3, "fmax": 500e3},
 }
 MANUFACTURER_SLUG = {"manufacturer.tdk": "tdk", "manufacturer.ferroxcube": "ferroxcube", "manufacturer.fair-rite": "fair-rite"}
+# material_applications from constants.py at MAGNET_COMMIT (verbatim); the 'power' tag is derived from these statements
+MAGNET_APPLICATIONS: dict[str, str] = {
+    "3C90": "Power and general purpose transformers",
+    "3C94": "Power and general purpose transformers",
+    "3E6": "Wideband transformers and EMI-suppression filters",
+    "3F4": "Power and general purpose transformers",
+    "77": "High and low flux density inductive designs",
+    "78": "Power applications and low loss inductive applications",
+    "N27": "Power transformers",
+    "N30": "Broadband transformers",
+    "N49": "Power transformers",
+    "N87": "Power transformers",
+}
 
 
 def magnet_fit_sets(material: str, fits: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
@@ -183,7 +209,8 @@ def material_records(fits: dict[str, Any]) -> list[dict[str, Any]]:
                                              "note": "mu_r_0 as listed in Princeton MagNet constants.py (material_extra); conditions not stated there"}
             if info["fmin"] is not None:
                 props["recommended_frequency_range"] = {"min": info["fmin"], "max": info["fmax"], "unit": "Hz"}
-            props["description"] = (f"MnZn power ferrite {grade}. Datasheet parameters (Bsat, Curie temperature, density) are not yet "
+            props["description"] = (f"MnZn ferrite {grade}; application per Princeton MagNet constants.py (material_applications): "
+                                    f"'{MAGNET_APPLICATIONS[grade]}'. Datasheet parameters (Bsat, Curie temperature, density) are not yet "
                                     "transcribed for this grade; only Princeton MagNet derived loss parameters are available.")
         else:
             ev += [EV_TDK_N87, EV_TDK_N87_FIT, EV_MUHLETHALER]
@@ -231,13 +258,15 @@ def material_records(fits: dict[str, Any]) -> list[dict[str, Any]]:
             # Muhlethaler 2012 (publication), converted from k_i to k
             props["steinmetz_parameter_sets"].append({
                 "id": "set.muhlethaler-2012-n87-25c", "k": q(81.12, "W/m^3"), "alpha": 1.09, "beta": 2.16,
-                "temperature": q(25, "degC"), "frequency_range": {"min": 20e3, "max": 100e3, "unit": "Hz"},
+                "temperature": q(25, "degC"), "frequency_range": {"min": 20e3, "max": 50e3, "unit": "Hz"},
                 "flux_density_range": {"min": 0.05, "max": 0.1, "unit": "T"},
                 "excitation": "sinusoidal", "basis": "publication", "source_ref": EV_MUHLETHALER["id"],
                 "fit_metrics": {"n_points": 3},
                 "note": ("Published iGSE k_i = 8.41 (W/m3, Hz, T) converted to classical k = k_i (2 pi)^(alpha-1) 2^(beta-alpha) "
-                         "Int_0^2pi |cos|^alpha = 81.12 W/m3; fitted on an R42 toroid at 25 degC with symmetric triangular flux, "
-                         "dB = 0.1-0.2 T peak-to-peak."),
+                         "Int_0^2pi |cos|^alpha = 81.12 W/m3; fitted on an R42 toroid at 25 degC with symmetric triangular flux "
+                         "(D = 0.5; source excitation triangular, stored as the sinusoidal-equivalent classical k), dB = 0.1-0.2 T "
+                         "peak-to-peak. Validity ranges are the span of the three Table I fit points (20-50 kHz, 0.05-0.1 T peak); "
+                         "the paper's 20-100 kHz triangular measurement range (Sec. IX) is wider than the fit span."),
             })
         out.append({
             "schema_version": "0.2.0", "id": f"material.{slug}-{grade.lower()}", "kind": "magnetic_material", "name": grade,
@@ -248,7 +277,9 @@ def material_records(fits: dict[str, Any]) -> list[dict[str, Any]]:
                            "normalization": "all quantities converted to SI by aipe_magnetics.common.units with original units retained"},
             "quality": {"status": "normalized", "flags": [] if grade == "N87" else ["datasheet_parameters_missing"],
                         "notes": ["review_status unreviewed: awaiting owner review of the transcriptions"]},
-            "tags": ["ferrite", "mnzn", "power"],
+            # 'power' only where a transcribed application statement says so (N87 datasheet 'Preferred application: Power
+            # transformers'; MagNet constants.py material_applications for the other grades)
+            "tags": ["ferrite", "mnzn"] + (["power"] if "power" in MAGNET_APPLICATIONS[grade].lower() else []),
         })
     return out
 
@@ -260,9 +291,10 @@ def core_records() -> list[dict[str, Any]]:
     cores = []
 
     def rec(id: str, name: str, family: str, slug: str, part: str, *, c1_per_mm: float, le_mm: float, ae_mm2: float, amin_mm2: float,
-            ve_mm3: float, mass_g: float, an_mm2: float | None, ln_mm: float | None, dims_mm: dict[str, float], gaps_mm: list[float],
-            set_desc: str, extra: dict[str, Any], coil_former: str | None) -> dict[str, Any]:
-        ev = tdk_core_evidence(name, slug)
+            ve_mm3: float, mass_g: float, an_mm2: float | None, ln_mm: float | None, ar_uohm: float | None, dims_mm: dict[str, float],
+            gaps_mm: list[float], set_desc: str, extra: dict[str, Any], coil_former: str | None, coil_former_locator: str | None = None,
+            title: str | None = None, derived: dict[str, Any] | None = None) -> dict[str, Any]:
+        ev = tdk_core_evidence(name, slug, title=title, coil_former_locator=coil_former_locator)
         props: dict[str, Any] = {
             "family_ref": family, "manufacturer_ref": "manufacturer.tdk", "part_number": part,
             "material_refs": ["material.tdk-n27", "material.tdk-n87"], "set_description": set_desc,
@@ -284,61 +316,77 @@ def core_records() -> list[dict[str, Any]]:
                            "tool": {"id": "aipe.magnetics", "version": __version__}, "inputs": [ev["id"]],
                            "normalization": "mm -> m, mm^2 -> m^2, mm^3 -> m^3, g -> kg with original units retained"},
             "quality": {"status": "normalized", "notes": ["review_status unreviewed: awaiting owner review of the transcriptions"]},
-            "extensions": {"aipe.datasheet": {"core_constant_sum_l_over_A_per_mm": c1_per_mm, "coil_former": coil_former, **extra}},
+            "extensions": {"aipe.datasheet": {"core_constant_sum_l_over_A_per_mm": c1_per_mm, "coil_former": coil_former,
+                                              "coil_former_AR_uOhm": ar_uohm, **({"derived": derived} if derived else {}), **extra}},
             "tags": ["tdk", "ferrite-core"],
         }
 
     cores.append(rec("core.tdk-e65-32-27", "E 65/32/27", "core-family.tdk-e", "e_65_32_27", "B66387", c1_per_mm=0.27, le_mm=147, ae_mm2=535,
-                     amin_mm2=529, ve_mm3=78650, mass_g=394, an_mm2=426, ln_mm=188,
+                     amin_mm2=529, ve_mm3=78650, mass_g=394, an_mm2=426, ln_mm=188, ar_uohm=15.2,
                      dims_mm={"length_a": 65.0, "height_b_half": 32.8, "depth_c": 27.4, "centre_leg_width": 20.0,
                               "window_width_total": 44.2, "window_height_half": 22.2},
                      gaps_mm=[0.5, 1.0, 1.5, 2.5, 4.0], set_desc="core set of 2 E halves (per set values)",
                      extra={"ungapped_N87": {"AL_nH": 7900, "mu_e": 1700, "BS_mT_at_250A_per_m_100C": 320,
                                              "PV_W_per_set_max": 6.7, "PV_condition": "100 mT, 100 kHz, 100 degC"}},
-                     coil_former="B66388B1000T001 (one core set): AN 426 mm2, lN 188 mm"))
+                     coil_former="B66388B1000T001 (one core set): AN 426 mm2, lN 188 mm, AR 15.2 uOhm",
+                     coil_former_locator="coil former table p.4, row B66388B1000T001 (requires 1 core set)"))
     cores.append(rec("core.tdk-e70-33-32", "E 70/33/32", "core-family.tdk-e", "e_70_33_32", "B66371", c1_per_mm=0.22, le_mm=149, ae_mm2=683,
-                     amin_mm2=676, ve_mm3=102000, mass_g=514, an_mm2=456, ln_mm=230.5,
+                     amin_mm2=676, ve_mm3=102000, mass_g=514, an_mm2=456, ln_mm=209, ar_uohm=15.8,
                      dims_mm={"length_a": 70.5, "height_b_half": 33.2, "depth_c": 32.0, "centre_leg_width": 22.0,
                               "window_width_total": 48.0, "window_height_half": 21.9},
                      gaps_mm=[2.0, 2.5, 4.0], set_desc="core set of 2 E halves (per set values)",
                      extra={"ungapped_N87": {"AL_nH": 9700, "mu_e": 1700, "BS_mT_at_250A_per_m_100C": 320,
                                              "PV_W_per_set_max": 9.5, "PV_condition": "100 mT, 100 kHz, 100 degC"}},
-                     coil_former="B66372B1000T001 (one core set): AN 456 mm2, lN 230.5 mm"))
+                     coil_former="B66372B1000T001 (one core set): AN 456 mm2, lN 209 mm, AR 15.8 uOhm",
+                     coil_former_locator="coil former table p.4, row B66372B1000T001 (requires 1 core set; the 230.5 mm / 20 uOhm rows "
+                                         "are the two-core-set formers B66372A2000T001 and B66372B2000T001)"))
     cores.append(rec("core.tdk-etd59-31-22", "ETD 59/31/22", "core-family.tdk-etd", "etd_59_31_22", "B66397", c1_per_mm=0.38, le_mm=139,
-                     ae_mm2=368, amin_mm2=368, ve_mm3=51200, mass_g=260, an_mm2=365.6, ln_mm=106.1,
+                     ae_mm2=368, amin_mm2=368, ve_mm3=51200, mass_g=260, an_mm2=365.6, ln_mm=106.1, ar_uohm=10.0,
                      dims_mm={"length_a": 59.8, "height_b_half": 31.2, "depth_c": 22.1, "centre_leg_diameter": 22.1,
                               "window_width_total": 43.6, "window_height_half": 22.0},
                      gaps_mm=[0.2, 1.0, 1.5, 2.0], set_desc="core set of 2 ETD halves (per set values), IEC 63093-6",
                      extra={"ungapped_N87": {"AL_nH": 5300, "mu_e": 1590, "BS_mT_at_250A_per_m_100C": 320,
                                              "PV_W_per_set_max": 5.2, "PV_condition": "100 mT, 100 kHz, 100 degC"}},
-                     coil_former="B66398W1024T001: AN 365.6 mm2, lN 106.1 mm"))
+                     coil_former="B66398W1024T001: AN 365.6 mm2, lN 106.1 mm, AR 10.0 uOhm",
+                     coil_former_locator="coil former table, row B66398W1024T001"))
     cores.append(rec("core.tdk-pm87-70", "PM 87/70", "core-family.tdk-pm", "pm_87_70", "B65713", c1_per_mm=0.16, le_mm=146, ae_mm2=910,
-                     amin_mm2=700, ve_mm3=133000, mass_g=770, an_mm2=657, ln_mm=158,
+                     amin_mm2=700, ve_mm3=133000, mass_g=770, an_mm2=657, ln_mm=158, ar_uohm=8.27,
                      dims_mm={"diameter": 87.0, "height_total": 70.0, "centre_post_diameter": 31.7, "centre_hole_diameter": 8.5,
                               "window_height": 48.0},
                      gaps_mm=[], set_desc="core set of 2 PM halves (per set values), IEC 63093-10",
                      extra={"ungapped_N87": {"AL_nH": 14000, "mu_e": 1790, "PV_W_per_set_max": 8.0, "PV_condition": "100 mT, 100 kHz, 100 degC"}},
-                     coil_former="B65714K1020T001: AN 657 mm2, lN 158 mm"))
+                     coil_former="B65714K1020T001: AN 657 mm2, lN 158 mm, AR 8.27 uOhm",
+                     coil_former_locator="coil former table, row B65714K1020T001"))
     cores.append(rec("core.tdk-uu93-152-30", "UU 93/152/30", "core-family.tdk-u", "u_93_76_30", "B67345", c1_per_mm=0.42, le_mm=354, ae_mm2=840,
-                     amin_mm2=840, ve_mm3=297000, mass_g=1500, an_mm2=None, ln_mm=None,
-                     dims_mm={"length_a": 93.0, "height_b": 76.0, "depth_c": 30.0, "leg_width": 28.0, "window_width": 34.6, "window_height": 96.0},
+                     amin_mm2=840, ve_mm3=297000, mass_g=1500, an_mm2=None, ln_mm=None, ar_uohm=None,
+                     dims_mm={"length_a": 93.0, "height_b": 76.0, "depth_c": 30.0, "leg_width": 28.0, "window_width": 34.6,
+                              "window_height_single_u": 48.0},
                      gaps_mm=[], set_desc="two U 93/76/30 cores (UU combination, per set values); no coil former listed",
                      extra={"ungapped_N87": {"AL_nH": 5700, "mu_e": 1900, "PV_W_per_set_max": 5.5, "PV_condition": "100 mT, 25 kHz, 100 degC"}},
-                     coil_former=None))
+                     coil_former=None, title="U 93/76/30 with I 93/28/30",
+                     derived={"window_height_uu_mm": 96.0,
+                              "note": "UU 93/152/30 window height = 2 x 48 mm (single-U window height from the outline drawing, p.2); "
+                                      "derived by hand, not printed in the datasheet. window_width is the drawing's '34.6 min.'"}))
     return cores
 
 
 def family_records() -> list[dict[str, Any]]:
+    # a dimensional standard is recorded only where the core datasheet itself prints it ('To IEC 63093-6', 'To IEC 63093-10');
+    # the E and U datasheets mention IEC 63093 only for visual inspection, so no standard is asserted for them
     out = []
-    for fid, name, shape, std in (("core-family.tdk-e", "TDK E cores", "E", "IEC 63093 / IEC 62317"),
-                                  ("core-family.tdk-etd", "TDK ETD cores", "ETD", "IEC 63093-6"),
-                                  ("core-family.tdk-pm", "TDK PM cores", "PM", "IEC 63093-10"),
-                                  ("core-family.tdk-u", "TDK U cores", "U", "IEC 63093")):
+    for fid, name, shape, std, where in (("core-family.tdk-e", "TDK E cores", "E", None, None),
+                                         ("core-family.tdk-etd", "TDK ETD cores", "ETD", "IEC 63093-6", "ETD 59/31/22 datasheet header 'To IEC 63093-6'"),
+                                         ("core-family.tdk-pm", "TDK PM cores", "PM", "IEC 63093-10", "PM 87/70 datasheet header 'To IEC 63093-10'"),
+                                         ("core-family.tdk-u", "TDK U cores", "U", None, None)):
+        description = "Core family identity as used in the TDK datasheets." + (f" Dimensional standard: {where}." if where else
+                                                                               " No dimensional standard is printed on the datasheet.")
         ev = evidence(f"evidence.{fid.split('.')[-1]}-family", "source", "TDK Electronics ferrite core datasheets (October 2024)",
-                      "Core family identity as used in the TDK datasheets.", url="https://www.tdk-electronics.tdk.com/")
+                      description, url="https://www.tdk-electronics.tdk.com/")
+        properties: dict[str, Any] = {"manufacturer_ref": "manufacturer.tdk", "shape": shape}
+        if std:
+            properties["standard"] = std
         out.append({"schema_version": "0.2.0", "id": fid, "kind": "core_family", "name": name, "synthetic": False, "license": "NOASSERTION",
-                    "properties": {"manufacturer_ref": "manufacturer.tdk", "shape": shape, "standard": std},
-                    "evidence_refs": [ev["id"]], "evidence": [ev]})
+                    "properties": properties, "evidence_refs": [ev["id"]], "evidence": [ev]})
     return out
 
 

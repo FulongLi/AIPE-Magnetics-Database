@@ -41,9 +41,12 @@ against the constants published upstream in `src/magnet/constants.py` (`material
 documented there as `(k_i, alpha, beta)`): for **N87** and **3C90** our 25 degC fits reproduce α and
 β to four significant digits and the derived iGSE coefficient k_i within 0.2 %; for **3C94** α and β
 match but the upstream first entry equals our classical *k* (2.009 vs 2.0046), i.e. it appears to be
-k rather than k_i; for the remaining materials α/β differ by a few percent, so upstream evidently used
-different point selections. The bundled sets are therefore labelled as AIPE fits with their own
-metrics, not as upstream values.
+k rather than k_i; for the remaining materials the exponents differ by up to 12 % (N49: α −12.2 %,
+β +5.3 %; 78: α −4.5 %; 77: α −3.7 %; N27: α −3.5 %; 3F4: α −2.6 %, β +1.2 %; 3E6 and N30 within
+1.1 %), so upstream evidently used different point selections. The bundled sets are therefore labelled
+as AIPE fits with their own metrics, not as upstream values. The upstream `material_applications`
+strings of the same file are transcribed into the material descriptions (the `power` tag is derived
+from them and from the N87 datasheet only).
 
 ## Citation
 

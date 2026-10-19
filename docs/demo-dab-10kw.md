@@ -39,16 +39,20 @@ blocking/balanced control) - this is stated as an assumption.
   report).
 * Windings: copper, current density 4 A/mm^2, window fill factor 0.4, foil or litz as selected,
   Dowell 1-D AC resistance factor at 100 degC conductor temperature.
-* Candidate cores: catalogue E and ETD cores offered in N87 with effective parameters from TDK
-  datasheets (Ae, le, Ve, Amin, window area, mean turn length, mass).
+* Candidate cores: every catalogue core offered in N87 (E 65/32/27, E 70/33/32, ETD 59/31/22, PM 87/70,
+  UU 93/152/30) with effective parameters from TDK datasheets (Ae, le, Ve, Amin, window area, mean turn
+  length, mass). The UU core record has no coil former (no mean turn length / window area), so its copper
+  loss and window fill cannot be evaluated; it is reported as *not feasible* with that reason, never
+  ranked against complete totals.
 
 ## Steps performed (all through `aipe_magnetics.api`)
 
 1. Material lookup (`get_material("N87")`).
 2. Material parameter inspection (Bsat vs temperature, Steinmetz sets with validity ranges, Curie
    temperature, source locators, review status).
-3. Core candidate selection (`design_transformer` with `cores=None` screens the catalogue by area
-   product, then evaluates each candidate).
+3. Core candidate enumeration (`design_transformer` with `cores=None` evaluates every catalogue core
+   offered in N87; there is no area-product pre-screening - the window-fill check is the exact form of
+   that constraint).
 4. Basic turns calculation (Faraday, integer turns, realised turns ratio).
 5. Flux density estimation per candidate.
 6. Saturation screening (`validate_design`, margin against Bsat at 100 degC).
@@ -66,4 +70,8 @@ No hardware was built or measured. No thermal, finite-element, leakage-inductanc
 manufacturing analysis was run. The report separates **calculated** values (turns, flux density from
 Faraday's law), **model estimates** (core loss from iGSE with datasheet-fitted Steinmetz parameters,
 copper loss from Dowell's model) and **assumptions** (currents, fill factor, current density, flux
-limit), and prints the verification status (L1/L2) per capability.
+limit), and prints the verification status of each capability as derived from the bundled evidence
+registry: `L0 unverified` with a statement naming the missing file while the release evidence file
+`src/aipe_magnetics/verification/evidence/v0.2.0.json` has not been recorded by the maintainer's release
+step, L1/L2 per capability once it has. The zero-DC-bias assumption is recorded as `zero_dc_bias` in the
+design result.

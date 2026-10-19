@@ -6,6 +6,7 @@ from aipe_magnetics.common.errors import (
     ConvergenceError,
     DataIntegrityError,
     DataNotFoundError,
+    DestinationExistsError,
     InvalidInputError,
     LicenseRestrictionError,
     NumericalError,
@@ -31,7 +32,7 @@ from aipe_magnetics.common.units import MU_0, UnitRegistry, convert, si_unit_of,
 
 __all__ = [
     "AIPEMagneticsError", "AuthorizationError", "ConvergenceError", "DataIntegrityError", "DataNotFoundError",
-    "InvalidInputError", "LicenseRestrictionError", "NumericalError", "OutOfDomainError", "UnitError",
+    "DestinationExistsError", "InvalidInputError", "LicenseRestrictionError", "NumericalError", "OutOfDomainError", "UnitError",
     "UnsupportedOperationError",
     "Quantity", "Uncertainty", "require_dimension", "require_nonnegative", "require_positive",
     "Assumption", "EngineeringResult", "ErrorRecord", "Limitation", "ModelIdentity", "ResultValue",

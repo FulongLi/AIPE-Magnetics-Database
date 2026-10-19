@@ -7,6 +7,8 @@
   with ``--allow-write`` (or ``AIPE_MAGNETICS_MCP_ALLOW_WRITE=1``) *and* an explicit output path inside
   the allowed output directory.
 * The server never executes repository content or shell commands.
+* Unknown or misspelled tool arguments are rejected (``isError`` result naming the argument) instead of
+  being dropped silently by the SDK's generated argument model.
 
 Run: ``python -m aipe_magnetics.mcp.server`` (or the ``aipe-magnetics-mcp`` console script).
 Self-test: ``python -m aipe_magnetics.mcp.server --self-test`` lists the tools and exits.
@@ -34,10 +36,27 @@ INSTRUCTIONS = (
 )
 
 QUANTITY_DOC = "{'value': number, 'unit': str} in any registered unit (SI preferred; kHz, mT, degC accepted)"
+TRUE_VALUES = {"1", "true", "yes", "on"}
+FALSE_VALUES = {"0", "false", "no", "off", ""}
+
+
+def env_flag(name: str, default: bool = False) -> bool:
+    """Parse a boolean environment variable explicitly; any other spelling is an error, never silently 'off'."""
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    value = raw.strip().lower()
+    if value in TRUE_VALUES:
+        return True
+    if value in FALSE_VALUES:
+        return False
+    raise UnsupportedOperationError(f"{name}={raw!r} is not a boolean; use 1/true/yes or 0/false/no")
 
 
 class ServerConfig:
     def __init__(self, allow_write: bool = False, output_dir: str | Path | None = None):
+        if allow_write and not output_dir:
+            raise UnsupportedOperationError("allow_write requires an output_dir that written reports must stay inside")
         self.allow_write = allow_write
         self.output_dir = Path(output_dir).resolve() if output_dir else None
 
@@ -59,6 +78,7 @@ def build_server(config: ServerConfig | None = None):
 
     config = config or ServerConfig()
     server = MCPServer("aipe-magnetics", title=TOOL_NAME, instructions=INSTRUCTIONS, version=__version__)
+    server.middleware.append(_RejectUnknownArguments(server))
     read_only = ToolAnnotations(title=None, read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=False)
 
     def run(func, *args: Any, **kwargs: Any) -> dict[str, Any]:
@@ -95,8 +115,11 @@ def build_server(config: ServerConfig | None = None):
                  description=("Volumetric core loss (and total core loss when a core id is given) with the classical Steinmetz equation "
                               "(sinusoidal), iGSE (triangular/trapezoidal/piecewise-linear/sampled flux) or Bertotti (user coefficients). "
                               f"Quantities are {QUANTITY_DOC}. waveform: {{'kind': 'sinusoidal'|'triangular'|'trapezoidal'|'piecewise_linear'|'sampled', "
-                              "'duty': 0.5, 'duty_rise': ..., 'duty_flat': ..., 'breakpoints': [[t_frac, B_frac], ...], 'samples': [...]}. "
-                              "model: 'auto'|'steinmetz'|'igse'|'bertotti'. policy: 'reject' (default) or 'warn' for out-of-domain inputs."))
+                              "'duty': 0.5, 'duty_rise': ..., 'duty_flat': ..., 'breakpoints': [[t_frac, B_frac], ...], 'samples': [...], "
+                              "'endpoint_included': true}. The trapezoid is symmetric (rise, flat, fall, flat): 2*(duty_rise + duty_flat) must be 1 "
+                              "(duty_flat is derived when omitted). Sampled B(t) spans [0, T] with B[-1] == B[0] unless endpoint_included is false "
+                              "([0, T) data). model: 'auto'|'steinmetz'|'igse'|'bertotti' (bertotti needs model_parameters k_h, beta_h, k_c, k_e). "
+                              "policy: 'reject' (default) or 'warn' for out-of-domain inputs."))
     def estimate_core_loss(material: str, frequency: dict[str, Any], flux_density_peak: dict[str, Any], temperature: dict[str, Any] | None = None,
                            waveform: dict[str, Any] | None = None, model: str = "auto", core: str | None = None,
                            parameter_set: str | None = None, model_parameters: dict[str, float] | None = None,
@@ -112,12 +135,13 @@ def build_server(config: ServerConfig | None = None):
     @server.tool(name="evaluate_hysteresis", title="Evaluate hysteresis loop", annotations=read_only,
                  description=("Jiles-Atherton B-H loop evaluation via the ODE framework: peak B, remanence, coercivity, loop energy density, "
                               f"solver diagnostics. field_peak and field_dc are {QUANTITY_DOC} (A/m); parameters: {{Ms, a, alpha, k, c}} in SI "
-                              "(default: illustrative set, not a material fit)."))
+                              "(default: illustrative set, not a material fit). periods is the maximum number of periods integrated to reach "
+                              "periodic steady state (default 10, as in the Python API); too few periods give a convergence_error rejection."))
     def evaluate_hysteresis(field_peak: dict[str, Any], frequency: dict[str, Any] | None = None, field_dc: dict[str, Any] | None = None,
-                            waveform: str = "sinusoidal", periods: int = 4, parameters: dict[str, float] | None = None,
-                            samples_per_period: int = 400, policy: str = "reject") -> dict[str, Any]:
+                            waveform: str = "sinusoidal", periods: int = 10, parameters: dict[str, float] | None = None,
+                            samples_per_period: int = 400, steady_state_tol: float = 1e-4, policy: str = "reject") -> dict[str, Any]:
         payload: dict[str, Any] = {"field_peak": field_peak, "waveform": waveform, "periods": periods, "parameters": parameters,
-                                   "samples_per_period": samples_per_period, "policy": policy}
+                                   "samples_per_period": samples_per_period, "steady_state_tol": steady_state_tol, "policy": policy}
         if frequency is not None:
             payload["frequency"] = frequency
         if field_dc is not None:
@@ -126,16 +150,18 @@ def build_server(config: ServerConfig | None = None):
 
     @server.tool(name="design_inductor", title="Design inductor", annotations=read_only,
                  description=("Basic gapped inductor sizing: turns, air gap, peak flux density, saturation margin, core and copper loss, window fill. "
-                              f"Quantities are {QUANTITY_DOC}. core: catalogue core id or null to screen the catalogue. winding: "
+                              f"Quantities are {QUANTITY_DOC}. core: catalogue core id or null to evaluate every catalogue core offered in the "
+                              "material. ripple_duty: rising fraction of the triangular ripple flux (default 0.5). winding: "
                               "{'conductor_type': 'round'|'litz'|'foil', 'current_density': {...A/m^2}, 'fill_factor': 0.4, ...}. "
                               "flux_limit: {'mode': 'fraction_of_saturation', 'fraction': 0.7} or {'mode': 'absolute', 'absolute': {...T}}."))
     def design_inductor(inductance: dict[str, Any], current_peak: dict[str, Any], current_rms: dict[str, Any], frequency: dict[str, Any],
                         material: str, core: str | None = None, current_ripple_peak_to_peak: dict[str, Any] | None = None,
                         temperature: dict[str, Any] | None = None, flux_limit: dict[str, Any] | None = None,
                         winding: dict[str, Any] | None = None, loss_model: str = "auto", max_candidates: int = 5,
-                        policy: str = "warn") -> dict[str, Any]:
+                        ripple_duty: float = 0.5, policy: str = "warn") -> dict[str, Any]:
         payload: dict[str, Any] = {"inductance": inductance, "current_peak": current_peak, "current_rms": current_rms, "frequency": frequency,
-                                   "material": material, "core": core, "loss_model": loss_model, "max_candidates": max_candidates, "policy": policy}
+                                   "material": material, "core": core, "loss_model": loss_model, "max_candidates": max_candidates,
+                                   "ripple_duty": ripple_duty, "policy": policy}
         for key, value in (("current_ripple_peak_to_peak", current_ripple_peak_to_peak), ("temperature", temperature),
                            ("flux_limit", flux_limit), ("winding", winding)):
             if value is not None:
@@ -143,10 +169,13 @@ def build_server(config: ServerConfig | None = None):
         return run(api.design_inductor, payload)
 
     @server.tool(name="design_transformer", title="Design transformer", annotations=read_only,
-                 description=("Basic transformer sizing: candidate core screening, turns per winding, peak flux density, saturation margin, core loss "
-                              "(iGSE for square/trapezoidal voltage), winding losses (Dowell), window fill, ranked candidates. "
+                 description=("Basic transformer sizing: every catalogue core offered in the material (or the given core ids) is evaluated - turns "
+                              "per winding, peak flux density, saturation margin, core loss (iGSE for square/trapezoidal voltage), winding losses "
+                              "(Dowell), window fill - and feasible, completely evaluated candidates are ranked by total estimated loss. "
                               f"Quantities are {QUANTITY_DOC}. primary/secondaries: {{'name': str, 'voltage': {{...V}}, 'current_rms'?: {{...A}}, "
-                              "'winding'?: {...}}. voltage_waveform: 'square'|'sinusoidal'|'trapezoidal'; duty <= 0.5. cores: list of core ids or null."))
+                              "'power_share'?: fraction (secondaries; equal split when omitted), 'winding'?: {...}}. voltage_waveform: "
+                              "'square'|'sinusoidal'|'trapezoidal'; duty <= 0.5 is the fraction of the period with +V applied. cores: list of core ids "
+                              "or null."))
     def design_transformer(power: dict[str, Any], frequency: dict[str, Any], primary: dict[str, Any], secondaries: list[dict[str, Any]],
                            material: str, voltage_waveform: str = "square", duty: float = 0.5, cores: list[str] | None = None,
                            temperature: dict[str, Any] | None = None, flux_limit: dict[str, Any] | None = None,
@@ -210,6 +239,40 @@ def build_server(config: ServerConfig | None = None):
     return server
 
 
+class _RejectUnknownArguments:
+    """Server middleware: a ``tools/call`` whose arguments name a property the tool does not declare is refused.
+
+    The SDK's generated argument model ignores unknown keys, so a misspelled optional argument (``model_paramters``)
+    would silently fall back to the default and return a plausible number. The refusal is an ``isError`` tool result
+    naming the unknown argument(s) and the accepted ones.
+    """
+
+    def __init__(self, server: Any):
+        self._server = server
+        self._properties: dict[str, set[str]] | None = None
+
+    async def _declared(self) -> dict[str, set[str]]:
+        if self._properties is None:
+            tools = await self._server.list_tools()
+            self._properties = {t.name: set((t.input_schema or {}).get("properties", {})) for t in tools}
+        return self._properties
+
+    async def __call__(self, ctx: Any, call_next: Any) -> Any:
+        if ctx.method == "tools/call" and isinstance(ctx.params, dict):
+            name = ctx.params.get("name")
+            arguments = ctx.params.get("arguments") or {}
+            declared = (await self._declared()).get(name)
+            if declared is not None and isinstance(arguments, dict):
+                unknown = sorted(set(arguments) - declared)
+                if unknown:
+                    from mcp.types import CallToolResult, TextContent
+                    message = (f"invalid_input: unknown argument(s) for tool {name}: {', '.join(unknown)}; accepted arguments: "
+                               f"{', '.join(sorted(declared))}. Unknown arguments are refused rather than ignored so that a typo cannot "
+                               "silently change the calculation.")
+                    return CallToolResult(content=[TextContent(type="text", text=message)], isError=True)
+        return await call_next(ctx)
+
+
 def self_test(config: ServerConfig) -> int:
     """List the registered tools synchronously; exit code 0 when the server builds and lists tools."""
     import anyio
@@ -228,8 +291,8 @@ def self_test(config: ServerConfig) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="aipe-magnetics-mcp", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--allow-write", action="store_true", default=os.environ.get("AIPE_MAGNETICS_MCP_ALLOW_WRITE", "0") == "1",
-                        help="allow generate_report to write files (inside --output-dir)")
+    parser.add_argument("--allow-write", action="store_true", default=env_flag("AIPE_MAGNETICS_MCP_ALLOW_WRITE"),
+                        help="allow generate_report to write files (inside --output-dir); env AIPE_MAGNETICS_MCP_ALLOW_WRITE=1|true|yes")
     parser.add_argument("--output-dir", default=os.environ.get("AIPE_MAGNETICS_MCP_OUTPUT_DIR"),
                         help="directory that written reports must stay inside (required with --allow-write)")
     parser.add_argument("--self-test", action="store_true", help="build the server, list its tools and exit")

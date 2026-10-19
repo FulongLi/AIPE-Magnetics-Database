@@ -9,12 +9,22 @@ and may carry an uncertainty statement. Uncertainty is never fabricated: when un
 from __future__ import annotations
 
 import math
+import numbers
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from aipe_magnetics.common.errors import InvalidInputError, UnitError
 from aipe_magnetics.common.units import units
+
+
+def _real_number(value: Any, *, name: str = "value") -> Any:
+    """Reject booleans and strings *before* pydantic's lax coercion turns them into numbers."""
+    if value is None:
+        return value
+    if isinstance(value, bool) or not isinstance(value, numbers.Real):
+        raise ValueError(f"{name} must be a real number, got {type(value).__name__} {value!r}")
+    return value
 
 
 class Uncertainty(BaseModel):
@@ -32,8 +42,15 @@ class Uncertainty(BaseModel):
     coverage_factor: float | None = Field(default=None, description="k for expanded uncertainty")
     basis: str | None = Field(default=None, description="how the uncertainty was obtained")
 
+    @field_validator("value", "lower", "upper", "coverage_factor", mode="before")
+    @classmethod
+    def _numbers(cls, v: Any, info: Any) -> Any:
+        return _real_number(v, name=info.field_name)
+
     @model_validator(mode="after")
     def _consistent(self) -> "Uncertainty":
+        if self.kind == "unknown" and any(x is not None for x in (self.value, self.lower, self.upper, self.coverage_factor)):
+            raise ValueError("kind='unknown' cannot carry value, lower, upper or coverage_factor")
         if self.kind in ("standard", "expanded") and self.value is None:
             raise ValueError("standard/expanded uncertainty needs a value")
         if self.kind == "bounds" and (self.lower is None or self.upper is None):
@@ -52,6 +69,11 @@ class Original(BaseModel):
     value: float
     unit: str
 
+    @field_validator("value", mode="before")
+    @classmethod
+    def _numeric(cls, v: Any) -> Any:
+        return _real_number(v)
+
 
 class Quantity(BaseModel):
     """``{value, unit}`` with optional provenance of the original unit and an uncertainty statement."""
@@ -63,11 +85,15 @@ class Quantity(BaseModel):
     original: Original | None = None
     uncertainty: Uncertainty | None = None
 
+    @field_validator("value", mode="before")
+    @classmethod
+    def _numeric(cls, v: Any) -> Any:
+        # strings such as "100" and booleans are rejected explicitly; pydantic's lax mode would coerce them
+        return _real_number(v)
+
     @field_validator("value")
     @classmethod
     def _finite(cls, v: float) -> float:
-        if isinstance(v, bool) or not isinstance(v, (int, float)):
-            raise ValueError("value must be a real number")
         if not math.isfinite(v):
             raise ValueError("value must be finite")
         return float(v)
@@ -97,7 +123,10 @@ class Quantity(BaseModel):
             except (ValueError, UnitError) as error:
                 raise InvalidInputError(f"{name}: {error}") from None
         if isinstance(data, (tuple, list)) and len(data) == 2:
-            return cls.si(float(data[0]), str(data[1]))
+            try:
+                return cls.si(_real_number(data[0]), str(data[1]))
+            except (ValueError, UnitError) as error:
+                raise InvalidInputError(f"{name}: {error}") from None
         raise InvalidInputError(
             f"{name}: physical values must be given as {{'value': ..., 'unit': ...}}, not {type(data).__name__}")
 

@@ -31,11 +31,13 @@ Branch `feature/aipe-magnetics-v0.2`. The v0.1 files, commands and tests are pre
   (architecture / weights / inference configuration separation; numpy ANN + LSTM, Neural ODE,
   optional torch and mag-net-hub backends, verified synthetic reference ANN).
 - **Engineering engine**: material lookup/comparison, flux density, core-loss estimation,
-  inductor and transformer sizing with candidate screening, saturation screening, Dowell winding
-  resistance and copper loss, operating-point validation, Markdown/JSON reports.
+  inductor and transformer sizing (every catalogue core offered in the material evaluated and the
+  feasible, completely evaluated candidates ranked by total estimated loss), saturation screening,
+  Dowell winding resistance and copper loss, operating-point validation, Markdown/JSON reports.
 - **Verification framework**: evidence per capability and operating range at levels L1/L2/L3,
-  check suite with machine- and human-readable reports, bundled release evidence consulted by every
-  API result (`verified` / `partially_verified` / `out_of_range` / `unverified`).
+  check suite with machine- and human-readable reports, release evidence file consulted by every
+  API result (`verified` / `partially_verified` / `out_of_range` / `unverified`; `L0 unverified` with an
+  explicit statement while the file has not been recorded by the release step).
 - **Stable API and CLI** (`aipe_magnetics.api`, `aipe-magnetics`), typed requests and result
   envelopes (`aipe.magnetics.result/0.2`).
 - **Local stdio MCP server** (`aipe-magnetics-mcp`, mcp SDK 2.x): read-only by default, gated and
@@ -45,10 +47,65 @@ Branch `feature/aipe-magnetics-v0.2`. The v0.1 files, commands and tests are pre
 - **AIPE-Core round-trip adapter** (export → offline contract validation → import) with pinned
   Core/Registry schemas; `aipe.yaml` updated to v0.2 capabilities (`integration: native`).
 - **10 kW / 100 kHz DAB transformer demonstration** (`aipe-magnetics demo dab-10kw`).
-- **CI** matrix (Linux/Windows/macOS × Python 3.10/3.12), clean-environment wheel install test,
-  offline check, plugin packaging checks.
+- **CI** workflow (Linux/Windows/macOS × Python 3.10/3.12), clean-environment wheel install test,
+  offline check, plugin packaging checks. Its `verify --check-bundled` step passes only once the
+  bundled evidence file is committed (release step); no green run is recorded in this branch state.
 - Documentation: architecture, v0.1 audit, data standard, models, verification, API, MCP,
   plugins (install/uninstall/troubleshooting), sources and licensing, Core integration, demo.
+
+### Fixed during the pre-release review
+- Catalogue: `core.tdk-e70-33-32` mean turn length corrected from 230.5 mm (two-core-set former) to
+  209 mm (B66372B1000T001, one core set, AR 15.8 uOhm) per the TDK datasheet coil-former table p.4; AR
+  values recorded for every coil former; UU 93/152/30 window height stored as the drawn single-U 48 mm
+  with the derived 96 mm marked as derived; Muhlethaler 2012 N87 set validity reduced to the Table I
+  fit span (20-50 kHz); unsupported `power` tags and E/U-family standards removed.
+- `design_transformer` / `design_inductor`: candidates whose copper loss or window fill cannot be
+  evaluated are reported as not feasible (`evaluation: incomplete`) instead of being ranked on core
+  loss alone; a winding the Dowell model cannot evaluate or a foil wider than the window makes the
+  candidate infeasible; the selected candidate's warnings, Curie/frequency-range/loss-parameter
+  checks, a `zero_dc_bias` and (for trapezoidal voltage) a `trapezoidal_voltage_as_square` assumption
+  reach the top level; several secondaries share the throughput power (equal split or `power_share`);
+  user-supplied currents are labelled `specified`; the no-feasible-candidate error names the reasons.
+- `design_inductor`: `ripple_duty` (default 0.5) controls the triangular ripple waveform used by iGSE
+  and is recorded as an assumption; a ripple larger than 2 x the peak current is rejected.
+- Dowell porosity for round wire uses the equivalent square-conductor width (eta = h / pitch);
+  conductor temperatures outside the stated validity of the linear resistivity model are flagged.
+- `compare_materials` derives its verification block from the evidence registry (per material in
+  `data.comparison[].loss_verification`) instead of asserting L2.
+- Bertotti with user coefficients works (`model_parameters` k_h, beta_h, k_c, k_e).
+- `validate_design` reports `data.passed = null` (inconclusive) when a required check could not be
+  evaluated; the Curie check repeats the record note about the datasheet bound.
+- Evidence registry: a condition that is not supplied no longer counts as out of range
+  (`in_verified_range: null` with the unchecked dimension named); the missing bundled evidence file is
+  named in every status, in `aipe-magnetics info` and in `verification_status()`; `--update-bundled`
+  re-runs the suite until the bundle is stable and omits wall-clock durations.
+- MCP server: unknown or misspelled tool arguments are refused instead of silently dropped;
+  `evaluate_hysteresis` defaults match the API (`periods=10`, `steady_state_tol` exposed); write
+  authorisation requires an output directory at construction; `AIPE_MAGNETICS_MCP_ALLOW_WRITE` is parsed
+  explicitly; an existing destination is `destination_exists`, not `authorization_required`.
+- CLI: `--flux-fraction 0` reaches validation (rejected explicitly); `--duty-rise` alone derives the
+  symmetric trapezoid; malformed `--param`, missing files and non-envelope inputs give one
+  `ERROR <code>: <message>` line (exit 1); `report` accepts single envelopes, JSON reports and the demo
+  `steps[]` output; `mcp serve --allow-write` requires `--output-dir`.
+- Typed inputs: numeric strings and booleans are rejected for quantities, integers and floats; an
+  `unknown` uncertainty carries no numbers; the trapezoid constraint `2*(duty_rise + duty_flat) == 1`
+  is enforced at validation (`duty_flat` derived when omitted); `flux_density_peak` must be positive;
+  sampled waveforms declare `endpoint_included`.
+- Reports render material comparisons and validation check verdicts, print quantified uncertainties,
+  escape table pipes and no longer truncate candidate notes.
+- Documentation, manifest, skills and CI wording no longer claim area-product screening, an executed
+  ecosystem release run, host-validation runs, a reviewer-run torch test or committed release
+  evidence; the state of the bundled evidence file is stated wherever verification is mentioned.
+
+### Known issues (maintainer)
+- `src/aipe_magnetics/verification/evidence/v0.2.0.json` and `docs/verification-report-v0.2.0.md` are
+  produced by the release procedure (`verify --update-bundled`); `verify --check-bundled`,
+  `integration.registry-manifest-accepted` and
+  `tests/test_release_integrity.py::test_manifest_documentation_and_evidence_paths_exist` fail until
+  they are committed, and every model-based result reports `L0 unverified` (stated explicitly).
+- `.github/workflows/validate.yml` runs its original `python -m unittest discover -s tests -v`
+  unchanged: the pytest-only suites live in sub-directories without package markers (and the release
+  tests in `tests/release/`), so unittest discovery still finds exactly the 17 v0.1 tests.
 
 ### Changed
 - `aipe.yaml`: `name` AIPE Magnetics, `type: tool`, capabilities and tools extended, `aipe.core`

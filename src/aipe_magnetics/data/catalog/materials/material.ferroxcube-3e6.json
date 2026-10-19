@@ -3,11 +3,11 @@
   "evidence": [
     {
       "created_at": "2026-10-19T00:00:00Z",
-      "description": "Per-material constants published in the Princeton MagNet repository (MIT): manufacturer, initial permeability mu_r_0 and recommended frequency range; the repository's own Steinmetz/iGSE coefficients are documented there as (k_i, alpha, beta).",
+      "description": "Per-material constants published in the Princeton MagNet repository (MIT): manufacturer, initial permeability mu_r_0, recommended frequency range and the one-line application statement (material_applications); the repository's own Steinmetz/iGSE coefficients are documented there as (k_i, alpha, beta).",
       "id": "evidence.princeton-magnet-constants",
       "kind": "source",
       "license": "MIT",
-      "locator": "lines 14-53",
+      "locator": "material_steinmetz_param, material_extra, material_manufacturers, material_applications",
       "reference": "PrincetonUniversity/magnet, src/magnet/constants.py (material_steinmetz_param, material_extra, material_manufacturers)",
       "review_status": "unreviewed",
       "url": "https://github.com/PrincetonUniversity/magnet/blob/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/constants.py",
@@ -47,7 +47,7 @@
   "license": "NOASSERTION",
   "name": "3E6",
   "properties": {
-    "description": "MnZn power ferrite 3E6. Datasheet parameters (Bsat, Curie temperature, density) are not yet transcribed for this grade; only Princeton MagNet derived loss parameters are available.",
+    "description": "MnZn ferrite 3E6; application per Princeton MagNet constants.py (material_applications): 'Wideband transformers and EMI-suppression filters'. Datasheet parameters (Bsat, Curie temperature, density) are not yet transcribed for this grade; only Princeton MagNet derived loss parameters are available.",
     "grade": "3E6",
     "initial_permeability": {
       "note": "mu_r_0 as listed in Princeton MagNet constants.py (material_extra); conditions not stated there",
@@ -237,7 +237,6 @@
   "synthetic": false,
   "tags": [
     "ferrite",
-    "mnzn",
-    "power"
+    "mnzn"
   ]
 }

@@ -14,9 +14,9 @@ Tools: `design_inductor`, `validate_design`, `estimate_core_loss`, `get_material
 | --- | --- | --- |
 | inductance | H (uH) | target value at the operating point |
 | current: peak and RMS (or DC + ripple) | A | peak sets saturation, RMS sets copper loss |
-| ripple / AC flux swing | A or T | needed for core loss |
+| ripple / AC flux swing | A or T | needed for core loss; `ripple_duty` (default 0.5, symmetric triangle) sets the ripple shape used by iGSE |
 | switching frequency | Hz | |
-| material and core | catalogue ids or user records | if the user has no core yet, run with `core: null` to get an area-product based candidate list |
+| material and core | catalogue ids or user records | if the user has no core yet, run with `core: null` to evaluate every catalogue core offered in the material (feasible candidates ranked by total estimated loss) |
 | maximum flux density policy | T or fraction of Bsat | default: 70 % of Bsat at the maximum temperature (the tool records it as an assumption) |
 | maximum temperature | degC | selects Bsat(T) and Steinmetz set |
 | winding: wire type, current density, fill factor | - | defaults are explicit assumptions in the result |
@@ -47,5 +47,6 @@ current, or no Steinmetz parameter set covers the operating point) and propose c
   1-D model) and **assumed** parameters (fill factor, current density, flux limit).
 - Say explicitly that no thermal, FEM, fringing-field or manufacturing verification has been run
   unless a tool result says it has.
-- Quote the verification level/state. L2 means the equations were checked against analytical and
-  independent references, not that the design was built and measured.
+- Quote the verification level/state as returned (`L0 unverified` with an explicit statement while no
+  bundled evidence file is available). L2 means the loss-model equations were checked against analytical
+  and independent references, not that the design was built and measured.

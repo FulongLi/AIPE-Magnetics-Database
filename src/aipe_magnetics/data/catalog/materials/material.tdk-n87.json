@@ -3,11 +3,11 @@
   "evidence": [
     {
       "created_at": "2026-10-19T00:00:00Z",
-      "description": "Per-material constants published in the Princeton MagNet repository (MIT): manufacturer, initial permeability mu_r_0 and recommended frequency range; the repository's own Steinmetz/iGSE coefficients are documented there as (k_i, alpha, beta).",
+      "description": "Per-material constants published in the Princeton MagNet repository (MIT): manufacturer, initial permeability mu_r_0, recommended frequency range and the one-line application statement (material_applications); the repository's own Steinmetz/iGSE coefficients are documented there as (k_i, alpha, beta).",
       "id": "evidence.princeton-magnet-constants",
       "kind": "source",
       "license": "MIT",
-      "locator": "lines 14-53",
+      "locator": "material_steinmetz_param, material_extra, material_manufacturers, material_applications",
       "reference": "PrincetonUniversity/magnet, src/magnet/constants.py (material_steinmetz_param, material_extra, material_manufacturers)",
       "review_status": "unreviewed",
       "url": "https://github.com/PrincetonUniversity/magnet/blob/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/constants.py",
@@ -59,7 +59,7 @@
     },
     {
       "created_at": "2026-10-19T00:00:00Z",
-      "description": "Table I: iGSE parameters of EPCOS N87 (R42 toroid, 25 degC, symmetric triangular flux, 20-100 kHz): k_i = 8.41, alpha = 1.09, beta = 2.16 (SI: W/m3, Hz, T). Converted to the classical k by the exact k_i relation for storage.",
+      "description": "Table I: iGSE parameters of EPCOS N87 (R42 toroid, 25 degC, symmetric triangular flux) fitted on three operating points (dB 0.1 T at 20 kHz, 0.1 T at 50 kHz, 0.2 T at 50 kHz; dB peak-to-peak): k_i = 8.41, alpha = 1.09, beta = 2.16 (SI: W/m3, Hz, T). Sec. IX reports triangular-waveform measurements over 20-100 kHz, which is wider than the fit span. Converted to the classical k by the exact k_i relation for storage.",
       "id": "evidence.muhlethaler-2012-tpel",
       "kind": "source",
       "license": "NOASSERTION",
@@ -599,7 +599,7 @@
           "unit": "T"
         },
         "frequency_range": {
-          "max": 100000.0,
+          "max": 50000.0,
           "min": 20000.0,
           "unit": "Hz"
         },
@@ -608,7 +608,7 @@
           "unit": "W/m^3",
           "value": 81.12
         },
-        "note": "Published iGSE k_i = 8.41 (W/m3, Hz, T) converted to classical k = k_i (2 pi)^(alpha-1) 2^(beta-alpha) Int_0^2pi |cos|^alpha = 81.12 W/m3; fitted on an R42 toroid at 25 degC with symmetric triangular flux, dB = 0.1-0.2 T peak-to-peak.",
+        "note": "Published iGSE k_i = 8.41 (W/m3, Hz, T) converted to classical k = k_i (2 pi)^(alpha-1) 2^(beta-alpha) Int_0^2pi |cos|^alpha = 81.12 W/m3; fitted on an R42 toroid at 25 degC with symmetric triangular flux (D = 0.5; source excitation triangular, stored as the sinusoidal-equivalent classical k), dB = 0.1-0.2 T peak-to-peak. Validity ranges are the span of the three Table I fit points (20-50 kHz, 0.05-0.1 T peak); the paper's 20-100 kHz triangular measurement range (Sec. IX) is wider than the fit span.",
         "source_ref": "evidence.muhlethaler-2012-tpel",
         "temperature": {
           "original": {

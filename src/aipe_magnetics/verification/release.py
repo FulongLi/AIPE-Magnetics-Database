@@ -6,6 +6,11 @@ The bundled evidence file (``src/aipe_magnetics/verification/evidence/v<version>
 API consults when it reports a verification status. ``--check-bundled`` fails when the set of
 ``(check id, status, level, capability)`` of a fresh run differs from the bundled file, so stale or
 optimistic evidence cannot ship. ``--update-bundled`` rewrites the file (maintainers, before release).
+
+Some checks consult the bundled file themselves (the AIPE-Registry acceptance check cross-checks the
+manifest's verification claims against it), so ``--update-bundled`` writes the bundle, re-runs the suite
+against it and repeats until the fingerprint is stable; the persisted bundle omits wall-clock durations
+so that two runs with identical outcomes produce identical files.
 """
 
 from __future__ import annotations
@@ -19,8 +24,20 @@ from aipe_magnetics.verification.evidence import VerificationReport
 from aipe_magnetics.verification.suite import build_report, bundled_evidence_path, run_suite, write_reports
 
 
+MAX_UPDATE_PASSES = 3
+
+
 def fingerprint(report: VerificationReport) -> set[tuple[str, str, str, str]]:
     return {(r.id, r.status, r.level, r.capability) for r in report.records}
+
+
+def bundle_payload(report: VerificationReport) -> dict:
+    """The report as persisted in the bundled evidence file: no wall-clock duration, so identical outcomes give identical bytes."""
+    payload = report.model_dump(mode="json", exclude_none=True)
+    totals = payload.get("summary", {}).get("_totals")
+    if isinstance(totals, dict):
+        totals.pop("duration_s", None)
+    return payload
 
 
 def main_cli(*, output: Path, capability: str | None = None, check_bundled: bool = False, update_bundled: bool = False) -> int:
@@ -41,8 +58,25 @@ def main_cli(*, output: Path, capability: str | None = None, check_bundled: bool
             return 1
         bundled.parent.mkdir(parents=True, exist_ok=True)
         from aipe_magnetics.common.jsonio import dump
-        dump(report.model_dump(mode="json", exclude_none=True), bundled, overwrite=True)
-        print(f"bundled evidence updated: {bundled}")
+        stable = False
+        for _ in range(MAX_UPDATE_PASSES):
+            dump(bundle_payload(report), bundled, overwrite=True)
+            rerun = build_report(run_suite())
+            if fingerprint(rerun) == fingerprint(report):
+                stable = True
+                break
+            print("checks that consult the bundled evidence changed outcome after the update; re-running the suite")
+            report = rerun
+        if not stable:
+            print(f"bundled evidence did not stabilise within {MAX_UPDATE_PASSES} passes", file=sys.stderr)
+            return 1
+        json_path, md_path = write_reports(report, output)
+        totals = report.summary.get("_totals", {})
+        failed = [r for r in report.records if r.status != "pass"]
+        status = 0 if not failed else 1
+        print(f"bundled evidence updated: {bundled} ({totals.get('pass', 0)} passed, {totals.get('fail', 0)} failed after re-run)")
+        for r in failed:
+            print(f"  FAIL {r.check_id} ({r.capability})")
     if check_bundled:
         if not bundled.exists():
             print(f"bundled evidence missing: {bundled}", file=sys.stderr)

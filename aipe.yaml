@@ -3,7 +3,7 @@ id: aipe.magnetics-database
 name: AIPE Magnetics
 type: tool
 domains: [power-electronics]
-description: "Evidence-first magnetic engineering expert: unified magnetic data standard v0.2, verified loss and hysteresis models, inductor/transformer design calculations, per-capability verification evidence, local MCP server and standalone Codex / Claude Code plugins."
+description: "Evidence-first magnetic engineering expert: unified magnetic data standard v0.2, loss and hysteresis models with per-capability verification evidence, inductor/transformer design calculations, local MCP server and standalone Codex / Claude Code plugins."
 status: experimental
 maturity: prototype
 repository: https://github.com/FulongLi/AIPE-Magnetics-Database
@@ -120,8 +120,10 @@ validation:
     - tests/integrations/test_core_roundtrip.py
     - tests/integrations/test_registry_manifest.py
     - tests/plugins/test_packaging.py
+    # written by the maintainer's release step (aipe-magnetics verify --update-bundled); the Registry validator
+    # reports it as documentation_drift until it exists. The release procedure adds docs/verification-report-v0.2.0.md
+    # (the Markdown twin of the evidence file) here once it exists.
     - src/aipe_magnetics/verification/evidence/v0.2.0.json
-    - docs/verification-report-v0.2.0.md
     - docs/release-verification-v0.2.0.md
     - .github/workflows/validate.yml
     - .github/workflows/ci.yml
@@ -175,7 +177,7 @@ extensions:
       - {id: PrincetonUniversity/magnet, kind: source-adapter, status: optional, license: MIT}
       - {id: minjiechen/magnetchallenge-2, kind: source-adapter, status: reference-and-user-import, license: NOASSERTION}
     engineering_limitations:
-      - "Basic analytical sizing (Faraday, reluctance, area product, Dowell 1-D); no FEM, thermal, insulation or manufacturing analysis."
+      - "Basic analytical sizing (Faraday, reluctance, window fill, Dowell 1-D); every catalogue core offered in the material is evaluated, no area-product pre-screening; no FEM, thermal, insulation or manufacturing analysis."
       - "Core-loss models need parameter sets covering the operating point; otherwise the request is rejected rather than extrapolated."
       - "Uncertainty is reported as unknown unless a source quantifies it."
     standalone_operation: {requires_aipe_orchestrator: false, requires_registry_service: false, requires_other_domain_experts: false, requires_commercial_software: false, requires_llm_credentials: false}

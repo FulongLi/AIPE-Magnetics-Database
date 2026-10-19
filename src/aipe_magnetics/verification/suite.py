@@ -223,8 +223,19 @@ def bundled_evidence_path() -> Path:
     return Path(__file__).resolve().parent / "evidence" / f"v{__version__}.json"
 
 
+def bundled_evidence_available() -> bool:
+    """True when the committed evidence file for this version exists."""
+    return bundled_evidence_path().exists()
+
+
 def load_bundled_registry() -> VerificationRegistry:
+    """The bundled evidence registry; when the file is missing, an *empty* registry that says so in every status.
+
+    The absence is never silent: :attr:`VerificationRegistry.missing_source` names the expected file, every
+    :meth:`VerificationRegistry.status_for` statement mentions it, and ``aipe-magnetics info`` /
+    ``verification_status`` report it.
+    """
     path = bundled_evidence_path()
     if not path.exists():
-        return VerificationRegistry()
+        return VerificationRegistry(missing_source=path)
     return VerificationRegistry.load(path)

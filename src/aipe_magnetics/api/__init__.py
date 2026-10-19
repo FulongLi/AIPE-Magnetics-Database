@@ -30,6 +30,7 @@ from aipe_magnetics.api.types import (
     TransformerDesignRequest,
     WaveformSpec,
 )
+from aipe_magnetics.api.types import _q as _typed_q
 from aipe_magnetics.common.errors import AIPEMagneticsError, InvalidInputError
 from aipe_magnetics.common.quantity import Quantity
 from aipe_magnetics.common.results import EngineeringResult
@@ -84,8 +85,9 @@ def _guard(capability: str, func: Callable[[], EngineeringResult], inputs: dict[
         return EngineeringResult.rejected(capability, error, inputs=inputs)
 
 
-def _q(value: Any, name: str) -> Quantity | None:
-    return None if value is None else Quantity.parse(value, name=name).to_si()
+def _q(value: Any, unit: str, name: str) -> Quantity | None:
+    """Dimension-checked, SI-normalised optional quantity (the same rules as the typed request models)."""
+    return _typed_q(value, unit, name, optional=True)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -105,11 +107,13 @@ def compare_materials(materials: list[str], frequency: Any = None, flux_density_
                       catalog: Any | None = None) -> EngineeringResult:
     from aipe_magnetics.engineering import materials as m
 
-    def run() -> EngineeringResult:
-        return m.compare_materials(list(materials), _q(frequency, "frequency"), _q(flux_density_peak, "flux_density_peak"),
-                                   _q(temperature, "temperature"), catalog)
+    items = list(materials) if isinstance(materials, (list, tuple, set)) else [materials]
 
-    return _guard(m.CAP_COMPARE, run, {"materials": list(materials)})
+    def run() -> EngineeringResult:
+        return m.compare_materials(items, _q(frequency, "Hz", "frequency"), _q(flux_density_peak, "T", "flux_density_peak"),
+                                   _q(temperature, "K", "temperature"), catalog)
+
+    return _guard(m.CAP_COMPARE, run, {"materials": items})
 
 
 # -------------------------------------------------------------------------------------------------
@@ -193,27 +197,46 @@ def generate_report(results: list[EngineeringResult] | EngineeringResult, reques
 
 def verification_status(capability: str | None = None, *, frequency: Any = None, temperature: Any = None,
                         flux_density_peak: Any = None, material: str | None = None, excitation: str | None = None) -> EngineeringResult:
-    """Verification evidence (per capability and operating range) from the bundled release evidence file."""
+    """Verification evidence (per capability and operating range) from the bundled release evidence file.
+
+    Without a capability the envelope summarises the registry; its verification block then reports whether the
+    bundled evidence file exists at all (``unverified`` with an explicit statement when it does not).
+    """
     from aipe_magnetics.verification.suite import bundled_evidence_path, load_bundled_registry
 
-    registry = load_bundled_registry()
-    result = EngineeringResult(capability="aipe.magnetics.verification_status",
-                               inputs={"capability": capability, "material": material, "excitation": excitation})
-    result.data["evidence_file"] = str(bundled_evidence_path())
-    result.data["capabilities"] = registry.summary()
-    if capability:
-        f, t, b = _q(frequency, "frequency"), _q(temperature, "temperature"), _q(flux_density_peak, "flux_density_peak")
-        status = registry.status_for(capability, frequency=f.value if f else None, temperature=t.value if t else None,
-                                     flux_density_peak=b.value if b else None, material=material, excitation=excitation)
-        result.verification = status
-        result.data["records"] = [r.model_dump(mode="json", exclude_none=True) for r in registry.for_capability(capability)]
-    else:
-        result.verification.level = "L1"
-        result.verification.state = "verified"
-        result.verification.statement = "Summary of all recorded evidence; query a capability for a range-specific status."
-    result.limit("evidence_scope", "Verification evidence covers software, numerical and physical consistency (L1/L2) unless an L3 "
-                 "record states otherwise; no hardware qualification is implied.")
-    return result
+    def run() -> EngineeringResult:
+        registry = load_bundled_registry()
+        result = EngineeringResult(capability="aipe.magnetics.verification_status",
+                                   inputs={"capability": capability, "material": material, "excitation": excitation})
+        path = bundled_evidence_path()
+        result.data["evidence_file"] = str(path)
+        result.data["evidence_file_exists"] = path.exists()
+        result.data["capabilities"] = registry.summary()
+        result.data["record_count"] = len(registry.records)
+        if not path.exists():
+            result.warn("bundled_evidence_missing", f"The bundled evidence file {path} is missing; every capability reports L0 unverified "
+                        "until a maintainer records it with 'aipe-magnetics verify --update-bundled'.", "warning")
+        if capability:
+            f, t, b = _q(frequency, "Hz", "frequency"), _q(temperature, "K", "temperature"), _q(flux_density_peak, "T", "flux_density_peak")
+            status = registry.status_for(capability, frequency=f.value if f else None, temperature=t.value if t else None,
+                                         flux_density_peak=b.value if b else None, material=material, excitation=excitation)
+            result.verification = status
+            result.data["records"] = [r.model_dump(mode="json", exclude_none=True) for r in registry.for_capability(capability)]
+        elif registry.records:
+            result.verification.level = "L1"
+            result.verification.state = "verified"
+            result.verification.statement = (f"Summary of {len(registry.records)} recorded evidence record(s); query a capability for a "
+                                             "range-specific status.")
+        else:
+            result.verification.level = "L0"
+            result.verification.state = "unverified"
+            result.verification.statement = ("No verification evidence is recorded" +
+                                             (f": the bundled evidence file {path} is missing." if not path.exists() else " (empty registry)."))
+        result.limit("evidence_scope", "Verification evidence covers software, numerical and physical consistency (L1/L2) unless an L3 "
+                     "record states otherwise; no hardware qualification is implied.")
+        return result
+
+    return _guard("aipe.magnetics.verification_status", run, {"capability": capability})
 
 
 def list_capabilities() -> EngineeringResult:

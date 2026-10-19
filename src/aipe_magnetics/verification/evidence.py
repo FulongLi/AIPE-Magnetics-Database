@@ -47,27 +47,47 @@ class OperatingRange(BaseModel):
     flux_density_peak: ValidityRange | None = None
     note: str | None = None
 
+    def decide(self, *, frequency: float | None = None, temperature: float | None = None,
+               flux_density_peak: float | None = None, material: str | None = None,
+               excitation: str | None = None) -> tuple[bool | None, list[str]]:
+        """``(decision, undecided)`` for the supplied conditions.
+
+        ``decision`` is ``False`` as soon as one *supplied* condition lies outside its declared range,
+        ``True`` when every declared dimension was supplied and lies inside, and ``None`` when the range
+        cannot be decided: no dimension is declared, or a declared dimension was not supplied (listed in
+        ``undecided``). A missing condition is never treated as "outside".
+        """
+        inside = False
+        undecided: list[str] = []
+        for name, value, rng in (("frequency", frequency, self.frequency), ("temperature", temperature, self.temperature),
+                                 ("flux_density_peak", flux_density_peak, self.flux_density_peak)):
+            if rng is None:
+                continue
+            if value is None:
+                undecided.append(name)
+                continue
+            if not rng.contains(float(value)):
+                return False, undecided
+            inside = True
+        for name, value, allowed in (("material", material, self.materials), ("excitation", excitation, self.excitation)):
+            if allowed is None:
+                continue
+            if value is None:
+                undecided.append(name)
+                continue
+            if value not in allowed:
+                return False, undecided
+            inside = True
+        if inside and not undecided:
+            return True, []
+        return None, undecided
+
     def contains(self, *, frequency: float | None = None, temperature: float | None = None,
                  flux_density_peak: float | None = None, material: str | None = None,
                  excitation: str | None = None) -> bool | None:
-        """True/False when the range can be decided; None when no range dimension is declared."""
-        decided = False
-        for value, rng in ((frequency, self.frequency), (temperature, self.temperature),
-                           (flux_density_peak, self.flux_density_peak)):
-            if rng is None:
-                continue
-            decided = True
-            if value is None or not rng.contains(float(value)):
-                return False
-        if self.materials is not None:
-            decided = True
-            if material is None or material not in self.materials:
-                return False
-        if self.excitation is not None:
-            decided = True
-            if excitation is None or excitation not in self.excitation:
-                return False
-        return True if decided else None
+        """True/False when the range can be decided from the supplied conditions; None when it cannot."""
+        return self.decide(frequency=frequency, temperature=temperature, flux_density_peak=flux_density_peak,
+                           material=material, excitation=excitation)[0]
 
 
 class EvidenceRecord(BaseModel):
@@ -107,8 +127,20 @@ LEVEL_ORDER = {"L0": 0, "L1": 1, "L2": 2, "L3": 3}
 class VerificationRegistry:
     """Queryable collection of evidence records."""
 
-    def __init__(self, records: Iterable[EvidenceRecord] = ()):
+    def __init__(self, records: Iterable[EvidenceRecord] = (), *, missing_source: Path | None = None):
         self.records: list[EvidenceRecord] = list(records)
+        #: path of a bundled evidence file that should have been loaded but does not exist (reported, never hidden)
+        self.missing_source: Path | None = missing_source
+
+    @property
+    def evidence_available(self) -> bool:
+        return bool(self.records) and self.missing_source is None
+
+    def _missing_note(self) -> str:
+        if self.missing_source is None:
+            return ""
+        return (f" The bundled evidence file {self.missing_source} is missing, so no verification evidence is available "
+                "to any result; a maintainer records it with 'aipe-magnetics verify --update-bundled'.")
 
     @classmethod
     def from_report(cls, report: VerificationReport) -> "VerificationRegistry":
@@ -163,7 +195,7 @@ class VerificationRegistry:
         recs = self.for_capability(capability)
         if not recs:
             return VerificationStatus(level="L0", state="unverified",
-                                      statement=f"No verification evidence recorded for {capability}.")
+                                      statement=f"No verification evidence recorded for {capability}." + self._missing_note())
         if any(r.status == "fail" for r in recs):
             failed = [r.id for r in recs if r.status == "fail"]
             return VerificationStatus(level="L0", state="failed", evidence_refs=failed,
@@ -172,34 +204,51 @@ class VerificationRegistry:
         if not passing:
             return VerificationStatus(level="L0", state="not_run", evidence_refs=[r.id for r in recs],
                                       statement=f"Verification checks for {capability} have not been run.")
-        in_range: list[EvidenceRecord] = []
-        ranged = False
+        applicable: list[EvidenceRecord] = []   # unranged, ranged-and-inside, or ranged-but-undecidable records
+        confirmed: list[EvidenceRecord] = []    # ranged records whose declared range contains the supplied conditions
+        unchecked: list[EvidenceRecord] = []    # ranged records whose range could not be decided (condition not supplied)
+        outside: list[EvidenceRecord] = []
+        undecided_dims: set[str] = set()
         for r in passing:
             if r.range is None:
-                in_range.append(r)
+                applicable.append(r)
                 continue
-            decision = r.range.contains(frequency=frequency, temperature=temperature,
-                                        flux_density_peak=flux_density_peak, material=material, excitation=excitation)
-            if decision is None:
-                in_range.append(r)
+            decision, undecided = r.range.decide(frequency=frequency, temperature=temperature,
+                                                 flux_density_peak=flux_density_peak, material=material, excitation=excitation)
+            if decision is True:
+                applicable.append(r)
+                confirmed.append(r)
+            elif decision is False:
+                outside.append(r)
             else:
-                ranged = True
-                if decision:
-                    in_range.append(r)
+                applicable.append(r)
+                if undecided:
+                    unchecked.append(r)
+                    undecided_dims.update(undecided)
         level = "L0"
-        for r in in_range:
+        for r in applicable:
             if LEVEL_ORDER[r.level] > LEVEL_ORDER[level]:
                 level = r.level
-        ranged_records = [r for r in passing if r.range is not None]
-        in_ranged = [r for r in in_range if r.range is not None]
-        if ranged and ranged_records and not in_ranged:
+        if outside and not confirmed and not unchecked:
             unranged_level = level
             return VerificationStatus(
                 level=unranged_level, state="out_of_range", in_verified_range=False,
-                evidence_refs=[r.id for r in in_range],
+                evidence_refs=[r.id for r in applicable],
                 statement=(f"Conditions lie outside every verified operating range for {capability}; "
                            f"only range-independent evidence (up to {unranged_level}) applies."))
         state = "verified" if level in ("L2", "L3") else "partially_verified"
-        return VerificationStatus(level=level, state=state, in_verified_range=(True if ranged else None),
-                                  evidence_refs=[r.id for r in in_range],
-                                  statement=f"Passing evidence up to {level} applies to these conditions for {capability}.")
+        if confirmed:
+            in_verified_range: bool | None = True
+            statement = f"Passing evidence up to {level} applies to these conditions for {capability}."
+        elif unchecked:
+            in_verified_range = None
+            dims = ", ".join(sorted(undecided_dims))
+            statement = (f"Passing evidence up to {level} exists for {capability}; its operating range was not checked because "
+                         f"no {dims} condition was supplied.")
+        else:
+            in_verified_range = None
+            statement = f"Passing evidence up to {level} applies to {capability} (no operating range declared)."
+        if outside:
+            statement += f" {len(outside)} ranged record(s) do not cover the supplied conditions."
+        return VerificationStatus(level=level, state=state, in_verified_range=in_verified_range,
+                                  evidence_refs=[r.id for r in applicable], statement=statement)
