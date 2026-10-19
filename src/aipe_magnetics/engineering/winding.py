@@ -91,6 +91,11 @@ def _window_breadth(window_area: float | None, dimensions: dict[str, float] | No
         for key in ("window_breadth", "winding_breadth", "bobbin_breadth"):
             if key in dimensions and dimensions[key] > 0:
                 return float(dimensions[key]), None
+        # datasheet outline dimensions: winding breadth ~ 90 % of the core window height (bobbin flanges)
+        if dimensions.get("window_height_half", 0) > 0:
+            return 0.9 * 2.0 * float(dimensions["window_height_half"]), "winding breadth taken as 90 % of the core window height (2 x half height)"
+        if dimensions.get("window_height", 0) > 0:
+            return 0.9 * float(dimensions["window_height"]), "winding breadth taken as 90 % of the core window height"
     if window_area:
         # assumption: window aspect ratio breadth:height = 2:1 -> breadth = sqrt(2 * A_w)
         return math.sqrt(2.0 * window_area), "window breadth estimated as sqrt(2*A_w) (2:1 aspect assumption)"
