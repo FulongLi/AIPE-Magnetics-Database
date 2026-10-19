@@ -1,0 +1,95 @@
+name: AIPE Magnetics v0.2
+on: [push, pull_request]
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, py${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - name: Install package with development extras
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+      - name: Legacy v0.1 checks still pass
+        run: |
+          python -m unittest discover -s tests -p "test_records.py" -v
+          python scripts/validate.py examples/synthetic-transformer.json
+      - name: Unit, model, API, MCP, plugin and integration tests
+        run: python -m pytest -q
+      - name: Verification suite (machine- and human-readable reports)
+        run: python -m aipe_magnetics.cli.main verify --output reports/verification --check-bundled
+      - name: DAB 10 kW transformer demonstration (offline)
+        run: python -m aipe_magnetics.cli.main demo dab-10kw --output reports/demo
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ matrix.os }}-py${{ matrix.python }}
+          path: reports/
+
+  clean-install:
+    name: clean-environment install from wheel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build sdist and wheel
+        run: python -m pip install --upgrade pip build && python -m build
+      - name: Install wheel into a fresh virtual environment and smoke-test
+        run: |
+          python -m venv /tmp/clean
+          /tmp/clean/bin/python -m pip install --upgrade pip
+          /tmp/clean/bin/python -m pip install dist/*.whl
+          /tmp/clean/bin/python -m pip install "aipe-magnetics[mcp,hdf5]" --find-links dist --no-index || /tmp/clean/bin/python -m pip install "mcp>=2,<3" h5py
+          cd /tmp
+          /tmp/clean/bin/aipe-magnetics info
+          /tmp/clean/bin/aipe-magnetics materials list
+          /tmp/clean/bin/aipe-magnetics demo dab-10kw --output /tmp/demo-out
+          /tmp/clean/bin/python -m aipe_magnetics.mcp.server --self-test
+      - name: Offline operation check (network disabled)
+        run: |
+          /tmp/clean/bin/python - <<'EOF'
+          import socket
+          def forbidden(*a, **k):
+              raise AssertionError("network access attempted")
+          socket.socket = forbidden  # type: ignore[assignment]
+          from aipe_magnetics.api import list_materials, estimate_core_loss
+          print(list_materials().status)
+          print(estimate_core_loss(material="example-synthetic-ferrite", frequency={"value": 100, "unit": "kHz"},
+                                   flux_density_peak={"value": 100, "unit": "mT"}, temperature={"value": 100, "unit": "degC"}).status)
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  plugins:
+    name: plugin packaging checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e ".[dev]"
+      - name: Structural validation of Codex and Claude Code plugin packages
+        run: python -m pytest -q tests/plugins
+      - name: Claude Code manifest validation (when the CLI is available)
+        run: |
+          if command -v claude >/dev/null 2>&1; then
+            claude plugin validate plugins/claude/aipe-magnetics
+            claude plugin validate plugins/claude
+          else
+            echo "::notice::claude CLI not installed on the runner; manifest validation executed locally only (see docs/plugins.md)"
+          fi

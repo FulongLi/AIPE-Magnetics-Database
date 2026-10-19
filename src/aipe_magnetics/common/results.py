@@ -120,6 +120,8 @@ class EngineeringResult(BaseModel):
     model: ModelIdentity | None = None
     inputs: dict[str, Any] = Field(default_factory=dict, description="validated input conditions (JSON-serialisable)")
     values: dict[str, ResultValue] = Field(default_factory=dict)
+    data: dict[str, Any] = Field(default_factory=dict,
+                                 description="structured non-scalar payload (tables, records, arrays), JSON-serialisable")
     assumptions: list[Assumption] = Field(default_factory=list)
     sources: list[SourceReference] = Field(default_factory=list)
     verification: VerificationStatus = Field(default_factory=VerificationStatus)

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "aipe-magnetics": {
+      "command": "python",
+      "args": ["-m", "aipe_magnetics.mcp.server"],
+      "env": {
+        "AIPE_MAGNETICS_MCP_ALLOW_WRITE": "0"
+      }
+    }
+  }
+}
