@@ -261,14 +261,20 @@ def main(argv: list[str] | None = None) -> int:
             print(f"migrated {args.source} -> {args.destination}")
             return 0
         if args.check:
-            return sc.check_exported(args.directory)
-        sc.export_schemas(args.directory)
-        print(f"exported schemas to {args.directory}")
+            problems = sc.check_exported_schemas(args.directory)
+            print("\n".join(problems) if problems else f"schemas in {args.directory} match a fresh export")
+            return 1 if problems else 0
+        written = sc.export_schemas(args.directory)
+        print(f"exported {len(written)} schema file(s) to {args.directory}")
         return 0
     if args.command == "import":
-        from aipe_magnetics.data.importers.json_record import import_record
-        result = import_record(args.source, args.destination, catalogue=args.catalogue, migrate=args.migrate)
-        print(f"imported {args.source} -> {args.destination} ({len(result.records)} record(s))")
+        from aipe_magnetics.common.jsonio import load
+        from aipe_magnetics.data.importers.json_record import import_json_record
+        catalogue = [load(p) for p in args.catalogue] or None
+        result = import_json_record(args.source, args.destination, catalogue=catalogue, migrate_v01=args.migrate)
+        print(f"imported {args.source} -> {args.destination} ({len(result.records)} record(s), source sha256 {result.source_sha256})")
+        for warning in result.warnings:
+            print(f"  warning: {warning}")
         return 0
     if args.command == "mcp":
         from aipe_magnetics.mcp import server as srv
