@@ -7,7 +7,7 @@ import math
 import numpy as np
 import pytest
 
-from aipe_magnetics.common.errors import DataNotFoundError, InvalidInputError, OutOfDomainError
+from aipe_magnetics.common.errors import ConvergenceError, DataNotFoundError, InvalidInputError, OutOfDomainError
 from aipe_magnetics.common.units import MU_0
 from aipe_magnetics.models.contract import ModelOutput
 from aipe_magnetics.models.dynamic import Excitation, SolverConfig, solve
@@ -22,6 +22,7 @@ from aipe_magnetics.models.physics import (
     get_parameter_set,
     langevin,
     langevin_derivative,
+    loop_metrics,
 )
 from aipe_magnetics.models.physics.anhysteretic import (
     LANGEVIN_SERIES_THRESHOLD,
@@ -80,6 +81,7 @@ class TestJilesAthertonODE:
         {"Ms": 0.0}, {"Ms": -1.0}, {"a": 0.0}, {"k": 0.0}, {"alpha": -1e-3}, {"c": 1.0}, {"c": -0.1},
         {"c": float("nan")}, {"Ms": "1.6e6"}, {"Ms": True},
         {"alpha": 0.05, "c": 0.9},  # alpha*c*Ms/(3a) >= 1: singular reversible feedback
+        {"alpha": 2.1e-3},  # alpha*Ms/(3a) >= 1: multivalued anhysteretic
     ])
     def test_invalid_parameters(self, kwargs):
         params = {**JA_ILLUSTRATIVE.as_kwargs(), **kwargs}
@@ -215,6 +217,130 @@ class TestJilesAthertonModel:
 
 
 # ---------------------------------------------------------------------------------------------
+# regressions from the independent review (initial state, DC bias, small signal, asymmetry, errors)
+# ---------------------------------------------------------------------------------------------
+class TestInitialStateAndBias:
+    @pytest.mark.parametrize("exc", [
+        Excitation.sinusoidal(2000.0, 50.0, offset=500.0),
+        Excitation.sinusoidal(2000.0, 50.0, offset=1000.0),
+        Excitation.sinusoidal(2000.0, 50.0, phase=0.3),
+        Excitation.sinusoidal(5000.0, 50.0, phase=math.pi / 2),
+        Excitation.triangular(200.0, 50.0, offset=-1000.0),
+        Excitation.triangular(50.0, 50.0, offset=-2000.0),
+    ], ids=["offset500", "offset1000", "phase0.3", "phase_pi_2", "tri_minor_-1000", "tri_minor_-2000"])
+    def test_nonzero_start_is_premagnetised(self, exc):
+        model = JilesAthertonModel.illustrative()
+        out = model.trajectory(exc)
+        assert out.diagnostics["steady_state"] and out.values["loop_energy_density"].value > 0.0
+        assert out.values["magnetisation_peak"].value <= model.ode.Ms and not out.diagnostics["constraint_violations"]
+        premag = out.diagnostics["premagnetisation"]
+        assert premag["H_end_A_per_m"] == pytest.approx(exc(0.0))
+        assert abs(premag["gap_M_an_minus_M_A_per_m"]) < model.ode.admissible_gap
+        assert out.diagnostics["initial_state"]["source"] == "premagnetisation_ramp"
+        assumption = next(a for a in out.assumptions if a.id == "ja.initial_state")
+        assert "ramp" in assumption.statement and assumption.basis == "model_assumption"
+
+    def test_sampled_field_with_nonzero_start_is_premagnetised(self):
+        model = JilesAthertonModel.illustrative()
+        t = np.linspace(0.0, 0.02, 201)
+        out = model.trajectory((t, 500.0 + 1000.0 * np.sin(2 * np.pi * 50 * t)))
+        assert out.diagnostics["premagnetisation"] is not None
+        assert out.diagnostics["premagnetisation"]["H_end_A_per_m"] == pytest.approx(500.0)
+        assert out.diagnostics["trajectory"]["M"][0] == pytest.approx(out.diagnostics["premagnetisation"]["M_end_A_per_m"])
+
+    def test_premagnetised_state_equals_the_initial_curve(self):
+        model = JilesAthertonModel.illustrative()
+        cfg = model.default_config(1.0)
+        ramp = Excitation.piecewise_linear([0.0, 1.0], [0.0, 1000.0], periodic=False)
+        sol = solve(model.ode, ramp, (0.0, 1.0), cfg, t_eval=[0.0, 1.0])
+        out = model.trajectory(Excitation.constant(1000.0))
+        assert out.diagnostics["premagnetisation"]["M_end_A_per_m"] == pytest.approx(float(sol.y[0, -1]), rel=1e-9)
+
+    def test_constant_field_holds_the_initial_curve_magnetisation(self):
+        model = JilesAthertonModel.illustrative()
+        out = model.trajectory(Excitation.constant(1000.0))
+        m_peak = out.values["magnetisation_peak"].value
+        b_peak = out.values["flux_density_peak"].value
+        assert m_peak > 1e5 and b_peak > 100.0 * MU_0 * 1000.0  # not the vacuum response
+        assert b_peak == pytest.approx(MU_0 * (1000.0 + m_peak))
+        static = next(w for w in out.warnings if w.code == "ja.static_field")
+        assert "pre-magnetisation ramp" in static.message and static.severity == "info"
+        held = model.trajectory(Excitation.constant(1000.0), initial_state=2e5)
+        assert held.values["magnetisation_peak"].value == 2e5
+        assert "supplied initial state" in next(w for w in held.warnings if w.code == "ja.static_field").message
+        zero = model.trajectory(Excitation.constant(0.0))
+        assert zero.values["magnetisation_peak"].value == 0.0 and zero.diagnostics["premagnetisation"] is None
+
+    def test_inadmissible_initial_state_is_rejected(self):
+        model = JilesAthertonModel.illustrative()
+        with pytest.raises(InvalidInputError) as info:
+            model.trajectory(Excitation.sinusoidal(1000.0, 50.0), initial_state=-1.5e6)  # far below M_an, ascending
+        assert "admissible gap" in str(info.value)
+        with pytest.raises(InvalidInputError):
+            model.ode.check_initial_state(0.0, -1.5e6, 1.0)
+        model.ode.check_initial_state(0.0, -1.5e6, -1.0)  # descending start is reversible: admissible at t0
+        model.ode.check_initial_state(0.0, -1.5e6, 0.0)  # static start: no change at all
+        remanent = model.trajectory(Excitation.sinusoidal(1000.0, 50.0), initial_state=4e5)  # reachable remanent state
+        assert remanent.diagnostics["initial_state"]["source"] == "user_input" and remanent.diagnostics["steady_state"]
+
+    def test_small_signal_loops_converge_with_defaults(self):
+        model = JilesAthertonModel.illustrative()
+        for amp in (10.0, 50.0, 100.0):
+            out = model.trajectory(Excitation.sinusoidal(amp, 50.0))
+            assert out.diagnostics["steady_state"] and out.diagnostics["periods"] <= 12
+            assert out.diagnostics["accelerated"] and out.values["loop_energy_density"].value > 0.0
+            assert not any(w.severity != "info" for w in out.warnings)
+        with pytest.raises(ConvergenceError) as info:
+            model.trajectory(Excitation.sinusoidal(50.0, 50.0), accelerate=False, max_periods=10)
+        message = str(info.value)
+        assert "contraction ratio" in message and "max_periods" in message and "accelerate" in message
+        assert info.value.details["contraction_ratio"] is not None and info.value.details["max_periods"] == 10
+
+    def test_biased_loop_reports_asymmetry(self):
+        model = JilesAthertonModel.illustrative()
+        out = model.trajectory(Excitation.sinusoidal(2000.0, 50.0, offset=-1000.0))
+        warning = next(w for w in out.warnings if w.code == "ja.asymmetric_loop")
+        assert warning.severity == "info" and "DC-biased" in warning.message
+        loop = out.diagnostics["loop"]
+        assert loop["n_remanence_crossings"] == 2 and loop["remanence_asymmetry"] > 1e-3
+        magnitudes = [abs(c["B"]) for c in loop["remanence_crossings"]]
+        assert out.values["remanence"].value == pytest.approx(float(np.mean(magnitudes)))
+        symmetric = model.trajectory(Excitation.sinusoidal(3000.0, 50.0))
+        assert not any(w.code == "ja.asymmetric_loop" for w in symmetric.warnings)
+        assert symmetric.diagnostics["loop"]["remanence_asymmetry"] < 1e-4
+        no_crossing = model.trajectory(Excitation.triangular(200.0, 50.0, offset=-1000.0))
+        assert "remanence" not in no_crossing.values and any(w.code == "ja.no_remanence" for w in no_crossing.warnings)
+
+    def test_unknown_kwargs_and_bad_counts_rejected(self):
+        model = JilesAthertonModel.illustrative()
+        with pytest.raises(InvalidInputError):
+            model.trajectory(Excitation.sinusoidal(1e3, 50.0), bogus=1)
+        with pytest.raises(InvalidInputError):
+            model.trajectory(Excitation.sinusoidal(1e3, 50.0), max_periods=0)
+
+    def test_multivalued_anhysteretic_set_is_rejected(self):
+        with pytest.raises(InvalidInputError) as info:
+            JilesAthertonModel(1.6e6, 1100.0, 0.01, 400.0, 0.1)  # alpha*c*Ms/(3a) < 1 but alpha*Ms/(3a) = 4.8
+        assert "multivalued" in str(info.value)
+        ode = JilesAthertonODE(**JA_ILLUSTRATIVE.as_kwargs())
+        assert ode.anhysteretic_initial_susceptibility() == pytest.approx(ode.chi_e0 / (1.0 - ode.anhysteretic_feedback))
+        assert ode.admissible_gap == pytest.approx((1 - ode.c) * ode.k / ode.alpha)
+
+    def test_loop_metrics_are_robust_to_round_off_at_the_record_ends(self):
+        phi = np.linspace(0.0, 2 * np.pi, 1001)
+        for eps in (-2e-12, 2e-12):
+            H = 1e4 * np.sin(phi)
+            B = 0.6 * np.sin(phi - 0.3)
+            H[0], H[-1] = eps, -eps  # round-off of opposite signs at the two ends of the period
+            metrics = loop_metrics(H, B)
+            assert metrics["n_remanence_crossings"] == 2 and metrics["n_coercivity_crossings"] == 2
+            assert metrics["remanence"] == pytest.approx(0.6 * math.sin(0.3), rel=1e-4)
+            assert metrics["coercivity"] == pytest.approx(1e4 * math.sin(0.3), rel=1e-4)
+            assert metrics["remanence_asymmetry"] < 1e-6
+        assert loop_metrics(np.zeros(8), np.zeros(8))["remanence"] is None
+
+
+# ---------------------------------------------------------------------------------------------
 # verification checks of this module must pass
 # ---------------------------------------------------------------------------------------------
 JA_CHECKS = [
@@ -223,6 +349,8 @@ JA_CHECKS = [
     check_physics.ja_major_loop_closes_and_is_dissipative,
     check_physics.ja_descending_branch_above_ascending,
     check_physics.ja_solver_tolerance_convergence,
+    check_physics.ja_dc_biased_minor_loops_admissible,
+    check_physics.ja_small_signal_steady_state,
 ]
 
 

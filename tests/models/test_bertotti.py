@@ -114,6 +114,33 @@ class TestBertotti:
             BertottiLossModel.classical_eddy_coefficient(float("nan"), d)
 
 
+class TestBertottiRegressions:
+    def test_numpy_scalars_are_accepted_like_python_numbers(self):
+        import numpy as np
+
+        model = BertottiLossModel(np.float32(20.0), np.float64(1.8), np.int64(0), np.float32(0.5),
+                                  frequency_range=(np.float32(10.0), 1e5))
+        out = model.loss_density(frequency=np.int64(1000), flux_density_peak=np.float32(1.0))
+        assert out.values["loss_density"].value == pytest.approx(20.0 * 1000.0 + 0.5 * 1000.0 ** 1.5)
+        assert isinstance(model.k_h, float) and model.domain.frequency.min == 10.0
+        with pytest.raises(InvalidInputError):
+            BertottiLossModel(np.bool_(True), 1.8, 0.0, 0.0)
+
+    def test_lamination_provenance_is_validated(self):
+        sigma, d = 2.0e6, 0.35e-3
+        k_c = BertottiLossModel.classical_eddy_coefficient(sigma, d)
+        model = BertottiLossModel(20.0, 1.8, k_c, 0.5, lamination={"conductivity": sigma, "thickness": d})
+        assert model.lamination == {"conductivity": sigma, "thickness": d}
+        out = model.loss_density(frequency=50.0, flux_density_peak=1.0)
+        assert any(a.id == "bertotti.thin-lamination" for a in out.assumptions)
+        for bad in ({"sigma": sigma}, {"conductivity": sigma}, {"conductivity": sigma, "thickness": d, "width": 1.0},
+                    {"conductivity": -sigma, "thickness": d}, "steel"):
+            with pytest.raises(InvalidInputError):
+                BertottiLossModel(20.0, 1.8, k_c, 0.5, lamination=bad)
+        with pytest.raises(InvalidInputError):  # k_c not derived from the lamination data: the assumption would be false
+            BertottiLossModel(20.0, 1.8, 0.05, 0.5, lamination={"conductivity": sigma, "thickness": d})
+
+
 BERTOTTI_CHECKS = [
     check_physics.bertotti_scaling_and_limiting_cases,
     check_physics.bertotti_invalid_parameters_rejected,
