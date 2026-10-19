@@ -191,7 +191,12 @@ def build_server(config: ServerConfig | None = None):
             raise ToolError("authorization_required: file writing is disabled; start the server with --allow-write and an --output-dir")
         request = {"title": title, "format": format, "output_path": output_path, "allow_write": bool(output_path and config.allow_write),
                    "overwrite": overwrite, "include_inputs": include_inputs}
-        return run(api.generate_report, envelopes, request, allowed_directory=config.output_dir)
+        payload = run(api.generate_report, envelopes, request, allowed_directory=config.output_dir)
+        if payload.get("status") != "ok":
+            # authorisation and path problems are protocol-level failures for the caller, not engineering results
+            messages = "; ".join(f"{e.get('code')}: {e.get('message')}" for e in payload.get("errors", []))
+            raise ToolError(messages or "report generation failed")
+        return payload
 
     @server.tool(name="verification_status", title="Verification status", annotations=read_only,
                  description=("Verification evidence per capability and operating range (levels L1 software, L2 numerical/physical, "

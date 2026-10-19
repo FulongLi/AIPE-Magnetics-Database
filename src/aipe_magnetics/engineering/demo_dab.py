@@ -78,7 +78,8 @@ def run_dab_demo(*, output: Path | None = None, temperature: dict[str, Any] | No
     core_state = None
     if design.status == "ok":
         try:
-            from aipe_magnetics.integrations.aipe_core.export import component_summary_from_design, to_engineering_state
+            from aipe_magnetics.integrations.aipe_core.bridge import component_summary_from_design
+            from aipe_magnetics.integrations.aipe_core.export import to_engineering_state
             summary = component_summary_from_design(design, role="dab-transformer", created_at="2026-10-19T00:00:00Z")
             core_state = to_engineering_state(summary, created_at="2026-10-19T00:00:00Z", project_id="project.dab-10kw-demo",
                                               requirements={"nominal_power": SPEC["power"], "input_voltage": SPEC["primary_voltage"],
