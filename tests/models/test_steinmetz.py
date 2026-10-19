@@ -88,6 +88,36 @@ def test_constructor_rejects_invalid_parameters(kwargs):
         SteinmetzModel(params.pop("k"), params.pop("alpha"), params.pop("beta"), **params)
 
 
+@pytest.mark.parametrize("kwargs", [
+    dict(temperature_range=(-10.0, 400.0)),                                   # negative absolute temperature
+    dict(temperature_range=(0.0, 400.0)),                                     # 0 K is not admissible either
+    dict(temperature_range=ValidityRange(min=-300.0, max=100.0, unit="degC")),  # -26.85 K after conversion
+    dict(frequency_range=(0.0, 1e6)),                                         # zero lower frequency bound
+    dict(frequency_range=(-1e3, 1e6)),                                        # negative frequency bound
+    dict(frequency_range=RangeSI(min=0, max=1, unit="kHz")),                  # 0 kHz lower bound
+    dict(flux_density_range=(-1.0, 0.3)),                                     # negative flux-density bound
+    dict(synthetic="False"),                                                  # no truthiness coercion
+    dict(synthetic=1),
+    dict(synthetic=None),
+    dict(sources=[SourceReference(id="publication.steinmetz-1892", kind="publication", reference="SOMETHING ELSE")]),
+    dict(sources=[SYNTHETIC_SOURCE, SourceReference(id=SYNTHETIC_SOURCE.id, kind="internal", reference="other")]),
+])
+def test_constructor_rejects_inadmissible_ranges_and_silent_coercions(kwargs):
+    with pytest.raises(InvalidInputError):
+        SteinmetzModel(K, ALPHA, BETA, **kwargs)
+
+
+def test_admissible_ranges_identical_source_duplicates_and_numpy_bool_are_accepted():
+    model = SteinmetzModel(K, ALPHA, BETA, temperature_range=ValidityRange(min=-40.0, max=125.0, unit="degC"),
+                           frequency_range=(None, 1e6), flux_density_range=(0.0, 0.3),
+                           sources=[STEINMETZ_SOURCE, SYNTHETIC_SOURCE, SYNTHETIC_SOURCE], synthetic=np.bool_(True))
+    assert model.domain.temperature.min == pytest.approx(233.15) and model.domain.temperature.max == pytest.approx(398.15)
+    assert model.domain.frequency == ValidityRange(min=None, max=1e6, unit="Hz")
+    assert model.domain.flux_density_peak == ValidityRange(min=0.0, max=0.3, unit="T")
+    assert [s.id for s in model.sources] == [STEINMETZ_SOURCE.id, SYNTHETIC_SOURCE.id]
+    assert model.synthetic is True
+
+
 # --------------------------------------------------------------------------------------------------
 # evaluation
 # --------------------------------------------------------------------------------------------------
@@ -227,6 +257,20 @@ def test_loss_density_array_validation_and_domain():
     assert model.in_domain_mask([1e5], [0.5]).tolist() == [False]
     with pytest.raises(NumericalError):
         model.loss_density_array([1e300], [1e300], policy="warn")
+
+
+def test_loss_density_array_out_of_domain_messages_name_the_violated_condition():
+    model = make_model()
+    with pytest.raises(OutOfDomainError) as by_temperature:
+        model.loss_density_array([1e5], [0.1], temperature=298.15)  # grid inside, temperature outside
+    message = str(by_temperature.value)
+    assert "temperature=298.15 K" in message and "368.15" in message and "grid points" not in message
+    assert by_temperature.value.details["temperature"] == 298.15
+    assert by_temperature.value.details["violations"] == [f"temperature=298.15 K outside {model.domain.temperature.describe()}"]
+    with pytest.raises(OutOfDomainError) as by_grid:
+        model.loss_density_array([1e7, 1e5], [0.1, 0.1], temperature=373.15)  # temperature inside, one grid point outside
+    assert "1 of 2 grid points" in str(by_grid.value) and by_grid.value.details["outside"] == 1
+    assert model.in_domain_mask([1e5], [0.1], temperature=298.15).tolist() == [False]  # policy 'warn' can still ask
 
 
 # --------------------------------------------------------------------------------------------------
