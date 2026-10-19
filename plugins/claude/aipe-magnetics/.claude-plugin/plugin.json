@@ -1,7 +1,8 @@
 {
   "name": "aipe-magnetics",
+  "displayName": "AIPE Magnetics",
   "version": "0.2.0",
-  "description": "Magnetic engineering expert: material lookup and comparison, flux density and saturation screening, Steinmetz/iGSE core-loss estimation, inductor and transformer design calculations, winding loss, operating-point validation and engineering reports. All numbers come from the aipe-magnetics Python engine (no LLM arithmetic).",
+  "description": "Magnetic engineering expert: material lookup and comparison, flux density and saturation screening, Steinmetz/iGSE core-loss estimation, inductor and transformer design calculations, winding loss, operating-point validation and engineering reports. All numbers come from the aipe-magnetics Python engine through its local MCP server (no LLM arithmetic, no cloud services, no API keys).",
   "author": {
     "name": "AIPE Magnetics contributors",
     "url": "https://github.com/FulongLi/AIPE-Magnetics-Database"
@@ -9,5 +10,7 @@
   "homepage": "https://github.com/FulongLi/AIPE-Magnetics-Database",
   "repository": "https://github.com/FulongLi/AIPE-Magnetics-Database",
   "license": "NOASSERTION",
-  "keywords": ["magnetics", "power-electronics", "core-loss", "steinmetz", "igse", "transformer", "inductor", "ferrite", "mcp"]
+  "keywords": ["magnetics", "power-electronics", "core-loss", "steinmetz", "igse", "transformer", "inductor", "ferrite", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
 }
