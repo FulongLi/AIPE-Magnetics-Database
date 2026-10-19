@@ -80,6 +80,8 @@ def _defs() -> Iterable[UnitDef]:
     yield UnitDef("kHz", _d(s=-1), _F(1000))
     yield UnitDef("MHz", _d(s=-1), _F(10**6))
     yield UnitDef("1/s", _d(s=-1), _F(1))
+    yield UnitDef("1/m", _d(m=-1), _F(1), si=True, description="reciprocal length (core constant sum(l/A))")
+    yield UnitDef("1/mm", _d(m=-1), _F(1000))
     # electrical
     yield UnitDef("A", _d(A=1), _F(1), si=True)
     yield UnitDef("mA", _d(A=1), _F(1, 1000))

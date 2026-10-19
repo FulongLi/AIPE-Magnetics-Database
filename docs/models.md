@@ -38,4 +38,7 @@ and the TDK datasheet points used for N87.
 No model here is a thermal, finite-element or manufacturing model. Jiles-Atherton parameters are
 not identified for any catalogue material. Data-driven inference is demonstrated on a synthetic
 reference only; running the Paderborn/Sydney challenge models requires the optional `magnethub`
-package and the user's own download of its weights.
+package (upstream requires Python ≥ 3.13 with torch/jax/equinox, so it cannot be an install extra
+for Python 3.10-3.12) and the user's own download of its weights. PyTorch is not installed in the
+release environment; the torch backend's "present" branch was exercised by the reviewer in a
+throwaway environment with torch 2.5.1+cpu.

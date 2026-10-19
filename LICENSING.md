@@ -11,7 +11,7 @@ licence is an owner decision; until then, rights in the code are reserved by its
 
 | Component | Licence | How it is used |
 | --- | --- | --- |
-| AIPE-Core schemas v0.1.0 (pinned copy in `src/aipe_magnetics/integrations/aipe_core/schemas/`) | MIT | offline compatibility validation; NOTICE file carries the copyright and commit |
+| AIPE-Core schemas v0.1.0 (pinned copy in `src/aipe_magnetics/integrations/aipe_core/schemas/`) and the contract checks of Core's `scripts/validate.py` re-implemented in `integrations/aipe_core/state.py` | MIT | offline compatibility validation; NOTICE file and the `state.py` header carry the copyright, commit and attribution |
 | AIPE-Registry manifest schema (pinned copy in `src/aipe_magnetics/integrations/aipe_registry/schema/`) | MIT | offline manifest validation; NOTICE file carries the copyright and commit |
 | numpy, scipy, h5py | BSD-3-Clause | runtime |
 | pydantic, jsonschema, referencing, PyYAML, mcp | MIT | runtime / optional |

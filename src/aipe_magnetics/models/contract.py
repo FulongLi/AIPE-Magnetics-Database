@@ -30,7 +30,9 @@ from aipe_magnetics.common.errors import InvalidInputError, NumericalError, OutO
 from aipe_magnetics.common.quantity import Quantity
 from aipe_magnetics.common.results import Assumption, Limitation, ModelIdentity, SourceReference, Warning_
 
-ExcitationKind = Literal["sinusoidal", "triangular", "trapezoidal", "square", "piecewise_linear", "sampled", "dc"]
+ExcitationKind = Literal["sinusoidal", "triangular", "trapezoidal", "square", "piecewise_linear", "sampled", "dc", "custom"]
+# Note: "square" describes a voltage/current excitation; the resulting *flux* waveform is triangular or
+# trapezoidal and that is what loss models receive (see engineering.transformer.flux_waveform_for).
 DomainPolicy = Literal["reject", "warn"]
 DCBiasSupport = Literal["unsupported", "ignored", "supported"]
 
@@ -163,7 +165,8 @@ class MagneticModel(ABC):
     # -- helpers for subclasses ---------------------------------------------------------------------
     @staticmethod
     def require_finite_positive(name: str, value: float) -> float:
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
+        import numbers
+        if isinstance(value, bool) or not isinstance(value, numbers.Real):
             raise InvalidInputError(f"{name} must be a real number")
         if not math.isfinite(value):
             raise InvalidInputError(f"{name} must be finite, got {value}")
@@ -173,7 +176,8 @@ class MagneticModel(ABC):
 
     @staticmethod
     def require_finite(name: str, value: float) -> float:
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
+        import numbers
+        if isinstance(value, bool) or not isinstance(value, numbers.Real):
             raise InvalidInputError(f"{name} must be a real number")
         if not math.isfinite(value):
             raise InvalidInputError(f"{name} must be finite, got {value}")
@@ -198,7 +202,13 @@ class MagneticModel(ABC):
 
 
 class CoreLossModel(MagneticModel):
-    """Contract for volumetric core-loss models: returns ``loss_density`` in W/m^3."""
+    """Contract for volumetric core-loss models: returns ``loss_density`` in W/m^3.
+
+    Waveform-aware models (e.g. iGSE) accept an additional ``waveform`` keyword
+    (:class:`aipe_magnetics.models.waveforms.Waveform`) and may take frequency / peak flux density from it
+    when the scalar arguments are omitted; models without waveform support must reject a ``waveform``
+    keyword explicitly rather than ignore it.
+    """
 
     @abstractmethod
     def loss_density(self, *, frequency: float, flux_density_peak: float, temperature: float | None = None,

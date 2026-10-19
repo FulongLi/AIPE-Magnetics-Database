@@ -71,6 +71,34 @@ def _si_dim(q: Quantity, unit: str, label: str) -> Quantity:
     return q
 
 
+def _positive(q: Quantity, label: str) -> Quantity:
+    """v0.1 parity: physical magnitudes such as inductance, areas and turns ratio are strictly positive."""
+    if q.value <= 0:
+        raise ValueError(f"{label} must be positive, got {q.value} {q.unit}")
+    return q
+
+
+def _nonnegative(q: Quantity, label: str) -> Quantity:
+    if q.value < 0:
+        raise ValueError(f"{label} must be non-negative, got {q.value} {q.unit}")
+    return q
+
+
+_RFC3339 = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$")
+
+
+def _timestamp(value: str, label: str) -> str:
+    """RFC 3339 date-time with an explicit offset (Core and v0.1 schema parity)."""
+    if not isinstance(value, str) or not _RFC3339.match(value):
+        raise ValueError(f"{label} must be an RFC 3339 date-time with time zone, e.g. 2026-10-19T00:00:00Z; got {value!r}")
+    from datetime import datetime
+    try:
+        datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        raise ValueError(f"{label} is not a valid date-time: {value!r}") from None
+    return value
+
+
 # --------------------------------------------------------------------------------------------------
 # Envelope parts
 # --------------------------------------------------------------------------------------------------
@@ -97,6 +125,16 @@ class Evidence(BaseModel):
     def _id(cls, v: str) -> str:
         return _check_id(v, "evidence id")
 
+    @field_validator("created_at")
+    @classmethod
+    def _created(cls, v: str) -> str:
+        return _timestamp(v, "evidence.created_at")
+
+    @field_validator("accessed_at")
+    @classmethod
+    def _accessed(cls, v: str | None) -> str | None:
+        return None if v is None else _timestamp(v, "evidence.accessed_at")
+
 
 class Attribution(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -117,6 +155,11 @@ class Provenance(BaseModel):
     source_commit: str | None = Field(default=None, description="upstream commit hash when imported from a repository")
     dataset_version: str | None = None
     normalization: str | None = Field(default=None, description="description of unit/format normalisation applied")
+
+    @field_validator("created_at")
+    @classmethod
+    def _created(cls, v: str | None) -> str | None:
+        return None if v is None else _timestamp(v, "provenance.created_at")
 
 
 class Artifact(BaseModel):
@@ -231,11 +274,11 @@ class LossReferencePoint(BaseModel):
 
     @model_validator(mode="after")
     def _si_units(self) -> "LossReferencePoint":
-        _si(self.frequency, "Hz", "frequency")
-        _si(self.flux_density_peak, "T", "flux_density_peak")
-        _si(self.loss_density, "W/m^3", "loss_density")
+        _positive(_si(self.frequency, "Hz", "frequency"), "frequency")
+        _nonnegative(_si(self.flux_density_peak, "T", "flux_density_peak"), "flux_density_peak")
+        _nonnegative(_si(self.loss_density, "W/m^3", "loss_density"), "loss_density")
         if self.temperature is not None:
-            _si(self.temperature, "K", "temperature")
+            _positive(_si(self.temperature, "K", "temperature"), "temperature")
         if self.dc_bias_field is not None:
             _si(self.dc_bias_field, "A/m", "dc_bias_field")
         return self
@@ -296,21 +339,23 @@ class MaterialProperties(BaseModel):
     @model_validator(mode="after")
     def _si_units(self) -> "MaterialProperties":
         if self.initial_permeability is not None:
-            _si(self.initial_permeability.value, "1", "initial_permeability")
+            _positive(_si(self.initial_permeability.value, "1", "initial_permeability"), "initial_permeability")
+        for item in self.amplitude_permeability:
+            _positive(_si(item.value, "1", "amplitude_permeability"), "amplitude_permeability")
         for item in self.saturation_flux_density + self.remanence:
-            _si(item.value, "T", "saturation_flux_density/remanence")
+            _positive(_si(item.value, "T", "saturation_flux_density/remanence"), "saturation_flux_density/remanence")
         for item in self.coercivity:
-            _si(item.value, "A/m", "coercivity")
+            _nonnegative(_si(item.value, "A/m", "coercivity"), "coercivity")
         if self.curie_temperature is not None:
-            _si(self.curie_temperature.value, "K", "curie_temperature")
+            _positive(_si(self.curie_temperature.value, "K", "curie_temperature"), "curie_temperature")
         if self.density is not None:
-            _si(self.density.value, "kg/m^3", "density")
+            _positive(_si(self.density.value, "kg/m^3", "density"), "density")
         if self.resistivity is not None:
-            _si(self.resistivity.value, "Ohm*m", "resistivity")
+            _positive(_si(self.resistivity.value, "Ohm*m", "resistivity"), "resistivity")
         if self.recommended_frequency_range is not None and self.recommended_frequency_range.unit != "Hz":
             raise ValueError("recommended_frequency_range must use Hz")
         if self.relative_permeability is not None:
-            _si(self.relative_permeability, "1", "relative_permeability")
+            _positive(_si(self.relative_permeability, "1", "relative_permeability"), "relative_permeability")
         return self
 
 
@@ -321,6 +366,12 @@ class CoreMaterialProperties(BaseModel):
     material_ref: str | None = None
     relative_permeability: Quantity | None = None
     description: str | None = None
+
+    @model_validator(mode="after")
+    def _si_units(self) -> "CoreMaterialProperties":
+        if self.relative_permeability is not None:
+            _positive(_si(self.relative_permeability, "1", "relative_permeability"), "relative_permeability")
+        return self
 
 
 class CoreFamilyProperties(BaseModel):
@@ -335,13 +386,13 @@ class CoreFamilyProperties(BaseModel):
 class CoreDimensions(BaseModel):
     """Named outline dimensions in metres (datasheet letter designations)."""
 
-    model_config = ConfigDict(extra="forbid", extra_allowed=None)
+    model_config = ConfigDict(extra="forbid")
     values: dict[str, Quantity] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def _si_units(self) -> "CoreDimensions":
         for key, q in self.values.items():
-            _si(q, "m", f"dimension {key}")
+            _positive(_si(q, "m", f"dimension {key}"), f"dimension {key}")
         return self
 
 
@@ -377,12 +428,11 @@ class CoreGeometryProperties(BaseModel):
         for name, unit in pairs:
             q = getattr(self, name)
             if q is not None:
-                _si(q, unit, name)
-        if self.core_constant_c1 is not None and not units.compatible(self.core_constant_c1.unit, "1/K"):
-            # 1/m has no dedicated symbol in the registry; accept 'm' with exponent -1 via description
-            pass
+                _positive(_si(q, unit, name), name)
+        if self.core_constant_c1 is not None:
+            _positive(_si(self.core_constant_c1, "1/m", "core_constant_c1"), "core_constant_c1")
         for g in self.air_gap_options:
-            _si(g, "m", "air_gap_options")
+            _nonnegative(_si(g, "m", "air_gap_options"), "air_gap_options")
         return self
 
 
@@ -413,11 +463,12 @@ class WindingProperties(BaseModel):
             if abs(self.turns.value - round(self.turns.value)) > 0 or self.turns.value <= 0:
                 raise ValueError("turns must be a positive integer count")
         for name, unit in (("conductor_area", "m^2"), ("strand_diameter", "m"), ("conductor_diameter", "m"),
-                           ("foil_thickness", "m"), ("foil_width", "m"), ("mean_turn_length", "m"),
-                           ("insulation_thickness", "m")):
+                           ("foil_thickness", "m"), ("foil_width", "m"), ("mean_turn_length", "m")):
             q = getattr(self, name)
             if q is not None:
-                _si(q, unit, name)
+                _positive(_si(q, unit, name), name)
+        if self.insulation_thickness is not None:
+            _nonnegative(_si(self.insulation_thickness, "m", "insulation_thickness"), "insulation_thickness")
         return self
 
 
@@ -443,11 +494,12 @@ class ComponentProperties(BaseModel):
     @model_validator(mode="after")
     def _si_units(self) -> "ComponentProperties":
         for name, unit in (("inductance", "H"), ("leakage_inductance", "H"), ("magnetizing_inductance", "H"),
-                           ("turns_ratio", "1"), ("air_gap", "m"), ("rated_current_rms", "A"),
-                           ("rated_voltage_rms", "V"), ("rated_power", "W")):
+                           ("turns_ratio", "1"), ("rated_current_rms", "A"), ("rated_voltage_rms", "V"), ("rated_power", "W")):
             q = getattr(self, name)
             if q is not None:
-                _si(q, unit, name)
+                _positive(_si(q, unit, name), name)
+        if self.air_gap is not None:
+            _nonnegative(_si(self.air_gap, "m", "air_gap"), "air_gap")
         return self
 
 
@@ -469,12 +521,18 @@ class OperatingConditionProperties(BaseModel):
 
     @model_validator(mode="after")
     def _si_units(self) -> "OperatingConditionProperties":
-        for name, unit in (("frequency", "Hz"), ("flux_density_peak", "T"), ("flux_density_dc", "T"),
-                           ("field_dc", "A/m"), ("temperature", "K"), ("ambient_temperature", "K"),
-                           ("current_rms", "A"), ("current_dc", "A"), ("voltage_rms", "V")):
+        for name, unit in (("frequency", "Hz"), ("temperature", "K"), ("ambient_temperature", "K")):
             q = getattr(self, name)
             if q is not None:
-                _si(q, unit, name)
+                _positive(_si(q, unit, name), name)
+        for name, unit in (("flux_density_peak", "T"), ("current_rms", "A"), ("voltage_rms", "V")):
+            q = getattr(self, name)
+            if q is not None:
+                _nonnegative(_si(q, unit, name), name)
+        for name, unit in (("flux_density_dc", "T"), ("field_dc", "A/m"), ("current_dc", "A")):
+            q = getattr(self, name)
+            if q is not None:
+                _si(q, unit, name)  # signed: DC bias may be negative relative to the reference direction
         return self
 
 
