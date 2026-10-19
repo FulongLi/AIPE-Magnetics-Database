@@ -66,8 +66,10 @@ jobs:
           socket.socket = forbidden  # type: ignore[assignment]
           from aipe_magnetics.api import list_materials, estimate_core_loss
           print(list_materials().status)
-          print(estimate_core_loss(material="example-synthetic-ferrite", frequency={"value": 100, "unit": "kHz"},
-                                   flux_density_peak={"value": 100, "unit": "mT"}, temperature={"value": 100, "unit": "degC"}).status)
+          r = estimate_core_loss(material="N87", frequency={"value": 100, "unit": "kHz"},
+                                 flux_density_peak={"value": 100, "unit": "mT"}, temperature={"value": 100, "unit": "degC"})
+          print(r.status, r.values["loss_density"].quantity)
+          assert r.status == "ok"
           EOF
       - uses: actions/upload-artifact@v4
         with:
