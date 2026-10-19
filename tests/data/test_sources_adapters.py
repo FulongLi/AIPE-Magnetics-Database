@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import os
 import pickle
+import shutil
 import sys
 import zipfile
 from pathlib import Path
@@ -38,8 +39,8 @@ from aipe_magnetics.data.sources import magnet_challenge2 as mc2_module
 from aipe_magnetics.data.sources import paderborn_magnethub as hub_module
 from aipe_magnetics.data.sources import paderborn_materialdatabase as mdb_module
 from aipe_magnetics.data.sources import princeton_magnet as pm_module
-from aipe_magnetics.data.sources.base import SOURCES_EXTENSION
-from aipe_magnetics.data.sources.princeton_magnet import EXCITATIONS, PACKAGED_DATABASES, classify_excitation, known_file_checksums
+from aipe_magnetics.data.sources.base import SOURCES_EXTENSION, UNPINNED_FLAG
+from aipe_magnetics.data.sources.princeton_magnet import EXCITATIONS, PACKAGED_DATABASES, RAW_URL_TEMPLATE, classify_excitation, known_file_checksums
 
 pytestmark = pytest.mark.usefixtures("require_h5py")
 
@@ -165,6 +166,13 @@ def test_princeton_discover_inspect_extract_filter_and_records(tmp_path: Path, m
     dataset = next(r for r in records if r.kind == "dataset")
     assert dataset.properties["checksums"][Path(table).name] == sha256_file(table) and dataset.properties["license"] == "MIT"
     assert dataset.properties["redistribution_permitted"] is True and "TPEL" in dataset.properties["citation"]
+    # SYN is not packaged at the pinned commit: the commit is not asserted for bytes that cannot be checked
+    assert dataset.extensions[SOURCES_EXTENSION]["pinned"] is None
+    assert dataset.properties["version"] == f"unverified copy (sha256 {db.sha256})" and "source_commit" not in dataset.properties
+    assert dataset.provenance.source_commit is None and dataset.provenance.dataset_version == dataset.properties["version"]
+    assert dataset.extensions[SOURCES_EXTENSION]["commit"] == adapter.descriptor.pinned_commit, "the audited commit stays documented"
+    raw = next(a for a in dataset.artifacts if a.role == "raw")
+    assert (out / raw.uri).resolve() == db.path.resolve() and raw.sha256 == db.sha256, "raw artifact path is relative to the record directory"
     measurement = next(r for r in records if r.kind == "measurement")
     assert "R34.0X20.5X12.5" in measurement.properties["specimen"] and measurement.properties["acquired_at"] == "2026-10-19"
     assert measurement.evidence[1].kind == "measurement" and measurement.evidence[1].sha256 == db.sha256
@@ -174,6 +182,70 @@ def test_princeton_discover_inspect_extract_filter_and_records(tmp_path: Path, m
     assert Path(second.written[0]).name == "syn-triangular-25c-core-loss-table.h5"
     assert "material.princeton-magnet-syn.json" not in [Path(p).name for p in second.written], "identity record reused"
     assert next(r for r in second.records if r.kind == "core_loss_measurement").id == "core-loss-measurement.syn-triangular-25c-subset"
+
+
+def test_princeton_rejects_unsafe_tokens_and_reversed_ranges_before_writing(tmp_path: Path, magnet_checkout: Path):
+    adapter = PrincetonMagnetAdapter(LocalCache(tmp_path / "cache"))
+    db = read_magnet_database(magnet_checkout / "src" / "magnet" / "data" / "SYN_database.h5")
+    extracted = adapter.extract_database(db)
+    out = tmp_path / "deep" / "out"
+    for bad_id in ("dataset.a:b", "dataset.../../evil", "dataset.CON", "dataset.Mixed", "dataset.a_b"):
+        with pytest.raises(InvalidInputError, match="dataset_id token"):
+            adapter.to_records(extracted, destination_dir=out, dataset_id=bad_id)
+    with pytest.raises(InvalidInputError, match="file_prefix"):
+        adapter.to_records(extracted, destination_dir=out, file_prefix="../x")
+    assert not (tmp_path / "deep").exists() and sorted(p.name for p in tmp_path.iterdir()) == ["magnet"], "nothing written anywhere"
+    with pytest.raises(InvalidInputError, match="lower bound 90.0 exceeds upper bound 25.0"):
+        adapter.extract_database(db, temperature_degC=(90, 25))
+    with pytest.raises(InvalidInputError):
+        adapter.extract_database(db, temperature_degC=(25, 50, 70))  # type: ignore[arg-type]
+    assert adapter.extract_database(db, temperature_degC=(25, 50)).n_rows == 36
+
+
+def test_princeton_unpinned_copy_is_refused_unless_allowed_and_then_flagged(tmp_path: Path):
+    root = tmp_path / "magnet"
+    write_fake_magnet_database(root / "src" / "magnet" / "data" / "N87_database.h5", material="N87")
+    adapter = PrincetonMagnetAdapter(LocalCache(tmp_path / "cache"))
+    item = adapter.discover(root, materials=["N87"])[0]
+    expected = PACKAGED_DATABASES["N87"]["sha256"]
+    assert item.sha256 is None and item.extra["expected_sha256"] == expected and adapter.inspect(item)["matches_pinned_commit"] is False
+    extracted = adapter.extract(item)
+    actual = extracted.source_files["N87_database.h5"]
+    assert actual != expected and any("differs from the pinned upstream file" in p for p in adapter.validate(extracted))
+    out = tmp_path / "out"
+    with pytest.raises(DataIntegrityError, match="allow_unpinned=True") as info:
+        adapter.to_records(extracted, destination_dir=out, max_json_points=5)
+    assert info.value.details == {"file": "N87_database.h5", "expected_sha256": expected, "actual_sha256": actual}
+    assert not out.exists(), "refused before anything was written"
+    result = adapter.to_records(extracted, destination_dir=out, max_json_points=5, allow_unpinned=True)
+    records = _validated(result)
+    label = f"unpinned copy (sha256 {actual})"
+    for record in records:
+        if "identity-only" in record.tags:
+            continue
+        assert UNPINNED_FLAG in record.quality.flags, record.id
+        ext = record.extensions[SOURCES_EXTENSION]
+        assert ext["pinned"] is False and ext["pinned_mismatch"] == {"file": "N87_database.h5", "expected_sha256": expected, "actual_sha256": actual}
+        assert record.provenance.source_commit is None and record.provenance.dataset_version == label
+        assert next(e for e in record.evidence if e.id.endswith("-database")).version == label
+        assert next(e for e in record.evidence if e.id.endswith("-repository")).version == adapter.descriptor.pinned_commit
+    dataset = next(r for r in records if r.kind == "dataset")
+    assert dataset.properties["version"] == label and "source_commit" not in dataset.properties and "UNPINNED" in dataset.description
+    assert result.warnings and "differs from the pinned upstream file" in result.warnings[0]
+    raw = next(a for a in dataset.artifacts if a.role == "raw")
+    assert not raw.uri.startswith("http") and (out / raw.uri).resolve() == Path(item.path).resolve() and raw.sha256 == actual
+    assert TableStore().read(next(p for p in result.written if p.endswith(".h5"))).attrs["dataset_version"] == label
+
+
+def test_princeton_discover_falls_through_to_remote_items_for_a_directory_without_databases(tmp_path: Path):
+    (tmp_path / "csvdir").mkdir()
+    (tmp_path / "csvdir" / "x.csv").write_text("a\n", encoding="utf-8")
+    adapter = PrincetonMagnetAdapter(LocalCache(tmp_path / "cache"))
+    items = adapter.discover(tmp_path / "csvdir", materials=["N87", "3E6"])
+    assert [(i.material, i.kind, i.available) for i in items] == [("N87", "remote", False), ("3E6", "remote", False)]
+    assert all("listing cached / remote items" in i.extra["note"] for i in items)
+    with pytest.raises(DataNotFoundError, match="directory not found"):
+        adapter.discover(tmp_path / "missing", materials=["N87"])
 
 
 def test_princeton_remote_items_need_explicit_download_permission(tmp_path: Path, monkeypatch):
@@ -281,10 +353,30 @@ def test_mc2_import_requires_explicit_units_and_keeps_padded_nan(tmp_path: Path)
     dataset = next(r for r in records if r.kind == "dataset")
     assert dataset.properties["redistribution_permitted"] is False and dataset.properties["license"] == "NOASSERTION"
     assert dataset.id == "dataset.magnet-challenge2-syn-4" and waveform.id == "waveform-dataset.magnet-challenge2-syn-4"
+    assert dataset.properties["version"] == f"user-supplied files (sha256 {result.source_sha256})" and "source_commit" not in dataset.properties
+    assert dataset.provenance.source_commit is None and dataset.extensions[SOURCES_EXTENSION]["pinned"] is None
+    raw_uris = sorted(a.uri for a in dataset.artifacts if a.role == "raw")
+    assert raw_uris == ["../data/SYN_4_B.csv", "../data/SYN_4_H.csv", "../data/SYN_4_T.csv"], "raw artifacts are relative to the record directory"
+    assert all((tmp_path / "out" / uri).is_file() for uri in raw_uris)
     data = WaveformStore().read(next(p for p in result.written if p.endswith(".h5")))
     assert np.isnan(data.arrays["field"][:, 100:]).all() and not np.isnan(data.arrays["field"][:, :100]).any(), "NaN never becomes 0"
     assert np.allclose(data.conditions["frequency"], 100e3) and np.allclose(data.conditions["temperature"], [298.15, 323.15, 343.15, 298.15])
     assert waveform.typed_properties().timebase == "uniform_per_period"
+
+
+def test_mc2_flags_kelvin_values_declared_as_degc(tmp_path: Path):
+    paths = write_mc2_files(tmp_path / "data", rows=2)
+    np.savetxt(paths["T"], np.array([[298.15], [298.15]]), delimiter=",")
+    adapter = MagnetChallenge2Adapter()
+    common = dict(material="SYN", frequency_or_sampling_time=(100e3, "Hz"))
+    extracted = adapter.load_user_files(paths["B"], paths["H"], paths["T"], column_units={"B": "T", "H": "A/m", "T": "degC"}, **common)
+    problems = adapter.validate(extracted)
+    assert len(problems) == 1 and problems[0].startswith("temperature: 2 value(s) outside -60..250 degC") and "kelvin declared as degC" in problems[0]
+    with pytest.raises(DataIntegrityError, match="temperature"):
+        adapter.to_records(extracted, destination_dir=tmp_path / "out", synthetic=True)
+    assert not (tmp_path / "out").exists()
+    kelvin = adapter.load_user_files(paths["B"], paths["H"], paths["T"], column_units={"B": "T", "H": "A/m", "T": "K"}, **common)
+    assert adapter.validate(kelvin) == [] and mc2_module.TEMPERATURE_PLAUSIBLE_K == (213.15, 523.15)
 
 
 def test_mc2_timebase_modes_and_strict_row_validation(tmp_path: Path):
@@ -311,9 +403,10 @@ def test_mc2_timebase_modes_and_strict_row_validation(tmp_path: Path):
         adapter.load_user_files(ragged, paths["H"], paths["T"], material="SYN", frequency_or_sampling_time=(62.5, "ns"), column_units=units)
     nan_b = tmp_path / "nan_B.csv"
     nan_b.write_text("0,nan,2\n0,1,2\n", encoding="utf-8")
+    two_temperatures = tmp_path / "t.csv"
+    two_temperatures.write_text("25\n25\n", encoding="utf-8")
     with pytest.raises(DataIntegrityError, match="missing/NaN cells where none are allowed"):
-        adapter.load_user_files(nan_b, nan_b, tmp_path / "t.csv", material="SYN", frequency_or_sampling_time=(62.5, "ns"), column_units=units) \
-            if (tmp_path / "t.csv").write_text("25\n25\n", encoding="utf-8") else None
+        adapter.load_user_files(nan_b, nan_b, two_temperatures, material="SYN", frequency_or_sampling_time=(62.5, "ns"), column_units=units)
     short_t = tmp_path / "short_T.csv"
     short_t.write_text("25\n", encoding="utf-8")
     with pytest.raises(DataIntegrityError, match="one temperature per sequence"):
@@ -359,8 +452,11 @@ def write_fake_materialdatabase(root: Path) -> Path:
         "saturation flux density in T at 100 C\npower conversion,MnZn,2200,210,4850,10,0.49,0.39\n", encoding="utf-8")
     (data / "datasheet_curves" / "SYN" / "b_over_h_at_f_T.csv").write_text("h,b,T,f,branch\n26.2,0.0005,25,10000,r\n28.1,0.0132,25,10000,r\n30.0,0.1,25,10000,f\n",
                                                                            encoding="utf-8")
-    (data / "datasheet_curves" / "SYN" / "p_v_over_f_at_b_T.csv").write_text("f,p_v,T,b\n100000,4368.5,25,25\n110848.1,4885.8,25,25\n100000,30000,25,0.1\n"
-                                                                             "200000,80000,25,0.1\n", encoding="utf-8")
+    # two rows typed in millitesla (b = 25) among ten tesla rows: the genuine N87 mixed-unit pattern (45 of 252 rows upstream)
+    (data / "datasheet_curves" / "SYN" / "p_v_over_f_at_b_T.csv").write_text(
+        "f,p_v,T,b\n100000,4368.5,25,25\n110848.1,4885.8,25,25\n100000,30000,25,0.1\n200000,80000,25,0.1\n100000,5000,25,0.05\n"
+        "200000,14000,25,0.05\n300000,26000,25,0.05\n100000,90000,25,0.2\n200000,250000,25,0.2\n300000,450000,25,0.2\n50000,12000,25,0.1\n"
+        "400000,200000,25,0.1\n", encoding="utf-8")
     (data / "datasheet_curves" / "SYN" / "small_signal_mu_real_over_f_at_T.csv").write_text("f,mu_real\n104002.8, 3006.7\n112471.9, 3006.1\n", encoding="utf-8")
     (data / "datasheet_curves" / "SYN2" / "b_over_h_at_f_T.csv").write_text("h,b,T,f,branch\n24.6,0.00163,25,10000,r\n28.0,27.5,25,10000,r\n100.0,378.3,25,10000,f\n",
                                                                             encoding="utf-8")
@@ -465,16 +561,104 @@ def test_materialdatabase_rejects_millitesla_and_requires_unit_confirmation(tmp_
     with pytest.raises(DataIntegrityError, match="quarantine_implausible_rows"):
         adapter.extract(pv, confirm_units={"p_v": "W/m^3"})
     quarantined = adapter.extract(pv, confirm_units={"p_v": "W/m^3"}, quarantine_implausible_rows=True)
-    assert quarantined.n_rows == 2 and "rows_quarantined" in quarantined.quality_flags and quarantined.columns["loss_density"][1] == "W/m^3"
-    assert np.allclose(quarantined.columns["flux_density_peak"][0], [0.1, 0.1])
+    assert quarantined.n_rows == 10 and "rows_quarantined" in quarantined.quality_flags and quarantined.columns["loss_density"][1] == "W/m^3"
+    assert quarantined.columns["flux_density_peak"][0].max() == 0.2 and 25.0 not in quarantined.columns["flux_density_peak"][0]
+    summary = quarantined.metadata["quarantine"]["b"]
+    assert summary["rows"] == 2 and summary["fraction"] == pytest.approx(2 / 12, abs=1e-4) and summary["surviving_max_T"] == 0.2
+    assert summary["quarantined_min_T"] == 25.0 and summary["scale_gap"] == 125.0 and summary["unit_read_as"] == "T"
     with pytest.raises(UnitError):
         adapter.extract(pv, confirm_units={"p_v": "T"}, quarantine_implausible_rows=True)
     records = _validated(adapter.to_records(quarantined, destination_dir=tmp_path / "out"))
     dataset = next(r for r in records if r.kind == "dataset")
     assert dataset.extensions["aipe.import"]["filters"]["quarantine_implausible_rows"] is True
-    assert any("quarantined" in note for note in dataset.quality.notes)
+    assert dataset.extensions[SOURCES_EXTENSION]["quarantine"] == {"b": summary}
+    assert any("2 of 12 rows (16.7%) quarantined" in note and "scale gap 125x" in note for note in dataset.quality.notes)
     good = adapter.extract(items["datasheet_curves/SYN/b_over_h_at_f_T.csv"])
     assert good.categorical["branch"][1] == ["f", "r"] and adapter.validate(good) == []
+
+
+@pytest.mark.parametrize("b_values, refused_because", [
+    ([0.2, 0.5, 1.0, 1.5, 1.9, 1.95, 2.5, 3.0, 50, 100], "40% ... are implausible"),          # continuous mT curve crossing 2 "T"
+    ([0.1, 0.2, 0.5, 1.0, 1.5, 1.8, 1.9, 1.95, 50, 100], "remaining rows reach 1.95 T"),      # few outliers but survivors are not ferrite tesla
+    ([0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 2.5, 3.0], "only 6.2x the largest plausible"),  # no unit-scale gap (2.5 / 0.4)
+])
+def test_materialdatabase_quarantine_refuses_columns_that_are_not_two_unit_populations(tmp_path: Path, mdb_checkout: Path, b_values, refused_because):
+    curve = mdb_checkout / "materialdatabase" / "data" / "datasheet_curves" / "SYN3"
+    curve.mkdir()
+    (curve / "b_over_h_at_f_T.csv").write_text("h,b,T,f,branch\n" + "".join(f"{10 * (k + 1)},{b},25,10000,r\n" for k, b in enumerate(b_values)), encoding="utf-8")
+    adapter = PaderbornMaterialDatabaseAdapter(LocalCache(tmp_path / "cache"))
+    item = adapter.discover(mdb_checkout, materials=["SYN3"])[0]
+    with pytest.raises(DataIntegrityError, match="unit_overrides"):
+        adapter.extract(item)
+    with pytest.raises(DataIntegrityError, match="quarantine is refused because") as info:
+        adapter.extract(item, quarantine_implausible_rows=True)
+    assert info.value.details["quarantine_permitted"] is False
+    first, _sep, rest = refused_because.partition(" ... ")
+    assert first in info.value.message and rest in info.value.message
+    overridden = adapter.extract(item, unit_overrides={"b": "mT"})
+    assert overridden.n_rows == len(b_values) and overridden.columns["flux_density"][1] == "mT" and not overridden.quality_flags
+    table = TableStore().read(next(p for p in adapter.to_records(overridden, destination_dir=tmp_path / "out").written if p.endswith(".h5")))
+    assert table.units["flux_density"] == "T" and table.columns["flux_density"].max() == pytest.approx(max(b_values) * 1e-3)
+
+
+def test_materialdatabase_material_ref_never_renames_the_datasheet_record(tmp_path: Path, mdb_checkout: Path):
+    adapter = PaderbornMaterialDatabaseAdapter(LocalCache(tmp_path / "cache"))
+    item = next(i for i in adapter.discover(mdb_checkout) if i.extra["file_type"] == "general_information")
+    extracted = adapter.extract(item)
+    with pytest.raises(DataIntegrityError, match="not in the supplied context"):
+        adapter.to_records(extracted, destination_dir=tmp_path / "out", material_ref="material.tdk-n87")
+    assert not (tmp_path / "out").exists()
+    identity = adapter._material_identity_record(material="SYN", evidence=[adapter._repository_evidence()])
+    curated = identity.model_copy(update={"id": "material.tdk-n87", "license": "NOASSERTION"})
+    result = adapter.to_records(extracted, destination_dir=tmp_path / "out", material_ref="material.tdk-n87", context=[curated])
+    records = _validated(result)
+    material = next(r for r in records if r.kind == "magnetic_material")
+    assert material.id == "material.paderborn-materialdatabase-syn-datasheet" and material.license == "GPL-3.0-only"
+    assert {r.id for r in result.records} == {"dataset.paderborn-materialdatabase-datasheet-curves-syn-general-information", material.id}
+    assert material.extensions[SOURCES_EXTENSION]["related_material_ref"] == "material.tdk-n87" and "material.tdk-n87" in material.description
+    assert not (tmp_path / "out" / "material.tdk-n87.json").exists()
+    with pytest.raises(InvalidInputError, match="not a material"):
+        adapter.to_records(extracted, destination_dir=tmp_path / "out2", material_ref=result.records[0].id, context=result.records)
+    with pytest.raises(InvalidInputError, match="not the datasheet record"):
+        adapter.to_records(extracted, destination_dir=tmp_path / "out3", material_ref=material.id, context=[material])
+    assert not (tmp_path / "out2").exists() and not (tmp_path / "out3").exists()
+
+
+def test_materialdatabase_pinning_is_asserted_only_when_verified(tmp_path: Path, mdb_checkout: Path, monkeypatch):
+    adapter = PaderbornMaterialDatabaseAdapter(LocalCache(tmp_path / "cache"))
+    rel = "complex_permeability/LEA_MTB/SYN.csv"
+    items = {i.item_id: i for i in adapter.discover(mdb_checkout)}
+    assert items[rel].extra["checkout_verified"] is None, "a plain directory is not a verified checkout of the pinned commit"
+    plain = adapter.to_records(adapter.extract(items[rel]), destination_dir=tmp_path / "out-plain")
+    dataset = plain.records[0]
+    assert dataset.extensions[SOURCES_EXTENSION]["pinned"] is None and dataset.properties["version"] == f"unverified copy (sha256 {plain.source_sha256})"
+    assert "source_commit" not in dataset.properties and dataset.provenance.source_commit is None
+    assert any("could be verified" in w for w in plain.warnings)
+    raw = next(a for a in dataset.artifacts if a.role == "raw")
+    assert (tmp_path / "out-plain" / raw.uri).resolve() == Path(items[rel].path).resolve()
+
+    # a verified git blob id turns the commit into an assertion; a verified mismatch is refused unless allowed
+    real_blob = mdb_module.git_blob_sha1_lf(Path(items[rel].path).read_bytes())
+    monkeypatch.setitem(mdb_module.KNOWN_BLOB_SHA1, rel, real_blob)
+    verified_item = {i.item_id: i for i in adapter.discover(mdb_checkout)}[rel]
+    assert adapter.inspect(verified_item)["matches_pinned_commit"] is True
+    verified = adapter.to_records(adapter.extract(verified_item), destination_dir=tmp_path / "out-verified")
+    assert verified.records[0].extensions[SOURCES_EXTENSION]["pinned"] is True and verified.records[0].properties["version"] == mdb_module.COMMIT
+    assert verified.records[0].properties["source_commit"] == mdb_module.COMMIT and verified.records[0].quality.flags == []
+    monkeypatch.setitem(mdb_module.KNOWN_BLOB_SHA1, rel, "0" * 40)
+    item = {i.item_id: i for i in adapter.discover(mdb_checkout)}[rel]
+    assert adapter.inspect(item)["matches_pinned_commit"] is False
+    extracted = adapter.extract(item)
+    assert any("differs from the pinned commit" in p for p in adapter.validate(extracted))
+    with pytest.raises(DataIntegrityError, match="allow_unpinned=True"):
+        adapter.to_records(extracted, destination_dir=tmp_path / "out-mismatch")
+    assert not (tmp_path / "out-mismatch").exists()
+    flagged = _validated(adapter.to_records(extracted, destination_dir=tmp_path / "out-mismatch", allow_unpinned=True))
+    for record in flagged:
+        if "identity-only" not in record.tags:
+            assert UNPINNED_FLAG in record.quality.flags and record.extensions[SOURCES_EXTENSION]["pinned"] is False
+            assert record.extensions[SOURCES_EXTENSION]["pinned_mismatch"]["expected_git_blob_sha1"] == "0" * 40
+            assert record.provenance.dataset_version == f"unpinned copy (sha256 {extracted.source_files[rel]})"
 
 
 # -- MagNet-Hub -----------------------------------------------------------------------------------------
@@ -503,30 +687,46 @@ def test_magnethub_discover_extract_and_import_fixture(tmp_path: Path):
     assert kinds["tests/test_files/unit_test_data_ploss_at_450kWpm3.csv"] == "file" and kinds["src_py/magnethub/models/paderborn"] == "directory"
     assert kinds["tests/test_files/unit_test_data_sequence_3C90.csv"] == "remote"
     fixture = next(i for i in items if i.extra.get("fixture") == "ploss")
+    expected = hub_module.FIXTURES["ploss"]["sha256"]
+    assert fixture.sha256 == sha256_file(fixture.path) != expected, "item.sha256 is the computed digest of the local file, never the pinned one"
+    assert fixture.extra["expected_sha256"] == expected
     info = adapter.inspect(fixture)
     assert info["rows"] == 4 and info["materials"] == {"77": 2, "N87": 2} and info["b_samples"] == 1024 and info["matches_pinned_commit"] is False
     extracted = adapter.extract(fixture, materials=["N87"])
     assert extracted.n_rows == 2 and extracted.material == "N87" and extracted.conditions["loss_density"][1] == "W/m^3"
-    assert adapter.validate(extracted) == [f"{fixture.item_id.rsplit('/', 1)[-1]}: sha256 differs from the pinned upstream fixture ({hub_module.FIXTURES['ploss']['sha256'][:12]}...)"]
+    assert adapter.validate(extracted) == [f"{fixture.item_id.rsplit('/', 1)[-1]}: sha256 differs from the pinned upstream fixture ({expected[:12]}...)"]
     with pytest.raises(DataNotFoundError):
         adapter.extract(fixture, materials=["3C90"])
-    result = adapter.import_test_fixture(root, tmp_path / "out")
+    with pytest.raises(DataIntegrityError, match="allow_unpinned=True"):
+        adapter.import_test_fixture(root, tmp_path / "out")
+    assert not (tmp_path / "out").exists(), "an unpinned fixture is refused before anything is written"
+    result = adapter.import_test_fixture(root, tmp_path / "out", allow_unpinned=True)
     records = _validated(result)
     assert [r.kind for r in records] == ["dataset", "magnetic_material", "waveform_dataset", "magnetic_material", "waveform_dataset"]
     assert result.warnings and "differs from the pinned upstream fixture" in result.warnings[0]
+    label = f"unpinned copy (sha256 {fixture.sha256})"
     for record in records:
         assert record.license == "MIT"
+        if "identity-only" in record.tags:
+            continue
+        ext = record.extensions[SOURCES_EXTENSION]
+        assert UNPINNED_FLAG in record.quality.flags and ext["pinned"] is False and ext["pinned_mismatch"]["actual_sha256"] == fixture.sha256
+        assert record.provenance.source_commit is None and record.provenance.dataset_version == label
     waveform = next(r for r in records if r.kind == "waveform_dataset" and r.id.endswith("-n87"))
     assert waveform.properties["material_ref"] == "material.paderborn-magnethub-n87"
     data = WaveformStore().read(tmp_path / "out" / waveform.artifacts[0].uri)
     assert data.arrays["flux_density"].shape == (2, 1024) and np.allclose(data.conditions["temperature"], [298.15, 323.15])
     assert np.allclose(data.conditions["loss_density"], [450500.0, 450501.0]) and np.allclose(data.conditions["frequency"], [100e3, 200e3])
+    assert data.attrs["dataset_version"] == label
     dataset = next(r for r in records if r.kind == "dataset")
     assert dataset.properties["materials"] == ["77", "N87"] and dataset.properties["record_count"] == 4
+    assert dataset.properties["version"] == label and "source_commit" not in dataset.properties and "UNPINNED" in dataset.description
     assert set(dataset.properties["checksums"]) == {"unit_test_data_ploss_at_450kWpm3.csv", "paderborn-magnethub-ploss-fixture-77.h5",
                                                     "paderborn-magnethub-ploss-fixture-n87.h5"}
+    raw = next(a for a in dataset.artifacts if a.role == "raw")
+    assert not raw.uri.startswith("http") and (tmp_path / "out" / raw.uri).resolve() == Path(fixture.path).resolve()
     with pytest.raises(FileExistsError):
-        adapter.import_test_fixture(root, tmp_path / "out")
+        adapter.import_test_fixture(root, tmp_path / "out", allow_unpinned=True)
 
 
 def test_magnethub_discovery_without_checkout_and_run_model_contract(tmp_path: Path):
@@ -556,6 +756,8 @@ def test_external_princeton_checkout(tmp_path: Path):
     assert summary["matches_pinned_commit"] is True and summary["n_points_file"] == 6996 and summary["json_points"] == 100
     assert summary["excitation_counts"] == {"sinusoidal": 503, "triangular": 2045, "trapezoidal": 4448} and summary["validation_problems"] == []
     assert summary["units"]["temperature"] == "degC" and summary["license"] == "MIT"
+    assert summary["pinned"] is True and summary["version"] == PrincetonMagnetAdapter.descriptor.pinned_commit
+    assert summary["raw_artifact_uri"] == RAW_URL_TEMPLATE.format(commit=PrincetonMagnetAdapter.descriptor.pinned_commit, material="3E6")
 
 
 @pytest.mark.external
@@ -567,6 +769,8 @@ def test_external_magnethub_checkout(tmp_path: Path):
     summary = module.run(Path(root), tmp_path / "out", quiet=True)
     assert summary["matches_pinned_commit"] is True and summary["rows_in_file"] == 90 and summary["imported_rows"] == 90
     assert len(summary["materials_imported"]) == 15 and summary["license"] == "MIT" and summary["warnings"] == []
+    assert summary["pinned"] is True and summary["version"] == MagnetHubAdapter.descriptor.pinned_commit
+    assert summary["raw_artifact_uri"] == hub_module.RAW_URL_TEMPLATE.format(commit=hub_module.COMMIT, path=hub_module.FIXTURES["ploss"]["path"])
 
 
 @pytest.mark.external
@@ -582,6 +786,11 @@ def test_external_materialdatabase_checkout(tmp_path: Path):
             assert adapter.inspect(items[rel])["matches_pinned_commit"] is True, rel
     n95 = adapter.extract(items["complex_permeability/LEA_MTB/N95.csv"])
     assert n95.n_rows == 2115 and adapter.validate(n95) == []
+    if shutil.which("git") and LocalCache.checkout_problems(root, mdb_module.COMMIT) == []:
+        assert all(i.extra["checkout_verified"] is True for i in items.values()), "a pristine checkout of the pinned commit is verified with git"
+        written = adapter.to_records(n95, destination_dir=tmp_path / "out")
+        assert written.records[0].properties["version"] == mdb_module.COMMIT and written.records[0].extensions[SOURCES_EXTENSION]["pinned"] is True
+        assert written.records[0].extensions[SOURCES_EXTENSION]["checkout_verified"] is True
     with pytest.raises(DataIntegrityError):
         adapter.extract(items["datasheet_curves/N27/b_over_h_at_f_T.csv"])
     n27 = adapter.extract(items["datasheet_curves/N27/b_over_h_at_f_T.csv"], unit_overrides={"b": "mT"})

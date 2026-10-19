@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 import hashlib
+import http.server
 import io
 import json
 import os
+import shutil
+import subprocess
+import threading
+import urllib.request
 from pathlib import Path
 
 import numpy as np
@@ -31,13 +36,15 @@ from aipe_magnetics.data.sources.base import (
     TABLE_LAYOUT_VERSION,
     checksum_problems,
     dataset_token,
+    file_safe_token,
     finite_problems,
     monotone_time_problems,
     range_problems,
     slug,
+    source_uri,
     write_records,
 )
-from aipe_magnetics.data.sources.cache import MANIFEST_VERSION, urllib_transport
+from aipe_magnetics.data.sources.cache import MANIFEST_VERSION, SafeRedirectHandler, _safe_filename, check_fetch_url, urllib_transport
 from aipe_magnetics.data.sources.princeton_magnet import PrincetonMagnetAdapter
 
 PAYLOAD = b"synthetic payload for the cache tests\n" * 100
@@ -108,7 +115,27 @@ def test_slug_dataset_token_and_problem_helpers():
     assert dataset_token("dataset.my-import") == "my-import"
     with pytest.raises(InvalidInputError):
         dataset_token("material.x")
+    # tokens become file names: separators, drive letters, traversal, dots, upper case and reserved device names are refused up front
+    for bad in ("dataset.a:b", "dataset.../../evil", "dataset.CON", "dataset.nul", "dataset.Com1", "dataset.Abc", "dataset.a.b", "dataset.a_b",
+                "dataset.a--b", "dataset.-a", "dataset.a/b", "dataset.a\\b"):
+        with pytest.raises(InvalidInputError, match="dataset_id token|reserved device name"):
+            dataset_token(bad)
+    assert file_safe_token("n87-2026", label="x") == "n87-2026"
+    with pytest.raises(InvalidInputError, match="reserved device name"):
+        file_safe_token("lpt9")
+    with pytest.raises(InvalidInputError):
+        file_safe_token(None)  # type: ignore[arg-type]
     assert finite_problems("x", [1.0, np.inf]) == ["x: 1 infinite value(s)"]
+
+
+def test_source_uri_prefers_the_pinned_url_and_otherwise_a_relative_path(tmp_path: Path):
+    source = tmp_path / "upstream" / "data" / "x.h5"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"x")
+    assert source_uri(source, tmp_path / "out", pinned_url="https://raw.githubusercontent.com/o/r/c/x.h5") == "https://raw.githubusercontent.com/o/r/c/x.h5"
+    relative = source_uri(source, tmp_path / "out")
+    assert relative == "../upstream/data/x.h5" and (tmp_path / "out" / relative).resolve() == source.resolve()
+    assert source_uri(source, tmp_path / "upstream" / "data") == "x.h5"
     assert finite_problems("x", [1.0, np.nan]) and finite_problems("x", [1.0, np.nan], allow_nan=True) == []
     assert range_problems("f", [1.0, -1.0, np.nan], "Hz", minimum=0.0, strict_min=True)[0].startswith("f: 1 value(s) <= 0.0 Hz")
     assert range_problems("b", [0.1, 3.0], "T", maximum=2.0) and range_problems("b", [0.1], "T", maximum=2.0) == []
@@ -249,6 +276,103 @@ def test_transport_rejects_unsafe_urls_and_oversized_downloads(tmp_path: Path):
     with pytest.raises(DataIntegrityError, match="exceeds the cache limit"):
         cache.fetch(URL, DIGEST, allow_download=True)
     assert [p for p in (tmp_path / "cache").rglob("*") if p.is_file()] == []
+
+
+def test_redirect_targets_are_revalidated():
+    handler = SafeRedirectHandler()
+    request = urllib.request.Request("https://example.invalid/a")
+    for target in ("http://example.invalid/b", "https://user:pw@example.invalid/b", "ftp://example.invalid/b", "file:///etc/passwd"):
+        with pytest.raises(InvalidInputError):
+            handler.redirect_request(request, io.BytesIO(), 302, "Found", {}, target)
+    assert handler.redirect_request(request, io.BytesIO(), 302, "Found", {}, "https://mirror.invalid/b").full_url == "https://mirror.invalid/b"
+    check_fetch_url("http://example.invalid/b", previous="http://example.invalid/a")  # same scheme is fine
+    with pytest.raises(InvalidInputError, match="downgrade"):
+        check_fetch_url("http://example.invalid/b", previous="https://example.invalid/a")
+
+
+def test_transport_refuses_a_live_redirect_to_a_credentialed_url_and_follows_clean_ones():
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):  # noqa: N802 - http.server API
+            port = self.server.server_port
+            if self.path == "/creds":
+                self.send_response(302)
+                self.send_header("Location", f"http://user:pw@127.0.0.1:{port}/payload")
+                self.end_headers()
+            elif self.path == "/clean":
+                self.send_response(302)
+                self.send_header("Location", f"http://127.0.0.1:{port}/payload")
+                self.end_headers()
+            elif self.path == "/payload":
+                self.send_response(200)
+                self.send_header("Content-Length", "5")
+                self.end_headers()
+                self.wfile.write(b"hello")
+            else:
+                self.send_response(404)
+                self.end_headers()
+
+        def log_message(self, *args):  # silence
+            pass
+
+    server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        base = f"http://127.0.0.1:{server.server_port}"
+        with pytest.raises(InvalidInputError, match="embedded credentials"):
+            urllib_transport(f"{base}/creds", 5.0)
+        stream = urllib_transport(f"{base}/clean", 5.0)
+        try:
+            assert stream.read() == b"hello" and stream.geturl() == f"{base}/payload"
+        finally:
+            stream.close()
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_safe_filename_prefixes_windows_reserved_names():
+    assert _safe_filename("https://x/CON", None) == "file-CON" and _safe_filename("https://x/nul.txt", None) == "file-nul.txt"
+    assert _safe_filename("https://x/y", "COM1.h5") == "file-COM1.h5" and _safe_filename("https://x/console.h5", None) == "console.h5"
+    assert _safe_filename("https://x/N87_database.h5", None) == "N87_database.h5"
+
+
+def _git_repo_with_one_commit(root: Path, git: str) -> str:
+    root.mkdir(parents=True)
+    env = {**os.environ, "GIT_CONFIG_NOSYSTEM": "1", "HOME": str(root.parent)}
+    subprocess.run([git, "init", "-q", str(root)], check=True, env=env)
+    for key, value in (("user.email", "t@example.invalid"), ("user.name", "t"), ("commit.gpgsign", "false")):
+        subprocess.run([git, "-C", str(root), "config", key, value], check=True, env=env)
+    (root / "data.csv").write_text("a,b\n1,2\n", encoding="utf-8")
+    subprocess.run([git, "-C", str(root), "add", "data.csv"], check=True, env=env)
+    subprocess.run([git, "-C", str(root), "commit", "-q", "-m", "init"], check=True, env=env)
+    return subprocess.run([git, "-C", str(root), "rev-parse", "HEAD"], check=True, capture_output=True, text=True, env=env).stdout.strip()
+
+
+def test_cache_verify_detects_modified_tracked_files_in_a_pinned_checkout(tmp_path: Path):
+    git = shutil.which("git")
+    if git is None:
+        pytest.skip("git not on PATH")
+    cache = LocalCache(tmp_path / "cache")
+    repo = tmp_path / "cache" / "checkouts" / "probe"
+    head = _git_repo_with_one_commit(repo, git)
+    url = "https://example.invalid/probe"
+    data = cache._load()
+    data["checkouts"][f"{url}@{head}"] = {"repository_url": url, "commit": head, "path": "checkouts/probe"}
+    cache._save(data)
+    assert cache.verify() == [] and cache.clone_pinned(url, head) == repo
+    (repo / "untracked.txt").write_text("ignored\n", encoding="utf-8")
+    assert cache.verify() == [], "untracked additions are documented as not detected"
+    (repo / "data.csv").write_text("a,b\n1,999\n", encoding="utf-8")
+    problems = cache.verify()
+    assert len(problems) == 1 and "1 tracked file(s) modified or deleted" in problems[0] and "data.csv" in problems[0]
+    with pytest.raises(DataIntegrityError, match="not the pristine pinned commit"):
+        cache.clone_pinned(url, head)
+    assert cache.find_checkout(url, head) == repo, "find_checkout is a lookup without integrity checks (documented)"
+    (repo / "data.csv").unlink()
+    assert any("modified or deleted" in p for p in cache.verify())
+    assert LocalCache.checkout_problems(repo, "f" * 40)[0].startswith(f"HEAD {head} differs from pinned")
+    assert LocalCache.checkout_problems(tmp_path, head)[0].startswith("cannot read HEAD")
 
 
 def test_clone_pinned_requires_permission_and_valid_inputs(tmp_path: Path):
