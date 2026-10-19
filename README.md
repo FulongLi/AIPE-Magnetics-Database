@@ -1,60 +1,129 @@
-# AIPE Magnetics Database
+# AIPE Magnetics
 
-The canonical magnetics database scaffold for **AI for Power Engineering**.
-This v0.1 change introduces an evidence-first record boundary, offline validation
-and a conservative JSON import path. It contains **no real material, geometry,
-winding, component, loss or measurement data yet**.
+**Evidence-first magnetic engineering expert for power electronics** - a Python engine with a
+unified magnetic data standard, verified loss and hysteresis models, inductor/transformer design
+calculations and per-capability verification evidence, usable as a library, a CLI, a local MCP server
+and as a standalone plugin for **OpenAI Codex** and **Claude Code**. Part of
+[AIPE - AI for Power Engineering](https://github.com/FulongLi/AIPE-Core).
 
-The original repository contained only the `Rogowski_Coil-` heading; its Git
-history remains intact. No historical engineering files or datasets were removed.
+Version 0.2.0 (`feature/aipe-magnetics-v0.2`). The v0.1 record scaffold is preserved unchanged; see
+[docs/audit-v0.1.md](docs/audit-v0.1.md) and [CHANGELOG.md](CHANGELOG.md).
 
-## Open-source path
+## Capabilities
 
-Python 3.10+ and the open-source JSON Schema library are sufficient:
+| Area | What you get |
+| --- | --- |
+| Data | Magnetic Data Schema v0.2 (materials, manufacturers, datasheet parameters, cores, windings, measurements, B-H loops, loss tables, waveforms, model metadata), SI with original units, checksums, provenance, licence; v0.1 migration; HDF5 waveform store; bundled catalogue (TDK N87 datasheet, 10 ferrites with MagNet-derived Steinmetz sets, 5 TDK cores); source adapters for Princeton MagNet, MagNet Challenge 2, Paderborn materialdatabase and mag-net-hub |
+| Models | Steinmetz, iGSE, Bertotti, Jiles-Atherton (ODE framework), data-driven adapter (ANN / LSTM / Transformer / Neural ODE; numpy + optional torch / magnethub backends) behind one Magnetic Model Contract with declared validity domains |
+| Engineering | material lookup and comparison, flux density, core-loss estimation, inductor and transformer sizing with core screening, saturation screening, Dowell winding loss, operating-point validation, Markdown/JSON reports |
+| Verification | evidence per capability and operating range (L1 software, L2 numerical/physical, L3 engineering), check suite with machine- and human-readable reports, verification status in every result |
+| Interfaces | typed Python API, `aipe-magnetics` CLI, stdio MCP server, Codex plugin, Claude Code plugin, AIPE-Core round-trip adapter, AIPE-Registry manifest |
 
-```sh
-python -m pip install -r requirements-dev.txt
-python scripts/validate.py examples/synthetic-transformer.json
-python -m unittest discover -s tests -v
-python -m importers.json_record examples/synthetic-transformer.json data/derived/example-import.json
+Every result is an envelope with values + units, assumptions, model identity and version, input
+conditions, sources, verification status, warnings and limitations. Invalid or out-of-domain inputs
+are rejected explicitly, never clipped; uncertainty is reported as unknown when it is unknown.
+
+## Architecture
+
+```
+api / cli / mcp / plugins  ->  engineering  ->  models (contract, empirical, physics, dynamic, data-driven)
+                                    |                |
+                                   data (standard, catalogue, HDF5, adapters)   verification (evidence, checks)
+                                                      integrations (AIPE-Core, AIPE-Registry)
 ```
 
-The importer creates a review candidate with the original file SHA-256 and
-explicitly performs no unit inference. It refuses existing destinations and
-existing import provenance. Synthetic examples stay in `examples/` or disposable
-derived previews and must not be presented as real canonical data. Validation
-does not access the network or execute artifact references.
+Mathematics never imports from the AI layers; see [docs/architecture.md](docs/architecture.md).
 
-## Record boundary
+## Installation
 
-[magnetic-record.schema.json](schemas/magnetic-record.schema.json) defines:
-magnetic/core material, core family, core geometry, winding, inductor, transformer,
-magnetic component, loss model, measurement and operating condition. Every record
-has a version, stable ID, source/assumption evidence, review status and explicit
-synthetic flag. Physical quantities use SI `{value, unit}` objects. Unknown fields,
-wrong dimensions, duplicate IDs and missing record/evidence references fail.
+Python 3.10 or newer. No orchestrator, registry service, other domain expert, commercial software or
+LLM credentials are required.
 
-| Directory | Ownership |
-| --- | --- |
-| `data/raw/` | Original source bytes with source rights and checksums |
-| `data/canonical/` | Reviewed, normalized records with retained provenance |
-| `data/derived/` | Reproducible import previews/results, distinct from sources |
-| `schemas/` | Independent domain schema v0.1.0 |
-| `importers/` | Validating, non-overwriting source adapters |
-| `references/` | Source acquisition/rights checklist and references |
-| `examples/` | Clearly labeled synthetic structure examples |
+```sh
+python -m pip install "aipe-magnetics[mcp] @ git+https://github.com/FulongLi/AIPE-Magnetics-Database@feature/aipe-magnetics-v0.2"
+# development checkout
+git clone https://github.com/FulongLi/AIPE-Magnetics-Database && cd AIPE-Magnetics-Database
+python -m pip install -e ".[dev]"
+python -m pytest -q
+```
 
-See [Core mapping and provenance](docs/core-integration.md),
-[source policy](references/README.md), [contribution process](CONTRIBUTING.md) and
-[capability manifest](aipe.yaml). Materials, measurements and field solvers stay
-separate responsibilities; no solver or external MCP is installed or claimed.
+Extras: `[mcp]` MCP server, `[hdf5]` waveform store, `[torch]` optional data-driven backend.
 
-## Current limits
+### Codex
 
-This is a scaffold, not a characterized magnetics catalogue or a design engine.
-Manufacturer importers, measured loss surfaces, uncertainty, hysteresis and
-validated design/solver adapters are future work. An empty property is omitted
-instead of guessed. The checker validates declared metadata and references,
-not source authenticity or engineering fitness. Core integration is a documented
-mapping; no executable Core export is claimed. Repository licensing is unresolved
-and remains `NOASSERTION`; [LICENSING.md](LICENSING.md) records this explicitly.
+```sh
+codex plugin marketplace add https://github.com/FulongLi/AIPE-Magnetics-Database
+codex plugin add aipe-magnetics@aipe-magnetics        # skills + MCP server; start a new session
+```
+
+### Claude Code
+
+```text
+/plugin marketplace add FulongLi/AIPE-Magnetics-Database
+/plugin install aipe-magnetics@aipe-magnetics
+```
+
+Details, uninstall and troubleshooting: [docs/plugins.md](docs/plugins.md).
+
+## Quick start
+
+```sh
+aipe-magnetics info
+aipe-magnetics materials get N87
+aipe-magnetics materials compare N87 3C94 N49 -f "100 kHz" -b "100 mT" -t "90 degC"
+aipe-magnetics loss estimate N87 -f "100 kHz" -b "150 mT" -t "100 degC" --waveform triangular --core core.tdk-e65-32-27
+aipe-magnetics design transformer -P "10 kW" -f "100 kHz" --primary-voltage "800 V" --secondary-voltage "400 V" --material N87 -t "100 degC" --loss-target "300 kW/m^3"
+aipe-magnetics demo dab-10kw --output reports/demo
+aipe-magnetics verify --output reports/verification --check-bundled
+aipe-magnetics mcp self-test
+```
+
+```python
+import aipe_magnetics.api as api
+r = api.estimate_core_loss(material="N87", frequency={"value": 100, "unit": "kHz"},
+                           flux_density_peak={"value": 150, "unit": "mT"}, temperature={"value": 100, "unit": "degC"},
+                           waveform={"kind": "triangular"})
+print(r.values["loss_density"].quantity, r.model.id, r.verification.state)
+```
+
+## Example results
+
+`aipe-magnetics demo dab-10kw` sizes a 10 kW, 800 V : 400 V, 100 kHz dual-active-bridge transformer in
+TDK N87 (square voltage, triangular flux, 100 degC, flux limited to 70 % of Bsat and to a 300 kW/m^3
+loss density). See [docs/demo-dab-10kw.md](docs/demo-dab-10kw.md) for the specification and
+[docs/release-verification-v0.2.0.md](docs/release-verification-v0.2.0.md) for the recorded output
+of the release run. Values are analytical design estimates with stated assumptions; no hardware was
+built or measured.
+
+## Current limitations
+
+* Analytical sizing only: no finite-element, thermal, leakage/fringing, insulation or
+  manufacturing analysis; results are design estimates with explicit assumptions.
+* Core-loss models need a parameter set covering the operating temperature, frequency and flux
+  density; the engine refuses to extrapolate. Steinmetz/iGSE ignore DC bias and minor loops (flagged).
+* Datasheet parameters are transcribed for N87 only; other catalogue materials carry MagNet-derived
+  loss parameters but no Bsat/Curie data yet (reported as missing, not guessed).
+* Jiles-Atherton ships an illustrative parameter set, not a material fit. Data-driven inference is
+  demonstrated on a synthetic reference; real challenge models need the optional `magnethub` package.
+* Verification is L1/L2 (software, numerical and physical consistency). No L3 experimental validation is
+  bundled; optional external tests exist for users with the source datasets.
+* The repository licence is `NOASSERTION` pending the owner's decision ([LICENSING.md](LICENSING.md)).
+
+## Reference projects and attribution
+
+Princeton MagNet (MIT), MagNet Challenge 2 (no licence; reference only), Paderborn LEA
+materialdatabase (GPL-3.0; no code or data copied), Paderborn mag-net-hub (MIT), AIPE-Core and
+AIPE-Registry (MIT). Equations follow Steinmetz, Venkatachalam et al. 2002 (iGSE), Bertotti 1988,
+Jiles & Atherton 1986 / Jiles, Thoelke & Devine 1992, Dowell 1966. See [docs/sources.md](docs/sources.md).
+
+## Documentation
+
+[architecture](docs/architecture.md) · [v0.1 audit](docs/audit-v0.1.md) · [data standard v0.2](docs/data-standard-v0.2.md) ·
+[models](docs/models.md) · [verification](docs/verification.md) · [API and CLI](docs/api.md) · [MCP](docs/mcp.md) ·
+[plugins](docs/plugins.md) · [Core/Registry integration](docs/core-integration.md) · [sources](docs/sources.md) ·
+[DAB demo](docs/demo-dab-10kw.md) · [licensing](LICENSING.md) · [contributing](CONTRIBUTING.md)
+
+## Licence
+
+No licence has been declared by the repository owner (`NOASSERTION`). Third-party components keep
+their own licences; nothing is relicensed. See [LICENSING.md](LICENSING.md).
