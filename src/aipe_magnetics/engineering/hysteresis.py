@@ -42,7 +42,7 @@ def evaluate_hysteresis(request: HysteresisRequest, registry: Any | None = None)
 
         config = SolverConfig(method="RK45", rtol=request.rtol, atol=request.atol, max_step=1.0 / f / 200.0)
         output = model.trajectory(excitation, policy=request.policy, config=config, max_periods=request.periods,
-                                  points_per_period=request.samples_per_period)
+                                  steady_state_tol=request.steady_state_tol, points_per_period=request.samples_per_period)
     except AIPEMagneticsError as error:
         return EngineeringResult.rejected(CAP_HYSTERESIS, error, inputs=inputs)
 

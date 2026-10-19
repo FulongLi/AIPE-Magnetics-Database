@@ -100,7 +100,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     h = sub.add_parser("hysteresis", help="Jiles-Atherton loop evaluation").add_subparsers(dest="action", required=True)
     p = h.add_parser("evaluate"); p.add_argument("--field-peak", required=True, help="e.g. '500 A/m'"); p.add_argument("--frequency", default="1 Hz")
-    p.add_argument("--field-dc"); p.add_argument("--periods", type=int, default=4); p.add_argument("--waveform", default="sinusoidal", choices=["sinusoidal", "triangular"])
+    p.add_argument("--field-dc"); p.add_argument("--periods", type=int, default=10, help="maximum periods to reach steady state")
+    p.add_argument("--waveform", default="sinusoidal", choices=["sinusoidal", "triangular"])
     p.add_argument("--param", action="append", default=[], help="override parameter, e.g. --param Ms=1.6e6 (repeatable)"); _add_json_flag(p)
 
     d = sub.add_parser("design", help="inductor / transformer design").add_subparsers(dest="action", required=True)

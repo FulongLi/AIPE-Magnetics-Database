@@ -117,7 +117,8 @@ validation:
     - tests/test_records.py
     - tests/
     - src/aipe_magnetics/verification/evidence/v0.2.0.json
-    - reports/verification-report.md
+    - docs/verification-report-v0.2.0.md
+    - docs/release-verification-v0.2.0.md
     - .github/workflows/validate.yml
     - .github/workflows/ci.yml
   limitations:
