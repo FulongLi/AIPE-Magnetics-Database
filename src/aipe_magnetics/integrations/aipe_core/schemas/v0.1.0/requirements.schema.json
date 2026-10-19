@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/requirements.schema.json",
+  "title": "AIPE Requirements",
+  "type": "object",
+  "properties": {
+    "nominal_power": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/power"
+    },
+    "input_voltage": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/voltage"
+    },
+    "output_voltage": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/voltage"
+    },
+    "switching_frequency": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/frequency"
+    },
+    "operating_points": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/operating-point.schema.json"
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/id"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_refs": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+          }
+        },
+        "required": [
+          "id",
+          "description",
+          "evidence_refs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidence_refs": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+    },
+    "extensions": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/extensions"
+    }
+  },
+  "required": [
+    "evidence_refs"
+  ],
+  "additionalProperties": false
+}

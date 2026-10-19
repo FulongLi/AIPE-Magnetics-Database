@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/semiconductor.schema.json",
+  "title": "AIPE Semiconductor",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/id"
+    },
+    "role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selection_status": {
+      "enum": [
+        "unspecified",
+        "candidate",
+        "selected"
+      ]
+    },
+    "technology": {
+      "enum": [
+        "Si",
+        "SiC",
+        "GaN",
+        "other",
+        "unspecified"
+      ]
+    },
+    "manufacturer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "part_number": {
+      "type": "string",
+      "minLength": 1
+    },
+    "database_ref": {
+      "type": "string",
+      "format": "uri-reference",
+      "minLength": 1
+    },
+    "ratings": {
+      "type": "object",
+      "properties": {
+        "voltage": {
+          "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/voltage"
+        },
+        "current": {
+          "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/current"
+        },
+        "junction_temperature": {
+          "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/temperature"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "evidence_refs": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+    },
+    "extensions": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/extensions"
+    }
+  },
+  "required": [
+    "id",
+    "role",
+    "selection_status",
+    "evidence_refs"
+  ],
+  "additionalProperties": false
+}

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import importlib.util
 import json
 import os
 import subprocess
@@ -11,19 +12,22 @@ import sys
 from pathlib import Path
 
 import pytest
+from jsonschema import FormatChecker
 from pydantic import ValidationError
 from referencing.exceptions import NoSuchResource
 
 from aipe_magnetics.common.errors import DataIntegrityError, InvalidInputError, UnsupportedOperationError
-from aipe_magnetics.common.jsonio import dump
+from aipe_magnetics.common.jsonio import dump, load
 from aipe_magnetics.common.quantity import Quantity
 from aipe_magnetics.integrations.aipe_core import (
     CORE_COMMIT,
     CORE_SCHEMA_BASE,
+    DETAIL_SCHEMA,
     EXTENSION_KEY,
     SCHEMA_DIR,
     VENDORED_SHA256,
     CoreEvidence,
+    CoreProvenance,
     CoreValidationCheck,
     DesignRequirements,
     MagneticComponentSummary,
@@ -37,6 +41,7 @@ from aipe_magnetics.integrations.aipe_core import (
     validate_engineering_state,
     verify_vendored_integrity,
 )
+from aipe_magnetics.integrations.aipe_core import export as export_module
 from aipe_magnetics.integrations.aipe_core.__main__ import main as core_cli
 from aipe_magnetics.verification.checks.check_integrations import (
     FIXTURE_TIMESTAMP,
@@ -455,6 +460,180 @@ def test_import_rejects_unsupported_evidence_kind_and_inconsistent_extension():
     assert imported.limitations == [] and imported.detail == {}
 
 
+def _evidence(identifier: str, kind: str = "assumption", inputs: list | None = None) -> CoreEvidence:
+    return CoreEvidence(id=identifier, kind=kind, description=f"{identifier} (synthetic test record)",
+                        source={"type": "synthetic_example", "reference": "test"},
+                        provenance={"created_at": T, "activity": "test", "inputs": list(inputs or [])})
+
+
+# --------------------------------------------------------------------------------------------------
+# Regression tests for the review findings (never silent: conflicts are rejected or recorded)
+# --------------------------------------------------------------------------------------------------
+def test_requirement_conflicts_are_rejected_or_recorded():
+    fixture = illustrative_dab_transformer()
+    summary = fixture["summary"]
+    base = export_fixture_state(fixture)
+    other = _evidence("evidence.other-inputs")
+    changed = DesignRequirements(nominal_power=Quantity.si(5, "kW"), evidence=[other])
+    with pytest.raises(InvalidInputError, match="replace_requirements=True") as info:
+        to_engineering_state(summary, created_at=T, base_state=base, requirements=changed, replace_existing=True)
+    assert info.value.details["conflicts"] == [{"field": "nominal_power", "base": {"value": 10000.0, "unit": "W"},
+                                                "supplied": {"value": 5000.0, "unit": "W"}}]
+    assert base == export_fixture_state(fixture), "a rejected export must not touch the base"
+    # identical values (in any registered unit) are no conflict and the re-export is a no-op
+    same = DesignRequirements(nominal_power=Quantity(value=10, unit="kW"), evidence=fixture["requirements"].evidence)
+    again = to_engineering_state(summary, created_at=T, base_state=base, requirements=same, checks=fixture["checks"],
+                                 replace_existing=True)
+    assert again == base
+    # an explicit replacement is recorded: new value, new evidence appended, supersession record and limitation
+    replaced = to_engineering_state(summary, created_at="2026-10-20T00:00:00Z", base_state=base, requirements=changed,
+                                    replace_existing=True, replace_requirements=True)
+    assert validate_engineering_state(replaced) == []
+    assert replaced["requirements"]["nominal_power"] == {"value": 5000.0, "unit": "W"}
+    assert replaced["requirements"]["input_voltage"] == base["requirements"]["input_voltage"]
+    assert replaced["requirements"]["evidence_refs"] == ["evidence.design-inputs", "evidence.other-inputs"]
+    record = replaced["requirements"]["extensions"][EXTENSION_KEY]
+    assert record["schema"] == DETAIL_SCHEMA
+    assert record["superseded"] == [{"field": "nominal_power", "previous": {"value": 10000.0, "unit": "W"},
+                                     "replacement": {"value": 5000.0, "unit": "W"},
+                                     "previous_evidence_refs": ["evidence.design-inputs"],
+                                     "replaced_at": "2026-10-20T00:00:00Z"}]
+    statement = replaced["validation"]["limitations"][-1]
+    assert "nominal_power 10000 W -> 5000 W" in statement and "evidence.design-inputs" in statement
+    assert extract_requirements(replaced)["nominal_power"] == Quantity(value=5000.0, unit="W")
+    assert from_engineering_state(replaced) == [summary]
+    # a second replacement appends to the record instead of overwriting history
+    twice = to_engineering_state(summary, created_at="2026-10-21T00:00:00Z", base_state=replaced,
+                                 requirements=DesignRequirements(nominal_power=Quantity.si(7, "kW"), evidence=[other]),
+                                 replace_existing=True, replace_requirements=True)
+    assert [item["previous"]["value"] for item in twice["requirements"]["extensions"][EXTENSION_KEY]["superseded"]] == [10000.0, 5000.0]
+    assert validate_engineering_state(twice) == []
+
+
+def test_reexport_of_identical_checks_is_idempotent_and_nothing_is_pruned():
+    fixture = illustrative_dab_transformer()
+    summary = fixture["summary"]
+    base = export_fixture_state(fixture)
+    again = to_engineering_state(summary, created_at=T, base_state=base, requirements=fixture["requirements"],
+                                 checks=fixture["checks"], replace_existing=True)
+    assert again == base, "identical summary + requirements + checks must leave the state unchanged"
+    conflicting = CoreValidationCheck(id="check.turns-ratio-consistency", status="not_run", description="Changed wording.")
+    with pytest.raises(InvalidInputError, match="already exists in base_state with different content"):
+        to_engineering_state(summary, created_at=T, base_state=base, checks=[conflicting], replace_existing=True)
+    # replace_existing swaps the entry only; evidence and checks are an audit trail and stay (documented)
+    slim = summary.model_copy(update={"evidence": [_evidence("evidence.new-brief")], "turns_ratio": None,
+                                      "inductance": None, "leakage_inductance": None})
+    replaced = to_engineering_state(slim, created_at=T, base_state=base, replace_existing=True)
+    assert validate_engineering_state(replaced) == []
+    assert replaced["magnetics"][0]["evidence_refs"] == ["evidence.new-brief"]
+    assert [item["id"] for item in replaced["evidence"]] == [item["id"] for item in base["evidence"]] + ["evidence.new-brief"]
+    assert replaced["validation"]["checks"] == base["validation"]["checks"]
+    assert replaced["validation"]["status"] == "analytically_checked"  # the retained analytical check still holds
+
+
+def test_import_rejects_orphaned_or_unknown_extension_quantities():
+    state = export_fixture_state()
+    orphaned = copy.deepcopy(state)
+    del orphaned["magnetics"][0]["turns_ratio"]  # extension still records turns_ratio
+    assert validate_engineering_state(orphaned) == []
+    with pytest.raises(DataIntegrityError, match=r"records \['turns_ratio'\] but the Core entry carries no such field"):
+        from_engineering_state(orphaned)
+    unknown = copy.deepcopy(state)
+    unknown["magnetics"][0]["extensions"][EXTENSION_KEY]["quantities"]["saturation_current"] = {"value": 1, "unit": "A"}
+    with pytest.raises(DataIntegrityError, match="unknown keys \\['saturation_current'\\]"):
+        from_engineering_state(unknown)
+
+
+def test_contract_valid_but_unrepresentable_numbers_raise_data_integrity_errors():
+    huge = 10 ** 400  # a JSON integer Core's validator accepts (finite() inspects floats only)
+    state = export_fixture_state()
+    state["requirements"]["nominal_power"]["value"] = huge
+    assert validate_engineering_state(state) == []
+    with pytest.raises(DataIntegrityError, match=r"\$\.requirements\.nominal_power") as info:
+        extract_requirements(state)
+    assert info.value.details["path"] == "$.requirements.nominal_power"
+    inductance = export_fixture_state()
+    inductance["magnetics"][0]["inductance"]["value"] = huge
+    del inductance["magnetics"][0]["extensions"]
+    with pytest.raises(DataIntegrityError, match="inductance is not representable"):
+        from_engineering_state(inductance)
+    recorded = export_fixture_state()
+    recorded["magnetics"][0]["extensions"][EXTENSION_KEY]["quantities"]["inductance"]["value"] = huge
+    with pytest.raises(DataIntegrityError, match="not a valid quantity"):
+        from_engineering_state(recorded)
+
+
+@pytest.mark.parametrize("schema,error,match", [
+    ("aipe.magnetics.core-detail/9.9", UnsupportedOperationError, "same major"),
+    ("aipe.magnetics.core-detail/0.3", UnsupportedOperationError, "same minor while 0.x"),
+    ("aipe.magnetics.core-detail/0", UnsupportedOperationError, "unsupported"),
+    ("other.tool/9", UnsupportedOperationError, "not written by this adapter"),
+    (None, DataIntegrityError, "'schema' is missing"),
+    (7, DataIntegrityError, "'schema' is missing or not a string"),
+])
+def test_detail_extension_schema_versioning(schema, error, match):
+    state = export_fixture_state()
+    payload = state["magnetics"][0]["extensions"][EXTENSION_KEY]
+    if schema is None:
+        del payload["schema"]
+    else:
+        payload["schema"] = schema
+    assert validate_engineering_state(state) == []  # Core does not interpret extension payloads
+    with pytest.raises(error, match=match):
+        from_engineering_state(state)
+    payload["schema"] = DETAIL_SCHEMA
+    assert from_engineering_state(state)[0].id == "magnetics.dab-transformer"
+
+
+def test_import_closes_evidence_under_provenance_inputs():
+    fixture = illustrative_dab_transformer()
+    analytical = _evidence("evidence.ratio-from-requirements", kind="analytical", inputs=["evidence.design-inputs"])
+    summary = MagneticComponentSummary(id="magnetics.q", role="r", kind="transformer",
+                                       turns_ratio=Quantity(value=2, unit="1"), evidence=[analytical])
+    state = to_engineering_state(summary, created_at=T, project_id="project.q", requirements=fixture["requirements"])
+    assert state["magnetics"][0]["evidence_refs"] == ["evidence.ratio-from-requirements"]
+    [imported] = from_engineering_state(state)
+    assert [item.id for item in imported.evidence] == ["evidence.ratio-from-requirements", "evidence.design-inputs"]
+    assert imported != summary  # documented: non-closed entries import with their transitive inputs
+    standalone = to_engineering_state(imported, created_at=T, project_id="project.q")
+    assert validate_engineering_state(standalone) == []
+    assert from_engineering_state(standalone) == [imported]  # closure is idempotent
+    # a transitive input of a kind this adapter never emits is refused explicitly
+    measured = copy.deepcopy(state)
+    measured["evidence"].append({
+        "id": "evidence.measured", "kind": "measurement", "description": "Hypothetical measurement record.",
+        "source": {"type": "measurement_record", "reference": "lab record"},
+        "provenance": {"created_at": T, "activity": "measure", "inputs": [], "tool": {"id": "tool.bench", "version": "1"}},
+        "artifacts": [{"uri": "bench.csv", "media_type": "text/csv"}], "review_status": "unreviewed"})
+    measured["evidence"][1]["provenance"]["inputs"].append("evidence.measured")  # the analytical record now depends on it
+    assert validate_engineering_state(measured) == []
+    with pytest.raises(UnsupportedOperationError, match="reached via evidence.ratio-from-requirements"):
+        from_engineering_state(measured)
+
+
+def test_empty_project_strings_are_rejected_not_substituted():
+    summary = illustrative_dab_transformer()["summary"]
+    with pytest.raises(InvalidInputError, match="project_name must be a non-empty string"):
+        to_engineering_state(summary, created_at=T, project_id="project.p", project_name="")
+    with pytest.raises(InvalidInputError, match="project_description must be a non-empty string"):
+        to_engineering_state(summary, created_at=T, project_id="project.p", project_description="  ")
+    state = to_engineering_state(summary, created_at=T, project_id="project.p")
+    assert state["project"]["name"] == "project.p" and "description" not in state["project"]
+    named = to_engineering_state(summary, created_at=T, project_id="project.p", project_name="N", project_description="D")
+    assert named["project"]["name"] == "N" and named["project"]["description"] == "D"
+
+
+def test_format_checks_fail_closed_without_format_validators(monkeypatch):
+    monkeypatch.setattr(export_module, "_FORMAT", FormatChecker(formats=["uri"]))
+    with pytest.raises(UnsupportedOperationError, match="date-time, uri-reference"):
+        CoreProvenance(created_at="garbage", activity="a")
+    with pytest.raises(UnsupportedOperationError):
+        MagneticComponentSummary(id="magnetics.x", role="r", kind="other", core_material_ref="has space")
+    monkeypatch.undo()
+    with pytest.raises(ValidationError, match="RFC 3339"):
+        CoreProvenance(created_at="garbage", activity="a")
+
+
 # --------------------------------------------------------------------------------------------------
 # CLI and verification checks
 # --------------------------------------------------------------------------------------------------
@@ -519,6 +698,78 @@ def test_core_reference_validator_accepts_exported_state(tmp_path):
     dump(state, broken)
     negative = subprocess.run([sys.executable, str(script), str(broken)], capture_output=True, text=True)
     assert negative.returncode == 1 and "Cyclic" in negative.stdout, negative.stdout + negative.stderr
+
+
+def _extra_parity_mutations() -> list:
+    """Mutations beyond CORE_MUTATIONS that exercise the subtle branches of the port."""
+    selection_status = load(SCHEMA_DIR / "semiconductor.schema.json")["properties"]["selection_status"]["enum"][0]
+
+    def nan_inside_extension(s):
+        s["extensions"] = {"x.y": {"value": float("nan")}}
+
+    def refs_inside_extension_are_opaque(s):
+        s["extensions"] = {"x.y": {"evidence_refs": ["evidence.missing"]}}
+
+    def ratings_without_component_refs(s):
+        s["semiconductors"] = [{"id": "semiconductor.sw", "role": "switch", "selection_status": selection_status,
+                                "ratings": {"voltage": {"value": 1200, "unit": "V"}}, "evidence_refs": []}]
+
+    def ratings_with_component_refs(s):
+        s["semiconductors"] = [{"id": "semiconductor.sw", "role": "switch", "selection_status": selection_status,
+                                "ratings": {"voltage": {"value": 1200, "unit": "V"}},
+                                "evidence_refs": ["evidence.design-brief"]}]
+
+    def timestamp_without_zone(s):
+        s["project"]["created_at"] = "2026-10-19T00:00:00"
+
+    def constraint_quantity_without_refs(s):
+        s["requirements"]["constraints"] = [{"id": "constraint.x", "description": "x", "evidence_refs": []}]
+
+    def exported_fixture(s):
+        s.clear()
+        s.update(export_fixture_state())
+
+    def exported_with_replaced_requirements(s):
+        base = export_fixture_state()
+        other = _evidence("evidence.other-inputs")
+        s.clear()
+        s.update(to_engineering_state(illustrative_dab_transformer()["summary"], created_at=T, base_state=base,
+                                      requirements=DesignRequirements(nominal_power=Quantity.si(5, "kW"), evidence=[other]),
+                                      replace_existing=True, replace_requirements=True))
+
+    def untouched(s):
+        pass
+
+    return [nan_inside_extension, refs_inside_extension_are_opaque, ratings_without_component_refs,
+            ratings_with_component_refs, timestamp_without_zone, constraint_quantity_without_refs, exported_fixture,
+            exported_with_replaced_requirements, untouched]
+
+
+@pytest.mark.external
+def test_port_matches_core_validator_diagnostics_string_for_string():
+    """Load AIPE-Core's own scripts/validate.py from the user-designated checkout and compare every diagnostic."""
+    core = _checkouts() / "AIPE-Core"
+    script = core / "scripts" / "validate.py"
+    if not script.is_file():
+        pytest.fail(f"AIPE-Core checkout incomplete: {script} not found")
+    spec = importlib.util.spec_from_file_location("aipe_core_reference_validate", script)
+    assert spec is not None and spec.loader is not None
+    reference = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(reference)
+    battery = [mutate for mutate, _ in CORE_MUTATIONS] + _extra_parity_mutations()
+    mismatches = []
+    outcomes = {"pass": 0, "fail": 0}
+    for mutate in battery:
+        state = load_core_example()
+        mutate(state)
+        ours = validate_engineering_state(state)
+        theirs = reference.validate_state(copy.deepcopy(state))
+        outcomes["pass" if not theirs else "fail"] += 1
+        if ours != theirs:
+            mismatches.append((mutate.__name__, ours, theirs))
+    assert not mismatches, mismatches
+    assert outcomes["pass"] >= 4 and outcomes["fail"] >= 20, outcomes
+    print(f"parity battery: {len(battery)} states, {outcomes}")
 
 
 @pytest.mark.external

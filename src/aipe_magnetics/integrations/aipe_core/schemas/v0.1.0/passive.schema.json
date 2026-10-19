@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/passive.schema.json",
+  "title": "AIPE Passive",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/id"
+    },
+    "role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "resistor",
+        "capacitor",
+        "inductor",
+        "other"
+      ]
+    },
+    "resistance": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/resistance"
+    },
+    "capacitance": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/capacitance"
+    },
+    "inductance": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/inductance"
+    },
+    "evidence_refs": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+    },
+    "extensions": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/extensions"
+    }
+  },
+  "required": [
+    "id",
+    "role",
+    "kind",
+    "evidence_refs"
+  ],
+  "additionalProperties": false
+}

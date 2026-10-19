@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/simulation.schema.json",
+  "title": "AIPE Simulation",
+  "type": "object",
+  "properties": {
+    "status": {
+      "enum": [
+        "not_run",
+        "configured",
+        "completed",
+        "failed"
+      ]
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/id"
+          },
+          "status": {
+            "enum": [
+              "configured",
+              "completed",
+              "failed"
+            ]
+          },
+          "tool": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/attribution"
+          },
+          "model": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/artifact"
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/artifact"
+            }
+          },
+          "operating_point_ref": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/id"
+          },
+          "started_at": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/timestamp"
+          },
+          "completed_at": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/timestamp"
+          },
+          "evidence_refs": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "tool",
+          "model",
+          "outputs",
+          "evidence_refs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidence_refs": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+    },
+    "extensions": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/extensions"
+    }
+  },
+  "required": [
+    "status",
+    "runs",
+    "evidence_refs"
+  ],
+  "additionalProperties": false
+}

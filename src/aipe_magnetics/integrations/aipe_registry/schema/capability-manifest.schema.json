@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Registry/v0.1.0/schema/capability-manifest.schema.json",
+  "title": "AIPE capability manifest v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "name", "type", "domains", "description", "status", "maturity", "repository", "license", "capabilities", "inputs", "outputs", "dependencies", "compatibility", "tools", "connectors", "validation", "documentation"],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "id": {"$ref": "#/$defs/id"},
+    "name": {"$ref": "#/$defs/text"},
+    "type": {"enum": ["standard", "registry", "database", "tool", "skill_collection", "skill", "agent", "education", "presentation", "catalogue"]},
+    "domains": {"$ref": "#/$defs/nonemptyStrings"},
+    "description": {"$ref": "#/$defs/text"},
+    "status": {"enum": ["active", "experimental", "planned", "deprecated"]},
+    "maturity": {"enum": ["scaffold", "prototype", "usable", "stable"]},
+    "repository": {"type": "string", "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+    "license": {"$ref": "#/$defs/text"},
+    "capabilities": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"}},
+    "inputs": {"type": "array", "items": {"$ref": "#/$defs/port"}},
+    "outputs": {"type": "array", "items": {"$ref": "#/$defs/port"}},
+    "dependencies": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/dependency"}},
+    "compatibility": {
+      "type": "object", "additionalProperties": false,
+      "required": ["core", "engineering_state", "integration"],
+      "properties": {
+        "core": {"const": "0.1.x"},
+        "engineering_state": {"const": "0.1.x"},
+        "integration": {"enum": ["native", "mapped", "none"]}
+      }
+    },
+    "tools": {"type": "array", "items": {"$ref": "#/$defs/tool"}},
+    "connectors": {"type": "array", "items": {"$ref": "#/$defs/connector"}},
+    "validation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "evidence", "limitations"],
+      "properties": {
+        "status": {"enum": ["not_run", "schema_validated", "tested", "measured"]},
+        "evidence": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/reference"}},
+        "limitations": {"$ref": "#/$defs/strings"}
+      }
+    },
+    "documentation": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/reference"}},
+    "extensions": {"type": "object", "propertyNames": {"pattern": "^[a-z][a-z0-9-]*[.:][a-z][a-z0-9_.:-]*$"}}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+$"},
+    "strings": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "nonemptyStrings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "https": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "reference": {"type": "string", "minLength": 1, "pattern": "^(https://[^\\s]+|(?!(?:[A-Za-z]+:|/|\\\\))[^\\s\\\\]+)$"},
+    "port": {
+      "type": "object", "additionalProperties": false, "required": ["name", "description"],
+      "properties": {"name": {"$ref": "#/$defs/text"}, "description": {"$ref": "#/$defs/text"}, "schema": {"type": "string", "format": "uri"}}
+    },
+    "dependency": {
+      "type": "object", "additionalProperties": false, "required": ["id", "version", "optional"],
+      "properties": {"id": {"$ref": "#/$defs/id"}, "version": {"const": "0.1.x"}, "optional": {"type": "boolean"}}
+    },
+    "tool": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "capabilities", "licence_class", "optional", "interfaces", "platforms", "url", "limitations"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]*$"},
+        "name": {"$ref": "#/$defs/text"}, "capabilities": {"$ref": "#/$defs/nonemptyStrings"},
+        "licence_class": {"enum": ["open_source", "free_proprietary", "commercial"]},
+        "optional": {"type": "boolean"}, "interfaces": {"$ref": "#/$defs/strings"},
+        "platforms": {"$ref": "#/$defs/nonemptyStrings"}, "url": {"$ref": "#/$defs/https"},
+        "limitations": {"$ref": "#/$defs/strings"}
+      },
+      "allOf": [{"if": {"properties": {"licence_class": {"enum": ["free_proprietary", "commercial"]}}}, "then": {"properties": {"optional": {"const": true}}}}]
+    },
+    "connector": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "tool", "type", "repository", "license", "status", "supported_versions", "platforms", "security_notes"],
+      "properties": {
+        "id": {"$ref": "#/$defs/text"}, "tool": {"$ref": "#/$defs/text"},
+        "type": {"enum": ["mcp", "api", "cli", "python"]}, "repository": {"$ref": "#/$defs/https"},
+        "license": {"$ref": "#/$defs/text"}, "status": {"enum": ["evaluated", "experimental", "supported"]},
+        "supported_versions": {"$ref": "#/$defs/strings"}, "platforms": {"$ref": "#/$defs/nonemptyStrings"},
+        "security_notes": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    }
+  }
+}

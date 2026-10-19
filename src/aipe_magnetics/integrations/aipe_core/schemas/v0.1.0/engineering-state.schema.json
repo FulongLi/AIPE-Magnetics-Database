@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/engineering-state.schema.json",
+  "title": "AIPE Engineering State",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/id"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "project": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/project.schema.json"
+    },
+    "requirements": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/requirements.schema.json"
+    },
+    "architecture": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "enum": [
+            "concept",
+            "candidate",
+            "detailed",
+            "verified"
+          ]
+        },
+        "evidence_refs": {
+          "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+        },
+        "extensions": {
+          "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/extensions"
+        }
+      },
+      "required": [
+        "stage",
+        "evidence_refs"
+      ],
+      "additionalProperties": false
+    },
+    "converter": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/converter.schema.json"
+    },
+    "semiconductors": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/semiconductor.schema.json"
+      }
+    },
+    "magnetics": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/magnetics.schema.json"
+      }
+    },
+    "passives": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/passive.schema.json"
+      }
+    },
+    "control": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/control.schema.json"
+    },
+    "thermal": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/thermal.schema.json"
+    },
+    "simulation": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/simulation.schema.json"
+    },
+    "validation": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/validation.schema.json"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/evidence.schema.json"
+      }
+    },
+    "extensions": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/extensions"
+    }
+  },
+  "required": [
+    "id",
+    "schema_version",
+    "project",
+    "requirements",
+    "architecture",
+    "converter",
+    "semiconductors",
+    "magnetics",
+    "passives",
+    "control",
+    "thermal",
+    "simulation",
+    "validation",
+    "evidence"
+  ],
+  "additionalProperties": false
+}
