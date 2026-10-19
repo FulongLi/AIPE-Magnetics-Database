@@ -98,11 +98,12 @@ Branch `feature/aipe-magnetics-v0.2`. The v0.1 files, commands and tests are pre
   evidence; the state of the bundled evidence file is stated wherever verification is mentioned.
 
 ### Known issues (maintainer)
-- `src/aipe_magnetics/verification/evidence/v0.2.0.json` and `docs/verification-report-v0.2.0.md` are
-  produced by the release procedure (`verify --update-bundled`); `verify --check-bundled`,
-  `integration.registry-manifest-accepted` and
-  `tests/test_release_integrity.py::test_manifest_documentation_and_evidence_paths_exist` fail until
-  they are committed, and every model-based result reports `L0 unverified` (stated explicitly).
+- The bundled evidence `src/aipe_magnetics/verification/evidence/v0.2.0.json` (58 checks, all passing)
+  and its Markdown twin `docs/verification-report-v0.2.0.md` were produced by the release run on
+  2026-10-19 (`verify --update-bundled`); re-run the release step after changing any check, otherwise
+  `verify --check-bundled` and CI fail.
+- Verification evidence is L1/L2 only (software, numerical and physical consistency); no L3
+  experimental validation is bundled. Linux/macOS CI legs are defined but had not run at release time.
 - `.github/workflows/validate.yml` runs its original `python -m unittest discover -s tests -v`
   unchanged: the pytest-only suites live in sub-directories without package markers (and the release
   tests in `tests/release/`), so unittest discovery still finds exactly the 17 v0.1 tests.

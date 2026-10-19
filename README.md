@@ -90,10 +90,24 @@ print(r.values["loss_density"].quantity, r.model.id, r.verification.state)
 
 `aipe-magnetics demo dab-10kw` sizes a 10 kW, 800 V : 400 V, 100 kHz dual-active-bridge transformer in
 TDK N87 (square voltage, triangular flux, 100 degC, flux limited to 70 % of Bsat and to a 300 kW/m^3
-loss density). See [docs/demo-dab-10kw.md](docs/demo-dab-10kw.md) for the specification and
-[docs/release-verification-v0.2.0.md](docs/release-verification-v0.2.0.md) for the maintainer's record
-of what was executed for the release (items that were not run are marked as such there). Values are
-analytical design estimates with stated assumptions; no hardware was built or measured.
+loss density). Output of the release run (`docs/demo-dab-10kw-report.md`, selected core E 65/32/27):
+
+| Quantity | Value | Status |
+| --- | --- | --- |
+| turns primary : secondary | 21 : 10 | calculated (Faraday, integer turns) |
+| peak flux density | 0.178 T (Bsat at 100 degC: 0.39 T, margin 54 %) | calculated |
+| core loss density / core loss | 274 kW/m^3 / 21.5 W | estimated (iGSE, TDK 100 degC datasheet-fit set) |
+| copper loss (litz, Dowell 1-D) | 17.7 W | estimated |
+| total estimated loss | 39.2 W | estimated |
+| window fill | 0.30 | estimated |
+| verification | L2 (sizing relations and iGSE verified against analytical references) | - |
+
+Other candidates: E 70/33/32 44.8 W, PM 87/70 44.9 W; ETD 59/31/22 rejected (window fill 0.51 > 0.40);
+UU 93/152/30 not evaluable (no mean turn length / window area in the datasheet record). See
+[docs/demo-dab-10kw.md](docs/demo-dab-10kw.md) for the specification and assumptions and
+[docs/release-verification-v0.2.0.md](docs/release-verification-v0.2.0.md) for the record of what was
+executed for the release. Values are analytical design estimates with stated assumptions; no
+hardware was built or measured.
 
 ## Current limitations
 

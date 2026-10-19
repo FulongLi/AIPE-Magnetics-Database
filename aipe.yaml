@@ -120,9 +120,8 @@ validation:
     - tests/integrations/test_core_roundtrip.py
     - tests/integrations/test_registry_manifest.py
     - tests/plugins/test_packaging.py
-    # written by the maintainer's release step (aipe-magnetics verify --update-bundled); the Registry validator
-    # reports it as documentation_drift until it exists. The release procedure adds docs/verification-report-v0.2.0.md
-    # (the Markdown twin of the evidence file) here once it exists.
+    # written by the release step (aipe-magnetics verify --update-bundled) together with its Markdown twin
+    - docs/verification-report-v0.2.0.md
     - src/aipe_magnetics/verification/evidence/v0.2.0.json
     - docs/release-verification-v0.2.0.md
     - .github/workflows/validate.yml
@@ -167,7 +166,10 @@ extensions:
       aipe.magnetics.model.bertotti: {family: physics, maturity: prototype, verification: L2}
       aipe.magnetics.model.jiles_atherton: {family: physics, maturity: prototype, verification: L2}
       aipe.magnetics.model.ode_framework: {family: dynamic, maturity: prototype, verification: L2}
-      aipe.magnetics.model.reference_ann: {family: data_driven, maturity: reference_only, verification: L1}
+      aipe.magnetics.model.datadriven.reference-steinmetz-ann: {family: data_driven, maturity: reference_only, verification: L2, notes: "synthetic reference surrogate; demonstrates the inference workflow, not a material"}
+      aipe.magnetics.design_transformer: {family: engineering, maturity: usable, verification: L2}
+      aipe.magnetics.design_inductor: {family: engineering, maturity: usable, verification: L2}
+      aipe.magnetics.validate_design: {family: engineering, maturity: usable, verification: L2}
     verification_evidence: [src/aipe_magnetics/verification/evidence/v0.2.0.json]
     optional_integrations:
       - {id: aipe.core, kind: schema-roundtrip, status: tested-offline, notes: "Executable export/import adapter validated against pinned Core v0.1.0 schemas."}
