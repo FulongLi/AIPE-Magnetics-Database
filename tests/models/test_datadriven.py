@@ -50,6 +50,8 @@ from aipe_magnetics.models.datadriven import (
     load_reference_package,
     reference_package_path,
     reference_steinmetz_ann,
+    register_backend,
+    unregister_backend,
     write_aipe_json,
 )
 from aipe_magnetics.models.datadriven import numpy_backend as nb
@@ -599,13 +601,18 @@ def test_magnethub_mapping_functions_without_the_package():
         magnethub_package("N87", "oxford")
 
 
-def test_magnethub_backend_is_explicit_when_absent():
-    package = magnethub_package("N87")
+def test_magnethub_backend_is_explicit_when_absent_or_runs_when_present():
+    package = magnethub_package("N87", "paderborn", sequence_length=None)
     backend = get_backend("external-package", "ann")
     assert isinstance(backend, MagnetHubBackend)
-    if magnethub_available():
-        pytest.fail("magnethub is importable in this environment; extend this test with the real inference path "
-                    "(see test_magnethub_real_inference_external) instead of asserting its absence")
+    if magnethub_available():  # e.g. Python >= 3.13 with mag-net-hub installed: run the real path instead of failing
+        model = DataDrivenModel(package)
+        length = model.backend.expected_sequence_length  # type: ignore[attr-defined]
+        b = 0.1 * np.sin(np.linspace(0, 2 * np.pi, length, endpoint=False))
+        out = model.predict({"flux_density": b, "frequency": 1e5, "temperature": 298.15})
+        assert out.diagnostics["backend"] == "magnethub" and out.values["loss_density"].value > 0
+        assert any(w.code == "weights_unverified" for w in out.warnings)
+        return
     with pytest.raises(UnsupportedOperationError) as info:
         backend.load(package)
     assert "mag-net-hub" in str(info.value) and MAGNETHUB_INSTALL_HINT.split(" (")[0] in str(info.value)
@@ -702,3 +709,317 @@ def test_every_datadriven_check_passes(check_fn):
     assert outcome.duration_s < 5.0, f"{check_fn.check_id} took {outcome.duration_s:.2f} s"
     record = outcome.to_record()
     assert record.status == "pass" and record.capability.startswith("aipe.magnetics.")
+
+
+# --------------------------------------------------------------------------------------------------
+# Regression tests for the independent review findings (fix stage)
+# --------------------------------------------------------------------------------------------------
+_LINEAR_SPEC = ArchitectureSpec(family="ann", name="linear", hyperparameters={"hidden_sizes": []},
+                                input_features=["frequency", "flux_density_peak"], output_features=["loss_density"],
+                                input_units={"frequency": "Hz", "flux_density_peak": "T"}, output_units={"loss_density": "W/m^3"})
+_LINEAR_PARAMS = {"layers.0.weight": np.array([[2.0, 3.0]]), "layers.0.bias": np.array([1.0])}
+
+
+def test_explicit_conditions_cannot_override_conditions_derived_from_inputs(linear_ann: DataDrivenModel):
+    good = {"frequency": 1e5, "flux_density_peak": 0.1}
+    with pytest.raises(InvalidInputError, match="domain_map"):  # 5 MHz input, 100 kHz "condition": no silent override
+        linear_ann.predict({"frequency": 5e6, "flux_density_peak": 0.1}, conditions={"frequency": 1e5})
+    with pytest.raises(InvalidInputError):  # even a consistent value is refused: the input is the only source
+        linear_ann.predict(good, conditions={"flux_density_peak": 0.1})
+    ref = reference_steinmetz_ann()
+    with pytest.raises(InvalidInputError):
+        ref.predict({"frequency": 2e6, "flux_density_peak": 0.1}, conditions={"frequency": 1e5})
+    # unmapped conditions: one value or one value per sample, never truncated or silently broadcast
+    for bad in ([300.0, 300.0, 300.0], [[300.0]], [], np.zeros((2, 1))):
+        with pytest.raises(InvalidInputError):
+            linear_ann.predict(good, conditions={"temperature": bad})
+    batch = {"frequency": [1e5, 2e5, 3e5], "flux_density_peak": 0.1}
+    assert linear_ann.predict(batch, conditions={"temperature": 300.0}).domain.inside
+    assert linear_ann.predict(batch, conditions={"temperature": [300.0, 300.0, 300.0]}).domain.inside
+    with pytest.raises(OutOfDomainError):
+        linear_ann.predict(batch, conditions={"temperature": [300.0, 300.0, 900.0]})
+    warned = linear_ann.predict(batch, conditions={"temperature": [300.0, 300.0, 900.0]}, policy="warn")
+    assert warned.domain.inside is False and "temperature: 1 of 3" in warned.domain.violations[0]
+    with pytest.raises(InvalidInputError):  # impossible values stay invalid inputs
+        linear_ann.predict(batch, conditions={"temperature": [300.0, -1.0, 300.0]})
+
+
+def test_validity_ranges_must_be_declared_in_si_units(tmp_path: Path):
+    inference = InferenceConfig(domain_map={"frequency": "frequency"})
+    with pytest.raises(ValidationError, match="SI"):
+        _package(tmp_path, _LINEAR_SPEC, _LINEAR_PARAMS, inference=inference,
+                 domain=ValidityDomain(frequency=ValidityRange(min=20.0, max=500.0, unit="kHz")))
+    with pytest.raises(ValidationError):  # unknown unit
+        _package(tmp_path, _LINEAR_SPEC, _LINEAR_PARAMS, domain=ValidityDomain(temperature=ValidityRange(min=1.0, max=2.0, unit="furlong")))
+    with pytest.raises(ValidationError):  # the metadata ingestion path rejects it as well
+        ModelPackage.model_validate({**load_reference_package().to_json_dict(),
+                                     "domain": {"frequency": {"min": 20.0, "max": 500.0, "unit": "kHz"}}})
+    package = _package(tmp_path, _LINEAR_SPEC, _LINEAR_PARAMS, inference=inference,
+                       domain=ValidityDomain(frequency=ValidityRange(min=1e3, max=1e6, unit="Hz")))
+    model = DataDrivenModel(package)
+    assert model.predict({"frequency": 1e5, "flux_density_peak": 0.1}).domain.inside
+    with pytest.raises(OutOfDomainError):
+        model.predict({"frequency": 100.0, "flux_density_peak": 0.1})
+    model.domain = ValidityDomain(frequency=ValidityRange(min=20.0, max=500.0, unit="kHz"))  # bypassed validation
+    with pytest.raises(DataIntegrityError, match="SI"):
+        model.predict({"frequency": 1e5, "flux_density_peak": 0.1})
+
+
+def test_batch_and_single_sample_evaluations_agree_within_rounding():
+    ref = reference_steinmetz_ann()
+    rng = np.random.default_rng(2026)
+    f = 10 ** rng.uniform(np.log10(20e3), np.log10(500e3), 16)
+    b = 10 ** rng.uniform(np.log10(0.02), np.log10(0.3), 16)
+    batch = np.asarray(ref.predict({"frequency": f, "flux_density_peak": b}).diagnostics["outputs"]["loss_density"])
+    singles = np.array([ref.predict({"frequency": fi, "flux_density_peak": bi}).values["loss_density"].value
+                        for fi, bi in zip(f, b)])
+    np.testing.assert_allclose(batch, singles, rtol=1e-12, atol=0.0)  # BLAS kernels differ by a few ulp, not more
+    result = checks.reference_ann_loads_and_is_deterministic()
+    assert result.passed and result.metrics["repeat_bit_identical"] is True
+    assert result.metrics["batch_consistent_rtol_1e-12"] is True and result.metrics["batch_vs_single_max_rel_diff"] < 1e-12
+
+
+def test_empty_batches_and_empty_sequences_are_rejected(linear_ann: DataDrivenModel, tmp_path: Path):
+    with pytest.raises(InvalidInputError, match="N = 0"):
+        linear_ann.predict({"frequency": np.array([]), "flux_density_peak": np.array([])})
+    with pytest.raises(InvalidInputError):
+        linear_ann.predict({"frequency": np.array([]), "flux_density_peak": 0.1})
+    spec = checks.lstm_check_spec("last")
+    lstm = DataDrivenModel(_package(tmp_path, spec, checks.random_parameters(spec, seed=7)))
+    with pytest.raises(InvalidInputError, match="L >= 1"):
+        lstm.predict({"flux_density": np.zeros((1, 0)), "frequency": 1e5})
+    with pytest.raises(InvalidInputError):
+        coerce_inputs(spec, {"flux_density": np.zeros((2, 0)), "frequency": [1.0, 2.0]})
+    with pytest.raises(InvalidInputError):
+        stack_inputs(spec, {"flux_density": np.zeros((2, 0)), "frequency": np.zeros(2)})
+    with pytest.raises(InvalidInputError):
+        stack_inputs(spec, {"flux_density": np.zeros((0, 4)), "frequency": np.zeros(0)})
+    with pytest.raises(InvalidInputError):
+        stack_inputs(_LINEAR_SPEC, {"frequency": np.zeros(0), "flux_density_peak": np.zeros(0)})
+
+
+def test_npz_loader_reports_wrong_content_with_typed_errors(tmp_path: Path):
+    np.save(tmp_path / "w.npy", np.zeros(3))
+    with pytest.raises(DataIntegrityError, match="not an npz archive"):
+        nb.load_npz(tmp_path / "w.npy")
+    for name, payload in (("empty.npz", b""), ("trunc.npz", b"PK\x03\x04trunc"), ("garbage.npz", b"garbage")):
+        (tmp_path / name).write_bytes(payload)
+        with pytest.raises(DataIntegrityError):
+            nb.load_npz(tmp_path / name)
+    np.savez(tmp_path / "text.npz", a=np.array(["x", "y"]))
+    with pytest.raises(DataIntegrityError):
+        nb.load_npz(tmp_path / "text.npz")
+    with pytest.raises(DataNotFoundError):
+        nb.load_npz(tmp_path / "missing.npz")
+    np.savez(tmp_path / "ok.npz", **_LINEAR_PARAMS)
+    from_path, from_bytes = nb.load_npz(tmp_path / "ok.npz"), nb.load_npz((tmp_path / "ok.npz").read_bytes())
+    assert set(from_path) == set(from_bytes) == set(_LINEAR_PARAMS)
+    np.testing.assert_array_equal(from_path["layers.0.weight"], from_bytes["layers.0.weight"])
+    path = write_aipe_json(tmp_path / "ok.json", _LINEAR_SPEC, _LINEAR_PARAMS)
+    assert nb.load_aipe_json(path)[2] == nb.load_aipe_json(path.read_bytes())[2]
+    (tmp_path / "latin.json").write_bytes(b"\xff\xfe{}")
+    with pytest.raises(DataIntegrityError):
+        nb.load_aipe_json(tmp_path / "latin.json")
+
+
+def test_model_package_load_reports_missing_or_unreadable_metadata(tmp_path: Path):
+    with pytest.raises(DataNotFoundError):
+        ModelPackage.load(tmp_path / "does-not-exist.json")
+    with pytest.raises(DataNotFoundError):
+        ModelPackage.load(tmp_path)  # a directory
+    with pytest.raises(DataNotFoundError):
+        DataDrivenModel.from_path(tmp_path / "nope.json")
+    (tmp_path / "bad.json").write_bytes(b"\xff\xfe not utf-8 \x00")
+    with pytest.raises(DataIntegrityError):
+        ModelPackage.load(tmp_path / "bad.json")
+
+
+def test_neural_ode_conditions_and_dc_bias_follow_the_adapter_conventions(tmp_path: Path):
+    package = checks.build_linear_neural_ode_package(tmp_path, a=100.0, b=1.0)
+    package = package.model_copy(update={"domain": ValidityDomain(
+        temperature=ValidityRange(min=250.0, max=400.0, unit="K"), dc_bias="unsupported")}).with_base_dir(tmp_path)
+    model = NeuralODEModel(package)
+    t = np.linspace(0, 1e-2, 11)
+
+    def run(**kwargs):
+        return model.simulate(y0=[0.0], t_eval=t, u=lambda tt: [1.0], **kwargs)
+
+    ok = run(conditions={"temperature": Quantity(value=25.0, unit="degC")})  # converted, not rejected
+    assert ok.domain.inside and ok.domain.checked["temperature"] == "[250, 400] K"
+    with pytest.raises(OutOfDomainError):
+        run(conditions={"temperature": 500.0})
+    warned = run(conditions={"temperature": 500.0}, policy="warn")
+    assert warned.domain.inside is False and any(w.code == "out_of_domain" for w in warned.warnings)
+    with pytest.raises(InvalidInputError):  # arrays are not truncated to their first element
+        run(conditions={"temperature": [300.0, 900.0]})
+    with pytest.raises(InvalidInputError):  # impossible values are invalid inputs, not merely out of domain
+        run(conditions={"temperature": -5.0})
+    with pytest.raises(InvalidInputError):
+        run(conditions={"frequency": 0.0})
+    with pytest.raises(InvalidInputError):
+        run(conditions={"temperature": Quantity(value=1.0, unit="T")})
+    with pytest.raises(InvalidInputError):
+        run(conditions={"pressure": 1.0})
+    with pytest.raises(OutOfDomainError):  # dc_bias is part of the MagneticModel contract
+        run(dc_bias=True)
+    assert run(dc_bias=False).domain.inside
+
+
+def test_neural_ode_validates_solver_settings_before_integrating(tmp_path: Path):
+    package = checks.build_linear_neural_ode_package(tmp_path, a=100.0, b=1.0)
+    model = NeuralODEModel(package)
+    t = np.linspace(0, 1e-2, 11)
+    for kwargs in ({"max_step": 0.0}, {"max_step": -1.0}, {"max_step": float("nan")}, {"method": "bogus"},
+                   {"method": ""}, {"atol": 0.0}, {"rtol": float("inf")}, {"rtol": True}):
+        with pytest.raises(InvalidInputError):
+            model.simulate(y0=[0.0], t_eval=t, u=lambda tt: [1.0], **kwargs)
+    with pytest.raises(InvalidInputError):
+        NeuralODEModel(package, method="bogus")
+    with pytest.raises(InvalidInputError):
+        NeuralODEModel(package, max_step=0.0)
+    out = model.simulate(y0=[0.0], t_eval=t, u=lambda tt: [1.0], method="RK45", max_step=1e-3)
+    assert out.diagnostics["method"] == "RK45" and out.diagnostics["max_step"] == 1e-3
+    exact = linear_forced_response(t, y0=0.0, a=100.0, b=1.0, u0=1.0)
+    np.testing.assert_allclose(out.diagnostics["trajectory"]["y"], exact, rtol=0, atol=1e-6)
+
+    def picky(*args, **kwargs):
+        raise ValueError("custom integrator refuses")
+
+    with pytest.raises(InvalidInputError, match="integrator rejected"):
+        NeuralODEModel(package, integrator=picky, method="anything").simulate(y0=[0.0], t_eval=t, u=lambda tt: [1.0])
+    with pytest.raises(InvalidInputError, match="u\\(t\\) must return"):  # typed errors from u(t) pass through unchanged
+        model.simulate(y0=[0.0], t_eval=t, u=lambda tt: [1.0, 2.0])
+
+
+def test_aipe_json_header_is_cross_checked_against_the_architecture(tmp_path: Path):
+    package = load_reference_package()
+    weights = tmp_path / package.weights_path().name
+    data = load_json(package.weights_path())
+    meta = package.to_json_dict()
+
+    def rewrite() -> None:
+        dump(data, weights, overwrite=True)
+        meta["weights"]["sha256"] = sha256_file(weights)
+        meta["weights"]["size_bytes"] = weights.stat().st_size
+        dump(meta, tmp_path / "metadata.json", overwrite=True)
+
+    data["family"] = "neural_ode"
+    rewrite()
+    with pytest.raises(DataIntegrityError, match="family"):
+        DataDrivenModel.from_path(tmp_path / "metadata.json")
+    data["family"], data["architecture"] = "ann", "something-else"
+    rewrite()
+    with pytest.raises(DataIntegrityError, match="architecture"):
+        DataDrivenModel.from_path(tmp_path / "metadata.json")
+    del data["architecture"]  # the architecture name is optional in the header; the family is not
+    rewrite()
+    assert DataDrivenModel.from_path(tmp_path / "metadata.json").integrity["verified"] is True
+    with pytest.raises(DataIntegrityError):
+        nb.check_aipe_json_header({}, package.architecture)
+
+
+def test_unhonoured_inference_dtype_is_reported_not_silent(tmp_path: Path):
+    model = DataDrivenModel(_package(tmp_path, _LINEAR_SPEC, _LINEAR_PARAMS, inference=InferenceConfig(dtype="float32")))
+    assert [w.code for w in model.load_warnings] == ["dtype_ignored"]
+    out = model.predict({"frequency": 1.0, "flux_density_peak": 1.0})
+    assert any(w.code == "dtype_ignored" for w in out.warnings)
+    assert out.diagnostics["dtype"] == "float64" and out.diagnostics["dtype_configured"] == "float32"
+    honoured = DataDrivenModel(_package(tmp_path, _LINEAR_SPEC, _LINEAR_PARAMS))
+    assert not honoured.load_warnings
+    assert honoured.predict({"frequency": 1.0, "flux_density_peak": 1.0}).diagnostics["dtype"] == "float64"
+
+
+def test_backend_registry_validates_registrations():
+    with pytest.raises(InvalidInputError):
+        register_backend("probe-unknown-family", NumpyBackend, {"npz": ["cnn"]})
+    with pytest.raises(InvalidInputError):
+        register_backend("probe-unknown-format", NumpyBackend, {"onnx": ["ann"]})
+    with pytest.raises(InvalidInputError):
+        register_backend("probe-empty", NumpyBackend, {})
+    with pytest.raises(InvalidInputError):  # the default table cannot be replaced by accident
+        register_backend("numpy", NumpyBackend, {"npz": ["ann"]})
+    assert isinstance(get_backend("aipe-json", "ann"), NumpyBackend)
+    assert "probe-unknown-family" not in available_backends()
+    try:
+        register_backend("probe-ok", NumpyBackend, {"npz": ["ann"]})
+        with pytest.raises(InvalidInputError):
+            register_backend("probe-ok", NumpyBackend, {"npz": ["lstm"]})
+        register_backend("probe-ok", NumpyBackend, {"npz": ["lstm"]}, replace=True)
+        assert available_backends()["probe-ok"] == {"npz": ["lstm"]}
+    finally:
+        assert unregister_backend("probe-ok") is True
+    assert unregister_backend("probe-ok") is False
+
+
+def test_write_aipe_json_protects_reserved_header_keys(tmp_path: Path):
+    for key in ("format", "format_version", "family", "architecture", "layers", "lstm", "head"):
+        with pytest.raises(InvalidInputError, match="reserved"):
+            write_aipe_json(tmp_path / "x.json", _LINEAR_SPEC, _LINEAR_PARAMS, extra={key: "evil"})
+    path = write_aipe_json(tmp_path / "x.json", _LINEAR_SPEC, _LINEAR_PARAMS, extra={"note": "fine"})
+    assert nb.load_aipe_json(path)[2]["note"] == "fine"
+
+
+def test_hyperparameters_are_validated_strictly_and_stored_in_typed_form():
+    for bad in ([8.0], ["8"], [True], [0], [-1], 8):
+        with pytest.raises(ValidationError):
+            ArchitectureSpec(family="ann", name="x", hyperparameters={"hidden_sizes": bad}, input_features=["a"], output_features=["b"])
+    with pytest.raises(ValidationError):
+        ArchitectureSpec(family="lstm", name="x", hyperparameters={"hidden_size": 2.0}, input_features=["a"],
+                         output_features=["b"], sequence_features=["a"])
+    spec = ArchitectureSpec(family="ann", name="x", hyperparameters={"hidden_sizes": (4, 2)}, input_features=["a"], output_features=["b"])
+    assert spec.hyperparameters == {"kind": "mlp", "hidden_sizes": [4, 2], "activation": "tanh", "output_activation": "identity"}
+    assert spec.hyperparameters == spec.typed_hyperparameters().model_dump()
+    assert ArchitectureSpec.model_validate(spec.model_dump()).hyperparameters == spec.hyperparameters
+    assert ArchitectureSpec.model_validate_json(spec.model_dump_json()) == spec
+    external = magnethub_package("N87").architecture
+    assert external.hyperparameters["kind"] == "external" and external.hyperparameters["material"] == "N87"
+    committed = load_reference_package()
+    assert committed.to_json_dict()["architecture"]["hyperparameters"] == load_json(reference_package_path())["architecture"]["hyperparameters"]
+
+
+def test_weights_path_policy_and_size_declaration(tmp_path: Path):
+    package = _package(tmp_path, _LINEAR_SPEC, _LINEAR_PARAMS)
+    escaped = package.model_copy(update={"weights": package.weights.model_copy(update={"path": "../w.aipe.json"})}
+                                 ).with_base_dir(tmp_path / "inner")
+    with pytest.raises(InvalidInputError, match="escapes"):
+        escaped.weights_path()
+    with pytest.raises(InvalidInputError):
+        DataDrivenModel(escaped)
+    absolute = package.model_copy(update={"weights": package.weights.model_copy(
+        update={"path": str((tmp_path / "w.aipe.json").resolve())})})  # trusted-caller feature, still digest-checked
+    assert DataDrivenModel(absolute).integrity["verified"] is True
+    wrong_size = package.model_copy(update={"weights": package.weights.model_copy(update={"size_bytes": 1})}).with_base_dir(tmp_path)
+    with pytest.raises(DataIntegrityError, match="size_bytes"):
+        DataDrivenModel(wrong_size)
+    size = (tmp_path / "w.aipe.json").stat().st_size
+    right_size = package.model_copy(update={"weights": package.weights.model_copy(update={"size_bytes": size})}).with_base_dir(tmp_path)
+    assert DataDrivenModel(right_size).integrity["verified"] is True
+    data, digest = package.read_weights()
+    assert digest == package.weights.sha256 == sha256_file(tmp_path / "w.aipe.json") and len(data) == size
+    assert package.read_weights()[0] is data  # cached until released: the backend parses this very buffer
+    package.release_weights()
+    assert package.read_weights()[0] is not data
+    package.release_weights()
+
+
+def test_naive_lstm_reference_implements_every_head_activation():
+    for act in ("relu", "gelu", "sigmoid", "identity", "tanh"):
+        spec = ArchitectureSpec(family="lstm", name=f"lstm-{act}", input_features=["b", "f"], output_features=["p"],
+                                sequence_features=["b"], hyperparameters={"hidden_size": 3, "num_layers": 1, "head_hidden_sizes": [2],
+                                                                          "head_activation": act, "head_output_activation": act})
+        params = checks.random_parameters(spec, seed=3)
+        x = np.random.default_rng(4).normal(size=(2, 4, 2))
+        np.testing.assert_allclose(nb.build_network(spec, params)(x), checks.naive_lstm_forward(spec, params, x), rtol=0, atol=1e-13)
+    assert checks.naive_activation("relu", -1.0) == 0.0 and checks.naive_activation("gelu", 0.0) == 0.0
+    with pytest.raises(ValueError):
+        checks.naive_activation("swish", 0.1)
+
+
+def test_benchmark_iteration_cap_is_one_constant():
+    import inspect
+
+    bench = _load_benchmark_module()
+    assert bench.MAX_ITER == 20000
+    assert inspect.signature(bench.fit).parameters["max_iter"].default == bench.MAX_ITER
+    assert inspect.signature(bench.run).parameters["max_iter"].default == bench.MAX_ITER
+    assert load_reference_package().training["optimizer"]["max_iter"] == bench.MAX_ITER
