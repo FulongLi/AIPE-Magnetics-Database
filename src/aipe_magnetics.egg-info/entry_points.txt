@@ -1,3 +1,0 @@
-[console_scripts]
-aipe-magnetics = aipe_magnetics.cli.main:main
-aipe-magnetics-mcp = aipe_magnetics.mcp.server:main
