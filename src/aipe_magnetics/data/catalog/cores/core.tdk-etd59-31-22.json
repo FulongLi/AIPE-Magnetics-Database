@@ -1,0 +1,216 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight) and outline drawing; coil-former table (AN winding cross section, lN average length of turn, AR resistance factor) for the ordering code named in the record.",
+      "id": "evidence.tdk-etd-59-31-22-datasheet-2024-10",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "locator": "Magnetic characteristics (per set) table; outline drawing; coil former table, row B66398W1024T001",
+      "reference": "TDK Electronics, 'Ferrites and accessories - ETD 59/31/22', core and accessories datasheet, Date: October 2024",
+      "review_status": "unreviewed",
+      "url": "https://www.tdk-electronics.tdk.com/inf/80/db/fer/etd_59_31_22.pdf",
+      "version": "October 2024"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.tdk-etd-59-31-22-datasheet-2024-10"
+  ],
+  "extensions": {
+    "aipe.datasheet": {
+      "coil_former": "B66398W1024T001: AN 365.6 mm2, lN 106.1 mm, AR 10.0 uOhm",
+      "coil_former_AR_uOhm": 10.0,
+      "core_constant_sum_l_over_A_per_mm": 0.38,
+      "ungapped_N87": {
+        "AL_nH": 5300,
+        "BS_mT_at_250A_per_m_100C": 320,
+        "PV_W_per_set_max": 5.2,
+        "PV_condition": "100 mT, 100 kHz, 100 degC",
+        "mu_e": 1590
+      }
+    }
+  },
+  "id": "core.tdk-etd59-31-22",
+  "kind": "core_geometry",
+  "license": "NOASSERTION",
+  "name": "ETD 59/31/22",
+  "properties": {
+    "air_gap_options": [
+      {
+        "original": {
+          "unit": "mm",
+          "value": 0.2
+        },
+        "unit": "m",
+        "value": 0.0002
+      },
+      {
+        "original": {
+          "unit": "mm",
+          "value": 1.0
+        },
+        "unit": "m",
+        "value": 0.001
+      },
+      {
+        "original": {
+          "unit": "mm",
+          "value": 1.5
+        },
+        "unit": "m",
+        "value": 0.0015
+      },
+      {
+        "original": {
+          "unit": "mm",
+          "value": 2.0
+        },
+        "unit": "m",
+        "value": 0.002
+      }
+    ],
+    "bobbin_window_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 365.6
+      },
+      "unit": "m^2",
+      "value": 0.0003656
+    },
+    "description": "TDK ETD 59/31/22 ferrite core set; magnetic characteristics per set from the October 2024 datasheet. Core constant sum(l/A) = 0.38 1/mm (datasheet).",
+    "dimensions": {
+      "values": {
+        "centre_leg_diameter": {
+          "original": {
+            "unit": "mm",
+            "value": 22.1
+          },
+          "unit": "m",
+          "value": 0.0221
+        },
+        "depth_c": {
+          "original": {
+            "unit": "mm",
+            "value": 22.1
+          },
+          "unit": "m",
+          "value": 0.0221
+        },
+        "height_b_half": {
+          "original": {
+            "unit": "mm",
+            "value": 31.2
+          },
+          "unit": "m",
+          "value": 0.0312
+        },
+        "length_a": {
+          "original": {
+            "unit": "mm",
+            "value": 59.8
+          },
+          "unit": "m",
+          "value": 0.0598
+        },
+        "window_height_half": {
+          "original": {
+            "unit": "mm",
+            "value": 22.0
+          },
+          "unit": "m",
+          "value": 0.022
+        },
+        "window_width_total": {
+          "original": {
+            "unit": "mm",
+            "value": 43.6
+          },
+          "unit": "m",
+          "value": 0.0436
+        }
+      }
+    },
+    "effective_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 368.0
+      },
+      "unit": "m^2",
+      "value": 0.000368
+    },
+    "effective_length": {
+      "original": {
+        "unit": "mm",
+        "value": 139.0
+      },
+      "unit": "m",
+      "value": 0.139
+    },
+    "effective_volume": {
+      "original": {
+        "unit": "mm^3",
+        "value": 51200.0
+      },
+      "unit": "m^3",
+      "value": 5.1200000000000004e-05
+    },
+    "family_ref": "core-family.tdk-etd",
+    "manufacturer_ref": "manufacturer.tdk",
+    "mass": {
+      "original": {
+        "unit": "g",
+        "value": 260.0
+      },
+      "unit": "kg",
+      "value": 0.26
+    },
+    "material_refs": [
+      "material.tdk-n27",
+      "material.tdk-n87"
+    ],
+    "mean_turn_length": {
+      "original": {
+        "unit": "mm",
+        "value": 106.1
+      },
+      "unit": "m",
+      "value": 0.1061
+    },
+    "minimum_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 368.0
+      },
+      "unit": "m^2",
+      "value": 0.000368
+    },
+    "part_number": "B66397",
+    "set_description": "core set of 2 ETD halves (per set values), IEC 63093-6"
+  },
+  "provenance": {
+    "activity": "transcribed from the TDK datasheet by tools/build_catalog.py",
+    "created_at": "2026-10-19T00:00:00Z",
+    "inputs": [
+      "evidence.tdk-etd-59-31-22-datasheet-2024-10"
+    ],
+    "normalization": "mm -> m, mm^2 -> m^2, mm^3 -> m^3, g -> kg with original units retained",
+    "tool": {
+      "id": "aipe.magnetics",
+      "version": "0.2.0"
+    }
+  },
+  "quality": {
+    "flags": [],
+    "notes": [
+      "review_status unreviewed: awaiting owner review of the transcriptions"
+    ],
+    "status": "normalized"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": [
+    "tdk",
+    "ferrite-core"
+  ]
+}

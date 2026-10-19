@@ -1,0 +1,97 @@
+{
+  "description": "Illustrative E-core set with round-number effective parameters (Ae*le = Ve). Not a catalogue part.",
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Clearly synthetic placeholder authored to give the catalogue loader content. All geometry values are round illustrative numbers.",
+      "id": "evidence.example-synthetic-fixture",
+      "kind": "assumption",
+      "license": "NOASSERTION",
+      "reference": "AIPE Magnetics v0.2 bundled synthetic catalogue fixture (aipe_magnetics/data/catalog)",
+      "review_status": "unreviewed"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.example-synthetic-fixture"
+  ],
+  "id": "core.example-synthetic-e42",
+  "kind": "core_geometry",
+  "license": "NOASSERTION",
+  "name": "Example synthetic E42-class core set (illustrative)",
+  "properties": {
+    "air_gap_options": [
+      {
+        "unit": "m",
+        "value": 0.0005
+      },
+      {
+        "unit": "m",
+        "value": 0.001
+      }
+    ],
+    "bobbin_window_area": {
+      "unit": "m^2",
+      "value": 0.0002
+    },
+    "description": "Synthetic illustrative core geometry; round placeholder values consistent with Ae*le = Ve.",
+    "effective_area": {
+      "unit": "m^2",
+      "value": 0.0002
+    },
+    "effective_length": {
+      "unit": "m",
+      "value": 0.1
+    },
+    "effective_volume": {
+      "unit": "m^3",
+      "value": 2e-05
+    },
+    "manufacturer_ref": "manufacturer.example-synthetic",
+    "mass": {
+      "unit": "kg",
+      "value": 0.1
+    },
+    "material_refs": [
+      "material.example-synthetic-ferrite"
+    ],
+    "mean_turn_length": {
+      "unit": "m",
+      "value": 0.09
+    },
+    "minimum_area": {
+      "unit": "m^2",
+      "value": 0.00018
+    },
+    "part_number": "EXAMPLE-E42-SYN",
+    "set_description": "core set of 2 E halves (fictional)",
+    "window_area": {
+      "unit": "m^2",
+      "value": 0.00025
+    }
+  },
+  "provenance": {
+    "activity": "authored as a synthetic catalogue fixture for AIPE Magnetics v0.2",
+    "inputs": [],
+    "normalization": "none; values authored directly in SI",
+    "tool": {
+      "id": "aipe.magnetics",
+      "name": "AIPE Magnetics",
+      "version": "0.2.0"
+    }
+  },
+  "quality": {
+    "flags": [
+      "synthetic_fixture"
+    ],
+    "notes": [
+      "Illustrative round-number values; not datasheet or measured data."
+    ],
+    "status": "normalized"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": true,
+  "tags": [
+    "synthetic",
+    "fixture"
+  ]
+}

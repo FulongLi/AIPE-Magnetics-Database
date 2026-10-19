@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/validation.schema.json",
+  "title": "AIPE Validation",
+  "type": "object",
+  "properties": {
+    "status": {
+      "enum": [
+        "not_run",
+        "schema_validated",
+        "analytically_checked",
+        "simulated",
+        "measured",
+        "reviewed",
+        "failed"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/id"
+          },
+          "kind": {
+            "enum": [
+              "schema",
+              "analytical",
+              "simulation",
+              "measurement",
+              "review"
+            ]
+          },
+          "status": {
+            "enum": [
+              "not_run",
+              "pass",
+              "fail"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_refs": {
+            "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "status",
+          "description",
+          "evidence_refs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_refs": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/evidence_refs"
+    },
+    "extensions": {
+      "$ref": "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/common.schema.json#/$defs/extensions"
+    }
+  },
+  "required": [
+    "status",
+    "checks",
+    "limitations",
+    "evidence_refs"
+  ],
+  "additionalProperties": false
+}

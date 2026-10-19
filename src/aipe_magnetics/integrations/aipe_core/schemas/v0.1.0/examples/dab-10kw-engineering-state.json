@@ -1,0 +1,120 @@
+{
+  "id": "aipe.example.dab-10kw",
+  "schema_version": "0.1.0",
+  "project": {
+    "id": "project.dab-10kw",
+    "name": "Synthetic 10 kW DAB design brief",
+    "description": "Schema example only. Ratings are requested design inputs, not demonstrated performance.",
+    "purpose": "example",
+    "created_at": "2026-10-07T00:00:00Z",
+    "updated_at": "2026-10-07T00:00:00Z",
+    "evidence_refs": [
+      "evidence.design-brief"
+    ]
+  },
+  "requirements": {
+    "nominal_power": {
+      "value": 10000,
+      "unit": "W"
+    },
+    "input_voltage": {
+      "value": 800,
+      "unit": "V"
+    },
+    "output_voltage": {
+      "value": 400,
+      "unit": "V"
+    },
+    "switching_frequency": {
+      "value": 100000,
+      "unit": "Hz"
+    },
+    "operating_points": [
+      {
+        "id": "operating-point.nominal",
+        "description": "Requested nominal operating point; not a measurement.",
+        "input_voltage": {
+          "value": 800,
+          "unit": "V"
+        },
+        "output_voltage": {
+          "value": 400,
+          "unit": "V"
+        },
+        "output_power": {
+          "value": 10000,
+          "unit": "W"
+        },
+        "switching_frequency": {
+          "value": 100000,
+          "unit": "Hz"
+        },
+        "evidence_refs": [
+          "evidence.design-brief"
+        ]
+      }
+    ],
+    "constraints": [],
+    "evidence_refs": [
+      "evidence.design-brief"
+    ]
+  },
+  "architecture": {
+    "stage": "concept",
+    "description": "Isolated dual active bridge concept. Component selection and physical design are pending.",
+    "evidence_refs": [
+      "evidence.design-brief"
+    ]
+  },
+  "converter": {
+    "id": "converter.dab",
+    "topology": "dual-active-bridge",
+    "isolation": "isolated",
+    "design_status": "concept",
+    "evidence_refs": [
+      "evidence.design-brief"
+    ]
+  },
+  "semiconductors": [],
+  "magnetics": [],
+  "passives": [],
+  "control": {
+    "evidence_refs": []
+  },
+  "thermal": {
+    "evidence_refs": []
+  },
+  "simulation": {
+    "status": "not_run",
+    "runs": [],
+    "evidence_refs": []
+  },
+  "validation": {
+    "status": "not_run",
+    "checks": [],
+    "limitations": [
+      "No devices, core, turns ratio, leakage inductance or control law selected.",
+      "No losses, efficiency, thermal results, simulation results or measurements are claimed.",
+      "Passing schema checks establishes interchange structure only."
+    ],
+    "evidence_refs": []
+  },
+  "evidence": [
+    {
+      "id": "evidence.design-brief",
+      "kind": "assumption",
+      "description": "Synthetic task-specified targets: 10 kW, 800 V to 400 V, 100 kHz, dual active bridge.",
+      "source": {
+        "type": "synthetic_example",
+        "reference": "AIPE Ecosystem v0.1 task, WP1 example requirements"
+      },
+      "provenance": {
+        "created_at": "2026-10-07T00:00:00Z",
+        "activity": "Record requested example design inputs; no engineering calculation or experiment performed.",
+        "inputs": []
+      },
+      "artifacts": [],
+      "review_status": "unreviewed"
+    }
+  ]
+}

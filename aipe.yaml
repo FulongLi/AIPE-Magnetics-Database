@@ -1,88 +1,185 @@
-{
-  "schema_version": "0.1.0",
-  "id": "aipe.magnetics-database",
-  "name": "AIPE Magnetics Database",
-  "type": "database",
-  "domains": [
-    "power-electronics"
-  ],
-  "description": "Evidence-first magnetic material, geometry, winding, component, loss-model and measurement record scaffold with explicit SI units.",
-  "status": "experimental",
-  "maturity": "scaffold",
-  "repository": "https://github.com/FulongLi/AIPE-Magnetics-Database",
-  "license": "NOASSERTION",
-  "capabilities": [
-    "magnetics-record-schema",
-    "magnetics-data-import",
-    "magnetics-data-validation"
-  ],
-  "inputs": [
-    {
-      "name": "magnetic-record",
-      "description": "Already normalized magnetic records with explicit evidence and SI units."
-    }
-  ],
-  "outputs": [
-    {
-      "name": "validated-import-candidate",
-      "description": "Review candidate with original-byte checksum and importer version."
-    }
-  ],
-  "dependencies": [
-    {
-      "id": "aipe.core",
-      "version": "0.1.x",
-      "optional": false
-    }
-  ],
-  "compatibility": {
-    "core": "0.1.x",
-    "engineering_state": "0.1.x",
-    "integration": "mapped"
-  },
-  "tools": [
-    {
-      "id": "python",
-      "name": "Python",
-      "capabilities": [
-        "magnetics-data-validation",
-        "magnetics-data-import"
-      ],
-      "licence_class": "open_source",
-      "optional": false,
-      "interfaces": [
-        "cli",
-        "python"
-      ],
-      "platforms": [
-        "linux",
-        "windows",
-        "macos"
-      ],
-      "url": "https://www.python.org/",
-      "limitations": [
-        "Physical models require separate validation."
-      ]
-    }
-  ],
-  "connectors": [],
-  "validation": {
-    "status": "tested",
-    "evidence": [
-      "tests/test_records.py",
-      ".github/workflows/validate.yml"
-    ],
-    "limitations": [
-      "No real manufacturer or measurement records bundled.",
-      "Core integration is documented mapping only; no executed Core export.",
-      "No field solver or measurement validation claimed.",
-      "Repository licence remains NOASSERTION pending owner decision."
-    ]
-  },
-  "documentation": [
-    "README.md",
-    "docs/core-integration.md",
-    "references/README.md",
-    "LICENSING.md"
-  ]
-}
+schema_version: 0.1.0
+id: aipe.magnetics-database
+name: AIPE Magnetics
+type: tool
+domains: [power-electronics]
+description: "Evidence-first magnetic engineering expert: unified magnetic data standard v0.2, loss and hysteresis models with per-capability verification evidence, inductor/transformer design calculations, local MCP server and standalone Codex / Claude Code plugins."
+status: experimental
+maturity: prototype
+repository: https://github.com/FulongLi/AIPE-Magnetics-Database
+license: NOASSERTION
+capabilities:
+  - magnetics-record-schema
+  - magnetics-data-import
+  - magnetics-data-validation
+  - magnetics-data-migration
+  - magnetics-waveform-storage
+  - magnetics-source-adapters
+  - magnetics-material-lookup
+  - magnetics-material-comparison
+  - magnetics-core-loss-estimation
+  - magnetics-hysteresis-evaluation
+  - magnetics-inductor-design
+  - magnetics-transformer-design
+  - magnetics-design-validation
+  - magnetics-engineering-report
+  - magnetics-verification-suite
+  - magnetics-mcp-server
+  - magnetics-agent-plugin
+  - magnetics-core-state-export
+inputs:
+  - name: magnetic-record
+    description: "Magnetic record (schema 0.1.0 or 0.2.0) with explicit evidence and SI units."
+  - name: waveform-dataset
+    description: "HDF5 waveform container in the aipe.magnetics.waveforms/0.2 layout with per-array units and checksums."
+  - name: design-request
+    description: "Typed inductor, transformer, core-loss or validation request (aipe_magnetics.api.types) in any registered unit."
+  - name: engineering-state
+    description: "AIPE-Core Engineering State 0.1.0 whose requirements seed a design request."
+    schema: "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/engineering-state.schema.json"
+outputs:
+  - name: engineering-result
+    description: "Result envelope aipe.magnetics.result/0.2 with values, units, assumptions, model identity and version, sources, verification status, warnings and limitations."
+  - name: validated-import-candidate
+    description: "Review candidate with original-byte checksum, importer version and normalisation record."
+  - name: verification-report
+    description: "Machine-readable (JSON) and human-readable (Markdown) evidence per capability and operating range."
+  - name: engineering-state
+    description: "AIPE-Core Engineering State 0.1.0 fragment (magnetics entry plus evidence) produced by the tested round-trip adapter."
+    schema: "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/engineering-state.schema.json"
+dependencies:
+  - {id: aipe.core, version: 0.1.x, optional: true}
+compatibility: {core: 0.1.x, engineering_state: 0.1.x, integration: native}
+tools:
+  - id: python
+    name: Python
+    capabilities: [magnetics-record-schema, magnetics-data-import, magnetics-data-validation, magnetics-data-migration, magnetics-waveform-storage, magnetics-source-adapters, magnetics-material-lookup, magnetics-material-comparison, magnetics-core-loss-estimation, magnetics-hysteresis-evaluation, magnetics-inductor-design, magnetics-transformer-design, magnetics-design-validation, magnetics-engineering-report, magnetics-verification-suite, magnetics-mcp-server, magnetics-core-state-export]
+    licence_class: open_source
+    optional: false
+    interfaces: [cli, python, mcp]
+    platforms: [linux, windows, macos]
+    url: https://www.python.org/
+    limitations:
+      - "Analytical design relations only (no finite-element, thermal or manufacturing verification)."
+      - "Steinmetz/iGSE results are valid only inside the parameter-set ranges and ignore DC bias and minor loops."
+  - id: mcp-python-sdk
+    name: Model Context Protocol Python SDK
+    capabilities: [magnetics-mcp-server]
+    licence_class: open_source
+    optional: true
+    interfaces: [mcp]
+    platforms: [linux, windows, macos]
+    url: https://github.com/modelcontextprotocol/python-sdk
+    limitations: ["Local stdio transport only; no remote or cloud service is required or provided."]
+  - id: claude-code
+    name: Claude Code
+    capabilities: [magnetics-agent-plugin]
+    licence_class: free_proprietary
+    optional: true
+    interfaces: [cli]
+    platforms: [linux, windows, macos]
+    url: https://code.claude.com/
+    limitations: ["Host only; all engineering numbers come from the Python engine through the MCP server or CLI."]
+  - id: codex-cli
+    name: OpenAI Codex CLI
+    capabilities: [magnetics-agent-plugin]
+    licence_class: open_source
+    optional: true
+    interfaces: [cli]
+    platforms: [linux, windows, macos]
+    url: https://github.com/openai/codex
+    limitations: ["Host only; requires a user account for the model service; all engineering numbers come from the Python engine."]
+  - id: pytorch
+    name: PyTorch
+    capabilities: [magnetics-core-loss-estimation]
+    licence_class: open_source
+    optional: true
+    interfaces: [python]
+    platforms: [linux, windows, macos]
+    url: https://pytorch.org/
+    limitations: ["Optional backend for user-supplied trained models; no trained material model is bundled."]
+connectors:
+  - id: aipe-magnetics-mcp
+    tool: mcp-python-sdk
+    type: mcp
+    repository: https://github.com/FulongLi/AIPE-Magnetics-Database
+    license: NOASSERTION
+    status: experimental
+    supported_versions: ["mcp>=2,<3 (protocol 2026-07-28)"]
+    platforms: [linux, windows, macos]
+    security_notes:
+      - "Local stdio transport; no network listener, no API keys, no cloud services."
+      - "Read-only queries and deterministic calculations by default; file-writing tools require --allow-write and an explicit output path inside the allowed directory."
+      - "The server never executes repository content or shell commands."
+validation:
+  status: tested
+  evidence:
+    - tests/test_records.py
+    - tests/engineering/test_design_capabilities.py
+    - tests/mcp/test_server.py
+    - tests/integrations/test_core_roundtrip.py
+    - tests/integrations/test_registry_manifest.py
+    - tests/plugins/test_packaging.py
+    # written by the release step (aipe-magnetics verify --update-bundled) together with its Markdown twin
+    - docs/verification-report-v0.2.0.md
+    - src/aipe_magnetics/verification/evidence/v0.2.0.json
+    - docs/release-verification-v0.2.0.md
+    - .github/workflows/validate.yml
+    - .github/workflows/ci.yml
+  limitations:
+    - "Verification evidence is recorded per capability and operating range (levels L1-L3); there is no repository-wide validated flag."
+    - "Model implementations are verified against analytical, independent-numerical and published references (L2); no experimental (L3) validation is bundled."
+    - "Material and core parameters are datasheet-derived with locators and remain review_status unreviewed until an owner review."
+    - "No third-party datasets are redistributed; adapters download or import on demand subject to each source licence."
+    - "Repository licence remains NOASSERTION pending owner decision."
+documentation:
+  - README.md
+  - CHANGELOG.md
+  - docs/architecture.md
+  - docs/audit-v0.1.md
+  - docs/data-standard-v0.2.md
+  - docs/models.md
+  - docs/verification.md
+  - docs/api.md
+  - docs/mcp.md
+  - docs/plugins.md
+  - docs/core-integration.md
+  - docs/sources.md
+  - docs/demo-dab-10kw.md
+  - LICENSING.md
+extensions:
+  aipe.magnetics:
+    package: aipe-magnetics 0.2.0
+    python: ">=3.10"
+    runtime_requirements:
+      required: [numpy, scipy, pydantic, jsonschema, referencing, PyYAML]
+      optional: {hdf5: [h5py], mcp: [mcp], torch: [torch], magnethub: [magnethub]}
+    interfaces:
+      python_api: aipe_magnetics.api
+      cli: aipe-magnetics
+      mcp: "aipe-magnetics-mcp (stdio)"
+      plugins: [plugins/claude/aipe-magnetics, plugins/codex/aipe-magnetics]
+    platforms: [linux, windows, macos]
+    model_maturity:
+      aipe.magnetics.model.steinmetz: {family: empirical, maturity: usable, verification: L2}
+      aipe.magnetics.model.igse: {family: empirical, maturity: usable, verification: L2}
+      aipe.magnetics.model.bertotti: {family: physics, maturity: prototype, verification: L2}
+      aipe.magnetics.model.jiles_atherton: {family: physics, maturity: prototype, verification: L2}
+      aipe.magnetics.model.ode_framework: {family: dynamic, maturity: prototype, verification: L2}
+      aipe.magnetics.model.datadriven.reference-steinmetz-ann: {family: data_driven, maturity: reference_only, verification: L2, notes: "synthetic reference surrogate; demonstrates the inference workflow, not a material"}
+      aipe.magnetics.design_transformer: {family: engineering, maturity: usable, verification: L2}
+      aipe.magnetics.design_inductor: {family: engineering, maturity: usable, verification: L2}
+      aipe.magnetics.validate_design: {family: engineering, maturity: usable, verification: L2}
+    verification_evidence: [src/aipe_magnetics/verification/evidence/v0.2.0.json]
+    optional_integrations:
+      - {id: aipe.core, kind: schema-roundtrip, status: tested-offline, notes: "Executable export/import adapter validated against pinned Core v0.1.0 schemas."}
+      - {id: aipe.registry, kind: manifest-validation, status: tested-offline}
+      - {id: upb-lea/mag-net-hub, kind: model-backend, status: optional, license: MIT}
+      - {id: upb-lea/materialdatabase, kind: source-adapter, status: optional, license: GPL-3.0, notes: "No code copied; user checkout or on-demand download."}
+      - {id: PrincetonUniversity/magnet, kind: source-adapter, status: optional, license: MIT}
+      - {id: minjiechen/magnetchallenge-2, kind: source-adapter, status: reference-and-user-import, license: NOASSERTION}
+    engineering_limitations:
+      - "Basic analytical sizing (Faraday, reluctance, window fill, Dowell 1-D); every catalogue core offered in the material is evaluated, no area-product pre-screening; no FEM, thermal, insulation or manufacturing analysis."
+      - "Core-loss models need parameter sets covering the operating point; otherwise the request is rejected rather than extrapolated."
+      - "Uncertainty is reported as unknown unless a source quantifies it."
+    standalone_operation: {requires_aipe_orchestrator: false, requires_registry_service: false, requires_other_domain_experts: false, requires_commercial_software: false, requires_llm_credentials: false}

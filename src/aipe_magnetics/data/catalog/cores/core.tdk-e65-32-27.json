@@ -1,0 +1,224 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight) and outline drawing; coil-former table (AN winding cross section, lN average length of turn, AR resistance factor) for the ordering code named in the record.",
+      "id": "evidence.tdk-e-65-32-27-datasheet-2024-10",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "locator": "Magnetic characteristics (per set) table; outline drawing; coil former table p.4, row B66388B1000T001 (requires 1 core set)",
+      "reference": "TDK Electronics, 'Ferrites and accessories - E 65/32/27', core and accessories datasheet, Date: October 2024",
+      "review_status": "unreviewed",
+      "url": "https://www.tdk-electronics.tdk.com/inf/80/db/fer/e_65_32_27.pdf",
+      "version": "October 2024"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.tdk-e-65-32-27-datasheet-2024-10"
+  ],
+  "extensions": {
+    "aipe.datasheet": {
+      "coil_former": "B66388B1000T001 (one core set): AN 426 mm2, lN 188 mm, AR 15.2 uOhm",
+      "coil_former_AR_uOhm": 15.2,
+      "core_constant_sum_l_over_A_per_mm": 0.27,
+      "ungapped_N87": {
+        "AL_nH": 7900,
+        "BS_mT_at_250A_per_m_100C": 320,
+        "PV_W_per_set_max": 6.7,
+        "PV_condition": "100 mT, 100 kHz, 100 degC",
+        "mu_e": 1700
+      }
+    }
+  },
+  "id": "core.tdk-e65-32-27",
+  "kind": "core_geometry",
+  "license": "NOASSERTION",
+  "name": "E 65/32/27",
+  "properties": {
+    "air_gap_options": [
+      {
+        "original": {
+          "unit": "mm",
+          "value": 0.5
+        },
+        "unit": "m",
+        "value": 0.0005
+      },
+      {
+        "original": {
+          "unit": "mm",
+          "value": 1.0
+        },
+        "unit": "m",
+        "value": 0.001
+      },
+      {
+        "original": {
+          "unit": "mm",
+          "value": 1.5
+        },
+        "unit": "m",
+        "value": 0.0015
+      },
+      {
+        "original": {
+          "unit": "mm",
+          "value": 2.5
+        },
+        "unit": "m",
+        "value": 0.0025
+      },
+      {
+        "original": {
+          "unit": "mm",
+          "value": 4.0
+        },
+        "unit": "m",
+        "value": 0.004
+      }
+    ],
+    "bobbin_window_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 426.0
+      },
+      "unit": "m^2",
+      "value": 0.000426
+    },
+    "description": "TDK E 65/32/27 ferrite core set; magnetic characteristics per set from the October 2024 datasheet. Core constant sum(l/A) = 0.27 1/mm (datasheet).",
+    "dimensions": {
+      "values": {
+        "centre_leg_width": {
+          "original": {
+            "unit": "mm",
+            "value": 20.0
+          },
+          "unit": "m",
+          "value": 0.02
+        },
+        "depth_c": {
+          "original": {
+            "unit": "mm",
+            "value": 27.4
+          },
+          "unit": "m",
+          "value": 0.0274
+        },
+        "height_b_half": {
+          "original": {
+            "unit": "mm",
+            "value": 32.8
+          },
+          "unit": "m",
+          "value": 0.032799999999999996
+        },
+        "length_a": {
+          "original": {
+            "unit": "mm",
+            "value": 65.0
+          },
+          "unit": "m",
+          "value": 0.065
+        },
+        "window_height_half": {
+          "original": {
+            "unit": "mm",
+            "value": 22.2
+          },
+          "unit": "m",
+          "value": 0.0222
+        },
+        "window_width_total": {
+          "original": {
+            "unit": "mm",
+            "value": 44.2
+          },
+          "unit": "m",
+          "value": 0.0442
+        }
+      }
+    },
+    "effective_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 535.0
+      },
+      "unit": "m^2",
+      "value": 0.000535
+    },
+    "effective_length": {
+      "original": {
+        "unit": "mm",
+        "value": 147.0
+      },
+      "unit": "m",
+      "value": 0.147
+    },
+    "effective_volume": {
+      "original": {
+        "unit": "mm^3",
+        "value": 78650.0
+      },
+      "unit": "m^3",
+      "value": 7.865e-05
+    },
+    "family_ref": "core-family.tdk-e",
+    "manufacturer_ref": "manufacturer.tdk",
+    "mass": {
+      "original": {
+        "unit": "g",
+        "value": 394.0
+      },
+      "unit": "kg",
+      "value": 0.394
+    },
+    "material_refs": [
+      "material.tdk-n27",
+      "material.tdk-n87"
+    ],
+    "mean_turn_length": {
+      "original": {
+        "unit": "mm",
+        "value": 188.0
+      },
+      "unit": "m",
+      "value": 0.188
+    },
+    "minimum_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 529.0
+      },
+      "unit": "m^2",
+      "value": 0.000529
+    },
+    "part_number": "B66387",
+    "set_description": "core set of 2 E halves (per set values)"
+  },
+  "provenance": {
+    "activity": "transcribed from the TDK datasheet by tools/build_catalog.py",
+    "created_at": "2026-10-19T00:00:00Z",
+    "inputs": [
+      "evidence.tdk-e-65-32-27-datasheet-2024-10"
+    ],
+    "normalization": "mm -> m, mm^2 -> m^2, mm^3 -> m^3, g -> kg with original units retained",
+    "tool": {
+      "id": "aipe.magnetics",
+      "version": "0.2.0"
+    }
+  },
+  "quality": {
+    "flags": [],
+    "notes": [
+      "review_status unreviewed: awaiting owner review of the transcriptions"
+    ],
+    "status": "normalized"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": [
+    "tdk",
+    "ferrite-core"
+  ]
+}

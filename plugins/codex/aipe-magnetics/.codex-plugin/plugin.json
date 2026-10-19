@@ -1,0 +1,29 @@
+{
+  "name": "aipe-magnetics",
+  "version": "0.2.0",
+  "description": "Magnetic engineering expert: material lookup and comparison, flux density and saturation screening, Steinmetz/iGSE core-loss estimation, inductor and transformer design calculations, winding loss, operating-point validation and engineering reports. All numbers come from the aipe-magnetics Python engine through its local MCP server (no LLM arithmetic, no cloud services, no API keys).",
+  "author": {
+    "name": "AIPE Magnetics contributors",
+    "url": "https://github.com/FulongLi/AIPE-Magnetics-Database"
+  },
+  "homepage": "https://github.com/FulongLi/AIPE-Magnetics-Database",
+  "repository": "https://github.com/FulongLi/AIPE-Magnetics-Database",
+  "license": "NOASSERTION",
+  "keywords": ["magnetics", "power-electronics", "core-loss", "steinmetz", "igse", "transformer", "inductor", "ferrite", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "AIPE Magnetics",
+    "shortDescription": "Magnetic component design and loss modelling expert",
+    "longDescription": "Evidence-first magnetic engineering for power electronics: catalogue material lookup, Steinmetz and iGSE core-loss estimation with declared validity ranges, Jiles-Atherton hysteresis evaluation, basic inductor and transformer sizing, Dowell winding-loss estimation, saturation screening, operating-point validation and traceable engineering reports. Requires the aipe-magnetics Python package (pip install 'aipe-magnetics[mcp]') on the local machine.",
+    "developerName": "AIPE (AI for Power Engineering)",
+    "category": "Engineering",
+    "capabilities": ["Read"],
+    "websiteURL": "https://github.com/FulongLi/AIPE-Magnetics-Database",
+    "defaultPrompt": [
+      "Compare N87 and 3C94 at 100 kHz, 150 mT and 90 degC",
+      "Design a 10 kW 100 kHz DAB transformer with N87 cores",
+      "Review this inductor design for saturation and losses"
+    ]
+  }
+}

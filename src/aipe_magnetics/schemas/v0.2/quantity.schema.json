@@ -1,0 +1,150 @@
+{
+  "$defs": {
+    "Original": {
+      "additionalProperties": false,
+      "description": "The value as supplied before unit normalisation.",
+      "properties": {
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Original",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "additionalProperties": false,
+      "description": "Uncertainty statement attached to a quantity.\n\n``kind='unknown'`` is the honest default when no quantitative basis exists.",
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "how the uncertainty was obtained",
+          "title": "Basis"
+        },
+        "coverage_factor": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "k for expanded uncertainty",
+          "title": "Coverage Factor"
+        },
+        "kind": {
+          "default": "unknown",
+          "enum": [
+            "standard",
+            "expanded",
+            "bounds",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "lower bound (kind='bounds')",
+          "title": "Lower"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "upper bound (kind='bounds')",
+          "title": "Upper"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "standard/expanded uncertainty in the quantity unit",
+          "title": "Value"
+        }
+      },
+      "title": "Uncertainty",
+      "type": "object"
+    }
+  },
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Magnetics-Database/v0.2.0/schemas/v0.2/quantity.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A physical quantity: SI value and canonical SI unit symbol as registered in aipe_magnetics.common.units, the original {value, unit} when converted, and an optional, never fabricated uncertainty statement (kind 'unknown' when not quantified).",
+  "properties": {
+    "original": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Original"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "uncertainty": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Uncertainty"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "unit": {
+      "title": "Unit",
+      "type": "string"
+    },
+    "value": {
+      "title": "Value",
+      "type": "number"
+    }
+  },
+  "required": [
+    "value",
+    "unit"
+  ],
+  "title": "AIPE magnetic record v0.2 - quantity",
+  "type": "object"
+}

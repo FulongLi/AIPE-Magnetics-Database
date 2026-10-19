@@ -1,0 +1,29 @@
+{
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Synthetic structure fixture for migration and validator tests; not a real product, material or measurement. ",
+      "id": "evidence.fixture-v01-synthetic",
+      "kind": "assumption",
+      "license": "NOASSERTION",
+      "reference": "AIPE Magnetics v0.2 synthetic v0.1 fixture (aipe_magnetics/data/fixtures/v01)",
+      "review_status": "unreviewed"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.fixture-v01-synthetic"
+  ],
+  "id": "component.fixture-v01-synthetic",
+  "kind": "magnetic_component",
+  "name": "Synthetic v0.1 magnetic component fixture",
+  "properties": {
+    "component_type": "coupled_inductor",
+    "core_ref": "core.fixture-v01-synthetic",
+    "description": "Identity-only synthetic component.",
+    "winding_refs": [
+      "winding.fixture-v01-synthetic"
+    ]
+  },
+  "schema_version": "0.1.0",
+  "synthetic": true
+}

@@ -1,0 +1,36 @@
+{
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Synthetic structure fixture for migration and validator tests; not a real product, material or measurement. ",
+      "id": "evidence.fixture-v01-synthetic",
+      "kind": "assumption",
+      "license": "NOASSERTION",
+      "reference": "AIPE Magnetics v0.2 synthetic v0.1 fixture (aipe_magnetics/data/fixtures/v01)",
+      "review_status": "unreviewed"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.fixture-v01-synthetic"
+  ],
+  "id": "transformer.fixture-v01-synthetic",
+  "kind": "transformer",
+  "name": "Synthetic v0.1 transformer fixture",
+  "properties": {
+    "core_ref": "core.fixture-v01-synthetic",
+    "description": "Illustrative synthetic transformer.",
+    "leakage_inductance": {
+      "unit": "H",
+      "value": 1e-06
+    },
+    "turns_ratio": {
+      "unit": "1",
+      "value": 2
+    },
+    "winding_refs": [
+      "winding.fixture-v01-synthetic"
+    ]
+  },
+  "schema_version": "0.1.0",
+  "synthetic": true
+}

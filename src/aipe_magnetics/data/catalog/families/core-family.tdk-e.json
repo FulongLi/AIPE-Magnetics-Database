@@ -1,0 +1,30 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Core family identity as used in the TDK datasheets. No dimensional standard is printed on the datasheet.",
+      "id": "evidence.tdk-e-family",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "reference": "TDK Electronics ferrite core datasheets (October 2024)",
+      "review_status": "unreviewed",
+      "url": "https://www.tdk-electronics.tdk.com/"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.tdk-e-family"
+  ],
+  "extensions": {},
+  "id": "core-family.tdk-e",
+  "kind": "core_family",
+  "license": "NOASSERTION",
+  "name": "TDK E cores",
+  "properties": {
+    "manufacturer_ref": "manufacturer.tdk",
+    "shape": "E"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": []
+}

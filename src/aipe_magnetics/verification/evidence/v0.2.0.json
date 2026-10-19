@@ -1,0 +1,2053 @@
+{
+  "records": [
+    {
+      "capability": "aipe.magnetics.model.bertotti",
+      "check_id": "bertotti.classical-eddy-coefficient",
+      "description": "k_c = pi^2 sigma d^2 / 6 agrees with a direct numerical evaluation of the classical eddy-current loss of a thin lamination under uniform sinusoidal flux density.",
+      "id": "check:bertotti.classical-eddy-coefficient",
+      "kind": "independent_numerical",
+      "level": "L2",
+      "method": "Example values sigma = 2e6 S/m, d = 0.35 mm (labelled example, not a product). Direct computation: E(x, t) = -x dB/dt with B = Bpk sin(2 pi f t); P = (1/(d T)) int_0^T int_{-d/2}^{d/2} sigma E^2 dx dt by Gauss-Legendre quadrature in x (exact for the quadratic integrand) and periodic trapezoidal rule in t; compare with k_c f^2 Bpk^2 at f = 50 Hz and 1 kHz, Bpk = 1.0 and 1.5 T (relative error < 1e-10).",
+      "metrics": {
+        "from_lamination_consistent": true,
+        "k_c_W_per_m3_Hz2_T2": 0.4030088463778154,
+        "max_rel_error_direct_vs_formula": 9.027044542047488e-16,
+        "sigma_S_per_m": 2000000.0,
+        "thickness_m": 0.00035
+      },
+      "notes": [
+        "sigma and d are example values (see reference); the derivation assumes uniform flux across the thickness, i.e. skin depth much larger than d"
+      ],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 1.5,
+          "min": 1.0,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 1000.0,
+          "min": 50.0,
+          "unit": "Hz"
+        },
+        "note": "thin-lamination assumption (skin depth >> d) assumed, not verified here"
+      },
+      "reference": {
+        "id": "src.example.lamination-si-steel",
+        "kind": "assumption",
+        "license": "NOASSERTION",
+        "note": "basis: example values for verification of the k_c = pi^2 sigma d^2 / 6 formula only",
+        "reference": "Example lamination values for the classical eddy-current coefficient: conductivity sigma = 2.0e6 S/m (resistivity 50 uOhm*cm, representative of ~3 % Si-Fe electrical steel) and thickness d = 0.35 mm (a standard lamination gauge). Illustrative example values, not a specific product datasheet."
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.bertotti",
+      "check_id": "bertotti.invalid-parameters-rejected",
+      "description": "Invalid coefficients and inputs are rejected explicitly (InvalidInputError), out-of-domain inputs raise OutOfDomainError under policy 'reject' and are flagged under policy 'warn', while numpy real scalars are accepted like Python numbers.",
+      "id": "check:bertotti.invalid-parameters-rejected",
+      "kind": "invalid_input_rejection",
+      "level": "L1",
+      "method": "Negative/NaN/inf/boolean/string coefficients, beta_h <= 0, negative or NaN frequency and flux density, non-positive temperature, unexpected keyword arguments, invalid lamination data (missing/unknown keys, k_c inconsistent with pi^2 sigma d^2/6) and inputs outside the declared frequency/flux ranges; np.float32 / np.int64 coefficients and inputs must be accepted.",
+      "metrics": {
+        "cases": {
+          "bad_lamination": true,
+          "bad_policy": true,
+          "bad_range": true,
+          "bool_k_h": true,
+          "inf_k_h": true,
+          "lamination_inconsistent_k_c": true,
+          "lamination_missing_key": true,
+          "lamination_unknown_key": true,
+          "nan_flux": true,
+          "nan_k_c": true,
+          "negative_frequency": true,
+          "negative_k_c": true,
+          "negative_k_e": true,
+          "negative_k_h": true,
+          "numpy_bool_k_h": true,
+          "numpy_scalars_accepted": true,
+          "out_of_domain_reject": true,
+          "out_of_domain_warn_flagged": true,
+          "string_beta": true,
+          "unexpected_kwarg": true,
+          "zero_beta": true,
+          "zero_temperature": true
+        },
+        "n_cases": 22
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.bertotti",
+      "check_id": "bertotti.scaling-and-limiting-cases",
+      "description": "Each Bertotti term scales as its power law (f, f^2, f^1.5; Bpk^beta_h, Bpk^2, Bpk^1.5), the total is the sum of the components, zero excitation gives zero loss, the loss is monotone in f and Bpk and overflow is reported as NumericalError.",
+      "id": "check:bertotti.scaling-and-limiting-cases",
+      "kind": "limiting_case",
+      "level": "L2",
+      "method": "Synthetic coefficients (k_h = 20, beta_h = 1.8, k_c = 0.05, k_e = 0.5); doubling ratios on a grid of f in [10, 1e5] Hz and Bpk in [0.01, 2] T compared with the exact exponents to 1e-12; energy per cycle = Pv / f; Bpk = 1e200 T must raise NumericalError.",
+      "metrics": {
+        "energy_per_cycle_consistent": true,
+        "max_scaling_deviation": 8.881784197001252e-16,
+        "monotone_in_B": true,
+        "monotone_in_f": true,
+        "overflow_reported": true,
+        "zero_flux_loss": 0.0,
+        "zero_frequency_loss": 0.0
+      },
+      "notes": [
+        "synthetic coefficients; the check verifies the implemented functional form, not a fit"
+      ],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 2.0,
+          "min": 0.01,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 100000.0,
+          "min": 10.0,
+          "unit": "Hz"
+        },
+        "note": "synthetic coefficients; scaling laws only"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.catalog",
+      "check_id": "data.catalog-loads-and-cross-references",
+      "description": "The bundled catalogue loads, every record validates, all cross-references resolve to records of the right kind, every record satisfies the per-record evidence invariants (synthetic records are tagged and may rest on assumption evidence; real records cite source/measurement evidence with a locator or url), the synthetic manufacturer/material/core triple is present, look-ups behave (id / grade, not-found with suggestions) and malformed files fail loudly with their path.",
+      "id": "check:data.catalog-loads-and-cross-references",
+      "kind": "software",
+      "level": "L1",
+      "method": "Catalog.default(); validate(); per-record invariants independent of how many real entries the maintainer adds; resolve manufacturer_ref / material_refs; find_material by id and grade on the bundled catalogue and by name substring on the synthetic triple alone; cores(material) contains the synthetic core; get() of an unknown id raises DataNotFoundError; a temporary directory with a corrupted record raises DataIntegrityError naming the file.",
+      "metrics": {
+        "real": 22,
+        "records": 25,
+        "synthetic": 3
+      },
+      "notes": [
+        "bundled catalogue consistent (3 synthetic, 22 real records); per-record evidence invariants hold and look-ups behave"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.hdf5",
+      "check_id": "data.hdf5-roundtrip-checksums",
+      "description": "WaveformStore writes the aipe.magnetics.waveforms/0.2 layout with SI normalisation, NaN missing values and per-array SHA-256; reading reproduces the arrays bit-for-bit, checksums verify, array-content tampering is detected (attributes are covered only by the file-level artifact SHA-256), identical inputs give identical files, describe() reproduces the write result including a converted sampling rate, and values that overflow during unit conversion are rejected.",
+      "id": "check:data.hdf5-roundtrip-checksums",
+      "kind": "software",
+      "level": "L1",
+      "method": "Write a 6x128 sequence set (mT, kHz, degC with one NaN) twice into a temporary directory; compare file hashes; read back; compare arrays (equal_nan) with scalar conversions; verify_checksums; corrupt one sample and expect a reported mismatch; describe() equals the write result (also for a 1 MHz uniform_absolute file); a 1e306 kA/m field and a shape mismatch raise InvalidInputError and write nothing.",
+      "metrics": {
+        "deterministic_bytes": true,
+        "n_samples": 128,
+        "n_sequences": 6,
+        "tamper_detected": true
+      },
+      "notes": [
+        "round trip, checksums, array-content tamper detection, determinism, describe() reproduction and overflow rejection verified"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.import",
+      "check_id": "data.importers-provenance-and-no-overwrite",
+      "description": "Importers record the SHA-256 of the original bytes in extensions['aipe.import'], convert explicitly mapped units to SI with originals retained, never overwrite destinations, refuse to replace existing import provenance and apply every validation layer (a non-RFC 3339 evidence timestamp is rejected and nothing is written).",
+      "id": "check:data.importers-provenance-and-no-overwrite",
+      "kind": "software",
+      "level": "L1",
+      "method": "Import the v0.1 fixture winding (migrated) and a 3-row CSV loss table (kHz, mT, degC, kW/m^3) into a temporary directory; compare digests, converted values and refusal behaviour; repeat the CSV import with an invalid created_at and expect InvalidInputError without a written file.",
+      "metrics": {
+        "importers_exercised": 2
+      },
+      "notes": [
+        "digests, SI conversion with originals, non-overwrite, provenance protection and full-layer validation verified"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.schema",
+      "check_id": "data.schema-mirror-in-sync",
+      "description": "The packaged schema files equal a fresh export and the repository mirror schemas/v0.2 is byte-identical to the packaged canonical copy (the mirror comparison runs only in a source checkout).",
+      "id": "check:data.schema-mirror-in-sync",
+      "kind": "software",
+      "level": "L1",
+      "method": "check_exported_schemas(package dir) and compare_directories(package dir, repository schemas/v0.2).",
+      "metrics": {
+        "differences": 0,
+        "mirror_compared": true
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.schema",
+      "check_id": "data.schema-v02-is-valid-draft2020",
+      "description": "The generated v0.2 JSON Schema (and every per-kind / quantity schema) is valid draft 2020-12, self-contained, binds every record kind, and agrees with the packaged copy.",
+      "id": "check:data.schema-v02-is-valid-draft2020",
+      "kind": "schema",
+      "level": "L1",
+      "method": "Draft202012Validator.check_schema on every generated document; structural assertions on $id, title, required keys, allOf/if/then per PROPERTY_MODELS kind, local-only $ref resolution; byte comparison of the packaged files with a fresh export; a bundled record validates and a corrupted one is rejected.",
+      "metrics": {
+        "definitions": 31,
+        "documents": 21,
+        "generator_versions": {
+          "jsonschema": "4.25.1",
+          "pydantic": "2.14.1"
+        },
+        "kinds_bound": 19,
+        "problems": 0
+      },
+      "notes": [
+        "21 schema documents checked; 31 shared definitions; generated with pydantic 2.14.1, jsonschema 4.25.1"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.units",
+      "check_id": "data.unit-normalisation-reproducible",
+      "description": "Unit normalisation reproduces analytically defined conversion factors exactly (degC->K offset 273.15, SI prefixes, 1 Oe = 1000/(4 pi) A/m) in the scalar registry, in Quantity.si (original retained) and in the vectorised array path, which is bit-identical to the scalar path.",
+      "id": "check:data.unit-normalisation-reproducible",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "Compare units.convert, Quantity.si and convert_array against expected values computed from the defining relations; exact equality is required for every case; dimensionally wrong conversions must raise.",
+      "metrics": {
+        "cases": 12,
+        "max_rel_error": 0.0
+      },
+      "notes": [
+        "all conversions exact; array path bit-identical to scalar path"
+      ],
+      "reference": {
+        "id": "ref.bipm-si-brochure-9",
+        "kind": "standard",
+        "license": "NOASSERTION",
+        "locator": "Chapter 3 (prefixes) and Section 2.3.1 (degree Celsius)",
+        "reference": "BIPM, The International System of Units (SI), 9th edition (2019): SI prefixes; kelvin / degree Celsius relation",
+        "url": "https://www.bipm.org/en/publications/si-brochure"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.migration",
+      "check_id": "data.v01-examples-migrate-and-validate",
+      "description": "Every v0.1 record (repository examples and the packaged synthetic fixture of every v0.1 kind) validates under the legacy rules, migrates mechanically to schema 0.2.0, validates under v0.2 and keeps its meaning.",
+      "id": "check:data.v01-examples-migrate-and-validate",
+      "kind": "software",
+      "level": "L1",
+      "method": "validate_legacy_records on the inputs; migrate_record; validate_record + validate_catalogue on the outputs; field-by-field equality of id, kind, name, synthetic, evidence, evidence_refs and (except measurement.tool) properties.",
+      "metrics": {
+        "records_migrated": 12,
+        "repository_examples": 1,
+        "v01_kinds": 11
+      },
+      "notes": [
+        "12 v0.1 records migrated and validated"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.datadriven.lstm",
+      "check_id": "datadriven.lstm-numpy-matches-independent-step-loop",
+      "description": "The vectorised numpy LSTM (PyTorch gate layout i,f,g,o; W_ih, W_hh, b_ih, b_hh) agrees with an independent scalar-loop implementation for sequence-to-one and sequence-to-sequence heads.",
+      "id": "check:datadriven.lstm-numpy-matches-independent-step-loop",
+      "kind": "independent_numerical",
+      "level": "L2",
+      "method": "Two stacked LSTM layers (H=4) with a tanh/identity dense head and random N(0, 0.5^2) weights (seed 7) are evaluated on random inputs (N=3, L=6) by both implementations; compare max |difference|.",
+      "metrics": {
+        "max_abs_diff_last": 0.0,
+        "max_abs_diff_sequence": 1.1102230246251565e-16,
+        "output_shape_last": [
+          3,
+          2
+        ],
+        "output_shape_sequence": [
+          3,
+          6,
+          2
+        ],
+        "parameter_count": 311
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.integration.magnethub",
+      "check_id": "datadriven.magnethub-adapter-mapping",
+      "description": "The MagNet-Hub adapter maps AIPE inputs to the upstream call convention (B in T with the runtime sequence length, f in Hz, T converted K -> degC) and validates upstream outputs; without the package it fails explicitly with an installation hint. Nothing is downloaded.",
+      "id": "check:datadriven.magnethub-adapter-mapping",
+      "kind": "software",
+      "level": "L1",
+      "method": "Exercise prepare_inputs/collect_outputs/kelvin_to_celsius and the magnethub_package() descriptor; when magnethub is not importable, request the backend and confirm UnsupportedOperationError with the hint.",
+      "metrics": {
+        "backend_is_magnethub": true,
+        "bad_output_shape_rejected": true,
+        "descriptor_valid": true,
+        "kelvin_to_celsius": true,
+        "length_mismatch_rejected": true,
+        "magnethub_available": false,
+        "missing_package_explicit": true,
+        "nonpositive_kelvin_rejected": true,
+        "outputs_collected": true,
+        "shapes": true
+      },
+      "notes": [
+        "magnethub is not installed; the real inference path is covered only by the external pytest test"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.datadriven",
+      "check_id": "datadriven.missing-optional-backend-is-explicit",
+      "description": "Optional backends never fall back silently: without torch the torch backend raises UnsupportedOperationError naming aipe-magnetics[torch]; with torch, a state-dict export round-trips through the torch and numpy backends with identical results. Unsupported formats are explicit.",
+      "id": "check:datadriven.missing-optional-backend-is-explicit",
+      "kind": "software",
+      "level": "L1",
+      "method": "Probe torch availability; absent: request torch-state-dict/torchscript backends and load a package, plus the 'equinox' format and the numpy transformer path. Present: build an MLP and an LSTM module from a descriptor, save the state dict, load it through TorchBackend and through NumpyBackend (npz) and compare outputs.",
+      "metrics": {
+        "equinox_explicit": true,
+        "path": "torch absent",
+        "torch-state-dict_explicit": true,
+        "torch_available": false,
+        "torchscript_explicit": true,
+        "transformer_numpy_explicit": true
+      },
+      "notes": [
+        "torch is not installed in this environment; the equivalence path was not executed here"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.datadriven.neural-ode",
+      "check_id": "datadriven.neural-ode-linear-case-closed-form",
+      "description": "A Neural ODE whose identity-activation MLP vector field equals dy/dt = -a*y + b*u(t) reproduces the closed-form solution for a constant-plus-sinusoidal input to better than 1e-6.",
+      "id": "check:datadriven.neural-ode-linear-case-closed-form",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "Hand-constructed weights (a=1000 1/s, b=2.5), y0=0.3, u(t)=0.4+0.2 sin(2*pi*1000 t), DOP853 with rtol=1e-10/atol=1e-12 on [0, 5 ms]; compare with the analytic response at 101 points; also verify the vector field exactly and the sampled-input (linear interpolation) path for a constant input.",
+      "metrics": {
+        "dynamic_ode_module_available": true,
+        "integrator": "scipy.integrate.solve_ivp",
+        "max_abs_error_constant_input": 2.3103324808815273e-11,
+        "max_abs_error_sinusoidal_input": 3.0913382964570246e-11,
+        "method": "DOP853",
+        "nfev": 629,
+        "vector_field_max_abs_error": 0.0
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.datadriven",
+      "check_id": "datadriven.out-of-domain-rejected",
+      "description": "Inputs outside the declared validity domain are rejected (policy 'reject') or flagged (policy 'warn'); impossible or malformed inputs raise InvalidInputError; unit-bearing inputs are converted, not guessed; explicit conditions cannot override conditions derived from the inputs; validity ranges must be SI.",
+      "id": "check:datadriven.out-of-domain-rejected",
+      "kind": "invalid_input_rejection",
+      "level": "L1",
+      "method": "Evaluate the reference ANN at 2 MHz, 0.5 T, a batch with one bad sample, negative/NaN/missing/mis-dimensioned inputs, an empty batch, an explicit 'frequency' condition contradicting the 2 MHz input, a mis-sized condition array and a 100 kHz Quantity; validate a package copy whose frequency range is declared in kHz; observe the raised error classes and the warn-policy output.",
+      "metrics": {
+        "batch_with_one_bad_sample": true,
+        "boolean_input": true,
+        "condition_array_length_mismatch": true,
+        "dc_bias_unsupported": true,
+        "empty_batch": true,
+        "explicit_condition_overriding_input": true,
+        "flux_0p5T": true,
+        "frequency_2MHz": true,
+        "inside_domain_reported": true,
+        "missing_feature": true,
+        "nan_input": true,
+        "negative_frequency": true,
+        "non_si_domain_unit_rejected": true,
+        "quantity_units_converted": true,
+        "unexpected_feature": true,
+        "unsupported_material": true,
+        "warn_policy_flags": true,
+        "wrong_dimension_quantity": true
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.02,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 500000.0,
+          "min": 20000.0,
+          "unit": "Hz"
+        },
+        "materials": [
+          "material.synthetic-steinmetz-reference"
+        ],
+        "note": "training grid of the SYNTHETIC reference surrogate"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.datadriven.reference-steinmetz-ann",
+      "check_id": "datadriven.reference-ann-loads-and-is-deterministic",
+      "description": "The bundled SYNTHETIC reference ANN package validates, its weights digest verifies, repeated inference is bit-identical and a batch evaluation agrees with per-sample evaluations to 1e-12 relative.",
+      "id": "check:datadriven.reference-ann-loads-and-is-deterministic",
+      "kind": "software",
+      "level": "L1",
+      "method": "Load reference/metadata.json, recompute the weights SHA-256, run predict() twice on the same inputs (bit-for-bit comparison) and compare a 5-sample batch evaluation against per-sample evaluations with np.allclose(rtol=1e-12, atol=0); bit equality between batched and single evaluations is not a property of the model because BLAS gemm and gemv kernels round differently.",
+      "metrics": {
+        "batch_consistent_rtol_1e-12": true,
+        "batch_vs_single_max_rel_diff": 1.9984014443252818e-15,
+        "declared_max_rel_error_training_grid": 0.0017764027419877593,
+        "parameter_count": 105,
+        "repeat_bit_identical": true,
+        "sha256_verified": true
+      },
+      "notes": [
+        "the package is SYNTHETIC (training basis 'synthetic'); it demonstrates the inference workflow only"
+      ],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.02,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 500000.0,
+          "min": 20000.0,
+          "unit": "Hz"
+        },
+        "materials": [
+          "material.synthetic-steinmetz-reference"
+        ],
+        "note": "training grid of the SYNTHETIC reference surrogate"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.datadriven.reference-steinmetz-ann",
+      "check_id": "datadriven.reference-ann-reproduces-steinmetz",
+      "description": "On an independent random grid the reference ANN reproduces the SYNTHETIC Steinmetz surface it was trained on to better than 3 % maximum relative error.",
+      "id": "check:datadriven.reference-ann-reproduces-steinmetz",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "Draw 400 log-uniform (f, Bpk) points (seed 20261020) inside the training ranges, evaluate the surrogate and compare with Pv = k f^alpha Bpk^beta using the synthetic parameters recorded in the package metadata.",
+      "metrics": {
+        "max_relative_error": 0.0008186486140200344,
+        "points": 400,
+        "rms_relative_error": 0.00016142449240606651,
+        "synthetic_parameters": {
+          "alpha": 1.45,
+          "beta": 2.6,
+          "k": 2.0
+        }
+      },
+      "notes": [
+        "analytic reference is the SYNTHETIC training surface itself (no experimental data involved)"
+      ],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.02,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 500000.0,
+          "min": 20000.0,
+          "unit": "Hz"
+        },
+        "materials": [
+          "material.synthetic-steinmetz-reference"
+        ],
+        "note": "training grid of the SYNTHETIC reference surrogate"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.datadriven",
+      "check_id": "datadriven.weights-integrity",
+      "description": "Tampered or mis-declared weights are rejected with DataIntegrityError; a missing digest is reported as 'weights_unverified'; executable TorchScript bundles without a digest are refused.",
+      "id": "check:datadriven.weights-integrity",
+      "kind": "invalid_input_rejection",
+      "level": "L1",
+      "method": "Copy the reference package to a temporary directory and (a) perturb one weight, (b) declare a wrong digest, (c) drop the digest, (d) declare a 'torchscript' bundle without digest; observe the adapter's behaviour.",
+      "metrics": {
+        "clean_verified": true,
+        "missing_digest_warns": true,
+        "tampered_rejected": true,
+        "torchscript_without_digest_refused": true,
+        "wrong_digest_rejected": true
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.ode_framework",
+      "check_id": "dynamic.constraints-reported-not-clipped",
+      "description": "A violated physical constraint is listed on the solution while the state itself is left untouched.",
+      "id": "check:dynamic.constraints-reported-not-clipped",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "LinearRL with a reported limit i_max = 5 A and a 10 V step (steady state 10 A): the violation message is present, max|i| is 10 (1 - e^-5) A to 1e-9 relative and the trajectory still equals the closed form.",
+      "metrics": {
+        "expected_peak_A": 9.932620530009146,
+        "max_rel_error_vs_closed_form": 7.368236968499483e-13,
+        "peak_current_A": 9.932620530008808,
+        "violations": [
+          "|i| = 9.93262 A exceeds i_max = 5 A at t = 0.005 s"
+        ]
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.ode_framework",
+      "check_id": "dynamic.energy-consistency-nonlinear-inductor",
+      "description": "Power balance of the saturating inductor: int v i dt = int R i^2 dt + W(lambda_end) - W(lambda_0) with the analytic stored energy W(lambda) = -L0 I_sat^2 ln cos(lambda/(L0 I_sat)).",
+      "id": "check:dynamic.energy-consistency-nonlinear-inductor",
+      "kind": "energy_consistency",
+      "level": "L2",
+      "method": "NonlinearInductor(L0 = 1 mH, I_sat = 2 A, R = 0.5 Ohm) driven by a 3 V, 1 kHz sinusoid for 3 ms (DOP853, rtol 1e-10, atol 1e-13, 6001-point grid); trapezoidal integration of the output powers; residual relative to the absorbed energy must be below 1e-4. The analytic W(lambda) is independently checked against cumulative trapezoidal quadrature of i(lambda) dlambda.",
+      "metrics": {
+        "I_sat_A": 2.0,
+        "energy_in_J": 0.0003631342236492802,
+        "energy_resistive_J": 0.00029277620119911826,
+        "n_steps": 37,
+        "peak_current_A": 0.8990683111117408,
+        "power_balance_residual_rel": 4.0496527365648173e-07,
+        "stored_energy_change_J": 7.035816950691218e-05,
+        "stored_energy_quadrature_rel_error": 8.947195612374468e-09
+      },
+      "notes": [
+        "the excitation drives the inductor well into saturation (peak current > 0.3 I_sat) so the nonlinear term matters in the balance"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.ode_framework",
+      "check_id": "dynamic.periodic-steady-state-detection",
+      "description": "periodic_steady_state() stops when the boundary state has settled to the requested tolerance of the periodic orbit - also for a DC-biased, slowly contracting transient - the returned period equals the analytic steady-state response, Steffensen acceleration reaches the same orbit in a few periods, and insufficient max_periods raises ConvergenceError.",
+      "id": "check:dynamic.periodic-steady-state-detection",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "(a) LinearRL (tau = 1 ms) with a 10 V, 1 kHz sinusoid (period = tau): the transient decays by e^-1 per period; compare the last period with the analytic particular solution (rel. error < 1e-5 for tol = 1e-6), check the per-period decay ratio and the predicted period count. (b) LinearRL (tau = 5 ms) with a 1 V, 1 kHz sinusoid on a 5 V DC offset from i0 = 0: the ripple (0.31 A peak-to-peak) is small against the 4.8 A transient, the contraction ratio is e^-0.2 = 0.819 per period; require the measured ratio within 1e-3 of e^-0.2, the period count equal to the analytic prediction (first k with A r^(k+1) / ptp <= tol) within one period, the residual transient at the end of the returned period below tol and at its start below change / (1 - r) relative to the peak-to-peak ripple, and the same accuracy with accelerate=True in at most 6 periods. (c) max_periods = 3 on case (a) must raise ConvergenceError.",
+      "metrics": {
+        "accelerated_extrapolations": 1,
+        "accelerated_periods": 3,
+        "accelerated_residual_rel_ptp": 1.670914817702899e-09,
+        "biased_contraction_ratio": 0.8187307284155173,
+        "biased_estimated_remaining": 9.740642073001571e-07,
+        "biased_expected_periods": 91,
+        "biased_periods": 91,
+        "biased_ratio_exact": 0.8187307530779818,
+        "biased_residual_end_rel_ptp": 9.739328264684996e-07,
+        "biased_residual_start_rel_ptp": 1.1895933420456093e-06,
+        "biased_ripple_ptp_A": 0.06359915564479479,
+        "biased_start_bound": 1.1897249071265485e-06,
+        "biased_transient_amplitude_A": 4.968201230271494,
+        "boundary_change": 7.055207091097851e-07,
+        "decay_ratio_max": 0.36787944502701303,
+        "decay_ratio_min": 0.36787943838988757,
+        "expected_periods": 14,
+        "history": [
+          0.27766630773984063,
+          0.10989652722049709,
+          0.04156282389166005,
+          0.015447208385727114,
+          0.005704271503390723,
+          0.002101417357877233,
+          0.0007734659606374792,
+          0.00028459608844376937,
+          0.00010470434141835399,
+          3.851956153420115e-05,
+          1.4170688297239928e-05,
+          5.21312298703383e-06,
+          1.9178032031024537e-06,
+          7.055207091097851e-07
+        ],
+        "max_rel_error_vs_particular": 2.2322336277150856e-06,
+        "periods": 14,
+        "raises_when_not_converged": true,
+        "tolerance": 1e-06
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.ode_framework",
+      "check_id": "dynamic.rl-step-matches-closed-form",
+      "description": "LinearRL step and sinusoidal responses from the ODE framework match the closed-form solutions.",
+      "id": "check:dynamic.rl-step-matches-closed-form",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "Integrate di/dt = (v - R i)/L (R = 1 Ohm, L = 1 mH) with DOP853, rtol 1e-12, atol 1e-14 on a 501-point grid over 5 tau for a 10 V step and a 10 V, 1 kHz sinusoid with 2 V offset and 0.5 A initial current; compare with i(t) = V/R + (i0 - V/R) exp(-t/tau) and the phasor particular + transient solution.",
+      "metrics": {
+        "max_rel_error_sinusoid": 1.3018174788458084e-12,
+        "max_rel_error_step": 7.448715284902997e-13,
+        "n_steps_sinusoid": 117,
+        "n_steps_step": 24,
+        "tolerance": 1e-06
+      },
+      "notes": [
+        "closed forms: i = V/R + (i0 - V/R) e^{-t/tau}; sinusoid via |Z| = sqrt(R^2 + (wL)^2), theta = atan2(wL, R) (models/dynamic/examples.py docstring)"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.ode_framework",
+      "check_id": "dynamic.solver-failure-is-explicit",
+      "description": "Solver failures raise ConvergenceError (never a partial result), invalid inputs raise InvalidInputError, and failures inside user callables surface as typed package errors, never as bare TypeError / ValueError / ZeroDivisionError.",
+      "id": "check:dynamic.solver-failure-is-explicit",
+      "kind": "invalid_input_rejection",
+      "level": "L1",
+      "method": "Integrate dy/dt = y^2 (blow-up at t = 1) to t = 2 with RK45 and BDF; exceed max_steps and max_rhs_evaluations on LinearRL; pass NaN excitation value, NaN initial state, NaN t_span, wrong-length y0 and an excitation without derivative to a model that needs it; drive LinearRL with custom excitation callables that return a 2-vector, a string, or divide by zero (InvalidInputError), and with model rhs functions that raise ZeroDivisionError (ConvergenceError) or TypeError (InvalidInputError).",
+      "metrics": {
+        "cases": {
+          "blowup_bdf": true,
+          "blowup_rk45": true,
+          "callable_divides_by_zero": true,
+          "callable_raises_midway": true,
+          "callable_returns_string": true,
+          "callable_returns_vector": true,
+          "max_rhs_evaluations": true,
+          "max_steps": true,
+          "missing_derivative": true,
+          "nan_excitation": true,
+          "nan_t_span": true,
+          "nan_y0": true,
+          "reversed_span": true,
+          "rhs_arithmetic_error": true,
+          "rhs_type_error": true,
+          "rhs_wrong_length": true,
+          "wrong_y0_length": true
+        },
+        "n_cases": 17
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.ode_framework",
+      "check_id": "dynamic.timestep-convergence-order",
+      "description": "With a fixed max_step the RK45 (Dormand-Prince 5(4)) global error on the LinearRL step response decreases monotonically with observed order close to 5 and the finest error is below 1e-7.",
+      "id": "check:dynamic.timestep-convergence-order",
+      "kind": "convergence",
+      "level": "L2",
+      "method": "convergence_study() on the 10 V step response of LinearRL (tau = 1 ms) over 5 tau with max_step = first_step = tau * (0.4, 0.2, 0.1, 0.05, 0.025), rtol 1e-3 / atol 1e-6 so that the error controller never rejects a step; errors are the max-norm against the analytic solution on a 201-point grid; the observed order is the median of the orders estimated from successive differences. Expected 3.5 <= p <= 5.5 (DP5 propagates its 5th-order solution; the pre-asymptotic sinusoidal case shows apparent orders of 7-8 through error cancellation and is therefore not used for the order estimate).",
+      "metrics": {
+        "errors_monotone_decreasing": true,
+        "errors_vs_analytic": [
+          4.858834661675981e-06,
+          1.223830726421867e-07,
+          3.253938667314187e-09,
+          9.538216847231613e-11,
+          1.0484536220346655e-12
+        ],
+        "finest_error": 1.0484536220346655e-12,
+        "max_steps": [
+          0.0004,
+          0.0002,
+          0.0001,
+          5e-05,
+          2.5e-05
+        ],
+        "n_steps": [
+          13,
+          26,
+          50,
+          101,
+          201
+        ],
+        "observed_order": 5.219692386946301,
+        "orders_successive": [
+          5.324346964521142,
+          5.219692386946301,
+          5.093278244442104
+        ],
+        "orders_vs_analytic": [
+          5.3111344094521,
+          5.2330731576455705,
+          5.0923236658867115,
+          6.507384631285234
+        ]
+      },
+      "notes": [
+        "max_step caps the step but does not disable the error controller; tolerances were chosen so that every step equals max_step (n_steps = span / max_step + 1 for the automatic first step)."
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.design_transformer",
+      "check_id": "engineering.demo-deterministic",
+      "description": "Two independent runs of the demonstration design produce byte-identical result envelopes (no timestamps, no randomness).",
+      "id": "check:engineering.demo-deterministic",
+      "kind": "determinism",
+      "level": "L1",
+      "method": "Run design_transformer twice with the demonstration specification and compare the JSON serialisations.",
+      "metrics": {
+        "bytes": 29694
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.engineering.winding",
+      "check_id": "engineering.dowell-independent-form",
+      "description": "The Dowell AC-resistance factor agrees with the exponential form given by Reatti & Kazimierczuk and with its thin- and thick-conductor asymptotes.",
+      "id": "check:engineering.dowell-independent-form",
+      "kind": "independent_numerical",
+      "level": "L2",
+      "method": "Evaluate F_R = Delta[(e^{2D}-e^{-2D}+2 sin 2D)/(e^{2D}+e^{-2D}-2 cos 2D) + (2/3)(m^2-1)(e^{D}-e^{-D}-2 sin D)/(e^{D}+e^{-D}+2 cos D)] independently; compare for m in 1..8, Delta in 0.05..6; check asymptotes.",
+      "metrics": {
+        "max_rel_error_vs_exponential_form": 4.4408896313402385e-16,
+        "thick_limit_rel_error": 3.432763557799662e-06,
+        "thin_limit": 1.0000000175554657
+      },
+      "notes": [],
+      "reference": {
+        "id": "ref.reatti-kazimierczuk-2002",
+        "kind": "publication",
+        "license": "NOASSERTION",
+        "reference": "A. Reatti, M.K. Kazimierczuk, 'Comparison of various methods for calculating the AC resistance of inductors', IEEE Trans. Magn. 38(3), 2002, pp. 1512-1518 (exponential form of Dowell's equation)"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.engineering.formulas",
+      "check_id": "engineering.faraday-relations",
+      "description": "Flux-density / turns relations for square (duty), trapezoidal and sinusoidal voltages match independent arithmetic and turn rounding never exceeds the limit.",
+      "id": "check:engineering.faraday-relations",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "Compare formulas.flux_density_peak_square/sine and turns_for_flux_density_* with direct evaluation of V*D/(2 f N Ae) and V_rms/(sqrt(2) pi f N Ae) on a grid.",
+      "metrics": {
+        "max_rel_error": 0.0,
+        "rounding_violations": 0
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.engineering.formulas",
+      "check_id": "engineering.gapped-inductor-relations",
+      "description": "Gapped-core inductance and gap length are mutual inverses and reduce to the ungapped reluctance limit.",
+      "id": "check:engineering.gapped-inductor-relations",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "Round trip gapped_inductance -> air_gap_for_inductance on a grid; compare the zero-gap value with mu0 N^2 Ae mu_r / le; ungapped overshoot raises.",
+      "metrics": {
+        "max_abs_error": 0.0,
+        "ungapped_overshoot_rejected": true
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.design_inductor",
+      "check_id": "engineering.inductor-design-self-consistent",
+      "description": "The gapped inductor design satisfies the reluctance model exactly: L = mu0 N^2 Ae/(g + le/mu_i), B_pk = L I_pk/(N Ae) <= allowed, AC amplitude = L dI/(2 N Ae).",
+      "id": "check:engineering.inductor-design-self-consistent",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "Design a 100 uH / 25 A inductor on E 65/32/27 in N87 and recompute the relations from the catalogue parameters.",
+      "metrics": {
+        "ac_amplitude": 0.0,
+        "air_gap_m": 0.002111436501660626,
+        "flux_density_peak": 0.0,
+        "gap_nonnegative": 0.0,
+        "inductance_roundtrip": 1.3552527156068805e-16,
+        "turns": 18,
+        "within_allowed": 0.0
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "triangular",
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.0,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 500000.0,
+          "min": 50000.0,
+          "unit": "Hz"
+        },
+        "materials": [
+          "material.tdk-n87"
+        ],
+        "note": "bundled N87 record with the TDK 100 degC datasheet-fit Steinmetz set",
+        "temperature": {
+          "max": 378.15,
+          "min": 368.15,
+          "unit": "K"
+        }
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.design_transformer",
+      "check_id": "engineering.invalid-inputs-rejected",
+      "description": "Impossible or out-of-domain design inputs are returned as explicit rejections (never exceptions, never silently adjusted results).",
+      "id": "check:engineering.invalid-inputs-rejected",
+      "kind": "invalid_input_rejection",
+      "level": "L1",
+      "method": "Call the API with negative/zero/huge values, wrong dimensions, unknown material and core, out-of-range temperature and an infeasible specification; every call must return status 'rejected' with an error record.",
+      "metrics": {
+        "cases": 9,
+        "rejected": 9
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.validate_design",
+      "check_id": "engineering.saturation-screening",
+      "description": "Saturation screening interpolates Bsat linearly between the datasheet temperature points, refuses extrapolation, and validate_design fails a saturating design while passing a sane one.",
+      "id": "check:engineering.saturation-screening",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "Bsat(62.5 degC) on N87 must be the midpoint of the 25/100 degC datasheet values; 150 degC must be refused; validate_design with 4 turns (B_pk > Bsat) must fail the saturation check and with 20 turns pass it.",
+      "metrics": {
+        "bsat_62_5C_T": 0.44,
+        "extrapolation_refused": true,
+        "sane_design_passes": true,
+        "saturating_design_rejected": true
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "triangular",
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.0,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 500000.0,
+          "min": 50000.0,
+          "unit": "Hz"
+        },
+        "materials": [
+          "material.tdk-n87"
+        ],
+        "note": "bundled N87 record with the TDK 100 degC datasheet-fit Steinmetz set",
+        "temperature": {
+          "max": 378.15,
+          "min": 368.15,
+          "unit": "K"
+        }
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.design_transformer",
+      "check_id": "engineering.transformer-design-self-consistent",
+      "description": "The 10 kW / 100 kHz DAB transformer design on N87 reproduces by hand: Faraday turns and peak flux density, secondary turns, iGSE triangular core loss from the stored parameter set, copper loss from the reported winding data, window fill and loss totals.",
+      "id": "check:engineering.transformer-design-self-consistent",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "Run design_transformer with the demonstration specification; recompute every headline value independently from the selected core's datasheet parameters and the N87 100 degC parameter set (closed forms), tolerance 1e-9 relative.",
+      "metrics": {
+        "copper_loss": 0.0,
+        "core_loss": 1.7520877898975605e-11,
+        "currents_p_over_v": 0.0,
+        "flux_density_peak": 0.0,
+        "flux_density_peak_T": 0.1780151312861593,
+        "flux_within_allowed": 0.0,
+        "loss_density": 1.752088573481883e-11,
+        "loss_density_W_per_m3": 273901.03926851257,
+        "selected_core": "core.tdk-e65-32-27",
+        "total_loss": 0.0,
+        "turns_primary": 21,
+        "turns_secondary": 10
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "triangular",
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.0,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 500000.0,
+          "min": 50000.0,
+          "unit": "Hz"
+        },
+        "materials": [
+          "material.tdk-n87"
+        ],
+        "note": "bundled N87 record with the TDK 100 degC datasheet-fit Steinmetz set",
+        "temperature": {
+          "max": 378.15,
+          "min": 368.15,
+          "unit": "K"
+        }
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.design_transformer",
+      "check_id": "engineering.transformer-power-split",
+      "description": "With several secondaries the throughput power is shared (equal split by default, explicit power_share otherwise) so that the secondary volt-amperes add up to the rated power.",
+      "id": "check:engineering.transformer-power-split",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "Design a 10 kW transformer with 400 V and 200 V secondaries; check I_rms = P_share / V per winding and sum(V I) = P.",
+      "metrics": {
+        "sec_a_A": 12.5,
+        "sec_b_A": 25.0,
+        "secondary_VA_total": 10000.0
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "triangular",
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.0,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 500000.0,
+          "min": 50000.0,
+          "unit": "Hz"
+        },
+        "materials": [
+          "material.tdk-n87"
+        ],
+        "note": "bundled N87 record with the TDK 100 degC datasheet-fit Steinmetz set",
+        "temperature": {
+          "max": 378.15,
+          "min": 368.15,
+          "unit": "K"
+        }
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.igse",
+      "check_id": "igse.ki-approximation-agreement",
+      "description": "The quadrature-based k_i agrees with Venkatachalam's published closed-form approximation k_i ~= k / (2^(beta+1) pi^(alpha-1) (0.2761 + 1.7061/(alpha+1.354))) within 1 %.",
+      "id": "check:igse.ki-approximation-agreement",
+      "kind": "published_reference",
+      "level": "L2",
+      "method": "Sweep alpha in [1.0, 2.5] (16 values) and beta in [2, 3] (5 values); compare igse_coefficient (quad) with igse_coefficient_venkatachalam_approximation; also compare the quadrature integral with the exact Gamma-function expression 2 sqrt(pi) Gamma((alpha+1)/2) / Gamma(alpha/2+1).",
+      "metrics": {
+        "alpha_range": [
+          1.0,
+          2.5
+        ],
+        "approximation_tolerance": 0.01,
+        "beta_range": [
+          2.0,
+          3.0
+        ],
+        "exact_tolerance": 1e-12,
+        "max_rel_deviation_from_approximation": 0.0008656052186563801,
+        "max_rel_error_vs_gamma_closed_form": 1.8228840265401344e-15
+      },
+      "notes": [],
+      "reference": {
+        "id": "publication.venkatachalam-2002-igse",
+        "kind": "publication",
+        "license": "NOASSERTION",
+        "note": "Defines the iGSE loss integral and the coefficient k_i; also gives the closed-form approximation of k_i.",
+        "reference": "K. Venkatachalam, C. R. Sullivan, T. Abdallah and H. Tacca, \"Accurate prediction of ferrite core loss with nonsinusoidal waveforms using only Steinmetz parameters,\" Proc. IEEE Workshop on Computers in Power Electronics (COMPEL 2002), Mayaguez, PR, USA, 2002, pp. 36-41.",
+        "url": "https://doi.org/10.1109/CIPE.2002.1196712"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.igse",
+      "check_id": "igse.minor-loop-detection",
+      "description": "Waveforms with minor loops are detected (reversal count > 2) and rejected under policy 'reject' or flagged with 'minor_loops_ignored' under policy 'warn'; the flagged value lies above the loop-decomposed iGSE result for beta > alpha and below it for beta < alpha, as the warning states; single-loop waveforms are not flagged.",
+      "id": "check:igse.minor-loop-detection",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "Build a piecewise-linear waveform with an intermediate dip (4 reversals) and its 513-sample version; check count_reversals/has_minor_loops, OutOfDomainError under reject and the warning under warn; compare the warn value with a hand-derived loop-decomposed reference for (alpha, beta) = (1.5, 2.5) and (2.0, 1.5) and require the sign stated in the warning; confirm sinusoidal, triangular, flat-topped trapezoidal and flat-topped PWL waveforms report 2 reversals.",
+      "metrics": {
+        "pwl_flat_top_reversals": 2,
+        "pwl_reversals": 4,
+        "pwl_warn_codes": [
+          "out_of_domain",
+          "dc_bias_ignored",
+          "minor_loops_ignored"
+        ],
+        "sampled_reversals": 4,
+        "sampled_warn_codes": [
+          "out_of_domain",
+          "dc_bias_ignored",
+          "minor_loops_ignored"
+        ],
+        "sinusoidal_reversals": 2,
+        "trapezoidal_reversals": 2,
+        "triangular_reversals": 2,
+        "undecomposed_over_decomposed_alpha1.5_beta2.5": 1.178739957211988,
+        "undecomposed_over_decomposed_alpha2_beta1.5": 0.8854194343597814
+      },
+      "notes": [
+        "the loop-decomposed reference is a hand derivation for this one waveform (documented in the check source); the model itself never decomposes loops"
+      ],
+      "range": {
+        "excitation": [
+          "piecewise_linear",
+          "sampled",
+          "triangular",
+          "trapezoidal",
+          "sinusoidal"
+        ]
+      },
+      "reference": {
+        "id": "publication.venkatachalam-2002-igse",
+        "kind": "publication",
+        "license": "NOASSERTION",
+        "note": "Defines the iGSE loss integral and the coefficient k_i; also gives the closed-form approximation of k_i.",
+        "reference": "K. Venkatachalam, C. R. Sullivan, T. Abdallah and H. Tacca, \"Accurate prediction of ferrite core loss with nonsinusoidal waveforms using only Steinmetz parameters,\" Proc. IEEE Workshop on Computers in Power Electronics (COMPEL 2002), Mayaguez, PR, USA, 2002, pp. 36-41.",
+        "url": "https://doi.org/10.1109/CIPE.2002.1196712"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.igse",
+      "check_id": "igse.sampled-converges",
+      "description": "The sampled-waveform iGSE path converges to the analytic sinusoidal result as the number of samples per period grows (N = 64, 256, 1024, 4096), with the same relative error at every (f, Bpk).",
+      "id": "check:igse.sampled-converges",
+      "kind": "convergence",
+      "level": "L2",
+      "method": "Sample Waveform.sinusoidal with N points spanning one period at (1 kHz, 1 mT), (100 kHz, 0.1 T) and (1 MHz, 0.3 T), wrap as Waveform.sampled, evaluate IGSEModel and compare with the Steinmetz closed form; require monotonically decreasing error, < 1e-4 at N=4096 and a relative error that is independent of (f, Bpk) to 1e-9 (scale invariance: the sampled path scales exactly as f^alpha Bpk^beta).",
+      "metrics": {
+        "monotone_decrease": true,
+        "observed_convergence_orders": [
+          2.0127148987460837,
+          2.002197848654116,
+          2.000049208912951
+        ],
+        "points": [
+          [
+            1000.0,
+            0.001
+          ],
+          [
+            100000.0,
+            0.1
+          ],
+          [
+            1000000.0,
+            0.3
+          ]
+        ],
+        "rel_error_n1024": 3.52669340223656e-06,
+        "rel_error_n256": 5.659928236942505e-05,
+        "rel_error_n4096": 2.2040330164600161e-07,
+        "rel_error_n64": 0.0009216924695734632,
+        "sampling_sensitivity_warning_at_n64": true,
+        "scale_invariance_max_abs_spread_of_rel_error": 4.167577065734325e-16,
+        "scale_invariance_tolerance": 1e-13,
+        "tolerance_n4096": 0.0001
+      },
+      "notes": [
+        "error measured against the Steinmetz closed form; the relative error is independent of f and Bpk because the sampled path scales exactly as f^alpha Bpk^beta, so one convergence curve covers the range",
+        "second-order convergence holds for alpha >= 1; for alpha < 1 the integrand |dB/dt|^alpha has a cusp at dB/dt = 0 and the order is irregular (not claimed here)"
+      ],
+      "range": {
+        "excitation": [
+          "sampled"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.001,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 1000000.0,
+          "min": 1000.0,
+          "unit": "Hz"
+        },
+        "note": "sinusoid sampled with 64-4096 points per period at (1 kHz, 1 mT), (100 kHz, 0.1 T) and (1 MHz, 0.3 T); the relative error of the sampled path is scale invariant in f and Bpk (the check verifies this), so the convergence evidence applies across the declared range; synthetic parameters"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.igse",
+      "check_id": "igse.sinusoid-equals-steinmetz",
+      "description": "For sinusoidal excitation the iGSE reduces exactly to the classical Steinmetz equation.",
+      "id": "check:igse.sinusoid-equals-steinmetz",
+      "kind": "limiting_case",
+      "level": "L2",
+      "method": "Evaluate IGSEModel (default sinusoidal waveform and an explicit Waveform.sinusoidal) and SteinmetzModel on a grid of f x Bpk for several (alpha, beta) with the synthetic parameters; compare relative error.",
+      "metrics": {
+        "alpha_sweep": [
+          1.0,
+          1.2,
+          1.5,
+          1.8,
+          2.0,
+          2.3,
+          2.5
+        ],
+        "beta_sweep": [
+          2.0,
+          2.5,
+          3.0
+        ],
+        "max_rel_error": 6.520659450248267e-16,
+        "n_points": 336,
+        "tolerance": 1e-09
+      },
+      "notes": [
+        "synthetic parameters k=1 W/m^3; alpha/beta swept"
+      ],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.001,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 1000000.0,
+          "min": 1000.0,
+          "unit": "Hz"
+        },
+        "note": "synthetic parameters, material-agnostic; alpha in [1.0, 2.5], beta in [2.0, 3.0]"
+      },
+      "reference": {
+        "id": "publication.venkatachalam-2002-igse",
+        "kind": "publication",
+        "license": "NOASSERTION",
+        "note": "Defines the iGSE loss integral and the coefficient k_i; also gives the closed-form approximation of k_i.",
+        "reference": "K. Venkatachalam, C. R. Sullivan, T. Abdallah and H. Tacca, \"Accurate prediction of ferrite core loss with nonsinusoidal waveforms using only Steinmetz parameters,\" Proc. IEEE Workshop on Computers in Power Electronics (COMPEL 2002), Mayaguez, PR, USA, 2002, pp. 36-41.",
+        "url": "https://doi.org/10.1109/CIPE.2002.1196712"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.igse",
+      "check_id": "igse.triangular-closed-form",
+      "description": "The piecewise-linear iGSE path reproduces the analytic triangular result Pv = k_i (2 Bpk)^beta f^alpha [D^(1-alpha) + (1-D)^(1-alpha)] and the analytic symmetric-trapezoid result Pv = 2 k_i (2 Bpk)^beta f^alpha D_rise^(1-alpha).",
+      "id": "check:igse.triangular-closed-form",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "Evaluate IGSEModel on Waveform.triangular for duty 0.1-0.9 and on Waveform.trapezoidal for duty_rise 0.1, 0.2, 0.35 (duty_flat = 0.5 - duty_rise) over a grid of f x Bpk x (alpha, beta); compare with igse_triangular_closed_form / igse_trapezoidal_closed_form; also confirm that a trapezoid with duty_flat=0 equals the D=0.5 triangle and equation (5) at D_rise=0.5.",
+      "metrics": {
+        "closed_forms_rel_difference_at_half_duty": 0.0,
+        "degenerate_trapezoid_rel_error": 0.0,
+        "max_rel_error_trapezoidal": 9.320170357649273e-16,
+        "max_rel_error_triangular": 4.3282993225389777e-16,
+        "n_trapezoidal_points": 567,
+        "n_triangular_points": 945,
+        "tolerance": 1e-12,
+        "trapezoid_duty_rise": [
+          0.1,
+          0.2,
+          0.35
+        ]
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "triangular",
+          "trapezoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.001,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 1000000.0,
+          "min": 1000.0,
+          "unit": "Hz"
+        },
+        "note": "triangular duty 0.1-0.9 and symmetric trapezoids with duty_rise 0.1-0.35 (duty_flat = 0.5 - duty_rise); synthetic parameters, alpha in [1.0, 2.5], beta in [2.0, 3.0]"
+      },
+      "reference": {
+        "id": "publication.venkatachalam-2002-igse",
+        "kind": "publication",
+        "license": "NOASSERTION",
+        "note": "Defines the iGSE loss integral and the coefficient k_i; also gives the closed-form approximation of k_i.",
+        "reference": "K. Venkatachalam, C. R. Sullivan, T. Abdallah and H. Tacca, \"Accurate prediction of ferrite core loss with nonsinusoidal waveforms using only Steinmetz parameters,\" Proc. IEEE Workshop on Computers in Power Electronics (COMPEL 2002), Mayaguez, PR, USA, 2002, pp. 36-41.",
+        "url": "https://doi.org/10.1109/CIPE.2002.1196712"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.integration.aipe-core",
+      "check_id": "integration.core-example-validates",
+      "description": "Vendored AIPE-Core 0.1.0 schemas match their pinned upstream hashes, resolve fully offline, accept Core's synthetic DAB example without errors and reject representative contract violations.",
+      "id": "check:integration.core-example-validates",
+      "kind": "schema",
+      "level": "L1",
+      "method": "SHA-256 of the 14 schemas and the example against pins; referencing.Registry retrieve must raise NoSuchResource for an unknown id; validate_engineering_state(example) == []; three mutations (wrong unit dimension, missing evidence, provenance cycle) must each produce errors.",
+      "metrics": {
+        "example_errors": 0,
+        "mutation_error_counts": {
+          "cycle": 1,
+          "missing_evidence": 1,
+          "wrong_unit": 1
+        },
+        "offline_registry": true,
+        "schema_ids": 14,
+        "vendored_files": 15
+      },
+      "notes": [
+        "Core commit 4e664f03df1e294fefc169244bf1223c7352e2be; example id aipe.example.dab-10kw."
+      ],
+      "range": {
+        "note": "Schema/software interoperability check; no physical operating range applies."
+      },
+      "reference": {
+        "id": "src.aipe-core",
+        "kind": "repository",
+        "license": "MIT",
+        "note": "Schemas and example vendored byte-exact; scripts/validate.py::validate_state reproduced under MIT attribution (src/aipe_magnetics/integrations/aipe_core/schemas/v0.1.0/NOTICE.md).",
+        "reference": "AIPE-Core: versioned SI Engineering State schemas, evidence conventions and offline contract validator (schemas/, scripts/validate.py, examples/dab-10kw)",
+        "url": "https://github.com/FulongLi/AIPE-Core",
+        "version": "4e664f03df1e294fefc169244bf1223c7352e2be"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.integration.aipe-core",
+      "check_id": "integration.core-roundtrip",
+      "description": "An illustrative transformer summary with assumption, source and analytical evidence exports to a contract-valid Core Engineering State 0.1.0, imports back field-for-field equal, keeps foreign extensions when extending Core's DAB example and re-exports idempotently (the identical summary, requirements and checks exported onto the state's own output leave it unchanged).",
+      "id": "check:integration.core-roundtrip",
+      "kind": "software",
+      "level": "L1",
+      "method": "to_engineering_state -> validate_engineering_state == [] -> from_engineering_state == [summary]; validation.status is analytically_checked only with the supplied passing analytical check; the same summary extended onto the vendored example preserves extensions['example.custom']; the second export of summary + requirements + checks onto the first output (replace_existing=True) is equal to the first output, and the second export onto the extended example is unchanged too.",
+      "metrics": {
+        "base_state_errors": 0,
+        "evidence_records": 5,
+        "export_errors": 0,
+        "extension_detail_kept": true,
+        "foreign_extension_kept": true,
+        "idempotent_reexport": true,
+        "idempotent_reexport_on_example": true,
+        "roundtrip_equal": true,
+        "status_analytically_checked": true,
+        "status_not_run_without_check": true
+      },
+      "notes": [
+        "Exported state id project.dab-10kw-fixture.state with 5 evidence records; validation.status=analytically_checked."
+      ],
+      "range": {
+        "note": "Schema/software interoperability check; no physical operating range applies."
+      },
+      "reference": {
+        "id": "src.aipe-core",
+        "kind": "repository",
+        "license": "MIT",
+        "note": "Schemas and example vendored byte-exact; scripts/validate.py::validate_state reproduced under MIT attribution (src/aipe_magnetics/integrations/aipe_core/schemas/v0.1.0/NOTICE.md).",
+        "reference": "AIPE-Core: versioned SI Engineering State schemas, evidence conventions and offline contract validator (schemas/, scripts/validate.py, examples/dab-10kw)",
+        "url": "https://github.com/FulongLi/AIPE-Core",
+        "version": "4e664f03df1e294fefc169244bf1223c7352e2be"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.integration.aipe-registry",
+      "check_id": "integration.registry-manifest-accepted",
+      "description": "AIPE-Registry's own validator would accept this repository's aipe.yaml for this checkout (no error, including documentation_drift for referenced files that do not exist) and every verification level claimed in extensions.aipe.magnetics.model_maturity is supported by the bundled evidence registry. Fails closed while referenced files are missing or while the claims cannot be cross-checked.",
+      "id": "check:integration.registry-manifest-accepted",
+      "kind": "software",
+      "level": "L1",
+      "method": "validate_manifest(manifest, repo_root=<checkout>, evidence_registry=<bundled v<version>.json or None>) must report zero errors and must not report verification_claims_unchecked; metrics expose registry_validator_would_accept, verification_claims_unchecked and missing_reference_count. Cross-manifest Registry checks (dependency resolution against aipe.core) are outside this check.",
+      "metrics": {
+        "bundled_evidence_consulted": true,
+        "errors": 0,
+        "manifest_found": true,
+        "missing_reference_count": 0,
+        "registry_validator_would_accept": true,
+        "repository_manifest": true,
+        "verification_claim_errors": 0,
+        "verification_claims": 9,
+        "verification_claims_unchecked": false,
+        "warnings": 1
+      },
+      "notes": [
+        "Registry commit f419260bc604e5e79ecde9d998139a39a5e0ebdf; manifest D:\\Cursor Workspace\\AIPE-Magnetics\\AIPE-Magnetics-Database\\aipe.yaml validated for repository root D:\\Cursor Workspace\\AIPE-Magnetics\\AIPE-Magnetics-Database; 9 verification-level claim(s) in extensions.aipe.magnetics.model_maturity.",
+        "warning [unresolved_license] rights remain unconfirmed; no open-source licence inferred"
+      ],
+      "range": {
+        "note": "Schema/software interoperability check; no physical operating range applies."
+      },
+      "reference": {
+        "id": "src.aipe-registry",
+        "kind": "repository",
+        "license": "MIT",
+        "note": "Schema vendored byte-exact; loader and semantic rules re-implemented under MIT attribution (src/aipe_magnetics/integrations/aipe_registry/schema/NOTICE.md).",
+        "reference": "AIPE-Registry: capability manifest schema v0.1 and manifest validation rules (schema/capability-manifest.schema.json, scripts/registry.py)",
+        "url": "https://github.com/FulongLi/AIPE-Registry",
+        "version": "f419260bc604e5e79ecde9d998139a39a5e0ebdf"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.integration.aipe-registry",
+      "check_id": "integration.registry-manifest-schema-valid",
+      "description": "This repository's aipe.yaml (id aipe.magnetics-database with the aipe.magnetics extension) parses under Registry's loader rules, validates against the vendored AIPE-Registry capability-manifest schema v0.1 and Registry's manifest-level semantic rules that need no file system, and its extensions['aipe.magnetics'] matches MagneticsManifestExtension; a mutated manifest is rejected.",
+      "id": "check:integration.registry-manifest-schema-valid",
+      "kind": "schema",
+      "level": "L1",
+      "method": "verify vendored schema hash; find_repository_manifest() must name a manifest whose id is aipe.magnetics-database and that carries extensions['aipe.magnetics'] (a foreign manifest fails closed); load_manifest with UniqueLoader; validate_manifest(manifest) without repo_root must yield no error; a manifest mutated to compatibility.integration='certified' must be rejected. File existence and verification claims are judged by integration.registry-manifest-accepted.",
+      "metrics": {
+        "capabilities": 18,
+        "errors": 0,
+        "manifest_found": true,
+        "mutation_rejected": true,
+        "repository_manifest": true,
+        "vendored_files": 1,
+        "warnings": 2
+      },
+      "notes": [
+        "Registry commit f419260bc604e5e79ecde9d998139a39a5e0ebdf; manifest D:\\Cursor Workspace\\AIPE-Magnetics\\AIPE-Magnetics-Database\\aipe.yaml id 'aipe.magnetics-database' with 18 capabilities and 9 verification-level claim(s) (claims are judged by integration.registry-manifest-accepted).",
+        "warning [unresolved_license] rights remain unconfirmed; no open-source licence inferred",
+        "warning [verification_claims_unchecked] extensions/aipe.magnetics/model_maturity claims verification levels for 9 model(s); no evidence registry supplied for cross-checking"
+      ],
+      "range": {
+        "note": "Schema/software interoperability check; no physical operating range applies."
+      },
+      "reference": {
+        "id": "src.aipe-registry",
+        "kind": "repository",
+        "license": "MIT",
+        "note": "Schema vendored byte-exact; loader and semantic rules re-implemented under MIT attribution (src/aipe_magnetics/integrations/aipe_registry/schema/NOTICE.md).",
+        "reference": "AIPE-Registry: capability manifest schema v0.1 and manifest validation rules (schema/capability-manifest.schema.json, scripts/registry.py)",
+        "url": "https://github.com/FulongLi/AIPE-Registry",
+        "version": "f419260bc604e5e79ecde9d998139a39a5e0ebdf"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.jiles_atherton",
+      "check_id": "ja.dc-biased-minor-loops-admissible",
+      "description": "Excitations that do not start at H = 0 (DC offset, non-zero phase, biased triangular minor loops) are integrated from an admissible pre-magnetised state, converge to dissipative steady loops, obey the H -> -H point symmetry of the model, and the Steffensen-accelerated steady state coincides with plain period iteration.",
+      "id": "check:ja.dc-biased-minor-loops-admissible",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "Illustrative set. Cases: sinusoidal 2 kA/m at +1 kA/m and -1 kA/m offset, sinusoidal 5 kA/m with phase pi/2 (starts at the peak, dH/dt(0) ~ 0), triangular 200 A/m at -1 kA/m offset (minor loop without zero crossing of H). Require: no ConvergenceError, steady state reached, oint H dB > 0, |M| <= Ms, the pre-magnetisation ramp recorded with |M_an - M| below the admissible gap (1-c)k/alpha; the +1 kA/m and -1 kA/m loops mirror each other (B_-(t) = -B_+(t + T/2) within 1e-4 of B peak, loop energies within 1e-5); the biased triangular loop computed with accelerate=True and accelerate=False (both at steady_state_tol 1e-5 with the default solver settings, whose period-to-period noise floor for this loop is about 3e-6 of the excursion of M) agrees in loop energy to 5e-4 and in M(t) to 2e-4 of its peak-to-peak excursion (both bounds are at least eight times the tolerance-limited differences observed, 3.4e-5 and 2.5e-5).",
+      "metrics": {
+        "accelerated_extrapolations": 2,
+        "accelerated_periods": 6,
+        "accelerated_vs_plain_loop_energy_rel": 3.4460286989537887e-05,
+        "accelerated_vs_plain_max_dM_rel_ptp": 2.493034008758473e-05,
+        "admissible_gap_A_per_m": 200000.0,
+        "cases": {
+          "sin_2000_offset_+1000": {
+            "flux_density_peak_T": 1.533783863026127,
+            "loop_energy_density": 1547.5936881224986,
+            "ok": true,
+            "periods": 2,
+            "premagnetisation_M_A_per_m": 776558.1452295616,
+            "premagnetisation_gap_A_per_m": 93789.05004169,
+            "warnings": [
+              "ja.asymmetric_loop"
+            ]
+          },
+          "sin_2000_offset_-1000": {
+            "flux_density_peak_T": 1.5337835070254509,
+            "loop_energy_density": 1547.593153903173,
+            "ok": true,
+            "periods": 2,
+            "premagnetisation_M_A_per_m": -776558.1452295616,
+            "premagnetisation_gap_A_per_m": -93789.05004169,
+            "warnings": [
+              "ja.asymmetric_loop"
+            ]
+          },
+          "sin_5000_phase_pi_2": {
+            "flux_density_peak_T": 1.6917077191626617,
+            "loop_energy_density": 2145.5514733525624,
+            "ok": true,
+            "periods": 1,
+            "premagnetisation_M_A_per_m": 1341218.228124419,
+            "premagnetisation_gap_A_per_m": 12495.67465893738,
+            "warnings": []
+          },
+          "tri_200_offset_-1000": {
+            "flux_density_peak_T": 1.1831109781588596,
+            "loop_energy_density": 3.920849193702111,
+            "ok": true,
+            "periods": 6,
+            "premagnetisation_M_A_per_m": -869422.6488784523,
+            "premagnetisation_gap_A_per_m": -80369.32282059081,
+            "warnings": [
+              "ja.no_remanence",
+              "ja.no_coercivity"
+            ]
+          }
+        },
+        "mirror_loop_energy_rel": 3.45193528296791e-07,
+        "mirror_max_rel_B_error": 3.895491748937582e-07,
+        "plain_contraction_ratio": 0.06668032371093788,
+        "plain_periods": 13
+      },
+      "notes": [
+        "illustrative parameters; the pre-magnetisation ramp (0 -> H(t0) along the initial curve) is the documented default initial state for excitations with H(t0) != 0"
+      ],
+      "range": {
+        "excitation": [
+          "sinusoidal",
+          "triangular"
+        ],
+        "note": "illustrative parameter set ja.illustrative-demo (not a material); H peak up to 10 kA/m; rate independent, frequency immaterial"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.jiles_atherton",
+      "check_id": "ja.descending-branch-above-ascending",
+      "description": "Branch ordering / sign convention: at the same interior H the descending branch (dH/dt < 0) carries a higher B than the ascending branch, i.e. the loop is traversed counter-clockwise in the (H, B) plane, consistent with oint H dB > 0.",
+      "id": "check:ja.descending-branch-above-ascending",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "Simulate the 10 kA/m, 50 Hz steady-state loop, split it by the sign of dH/dt, sort each branch by H and interpolate B at 41 common values with |H| <= 0.8 H_peak; require B_desc - B_asc > 0 everywhere and equal to 2 B_r at H = 0 within 1e-3. The task brief phrased this as 'descending below ascending'; with B and H positive along the same reference direction the physically correct ordering, verified here, is descending >= ascending.",
+      "metrics": {
+        "gap_at_H0_T": 1.2604817576979706,
+        "max_gap_T": 1.2604817576979706,
+        "min_gap_T": 0.013791395930333739,
+        "n_grid": 41,
+        "rel_error_gap_vs_2Br": 0.0,
+        "two_Br_T": 1.2604817576979706
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "note": "illustrative parameter set ja.illustrative-demo (not a material); H peak up to 10 kA/m; rate independent, frequency immaterial"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.jiles_atherton",
+      "check_id": "ja.major-loop-closes-and-is-dissipative",
+      "description": "After periodic steady state the 10 kA/m major loop closes, dissipates energy (oint H dB > 0), keeps |M| <= Ms, has positive, symmetric coercivity and remanence, and - the model being rate independent - the loop driven by a 10 kA/m triangular wave is the same loop as the sinusoidal one.",
+      "id": "check:ja.major-loop-closes-and-is-dissipative",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "trajectory() with Excitation.sinusoidal(1e4 A/m, 50 Hz) and Excitation.triangular(1e4 A/m, 50 Hz), steady-state tolerance 1e-4; require convergence, closure error of B below 1e-6, loop energy > 0, no |M| > Ms constraint violation, coercivity > 0, remanence > 0, the two H = 0 / B = 0 crossings symmetric to 1e-4 relative, and triangular vs sinusoidal agreement of the loop energy (1e-4), remanence (1e-4), coercivity (1e-3) and peak flux density (1e-5); the maximum B difference between the two loops at common H values is reported (interpolation-limited, bound 1 % of B peak).",
+      "metrics": {
+        "closure_error_B": 1.821710460120978e-11,
+        "coercivity_A_per_m": 316.0158956423858,
+        "coercivity_symmetry": 4.74533591939017e-10,
+        "flux_density_peak_T": 1.8387471901568584,
+        "loop_energy_density_J_per_m3": 2333.8129431643574,
+        "magnetisation_peak_over_Ms": 0.9082678257827752,
+        "n_steps": 506,
+        "periods": 2,
+        "remanence_T": 0.6302408788489853,
+        "remanence_symmetry": 2.0208905778629503e-12,
+        "triangular_closure_error_B": 1.787079405675089e-08,
+        "triangular_periods": 1,
+        "triangular_vs_sinusoidal_max_dB_T": 0.001883543324302378,
+        "triangular_vs_sinusoidal_rel": {
+          "coercivity": 0.00013615909966337348,
+          "flux_density_peak": 2.10114152261094e-07,
+          "loop_energy": 5.060050905666479e-06,
+          "remanence": 1.809802634803401e-09
+        }
+      },
+      "notes": [
+        "illustrative parameters: the numbers characterise the model implementation, not a material",
+        "the branch comparison interpolates B(H) on a 41-point grid from 1000 samples per period; its residual (1e-3 T) is interpolation error near the steep parts of the loop, the integral and crossing quantities agree to 1e-4 or better"
+      ],
+      "range": {
+        "excitation": [
+          "sinusoidal",
+          "triangular"
+        ],
+        "note": "illustrative parameter set ja.illustrative-demo (not a material); H peak up to 10 kA/m; rate independent, frequency immaterial"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.jiles_atherton",
+      "check_id": "ja.small-signal-initial-susceptibility",
+      "description": "The initial slope dM/dH of the ODE at the demagnetised origin equals the analytic chi_0 = c Ms/(3a) / (1 - alpha c Ms/(3a)).",
+      "id": "check:ja.small-signal-initial-susceptibility",
+      "kind": "analytical_reference",
+      "level": "L2",
+      "method": "Derivation: at H = M = 0 the gap M_an - M vanishes so the irreversible term is zero and the closed form reduces to c chi_e / (1 - alpha c chi_e) with chi_e = Ms/(3a). Check (a) rhs(0, M=0, H=0, dH/dt=1) equals chi_0 to 1e-12 and (b) the secant M(H)/H after integrating a linear ramp 0 -> 0.1 A/m (rtol 1e-10) is within 2 % of chi_0 (first-order correction ~ (dM_an/dH - chi_0) H / k is about 0.06 % here).",
+      "metrics": {
+        "H_small_A_per_m": 0.1,
+        "anhysteretic_initial_susceptibility": 2162.1621621621634,
+        "chi_0_analytic": 114.77761836441896,
+        "rel_error_rhs": 1.2381207170619743e-16,
+        "rel_error_secant": 0.0005918986706018109,
+        "rhs_slope": 114.77761836441894,
+        "secant_slope": 114.8455550841437,
+        "tolerance_secant": 0.02
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "piecewise_linear"
+        ],
+        "note": "illustrative parameter set ja.illustrative-demo (not a material); H peak up to 10 kA/m; rate independent, frequency immaterial; monotone ramp 0 -> 0.1 A/m"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.jiles_atherton",
+      "check_id": "ja.small-signal-steady-state",
+      "description": "Small-amplitude symmetric minor loops (10, 50, 100 A/m), whose period map contracts by only a few per cent per period, reach the periodic steady state with the default settings in a handful of periods, are symmetric, dissipative and ordered in energy, and the accelerated steady loop equals the plain-iteration loop.",
+      "id": "check:ja.small-signal-steady-state",
+      "kind": "convergence",
+      "level": "L2",
+      "method": "Illustrative set, 50 Hz sinusoids of 10, 50 and 100 A/m with trajectory() defaults (accelerate=True, steady_state_tol 1e-4): require convergence in at most 12 integrated periods each, oint H dB > 0 increasing with amplitude, |mean M| of the last period below 10 x tol of the peak-to-peak M (symmetry), and at 100 A/m agreement of the loop energy between the accelerated and the plain period iteration (accelerate=False, up to 150 periods; both RK45 rtol 1e-7, max_step = period/100) to 1e-4 while the plain iteration needs more than 20 periods (contraction ratio reported). The exponent of the energy-vs-amplitude power law between 50 and 100 A/m is reported as a metric only.",
+      "metrics": {
+        "accelerated_periods_100_A_per_m_same_config": 8,
+        "accelerated_vs_plain_loop_energy_rel_100_A_per_m": 5.554999580174268e-06,
+        "energies_monotone": true,
+        "energy_exponent_50_to_100": 3.1428240639406213,
+        "plain_contraction_ratio_100_A_per_m": 0.7575826643339074,
+        "plain_periods_100_A_per_m": 38,
+        "runs": {
+          "100_A_per_m": {
+            "boundary_change": 8.914919402643607e-06,
+            "coercivity_A_per_m": 29.20568755178932,
+            "extrapolations": 1,
+            "loop_energy_density": 1.3749972326380782,
+            "mean_M_over_ptp": 6.579671857938731e-05,
+            "ok": true,
+            "periods": 4,
+            "remanence_T": 0.005111508586076088,
+            "warnings": []
+          },
+          "10_A_per_m": {
+            "boundary_change": 6.911178423080872e-10,
+            "coercivity_A_per_m": 0.29766943230702314,
+            "extrapolations": 3,
+            "loop_energy_density": 0.0011580865425629763,
+            "mean_M_over_ptp": 5.0501633468385645e-08,
+            "ok": true,
+            "periods": 7,
+            "remanence_T": 4.339295124888341e-05,
+            "warnings": []
+          },
+          "50_A_per_m": {
+            "boundary_change": 1.5949019454266988e-08,
+            "coercivity_A_per_m": 7.607305668431156,
+            "extrapolations": 2,
+            "loop_energy_density": 0.155674510838299,
+            "mean_M_over_ptp": 7.665422563473674e-06,
+            "ok": true,
+            "periods": 5,
+            "remanence_T": 0.0011626655447709933,
+            "warnings": []
+          }
+        },
+        "steady_state_tol": 0.0001
+      },
+      "notes": [
+        "illustrative parameters; the energy exponent is reported, not asserted (a cubic, Rayleigh-like dependence is a plausibility observation, not a reference comparison)"
+      ],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "note": "illustrative parameter set ja.illustrative-demo (not a material); H peak up to 10 kA/m; rate independent, frequency immaterial; small-signal minor loops 10-100 A/m"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.jiles_atherton",
+      "check_id": "ja.solver-tolerance-convergence",
+      "description": "The steady-state loop energy is insensitive to the solver tolerance (rtol 1e-6 vs 1e-9 changes it by less than 0.5 %) and agrees between RK45 and DOP853.",
+      "id": "check:ja.solver-tolerance-convergence",
+      "kind": "convergence",
+      "level": "L2",
+      "method": "trajectory() with a 5 kA/m, 50 Hz sinusoid, max_step = period/200, RK45 at rtol 1e-6 and 1e-9 and DOP853 at rtol 1e-9; compare loop energy densities and coercivities.",
+      "metrics": {
+        "coercivity_rel_change_rtol": 7.935187704695979e-09,
+        "loop_energy_rel_change_method": 8.705624553467976e-08,
+        "loop_energy_rel_change_rtol": 1.9205515819783323e-07,
+        "runs": {
+          "dop853_1e-9": {
+            "hc": 315.9953201670019,
+            "n_steps": 244,
+            "w": 2145.5508476901246
+          },
+          "rk45_1e-6": {
+            "hc": 315.9953226612839,
+            "n_steps": 248,
+            "w": 2145.550622409599
+          },
+          "rk45_1e-9": {
+            "hc": 315.99532015380174,
+            "n_steps": 619,
+            "w": 2145.551034473742
+          }
+        },
+        "tolerance": 0.005
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "note": "illustrative parameter set ja.illustrative-demo (not a material); H peak up to 10 kA/m; rate independent, frequency immaterial"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.jiles_atherton",
+      "check_id": "ja.zero-excitation-gives-zero-magnetisation",
+      "description": "With H identically zero (constant 0, a zero-amplitude sinusoid and a zero-amplitude triangle) the Jiles-Atherton ODE keeps M = 0 exactly, B = 0 and the loop energy is 0.",
+      "id": "check:ja.zero-excitation-gives-zero-magnetisation",
+      "kind": "limiting_case",
+      "level": "L2",
+      "method": "trajectory() from the demagnetised state with Excitation.constant(0), Excitation.sinusoidal(0, 50 Hz) and Excitation.triangular(0, 50 Hz); require max|M| == 0, max|B| == 0 and zero loop energy (the rhs returns exactly 0 when dH/dt = 0 and the Langevin series gives M_an(0) = 0); remanence and coercivity must be reported as undefined (no zero crossing of an identically zero signal).",
+      "metrics": {
+        "flux_density_peak_T": 0.0,
+        "loop_energy_density_sinusoid": 0.0,
+        "loop_energy_density_triangle": 0.0,
+        "max_abs_M_constant": 0.0,
+        "max_abs_M_zero_sinusoid": 0.0,
+        "max_abs_M_zero_triangle": 0.0,
+        "remanence_coercivity_undefined": true
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "sinusoidal",
+          "triangular",
+          "dc"
+        ],
+        "note": "illustrative parameter set ja.illustrative-demo (not a material); H peak up to 10 kA/m; rate independent, frequency immaterial; zero amplitude"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.sources",
+      "check_id": "sources.cache-tamper-detected",
+      "description": "The local cache never downloads without allow_download=True, verifies SHA-256 after a download (mismatch deletes the file), records a manifest with url / sha256 / size / licence, serves cached files without re-downloading, and verify() detects tampering and missing files.",
+      "id": "check:sources.cache-tamper-detected",
+      "kind": "software",
+      "level": "L1",
+      "method": "LocalCache in a temporary directory with an in-memory transport (no network): fetch without permission -> DownloadNotAllowedError; wrong expected digest -> DataIntegrityError and no file left; correct digest -> cached path; second fetch served from cache (transport not called); modify the cached bytes -> verify() reports size and sha256 mismatches; delete -> reported missing.",
+      "metrics": {
+        "problems": 0,
+        "transport_calls": 2
+      },
+      "notes": [
+        "download opt-in, digest verification, manifest, cache hits and tamper detection verified offline"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.sources",
+      "check_id": "sources.descriptors-valid",
+      "description": "Every registered source adapter carries a valid descriptor: 40-hex pinned commit equal to the audited commit, https repository URL, SPDX licence (MIT / GPL-3.0-only / NOASSERTION) with the audited redistribution flag, citation, documented data locations and a consistent record-id token.",
+      "id": "check:sources.descriptors-valid",
+      "kind": "schema",
+      "level": "L1",
+      "method": "Validate SourceDescriptor models, compare against the audited (licence, redistribution, commit) table, run descriptor.problems(), and reject a malformed descriptor (short commit, http URL, free-text licence).",
+      "metrics": {
+        "adapters": 4,
+        "problems": 0
+      },
+      "notes": [
+        "4 descriptors valid and consistent with the audit"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.sources",
+      "check_id": "sources.license-policy-enforced",
+      "description": "Licence policy is enforced per source: MagNet Challenge 2 (NOASSERTION) refuses any download, caching, bundling or redistribution; the GPL-3.0 materialdatabase allows read and cache but refuses bundle and redistribute; the MIT sources allow all four actions; unknown actions are rejected.",
+      "id": "check:sources.license-policy-enforced",
+      "kind": "invalid_input_rejection",
+      "level": "L1",
+      "method": "Call check_license for every action on every adapter and fetch()/download()/discover(allow_download=True) on the MagNet Challenge 2 adapter; compare with the audited policy table; the raised errors must be LicenseRestrictionError.",
+      "metrics": {
+        "actions": 4,
+        "adapters": 4,
+        "problems": 0
+      },
+      "notes": [
+        "licence policy table enforced; MagNet Challenge 2 downloads refused with the manual path"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.data.sources",
+      "check_id": "sources.unit-mapping-explicit",
+      "description": "No adapter infers units: MagNet Challenge 2 imports require the column_units mapping and reject wrong dimensions; the materialdatabase adapter rejects millitesla-valued flux-density columns unless the caller overrides the unit, requires confirmation of the unit-less p_v column, and the TableStore refuses columns without a unit; conversions keep the original unit.",
+      "id": "check:sources.unit-mapping-explicit",
+      "kind": "invalid_input_rejection",
+      "level": "L1",
+      "method": "Synthetic in-memory CSV files in a temporary directory: import_user_files without column_units -> InvalidInputError, with a frequency unit for B -> UnitError; a B-H file with b up to 450 -> DataIntegrityError, accepted with unit_overrides={'b': 'mT'} and stored in tesla with original_unit mT; a p_v file -> InvalidInputError until confirm_units is given; TableStore.write with a bare array -> InvalidInputError.",
+      "metrics": {
+        "problems": 0
+      },
+      "notes": [
+        "explicit unit mappings enforced; overrides and confirmations recorded; originals retained"
+      ],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.steinmetz",
+      "check_id": "steinmetz.invalid-inputs-rejected",
+      "description": "Negative, zero-frequency, non-finite, non-real, wrongly typed, physically inadmissible, overflowing and inconsistent inputs raise InvalidInputError (never clipped, coerced or evaluated) for the models and the waveform constructors.",
+      "id": "check:steinmetz.invalid-inputs-rejected",
+      "kind": "invalid_input_rejection",
+      "level": "L1",
+      "method": "Call constructors and loss_density with a table of invalid inputs and require InvalidInputError for each.",
+      "metrics": {
+        "n_cases": 56,
+        "n_failures": 0
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.steinmetz",
+      "check_id": "steinmetz.overflow-detected",
+      "description": "Inputs that overflow double precision raise NumericalError instead of returning inf or nan.",
+      "id": "check:steinmetz.overflow-detected",
+      "kind": "limiting_case",
+      "level": "L2",
+      "method": "Evaluate the scalar Steinmetz path, the vectorised helper, the iGSE sinusoidal, piecewise-linear (including a resolvable but near-zero segment fraction) and sampled paths and the closed-form references with extreme inputs such as 1e300 and require NumericalError with no inf/nan escaping.",
+      "metrics": {
+        "n_cases": 11,
+        "n_failures": 0
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.steinmetz",
+      "check_id": "steinmetz.scaling-laws",
+      "description": "Doubling the frequency scales the loss density by 2^alpha and doubling Bpk by 2^beta.",
+      "id": "check:steinmetz.scaling-laws",
+      "kind": "physical_consistency",
+      "level": "L2",
+      "method": "For the synthetic parameters and swept (alpha, beta), evaluate SteinmetzModel at (f, B), (2f, B) and (f, 2B) on a grid and compare the ratios with 2^alpha and 2^beta (relative tolerance 1e-12); also check the vectorised helper loss_density_array against the scalar path.",
+      "metrics": {
+        "max_rel_error_scaling": 2.5506227241335e-16,
+        "max_rel_error_vectorised": 0.0,
+        "n_points": 189,
+        "tolerance": 1e-12
+      },
+      "notes": [],
+      "range": {
+        "excitation": [
+          "sinusoidal"
+        ],
+        "flux_density_peak": {
+          "max": 0.3,
+          "min": 0.001,
+          "unit": "T"
+        },
+        "frequency": {
+          "max": 1000000.0,
+          "min": 1000.0,
+          "unit": "Hz"
+        },
+        "note": "synthetic parameters, material-agnostic; alpha in [1.0, 2.5], beta in [2.0, 3.0]"
+      },
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.steinmetz",
+      "check_id": "steinmetz.zero-excitation",
+      "description": "Zero peak flux density yields exactly 0 W/m^3 with an informational 'zero_excitation' warning.",
+      "id": "check:steinmetz.zero-excitation",
+      "kind": "limiting_case",
+      "level": "L2",
+      "method": "Evaluate SteinmetzModel and IGSEModel with flux_density_peak=0 at several frequencies and the vectorised helper with zero entries; require exact zeros, the info warning and no exception.",
+      "metrics": {
+        "n_cases": 9
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    },
+    {
+      "capability": "aipe.magnetics.model.waveforms",
+      "check_id": "waveform.descriptors-consistent",
+      "description": "Waveform peak, peak-to-peak, DC component, segments and samples are mutually consistent across the analytic, piecewise-linear and sampled representations, including the [0, T) sampling convention.",
+      "id": "check:waveform.descriptors-consistent",
+      "kind": "software",
+      "level": "L1",
+      "method": "Compare dc_component/peak of sampled and PWL versions of analytic waveforms with their constructor values, check that segments sum to one period and to zero net flux change, that samples close, and that the same waveform given as [0, T) samples with endpoint_included=False reproduces the inclusive representation.",
+      "metrics": {
+        "dc_tolerance_T": 1e-12,
+        "max_sampled_dc_deviation_T": 3.469446951953614e-18,
+        "n_samples": 4001,
+        "peak_rel_tolerance": 1e-12
+      },
+      "notes": [],
+      "status": "pass",
+      "tool_version": "0.2.0"
+    }
+  ],
+  "report_schema": "aipe.magnetics.verification-report/0.2",
+  "summary": {
+    "_totals": {
+      "checks": 58,
+      "fail": 0,
+      "pass": 58
+    },
+    "aipe.magnetics.data.catalog": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.data.hdf5": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.data.import": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.data.migration": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.data.schema": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 2,
+      "records": 2
+    },
+    "aipe.magnetics.data.sources": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 4,
+      "records": 4
+    },
+    "aipe.magnetics.data.units": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.design_inductor": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.design_transformer": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 4,
+      "records": 4
+    },
+    "aipe.magnetics.engineering.formulas": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 2,
+      "records": 2
+    },
+    "aipe.magnetics.engineering.winding": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.integration.aipe-core": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 2,
+      "records": 2
+    },
+    "aipe.magnetics.integration.aipe-registry": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 2,
+      "records": 2
+    },
+    "aipe.magnetics.integration.magnethub": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.model.bertotti": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 3,
+      "records": 3
+    },
+    "aipe.magnetics.model.datadriven": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 3,
+      "records": 3
+    },
+    "aipe.magnetics.model.datadriven.lstm": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.model.datadriven.neural-ode": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.model.datadriven.reference-steinmetz-ann": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 2,
+      "records": 2
+    },
+    "aipe.magnetics.model.igse": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 5,
+      "records": 5
+    },
+    "aipe.magnetics.model.jiles_atherton": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 7,
+      "records": 7
+    },
+    "aipe.magnetics.model.ode_framework": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 6,
+      "records": 6
+    },
+    "aipe.magnetics.model.steinmetz": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 4,
+      "records": 4
+    },
+    "aipe.magnetics.model.waveforms": {
+      "fail": 0,
+      "highest_passing_level": "L1",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    },
+    "aipe.magnetics.validate_design": {
+      "fail": 0,
+      "highest_passing_level": "L2",
+      "not_run": 0,
+      "pass": 1,
+      "records": 1
+    }
+  },
+  "tool_version": "0.2.0"
+}

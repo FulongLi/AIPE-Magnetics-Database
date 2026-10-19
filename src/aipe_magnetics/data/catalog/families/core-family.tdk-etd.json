@@ -1,0 +1,31 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Core family identity as used in the TDK datasheets. Dimensional standard: ETD 59/31/22 datasheet header 'To IEC 63093-6'.",
+      "id": "evidence.tdk-etd-family",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "reference": "TDK Electronics ferrite core datasheets (October 2024)",
+      "review_status": "unreviewed",
+      "url": "https://www.tdk-electronics.tdk.com/"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.tdk-etd-family"
+  ],
+  "extensions": {},
+  "id": "core-family.tdk-etd",
+  "kind": "core_family",
+  "license": "NOASSERTION",
+  "name": "TDK ETD cores",
+  "properties": {
+    "manufacturer_ref": "manufacturer.tdk",
+    "shape": "ETD",
+    "standard": "IEC 63093-6"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": []
+}

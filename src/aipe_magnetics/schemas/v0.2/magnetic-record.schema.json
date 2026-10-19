@@ -1,0 +1,3611 @@
+{
+  "$defs": {
+    "ArrayLayout": {
+      "additionalProperties": false,
+      "description": "Description of one array inside an HDF5 waveform file.",
+      "properties": {
+        "axis_semantics": {
+          "description": "meaning of each axis",
+          "items": {
+            "type": "string"
+          },
+          "title": "Axis Semantics",
+          "type": "array"
+        },
+        "dtype": {
+          "default": "float64",
+          "title": "Dtype",
+          "type": "string"
+        },
+        "missing_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "sentinel description, e.g. 'NaN'",
+          "title": "Missing Value"
+        },
+        "original_unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Original Unit"
+        },
+        "path": {
+          "description": "HDF5 dataset path, e.g. /sequences/flux_density",
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "quantity": {
+          "description": "physical meaning, e.g. flux_density, field, time, voltage",
+          "minLength": 1,
+          "title": "Quantity",
+          "type": "string"
+        },
+        "shape": {
+          "description": "[n_sequences, n_samples] or [n_samples]",
+          "items": {
+            "type": "integer"
+          },
+          "title": "Shape",
+          "type": "array"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "quantity",
+        "unit"
+      ],
+      "title": "ArrayLayout",
+      "type": "object"
+    },
+    "Artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "media_type": {
+          "minLength": 1,
+          "title": "Media Type",
+          "type": "string"
+        },
+        "role": {
+          "default": "other",
+          "enum": [
+            "raw",
+            "normalized",
+            "derived",
+            "documentation",
+            "model_weights",
+            "waveform_data",
+            "other"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "size_bytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Size Bytes"
+        },
+        "uri": {
+          "description": "URI or path relative to the record file",
+          "format": "uri-reference",
+          "minLength": 1,
+          "title": "Uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uri",
+        "media_type"
+      ],
+      "title": "Artifact",
+      "type": "object"
+    },
+    "Attribution": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "title": "Attribution",
+      "type": "object"
+    },
+    "BHLoopProperties": {
+      "additionalProperties": false,
+      "description": "Summary of a B-H hysteresis loop; the sampled loop itself lives in a waveform dataset.",
+      "properties": {
+        "coercivity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dataset_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dataset Ref"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "field_peak": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "flux_density_peak": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "frequency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "loop_energy_density": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "integral H dB over one loop, J/m^3"
+        },
+        "loop_type": {
+          "default": "major",
+          "enum": [
+            "major",
+            "minor",
+            "initial_curve",
+            "anhysteretic"
+          ],
+          "title": "Loop Type",
+          "type": "string"
+        },
+        "material_ref": {
+          "title": "Material Ref",
+          "type": "string"
+        },
+        "remanence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sign_convention": {
+          "default": "B and H positive along the same winding reference direction",
+          "title": "Sign Convention",
+          "type": "string"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "material_ref"
+      ],
+      "title": "BHLoopProperties",
+      "type": "object"
+    },
+    "ComponentProperties": {
+      "additionalProperties": false,
+      "description": "Inductor / transformer / generic magnetic component.",
+      "properties": {
+        "air_gap": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "component_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "inductor",
+                "transformer",
+                "coupled_inductor",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Component Type"
+        },
+        "core_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Core Ref"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "inductance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "leakage_inductance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "magnetizing_inductance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "material_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material Ref"
+        },
+        "rated_current_rms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rated_power": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rated_voltage_rms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "turns_ratio": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "winding_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Winding Refs",
+          "type": "array"
+        }
+      },
+      "title": "ComponentProperties",
+      "type": "object"
+    },
+    "ConditionedValue": {
+      "additionalProperties": false,
+      "description": "A datasheet-style value valid at stated conditions, with its own source reference.",
+      "properties": {
+        "field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "magnetic field strength H"
+        },
+        "flux_density_peak": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "frequency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "source_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "evidence id",
+          "title": "Source Ref"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "$ref": "#/$defs/Quantity"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "ConditionedValue",
+      "type": "object"
+    },
+    "CoreDimensions": {
+      "additionalProperties": false,
+      "description": "Named outline dimensions in metres (datasheet letter designations).",
+      "properties": {
+        "values": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Quantity"
+          },
+          "title": "Values",
+          "type": "object"
+        }
+      },
+      "title": "CoreDimensions",
+      "type": "object"
+    },
+    "CoreFamilyProperties": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "manufacturer_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Manufacturer Ref"
+        },
+        "shape": {
+          "anyOf": [
+            {
+              "enum": [
+                "E",
+                "EE",
+                "EI",
+                "ETD",
+                "EFD",
+                "ER",
+                "EQ",
+                "PQ",
+                "PM",
+                "RM",
+                "P",
+                "U",
+                "UU",
+                "UI",
+                "toroid",
+                "planar_E",
+                "block",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shape"
+        },
+        "standard": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "e.g. IEC 62317",
+          "title": "Standard"
+        }
+      },
+      "title": "CoreFamilyProperties",
+      "type": "object"
+    },
+    "CoreGeometryProperties": {
+      "additionalProperties": false,
+      "description": "Effective magnetic parameters of a core (set or single part) per IEC 60205 conventions.",
+      "properties": {
+        "air_gap_options": {
+          "items": {
+            "$ref": "#/$defs/Quantity"
+          },
+          "title": "Air Gap Options",
+          "type": "array"
+        },
+        "bobbin_window_area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "usable winding area with bobbin"
+        },
+        "core_constant_c1": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "sum(l/A), 1/m"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "dimensions": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoreDimensions"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "effective_area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Ae"
+        },
+        "effective_length": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "le"
+        },
+        "effective_volume": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Ve"
+        },
+        "family_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Family Ref"
+        },
+        "manufacturer_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Manufacturer Ref"
+        },
+        "mass": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "mass of the core set"
+        },
+        "material_refs": {
+          "description": "materials this core is offered in",
+          "items": {
+            "type": "string"
+          },
+          "title": "Material Refs",
+          "type": "array"
+        },
+        "mean_turn_length": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "minimum_area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Amin"
+        },
+        "part_number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Part Number"
+        },
+        "set_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "e.g. 'core set of 2 halves', 'single E'",
+          "title": "Set Description"
+        },
+        "surface_area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "window_area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "core window area (per datasheet definition)"
+        }
+      },
+      "title": "CoreGeometryProperties",
+      "type": "object"
+    },
+    "CoreLossMeasurementProperties": {
+      "additionalProperties": false,
+      "description": "Table of scalar core-loss points measured on one specimen.",
+      "properties": {
+        "dataset_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dataset Ref"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "instrument": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Instrument"
+        },
+        "material_ref": {
+          "title": "Material Ref",
+          "type": "string"
+        },
+        "method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method"
+        },
+        "points": {
+          "items": {
+            "$ref": "#/$defs/LossReferencePoint"
+          },
+          "minItems": 1,
+          "title": "Points",
+          "type": "array"
+        },
+        "specimen_core_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Specimen Core Ref"
+        },
+        "specimen_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Specimen Description"
+        }
+      },
+      "required": [
+        "material_ref",
+        "points"
+      ],
+      "title": "CoreLossMeasurementProperties",
+      "type": "object"
+    },
+    "CoreMaterialProperties": {
+      "additionalProperties": false,
+      "description": "v0.1 ``core_material`` kind: a material as used in a core (kept for compatibility).",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "material_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material Ref"
+        },
+        "relative_permeability": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "CoreMaterialProperties",
+      "type": "object"
+    },
+    "DatasetProperties": {
+      "additionalProperties": false,
+      "description": "Collection-level description of an external or local dataset (source, version, licence).",
+      "properties": {
+        "checksums": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "relative path -> sha256 of original bytes",
+          "title": "Checksums",
+          "type": "object"
+        },
+        "citation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Citation"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "license": {
+          "default": "NOASSERTION",
+          "title": "License",
+          "type": "string"
+        },
+        "materials": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Materials",
+          "type": "array"
+        },
+        "publisher": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Publisher"
+        },
+        "record_count": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Record Count"
+        },
+        "redistribution_permitted": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "None = unknown / not assessed",
+          "title": "Redistribution Permitted"
+        },
+        "retrieved_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retrieved At"
+        },
+        "source_commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Commit"
+        },
+        "source_id": {
+          "description": "adapter/source identifier, e.g. princeton_magnet",
+          "minLength": 1,
+          "title": "Source Id",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "format": "uri-reference",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "release tag or dataset version",
+          "title": "Version"
+        }
+      },
+      "required": [
+        "source_id",
+        "title"
+      ],
+      "title": "DatasetProperties",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "description": "v0.1-compatible evidence item with optional v0.2 locator/url/checksum fields.",
+      "properties": {
+        "accessed_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accessed At"
+        },
+        "created_at": {
+          "description": "RFC 3339 timestamp of the evidence event (not build time)",
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "assumption",
+            "source",
+            "measurement",
+            "analytical",
+            "simulation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "license": {
+          "description": "SPDX identifier/expression or NOASSERTION",
+          "minLength": 1,
+          "title": "License",
+          "type": "string"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "page/table/figure/column/record field",
+          "title": "Locator"
+        },
+        "reference": {
+          "minLength": 1,
+          "title": "Reference",
+          "type": "string"
+        },
+        "review_status": {
+          "enum": [
+            "unreviewed",
+            "reviewed",
+            "rejected"
+          ],
+          "title": "Review Status",
+          "type": "string"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "format": "uri-reference",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "edition, revision, commit hash or dataset version",
+          "title": "Version"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "reference",
+        "description",
+        "created_at",
+        "review_status",
+        "license"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "ExcitationWaveformProperties": {
+      "additionalProperties": false,
+      "description": "Parametric or sampled time-domain excitation description.\n\nSign convention: positive ``B``/``H``/voltage follow the right-hand rule around the winding\nreference direction stated in ``reference_direction``. Time starts at ``t=0`` at the beginning of\none steady-state period unless ``timebase`` says otherwise.",
+      "properties": {
+        "amplitude_peak": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "breakpoints": {
+          "anyOf": [
+            {
+              "items": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "piecewise-linear [t_fraction_of_period, value_fraction_of_peak] pairs",
+          "title": "Breakpoints"
+        },
+        "controlled_quantity": {
+          "default": "flux_density",
+          "enum": [
+            "flux_density",
+            "field",
+            "voltage",
+            "current"
+          ],
+          "title": "Controlled Quantity",
+          "type": "string"
+        },
+        "dataset_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "waveform_dataset record holding the samples",
+          "title": "Dataset Ref"
+        },
+        "dc_offset": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "duty": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 1,
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duty"
+        },
+        "frequency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reference_direction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Direction"
+        },
+        "rise_fraction": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "trapezoid rise time / period",
+          "title": "Rise Fraction"
+        },
+        "timebase": {
+          "default": "periodic_from_zero",
+          "enum": [
+            "periodic_from_zero",
+            "absolute"
+          ],
+          "title": "Timebase",
+          "type": "string"
+        },
+        "waveform_type": {
+          "enum": [
+            "sinusoidal",
+            "triangular",
+            "trapezoidal",
+            "square",
+            "piecewise_linear",
+            "sampled",
+            "dc"
+          ],
+          "title": "Waveform Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "waveform_type"
+      ],
+      "title": "ExcitationWaveformProperties",
+      "type": "object"
+    },
+    "LossModelProperties": {
+      "additionalProperties": false,
+      "description": "v0.1 ``loss_model`` kind kept for compatibility.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "model_artifact": {
+          "format": "uri-reference",
+          "title": "Model Artifact",
+          "type": "string"
+        },
+        "operating_condition_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Operating Condition Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "method",
+        "model_artifact"
+      ],
+      "title": "LossModelProperties",
+      "type": "object"
+    },
+    "LossReferencePoint": {
+      "additionalProperties": false,
+      "description": "A single (f, Bpk, T) -> Pv point, typically a datasheet typical value or a measurement.",
+      "properties": {
+        "basis": {
+          "default": "datasheet_typical",
+          "enum": [
+            "datasheet_typical",
+            "measurement",
+            "publication",
+            "synthetic"
+          ],
+          "title": "Basis",
+          "type": "string"
+        },
+        "dc_bias_field": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "duty": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 1,
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duty"
+        },
+        "excitation": {
+          "default": "sinusoidal",
+          "enum": [
+            "sinusoidal",
+            "triangular",
+            "trapezoidal",
+            "square",
+            "piecewise_linear",
+            "sampled"
+          ],
+          "title": "Excitation",
+          "type": "string"
+        },
+        "flux_density_peak": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "frequency": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "loss_density": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "source_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Ref"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "frequency",
+        "flux_density_peak",
+        "loss_density"
+      ],
+      "title": "LossReferencePoint",
+      "type": "object"
+    },
+    "ManufacturerProperties": {
+      "additionalProperties": false,
+      "properties": {
+        "brand_names": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Brand Names",
+          "type": "array"
+        },
+        "country": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Country"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "legal_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Legal Name"
+        },
+        "website": {
+          "anyOf": [
+            {
+              "format": "uri-reference",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Website"
+        }
+      },
+      "title": "ManufacturerProperties",
+      "type": "object"
+    },
+    "MaterialProperties": {
+      "additionalProperties": false,
+      "description": "Datasheet-level parameters of a soft magnetic material.",
+      "properties": {
+        "amplitude_permeability": {
+          "items": {
+            "$ref": "#/$defs/ConditionedValue"
+          },
+          "title": "Amplitude Permeability",
+          "type": "array"
+        },
+        "coercivity": {
+          "items": {
+            "$ref": "#/$defs/ConditionedValue"
+          },
+          "title": "Coercivity",
+          "type": "array"
+        },
+        "curie_temperature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConditionedValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "dc_bias_points": {
+          "description": "permeability (or B) at stated DC field H",
+          "items": {
+            "$ref": "#/$defs/ConditionedValue"
+          },
+          "title": "Dc Bias Points",
+          "type": "array"
+        },
+        "density": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConditionedValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "manufacturer grade designation, e.g. N87",
+          "title": "Grade"
+        },
+        "initial_permeability": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConditionedValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "loss_density_vs_temperature": {
+          "items": {
+            "$ref": "#/$defs/LossReferencePoint"
+          },
+          "title": "Loss Density Vs Temperature",
+          "type": "array"
+        },
+        "loss_reference_points": {
+          "items": {
+            "$ref": "#/$defs/LossReferencePoint"
+          },
+          "title": "Loss Reference Points",
+          "type": "array"
+        },
+        "manufacturer_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Manufacturer Ref"
+        },
+        "material_class": {
+          "anyOf": [
+            {
+              "enum": [
+                "ferrite_mnzn",
+                "ferrite_nizn",
+                "powder_iron",
+                "powder_alloy",
+                "nanocrystalline",
+                "amorphous",
+                "silicon_steel",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material Class"
+        },
+        "permeability_vs_temperature": {
+          "items": {
+            "$ref": "#/$defs/TemperaturePoint"
+          },
+          "title": "Permeability Vs Temperature",
+          "type": "array"
+        },
+        "recommended_frequency_range": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RangeSI"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "relative_permeability": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "v0.1 compatibility field"
+        },
+        "remanence": {
+          "items": {
+            "$ref": "#/$defs/ConditionedValue"
+          },
+          "title": "Remanence",
+          "type": "array"
+        },
+        "resistivity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConditionedValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "saturation_flux_density": {
+          "description": "Bsat at stated H and T",
+          "items": {
+            "$ref": "#/$defs/ConditionedValue"
+          },
+          "title": "Saturation Flux Density",
+          "type": "array"
+        },
+        "steinmetz_parameter_sets": {
+          "items": {
+            "$ref": "#/$defs/SteinmetzParameterSet"
+          },
+          "title": "Steinmetz Parameter Sets",
+          "type": "array"
+        }
+      },
+      "title": "MaterialProperties",
+      "type": "object"
+    },
+    "MeasurementProperties": {
+      "additionalProperties": false,
+      "description": "v0.1 ``measurement`` kind (artifact-based) with optional instrument detail.",
+      "properties": {
+        "acquired_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acquired At"
+        },
+        "artifact": {
+          "anyOf": [
+            {
+              "format": "uri-reference",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Artifact"
+        },
+        "component_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Component Ref"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "instrument": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Instrument"
+        },
+        "material_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material Ref"
+        },
+        "method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "e.g. two-winding wattmeter, calorimetric",
+          "title": "Method"
+        },
+        "operating_condition_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Operating Condition Ref"
+        },
+        "specimen": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "specimen identity/geometry (toroid dimensions ...)",
+          "title": "Specimen"
+        },
+        "tool": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "MeasurementProperties",
+      "type": "object"
+    },
+    "ModelMetadataProperties": {
+      "additionalProperties": false,
+      "description": "Identity, architecture, parameters and provenance of a model (empirical, physics, ODE or data-driven).",
+      "properties": {
+        "architecture": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "e.g. steinmetz, igse, jiles_atherton, mlp, lstm",
+          "title": "Architecture"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "family": {
+          "enum": [
+            "empirical",
+            "physics",
+            "dynamic",
+            "data_driven"
+          ],
+          "title": "Family",
+          "type": "string"
+        },
+        "implementation_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Implementation Version"
+        },
+        "inference_config": {
+          "additionalProperties": true,
+          "title": "Inference Config",
+          "type": "object"
+        },
+        "material_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Material Refs",
+          "type": "array"
+        },
+        "method_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method Version"
+        },
+        "model_id": {
+          "description": "e.g. aipe.magnetics.model.igse",
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "parameter_set_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parameter Set Ref"
+        },
+        "training_data_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Training Data Refs",
+          "type": "array"
+        },
+        "validity": {
+          "additionalProperties": true,
+          "description": "ValidityDomain JSON",
+          "title": "Validity",
+          "type": "object"
+        },
+        "verification_refs": {
+          "description": "evidence record ids",
+          "items": {
+            "type": "string"
+          },
+          "title": "Verification Refs",
+          "type": "array"
+        },
+        "weights_artifact": {
+          "anyOf": [
+            {
+              "format": "uri-reference",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "artifact uri of trained parameters",
+          "title": "Weights Artifact"
+        }
+      },
+      "required": [
+        "model_id",
+        "family"
+      ],
+      "title": "ModelMetadataProperties",
+      "type": "object"
+    },
+    "OperatingConditionProperties": {
+      "additionalProperties": false,
+      "properties": {
+        "ambient_temperature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "current_dc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "current_rms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "duty": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 1,
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duty"
+        },
+        "excitation_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "excitation_waveform record id",
+          "title": "Excitation Ref"
+        },
+        "field_dc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "DC bias field H_dc"
+        },
+        "flux_density_dc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "flux_density_peak": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "frequency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "voltage_rms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "OperatingConditionProperties",
+      "type": "object"
+    },
+    "Original": {
+      "additionalProperties": false,
+      "description": "The value as supplied before unit normalisation.",
+      "properties": {
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Original",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "How this record came to exist (distinct from the evidence it cites).",
+      "properties": {
+        "activity": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Activity"
+        },
+        "agent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "created_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Created At"
+        },
+        "dataset_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dataset Version"
+        },
+        "inputs": {
+          "description": "ids of input records or evidence",
+          "items": {
+            "type": "string"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "normalization": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "description of unit/format normalisation applied",
+          "title": "Normalization"
+        },
+        "source_commit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "upstream commit hash when imported from a repository",
+          "title": "Source Commit"
+        },
+        "tool": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Quality": {
+      "additionalProperties": false,
+      "properties": {
+        "completeness": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "fraction of expected fields present",
+          "title": "Completeness"
+        },
+        "flags": {
+          "description": "e.g. outlier_suspected, missing_temperature",
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "status": {
+          "default": "normalized",
+          "enum": [
+            "raw",
+            "normalized",
+            "curated",
+            "reviewed",
+            "rejected"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "title": "Quality",
+      "type": "object"
+    },
+    "Quantity": {
+      "additionalProperties": false,
+      "description": "``{value, unit}`` with optional provenance of the original unit and an uncertainty statement.",
+      "properties": {
+        "original": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Original"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uncertainty"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Quantity",
+      "type": "object"
+    },
+    "RangeSI": {
+      "additionalProperties": false,
+      "properties": {
+        "max": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max"
+        },
+        "min": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit"
+      ],
+      "title": "RangeSI",
+      "type": "object"
+    },
+    "SteinmetzParameterSet": {
+      "additionalProperties": false,
+      "description": "Classical Steinmetz parameters in SI form: ``Pv [W/m^3] = k * f[Hz]^alpha * Bpk[T]^beta``.\n\nParameters fitted in other unit systems (kHz, mT, kW/m^3) must be converted on import; the\n``original`` field of ``k`` records the pre-conversion value for reproducibility.",
+      "properties": {
+        "alpha": {
+          "exclusiveMinimum": 0,
+          "title": "Alpha",
+          "type": "number"
+        },
+        "basis": {
+          "enum": [
+            "datasheet_fit",
+            "measurement_fit",
+            "publication",
+            "manufacturer_supplied",
+            "synthetic"
+          ],
+          "title": "Basis",
+          "type": "string"
+        },
+        "beta": {
+          "exclusiveMinimum": 0,
+          "title": "Beta",
+          "type": "number"
+        },
+        "excitation": {
+          "const": "sinusoidal",
+          "default": "sinusoidal",
+          "title": "Excitation",
+          "type": "string"
+        },
+        "fit_metrics": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "e.g. max_rel_error, n_points",
+          "title": "Fit Metrics",
+          "type": "object"
+        },
+        "flux_density_range": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RangeSI"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "frequency_range": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RangeSI"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "k": {
+          "$ref": "#/$defs/Quantity",
+          "description": "W/m^3 with f in Hz and B in T"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "source_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Ref"
+        },
+        "temperature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "temperature at which the set was fitted"
+        },
+        "temperature_range": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RangeSI"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "k",
+        "alpha",
+        "beta",
+        "basis"
+      ],
+      "title": "SteinmetzParameterSet",
+      "type": "object"
+    },
+    "TemperaturePoint": {
+      "additionalProperties": false,
+      "properties": {
+        "source_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Ref"
+        },
+        "temperature": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "value": {
+          "$ref": "#/$defs/Quantity"
+        }
+      },
+      "required": [
+        "temperature",
+        "value"
+      ],
+      "title": "TemperaturePoint",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "additionalProperties": false,
+      "description": "Uncertainty statement attached to a quantity.\n\n``kind='unknown'`` is the honest default when no quantitative basis exists.",
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "how the uncertainty was obtained",
+          "title": "Basis"
+        },
+        "coverage_factor": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "k for expanded uncertainty",
+          "title": "Coverage Factor"
+        },
+        "kind": {
+          "default": "unknown",
+          "enum": [
+            "standard",
+            "expanded",
+            "bounds",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "lower bound (kind='bounds')",
+          "title": "Lower"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "upper bound (kind='bounds')",
+          "title": "Upper"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "standard/expanded uncertainty in the quantity unit",
+          "title": "Value"
+        }
+      },
+      "title": "Uncertainty",
+      "type": "object"
+    },
+    "WaveformDatasetProperties": {
+      "additionalProperties": false,
+      "description": "Metadata for an HDF5 waveform container (large numerical arrays never go into JSON).",
+      "properties": {
+        "arrays": {
+          "items": {
+            "$ref": "#/$defs/ArrayLayout"
+          },
+          "minItems": 1,
+          "title": "Arrays",
+          "type": "array"
+        },
+        "conditions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "scalar per-sequence condition arrays: name -> HDF5 path",
+          "title": "Conditions",
+          "type": "object"
+        },
+        "coordinate_definition": {
+          "default": "scalar quantities along the magnetic path; no vector components",
+          "title": "Coordinate Definition",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "format": {
+          "const": "hdf5",
+          "default": "hdf5",
+          "title": "Format",
+          "type": "string"
+        },
+        "layout_version": {
+          "default": "aipe.magnetics.waveforms/0.2",
+          "title": "Layout Version",
+          "type": "string"
+        },
+        "material_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material Ref"
+        },
+        "n_sequences": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "N Sequences"
+        },
+        "samples_per_sequence": {
+          "anyOf": [
+            {
+              "minimum": 2,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Samples Per Sequence"
+        },
+        "sampling_rate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hz; omit if per-sequence time arrays exist"
+        },
+        "sign_convention": {
+          "default": "B, H, v, i positive along the winding reference direction (right-hand rule)",
+          "title": "Sign Convention",
+          "type": "string"
+        },
+        "source_dataset_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "dataset record of the upstream source",
+          "title": "Source Dataset Ref"
+        },
+        "timebase": {
+          "default": "uniform_per_period",
+          "enum": [
+            "uniform_per_period",
+            "explicit_time_array",
+            "uniform_absolute"
+          ],
+          "title": "Timebase",
+          "type": "string"
+        }
+      },
+      "required": [
+        "arrays"
+      ],
+      "title": "WaveformDatasetProperties",
+      "type": "object"
+    },
+    "WindingProperties": {
+      "additionalProperties": false,
+      "description": "Winding geometry (v0.1 ``winding`` plus conductor detail).",
+      "properties": {
+        "conductor_area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "conductor_diameter": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "conductor_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "round",
+                "foil",
+                "litz",
+                "rectangular",
+                "pcb_trace",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conductor Type"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "foil_thickness": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "foil_width": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "insulation_thickness": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "layers": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Layers"
+        },
+        "material": {
+          "anyOf": [
+            {
+              "enum": [
+                "copper",
+                "aluminium",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material"
+        },
+        "mean_turn_length": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "parallel_conductors": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parallel Conductors"
+        },
+        "strand_count": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strand Count"
+        },
+        "strand_diameter": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "turns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Quantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "WindingProperties",
+      "type": "object"
+    }
+  },
+  "$id": "https://raw.githubusercontent.com/FulongLi/AIPE-Magnetics-Database/v0.2.0/schemas/v0.2/magnetic-record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "manufacturer"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/ManufacturerProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "magnetic_material"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/MaterialProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "core_material"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/CoreMaterialProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "core_family"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/CoreFamilyProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "core_geometry"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/CoreGeometryProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "winding"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/WindingProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "winding_geometry"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/WindingProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "inductor"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/ComponentProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "transformer"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/ComponentProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "magnetic_component"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/ComponentProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "operating_condition"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/OperatingConditionProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "excitation_waveform"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/ExcitationWaveformProperties"
+          }
+        },
+        "required": [
+          "properties"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "measurement"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/MeasurementProperties"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "core_loss_measurement"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/CoreLossMeasurementProperties"
+          }
+        },
+        "required": [
+          "properties"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "bh_loop"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/BHLoopProperties"
+          }
+        },
+        "required": [
+          "properties"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "waveform_dataset"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/WaveformDatasetProperties"
+          }
+        },
+        "required": [
+          "properties"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "dataset"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/DatasetProperties"
+          }
+        },
+        "required": [
+          "properties"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "loss_model"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/LossModelProperties"
+          }
+        },
+        "required": [
+          "properties"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "model_metadata"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "properties": {
+            "$ref": "#/$defs/ModelMetadataProperties"
+          }
+        },
+        "required": [
+          "properties"
+        ]
+      }
+    }
+  ],
+  "description": "A record of the AIPE Magnetic Data Standard v0.2: a common envelope (identity, evidence, licence, provenance, quality, artifacts with checksums, namespaced extensions) plus a kind-specific 'properties' object bound by the allOf/if/then blocks below. All physical quantities are SI {value, unit} objects; a converted value retains its original {value, unit}. Missing values are omitted, never zero-filled. Large numerical arrays live in HDF5 artifacts described by waveform_dataset records. Generated from the normative pydantic models in aipe_magnetics.data.records - do not edit by hand.",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/Artifact"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "dataset_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dataset Ref"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "evidence_refs": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "extensions": {
+      "additionalProperties": true,
+      "title": "Extensions",
+      "type": "object"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "manufacturer",
+        "magnetic_material",
+        "core_material",
+        "core_family",
+        "core_geometry",
+        "winding",
+        "winding_geometry",
+        "inductor",
+        "transformer",
+        "magnetic_component",
+        "operating_condition",
+        "excitation_waveform",
+        "measurement",
+        "core_loss_measurement",
+        "bh_loop",
+        "waveform_dataset",
+        "dataset",
+        "loss_model",
+        "model_metadata"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "license": {
+      "default": "NOASSERTION",
+      "description": "record-level SPDX or NOASSERTION",
+      "minLength": 1,
+      "title": "License",
+      "type": "string"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "properties": {
+      "additionalProperties": true,
+      "title": "Properties",
+      "type": "object"
+    },
+    "provenance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Provenance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "quality": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Quality"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "const": "0.2.0",
+      "default": "0.2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "synthetic": {
+      "title": "Synthetic",
+      "type": "boolean"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "kind",
+    "name",
+    "synthetic",
+    "evidence_refs",
+    "evidence"
+  ],
+  "title": "AIPE magnetic record v0.2",
+  "type": "object"
+}

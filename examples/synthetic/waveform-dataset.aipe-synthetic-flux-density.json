@@ -1,0 +1,190 @@
+{
+  "artifacts": [
+    {
+      "description": "AIPE waveform file (layout aipe.magnetics.waveforms/0.2)",
+      "media_type": "application/x-hdf5",
+      "role": "waveform_data",
+      "sha256": "a5691be93032486a1b9eb926fd28628637675bdd9871bfd852c13f2dca56d949",
+      "size_bytes": 22498,
+      "uri": "waveforms-synthetic.h5"
+    },
+    {
+      "description": "original source as supplied",
+      "media_type": "application/octet-stream",
+      "role": "raw",
+      "sha256": "d3866ef417f2b319ebf37fa1fecd458c906ea6105a7d39d9d72d98eb7ef200b9",
+      "size_bytes": 37958,
+      "uri": "waveforms-synthetic-source.npz"
+    }
+  ],
+  "dataset_ref": "dataset.aipe-synthetic-waveforms",
+  "description": "HDF5 waveform file of the synthetic example; see the aipe.synthetic extension for the generator parameters.",
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Sequences are generated analytically (sinusoid and arcsin(sin) triangle). They are not measurements, belong to no material and carry no loss information.",
+      "id": "evidence.aipe-synthetic-waveform-generator",
+      "kind": "assumption",
+      "license": "NOASSERTION",
+      "reference": "examples/import_synthetic_waveforms.py (AIPE Magnetics v0.2 synthetic waveform generator)",
+      "review_status": "unreviewed"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.aipe-synthetic-waveform-generator"
+  ],
+  "extensions": {
+    "aipe.import": {
+      "arrays": {
+        "flux_density": {
+          "key": "flux_density_mT",
+          "unit": "mT"
+        }
+      },
+      "conditions": {
+        "frequency": {
+          "key": "frequency_kHz",
+          "unit": "kHz"
+        },
+        "temperature": {
+          "key": "temperature_degC",
+          "unit": "degC"
+        }
+      },
+      "importer": "aipe.magnetics.import.hdf5_waveforms",
+      "importer_version": "0.2.0",
+      "normalization": "arrays converted to canonical SI units (flux_density: mT -> T); original units recorded as HDF5 attributes; missing values written as NaN",
+      "source_filename": "waveforms-synthetic-source.npz",
+      "source_files": {
+        "waveforms-synthetic-source.npz": "d3866ef417f2b319ebf37fa1fecd458c906ea6105a7d39d9d72d98eb7ef200b9"
+      },
+      "source_format": "npz",
+      "source_sha256": "d3866ef417f2b319ebf37fa1fecd458c906ea6105a7d39d9d72d98eb7ef200b9",
+      "source_sha256_method": "sha256 of the source file bytes"
+    },
+    "aipe.synthetic": {
+      "equations": {
+        "sinusoidal": "B(t) = Bpk sin(2 pi t / T)",
+        "triangular": "B(t) = Bpk (2/pi) asin(sin(2 pi t / T))"
+      },
+      "frequency_kHz_by_row": [
+        50.0,
+        50.0,
+        50.0,
+        100.0,
+        100.0,
+        100.0,
+        200.0,
+        200.0,
+        200.0,
+        50.0,
+        50.0,
+        50.0,
+        100.0,
+        100.0,
+        100.0,
+        200.0,
+        200.0,
+        200.0
+      ],
+      "generator": "examples/import_synthetic_waveforms.py",
+      "peak_mT_by_row": [
+        50.0,
+        100.0,
+        200.0,
+        50.0,
+        100.0,
+        200.0,
+        50.0,
+        100.0,
+        200.0,
+        50.0,
+        100.0,
+        200.0,
+        50.0,
+        100.0,
+        200.0,
+        50.0,
+        100.0,
+        200.0
+      ],
+      "samples_per_period": 256,
+      "shapes_by_row": [
+        "sinusoidal",
+        "sinusoidal",
+        "sinusoidal",
+        "sinusoidal",
+        "sinusoidal",
+        "sinusoidal",
+        "sinusoidal",
+        "sinusoidal",
+        "sinusoidal",
+        "triangular",
+        "triangular",
+        "triangular",
+        "triangular",
+        "triangular",
+        "triangular",
+        "triangular",
+        "triangular",
+        "triangular"
+      ],
+      "temperature_degC": 25.0
+    }
+  },
+  "id": "waveform-dataset.aipe-synthetic-flux-density",
+  "kind": "waveform_dataset",
+  "license": "NOASSERTION",
+  "name": "Synthetic flux-density waveform file (illustrative)",
+  "properties": {
+    "arrays": [
+      {
+        "axis_semantics": [
+          "sequence",
+          "sample"
+        ],
+        "dtype": "float64",
+        "missing_value": "NaN",
+        "original_unit": "mT",
+        "path": "/sequences/flux_density",
+        "quantity": "flux_density",
+        "shape": [
+          18,
+          256
+        ],
+        "unit": "T"
+      }
+    ],
+    "conditions": {
+      "frequency": "/conditions/frequency",
+      "temperature": "/conditions/temperature"
+    },
+    "coordinate_definition": "scalar quantities along the magnetic path; no vector components",
+    "description": "Synthetic B(t): one period per row; rows 0-8 sinusoidal, rows 9-17 symmetric triangular; frequency and temperature per row in /conditions; no loss values.",
+    "format": "hdf5",
+    "layout_version": "aipe.magnetics.waveforms/0.2",
+    "n_sequences": 18,
+    "samples_per_sequence": 256,
+    "sign_convention": "B, H, v, i positive along the winding reference direction (right-hand rule)",
+    "timebase": "uniform_per_period"
+  },
+  "provenance": {
+    "activity": "imported 18 waveform sequences from waveforms-synthetic-source.npz (npz)",
+    "dataset_version": "0.2.0",
+    "inputs": [
+      "evidence.aipe-synthetic-waveform-generator"
+    ],
+    "normalization": "arrays converted to canonical SI units (flux_density: mT -> T); original units recorded as HDF5 attributes; missing values written as NaN",
+    "tool": {
+      "id": "aipe.magnetics",
+      "name": "AIPE Magnetics",
+      "version": "0.2.0"
+    }
+  },
+  "schema_version": "0.2.0",
+  "synthetic": true,
+  "tags": [
+    "synthetic",
+    "example"
+  ]
+}

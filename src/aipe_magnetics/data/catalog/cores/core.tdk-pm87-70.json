@@ -1,0 +1,174 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Manufacturer datasheet: 'Magnetic characteristics (per set)' table (sum l/A, le, Ae, Amin, Ve, approx. weight) and outline drawing; coil-former table (AN winding cross section, lN average length of turn, AR resistance factor) for the ordering code named in the record.",
+      "id": "evidence.tdk-pm-87-70-datasheet-2024-10",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "locator": "Magnetic characteristics (per set) table; outline drawing; coil former table, row B65714K1020T001",
+      "reference": "TDK Electronics, 'Ferrites and accessories - PM 87/70', core and accessories datasheet, Date: October 2024",
+      "review_status": "unreviewed",
+      "url": "https://www.tdk-electronics.tdk.com/inf/80/db/fer/pm_87_70.pdf",
+      "version": "October 2024"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.tdk-pm-87-70-datasheet-2024-10"
+  ],
+  "extensions": {
+    "aipe.datasheet": {
+      "coil_former": "B65714K1020T001: AN 657 mm2, lN 158 mm, AR 8.27 uOhm",
+      "coil_former_AR_uOhm": 8.27,
+      "core_constant_sum_l_over_A_per_mm": 0.16,
+      "ungapped_N87": {
+        "AL_nH": 14000,
+        "PV_W_per_set_max": 8.0,
+        "PV_condition": "100 mT, 100 kHz, 100 degC",
+        "mu_e": 1790
+      }
+    }
+  },
+  "id": "core.tdk-pm87-70",
+  "kind": "core_geometry",
+  "license": "NOASSERTION",
+  "name": "PM 87/70",
+  "properties": {
+    "air_gap_options": [],
+    "bobbin_window_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 657.0
+      },
+      "unit": "m^2",
+      "value": 0.0006569999999999999
+    },
+    "description": "TDK PM 87/70 ferrite core set; magnetic characteristics per set from the October 2024 datasheet. Core constant sum(l/A) = 0.16 1/mm (datasheet).",
+    "dimensions": {
+      "values": {
+        "centre_hole_diameter": {
+          "original": {
+            "unit": "mm",
+            "value": 8.5
+          },
+          "unit": "m",
+          "value": 0.0085
+        },
+        "centre_post_diameter": {
+          "original": {
+            "unit": "mm",
+            "value": 31.7
+          },
+          "unit": "m",
+          "value": 0.0317
+        },
+        "diameter": {
+          "original": {
+            "unit": "mm",
+            "value": 87.0
+          },
+          "unit": "m",
+          "value": 0.08700000000000001
+        },
+        "height_total": {
+          "original": {
+            "unit": "mm",
+            "value": 70.0
+          },
+          "unit": "m",
+          "value": 0.07
+        },
+        "window_height": {
+          "original": {
+            "unit": "mm",
+            "value": 48.0
+          },
+          "unit": "m",
+          "value": 0.048
+        }
+      }
+    },
+    "effective_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 910.0
+      },
+      "unit": "m^2",
+      "value": 0.00091
+    },
+    "effective_length": {
+      "original": {
+        "unit": "mm",
+        "value": 146.0
+      },
+      "unit": "m",
+      "value": 0.146
+    },
+    "effective_volume": {
+      "original": {
+        "unit": "mm^3",
+        "value": 133000.0
+      },
+      "unit": "m^3",
+      "value": 0.000133
+    },
+    "family_ref": "core-family.tdk-pm",
+    "manufacturer_ref": "manufacturer.tdk",
+    "mass": {
+      "original": {
+        "unit": "g",
+        "value": 770.0
+      },
+      "unit": "kg",
+      "value": 0.77
+    },
+    "material_refs": [
+      "material.tdk-n27",
+      "material.tdk-n87"
+    ],
+    "mean_turn_length": {
+      "original": {
+        "unit": "mm",
+        "value": 158.0
+      },
+      "unit": "m",
+      "value": 0.158
+    },
+    "minimum_area": {
+      "original": {
+        "unit": "mm^2",
+        "value": 700.0
+      },
+      "unit": "m^2",
+      "value": 0.0007
+    },
+    "part_number": "B65713",
+    "set_description": "core set of 2 PM halves (per set values), IEC 63093-10"
+  },
+  "provenance": {
+    "activity": "transcribed from the TDK datasheet by tools/build_catalog.py",
+    "created_at": "2026-10-19T00:00:00Z",
+    "inputs": [
+      "evidence.tdk-pm-87-70-datasheet-2024-10"
+    ],
+    "normalization": "mm -> m, mm^2 -> m^2, mm^3 -> m^3, g -> kg with original units retained",
+    "tool": {
+      "id": "aipe.magnetics",
+      "version": "0.2.0"
+    }
+  },
+  "quality": {
+    "flags": [],
+    "notes": [
+      "review_status unreviewed: awaiting owner review of the transcriptions"
+    ],
+    "status": "normalized"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": [
+    "tdk",
+    "ferrite-core"
+  ]
+}

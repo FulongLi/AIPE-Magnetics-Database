@@ -1,0 +1,247 @@
+{
+  "artifacts": [],
+  "evidence": [
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Per-material constants published in the Princeton MagNet repository (MIT): manufacturer, initial permeability mu_r_0, recommended frequency range and the one-line application statement (material_applications); the repository's own Steinmetz/iGSE coefficients are documented there as (k_i, alpha, beta).",
+      "id": "evidence.princeton-magnet-constants",
+      "kind": "source",
+      "license": "MIT",
+      "locator": "material_steinmetz_param, material_extra, material_manufacturers, material_applications",
+      "reference": "PrincetonUniversity/magnet, src/magnet/constants.py (material_steinmetz_param, material_extra, material_manufacturers)",
+      "review_status": "unreviewed",
+      "url": "https://github.com/PrincetonUniversity/magnet/blob/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/constants.py",
+      "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Classical Steinmetz parameter sets fitted by ordinary least squares in log space on sinusoidal, zero-DC-bias rows of the Princeton MagNet scalar databases, per measured temperature, 50-500 kHz, 10-300 mT. Fit metrics are stored with each set. These are AIPE-derived values, not manufacturer data.",
+      "id": "evidence.aipe-steinmetz-fit-magnet",
+      "kind": "analytical",
+      "license": "NOASSERTION",
+      "locator": "src/aipe_magnetics/data/derived/princeton-magnet-steinmetz-fits.json",
+      "reference": "benchmarks/fit_steinmetz_from_magnet.py (aipe-magnetics 0.2.0)",
+      "review_status": "unreviewed"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Measured sinusoidal/triangular/trapezoidal core-loss points on core 0014 (Ae 4e-05 m^2, le 0.062 m, Ve 2.44e-06 m^3, N1=N2=7), temperatures [25.0, 50.0, 70.0, 90.0] degC; Princeton Power Electronics Research Lab 2022 setup (see embedded metadata).",
+      "id": "evidence.princeton-magnet-database-77",
+      "kind": "measurement",
+      "license": "MIT",
+      "reference": "PrincetonUniversity/magnet, src/magnet/data/77_database.h5 (scalar core-loss database, 29986 points)",
+      "review_status": "unreviewed",
+      "sha256": "7e2a9044b92ab6ebea40fa971747a3b3af491c8f7f66c030e53f5e85ee099a39",
+      "url": "https://github.com/PrincetonUniversity/magnet/blob/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/77_database.h5",
+      "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a"
+    }
+  ],
+  "evidence_refs": [
+    "evidence.princeton-magnet-constants",
+    "evidence.aipe-steinmetz-fit-magnet",
+    "evidence.princeton-magnet-database-77"
+  ],
+  "extensions": {},
+  "id": "material.fair-rite-77",
+  "kind": "magnetic_material",
+  "license": "NOASSERTION",
+  "name": "77",
+  "properties": {
+    "description": "MnZn ferrite 77; application per Princeton MagNet constants.py (material_applications): 'High and low flux density inductive designs'. Datasheet parameters (Bsat, Curie temperature, density) are not yet transcribed for this grade; only Princeton MagNet derived loss parameters are available.",
+    "grade": "77",
+    "initial_permeability": {
+      "note": "mu_r_0 as listed in Princeton MagNet constants.py (material_extra); conditions not stated there",
+      "source_ref": "evidence.princeton-magnet-constants",
+      "value": {
+        "unit": "1",
+        "value": 2000.0
+      }
+    },
+    "manufacturer_ref": "manufacturer.fair-rite",
+    "material_class": "ferrite_mnzn",
+    "recommended_frequency_range": {
+      "max": 100000.0,
+      "min": 10000.0,
+      "unit": "Hz"
+    },
+    "steinmetz_parameter_sets": [
+      {
+        "alpha": 1.3658257541715104,
+        "basis": "measurement_fit",
+        "beta": 2.474126784182006,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.28202784170372386,
+          "mean_abs_rel_error": 0.089903714783079,
+          "n_points": 111,
+          "rms_log10_residual": 0.04730443358552051
+        },
+        "flux_density_range": {
+          "max": 0.2447,
+          "min": 0.0111,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 398100.0,
+          "min": 50020.0,
+          "unit": "Hz"
+        },
+        "id": "set.magnet-fit-77-25c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 6.256977779607182
+        },
+        "note": "AIPE least-squares fit on Princeton MagNet sinusoidal zero-bias points at 25 degC; mean |rel. error| 9.0%, max 28.2%. Validity window: the measured temperature +-5 K (selection policy), stated f and B ranges.",
+        "source_ref": "evidence.princeton-magnet-database-77",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 25.0
+          },
+          "unit": "K",
+          "value": 298.15
+        }
+      },
+      {
+        "alpha": 1.5367670466380754,
+        "basis": "measurement_fit",
+        "beta": 2.5072571890160065,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.2892195859548419,
+          "mean_abs_rel_error": 0.10079782569948559,
+          "n_points": 113,
+          "rms_log10_residual": 0.05351958088995698
+        },
+        "flux_density_range": {
+          "max": 0.2454,
+          "min": 0.0116,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 398100.0,
+          "min": 50020.0,
+          "unit": "Hz"
+        },
+        "id": "set.magnet-fit-77-50c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 0.63594039472737
+        },
+        "note": "AIPE least-squares fit on Princeton MagNet sinusoidal zero-bias points at 50 degC; mean |rel. error| 10.1%, max 28.9%. Validity window: the measured temperature +-5 K (selection policy), stated f and B ranges.",
+        "source_ref": "evidence.princeton-magnet-database-77",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 50.0
+          },
+          "unit": "K",
+          "value": 323.15
+        }
+      },
+      {
+        "alpha": 1.813901802245234,
+        "basis": "measurement_fit",
+        "beta": 2.572266898415272,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.4465988132300337,
+          "mean_abs_rel_error": 0.1647915657218467,
+          "n_points": 115,
+          "rms_log10_residual": 0.08624310264775169
+        },
+        "flux_density_range": {
+          "max": 0.2953,
+          "min": 0.0118,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 398100.0,
+          "min": 50020.0,
+          "unit": "Hz"
+        },
+        "id": "set.magnet-fit-77-70c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 0.021322191300620172
+        },
+        "note": "AIPE least-squares fit on Princeton MagNet sinusoidal zero-bias points at 70 degC; mean |rel. error| 16.5%, max 44.7%. Validity window: the measured temperature +-5 K (selection policy), stated f and B ranges.",
+        "source_ref": "evidence.princeton-magnet-database-77",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 70.0
+          },
+          "unit": "K",
+          "value": 343.15
+        }
+      },
+      {
+        "alpha": 2.027128282330002,
+        "basis": "measurement_fit",
+        "beta": 2.6249470629930185,
+        "excitation": "sinusoidal",
+        "fit_metrics": {
+          "max_rel_error": 0.4815771225410741,
+          "mean_abs_rel_error": 0.21112697748721973,
+          "n_points": 111,
+          "rms_log10_residual": 0.11202260974452662
+        },
+        "flux_density_range": {
+          "max": 0.245,
+          "min": 0.0116,
+          "unit": "T"
+        },
+        "frequency_range": {
+          "max": 398100.0,
+          "min": 50020.0,
+          "unit": "Hz"
+        },
+        "id": "set.magnet-fit-77-90c",
+        "k": {
+          "unit": "W/m^3",
+          "value": 0.001840247866590398
+        },
+        "note": "AIPE least-squares fit on Princeton MagNet sinusoidal zero-bias points at 90 degC; mean |rel. error| 21.1%, max 48.2%. Validity window: the measured temperature +-5 K (selection policy), stated f and B ranges.",
+        "source_ref": "evidence.princeton-magnet-database-77",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 90.0
+          },
+          "unit": "K",
+          "value": 363.15
+        }
+      }
+    ]
+  },
+  "provenance": {
+    "activity": "transcribed from cited sources and derived fits by tools/build_catalog.py",
+    "created_at": "2026-10-19T00:00:00Z",
+    "inputs": [
+      "evidence.princeton-magnet-constants",
+      "evidence.aipe-steinmetz-fit-magnet",
+      "evidence.princeton-magnet-database-77"
+    ],
+    "normalization": "all quantities converted to SI by aipe_magnetics.common.units with original units retained",
+    "tool": {
+      "id": "aipe.magnetics",
+      "version": "0.2.0"
+    }
+  },
+  "quality": {
+    "flags": [
+      "datasheet_parameters_missing"
+    ],
+    "notes": [
+      "review_status unreviewed: awaiting owner review of the transcriptions"
+    ],
+    "status": "normalized"
+  },
+  "schema_version": "0.2.0",
+  "synthetic": false,
+  "tags": [
+    "ferrite",
+    "mnzn"
+  ]
+}
