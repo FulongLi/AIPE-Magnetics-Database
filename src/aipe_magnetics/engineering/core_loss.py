@@ -86,9 +86,17 @@ def select_model(request: CoreLossRequest, props, material_id: str, sources: lis
                 raise DataNotFoundError(f"parameter set {request.parameter_set!r} not found for {material_id}")
         if not sets:
             raise DataNotFoundError(f"{material_id} has no Steinmetz parameter set; core loss cannot be estimated")
-        pset = select_parameter_set(sets, t_k)
-        notes.append(f"parameter set {pset.id} selected for temperature "
-                     f"{'unspecified' if t_k is None else f'{t_k - 273.15:.0f} degC'}")
+        if t_k is None:
+            if len(sets) == 1 and request.parameter_set:
+                pset = sets[0]
+                notes.append(f"parameter set {pset.id} forced by request (no temperature given)")
+            else:
+                raise InvalidInputError(f"temperature is required to select a Steinmetz parameter set for {material_id} "
+                                        f"(available: {', '.join(s.id for s in sets)}); pass operating_point.temperature, "
+                                        "parameter_set or model_parameters")
+        else:
+            pset = select_parameter_set(sets, t_k)
+            notes.append(f"parameter set {pset.id} selected for temperature {t_k - 273.15:.0f} degC")
     cls = SteinmetzModel if name == "steinmetz" else IGSEModel
     model = cls.from_parameter_set(pset, material_id=material_id, sources=sources)
     return model, pset, notes
@@ -179,16 +187,6 @@ def _verification(registry: Any | None, capability: str, f: float, t_k: float | 
 
 
 def _jsonable(value: Any) -> Any:
-    import numpy as np
+    from aipe_magnetics.engineering._json import jsonable
 
-    if isinstance(value, dict):
-        return {str(k): _jsonable(v) for k, v in value.items()}
-    if isinstance(value, (list, tuple)):
-        return [_jsonable(v) for v in value]
-    if isinstance(value, np.ndarray):
-        return value.tolist() if value.size <= 64 else {"array": True, "shape": list(value.shape), "dtype": str(value.dtype)}
-    if isinstance(value, (np.floating, np.integer)):
-        return value.item()
-    if hasattr(value, "model_dump"):
-        return value.model_dump(mode="json", exclude_none=True)
-    return value
+    return jsonable(value, max_points=256)
