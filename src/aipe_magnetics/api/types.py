@@ -104,6 +104,10 @@ class CoreLossRequest(_Spec):
     model: LossModelName = "auto"
     core: str | None = Field(default=None, description="core id to convert loss density into total core loss")
     parameter_set: str | None = Field(default=None, description="force a specific Steinmetz parameter set id")
+    model_parameters: dict[str, float] | None = Field(
+        default=None,
+        description="user-supplied SI model coefficients (steinmetz/igse: k, alpha, beta; bertotti: k_h, beta_h, k_c, k_e); "
+                    "recorded as a user_input assumption and bypasses the catalogue parameter sets")
     policy: DomainPolicy = "reject"
 
 
