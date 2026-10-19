@@ -12,7 +12,7 @@ import yaml
 
 from aipe_magnetics import __version__
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def _toml(path: Path) -> dict:
