@@ -1,51 +1,63 @@
-# Core v0.1 mapping and evidence provenance
+# AIPE-Core / AIPE-Registry integration
 
-AIPE-Core owns shared Engineering State; this database owns magnetics details.
-The domain schema is independently versioned at `0.1.0`. Core compatibility is
-`0.1.x`, integration `mapped`: this document specifies a mapping, not an executed
-export path. Core's logical schema base is
-`https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/`.
-Until release publication, use a complete trusted local Core schema checkout.
+## Versions and compatibility
 
-| Magnetic domain | Engineering State location / rule |
+| Contract | Version | How it is satisfied |
+| --- | --- | --- |
+| AIPE-Core Engineering State | `0.1.0` (schemas pinned by commit in `src/aipe_magnetics/integrations/aipe_core/schemas/v0.1.0/NOTICE.md`) | executable export/import adapter + offline contract validator (`aipe_magnetics.integrations.aipe_core`) |
+| AIPE Magnetic Data Schema | `0.2.0` (this repository, independent of the Core version) | `aipe_magnetics.data.records` / `schemas/v0.2` |
+| AIPE-Registry capability manifest | `0.1.0` (`aipe.yaml`) | validated offline against the pinned Registry schema (`aipe_magnetics.integrations.aipe_registry`) and with the Registry's own validator in the ecosystem check |
+
+`aipe.yaml` declares `compatibility.integration: native` because the round trip below is implemented
+and tested; v0.1 was `mapped` (documentation only). The Registry schema is closed
+(`additionalProperties: false`), so v0.2 metadata (model maturity, verification evidence, platforms,
+interfaces, optional integrations, engineering limitations, standalone-operation guarantees) lives
+under `extensions["aipe.magnetics"]`.
+
+**Logical schema compatibility versus runtime installation:** Core and Registry are *schema and
+contract* dependencies. Nothing at runtime needs an AIPE-Core checkout, an AIPE-Registry service, an
+orchestrator or another domain expert. `aipe.yaml` therefore lists `aipe.core` as an *optional*
+dependency; the pinned schema copies make the compatibility tests self-contained and offline.
+
+## Round trip (tested)
+
+```
+EngineeringResult (design_transformer / design_inductor)
+   │  aipe_magnetics.integrations.aipe_core.bridge.component_summary_from_design
+   ▼
+MagneticComponentSummary  (id, role, kind, design_status, turns_ratio / inductance / leakage, core_material_ref,
+                           database_ref, evidence[assumption | analytical | source], limitations, detail)
+   │  to_engineering_state(summary, created_at=..., project_id=..., requirements=...)
+   ▼
+Core Engineering State 0.1.0 (project, requirements with operating point, converter, magnetics[1], evidence[], validation)
+   │  validate_engineering_state(state) == []        <- offline, same checks as Core's scripts/validate.py
+   │  from_engineering_state(state) -> [MagneticComponentSummary]   (equal to the input summary)
+   │  extract_requirements(state) -> design inputs
+   ▼
+```
+
+Mapping rules follow Core's `docs/metadata.md` and `contracts/database-contract.md`:
+
+| Magnetics concept | Core location |
 | --- | --- |
-| inductor / transformer / magnetic_component | `magnetics[]`, appropriate kind, explicit role and design_status |
-| record ID + revisioned source URI | `id` / `database_ref`; retain independent domain version |
-| inductance / leakage_inductance | Same named Core properties with `H` |
-| turns_ratio | Core turns_ratio, dimensionless unit `1` |
-| core_material | `core_material_ref` or a domain source artifact, without inventing properties |
-| geometry / family / winding | Remain domain records referenced by a documented extension/artifact |
-| operating_condition | Input context/evidence; Core operating point where dimensions match |
-| source / assumption | Core evidence record of the corresponding kind with original reference |
-| loss_model / measurement | Explicit artifacts and provenance; never promoted solely by schema validity |
+| component kind (transformer, inductor, coupled_inductor, other) | `magnetics[].kind`, `role`, `design_status` |
+| turns ratio, inductance, leakage inductance | `magnetics[]` SI quantities (`1`, `H`) |
+| material record id, core record id | `core_material_ref`, `database_ref` (uri-references into this repository's records) |
+| assumptions (flux limit, fill factor, currents ...) | evidence `kind: assumption` |
+| the design calculation itself | evidence `kind: analytical` with `provenance.inputs` = the assumption / source evidence ids and `tool` attribution `aipe.magnetics@<version>` |
+| datasheets and publications | evidence `kind: source` |
+| flux density, losses, verification status, warnings | `extensions["aipe.magnetics-detail"]` (namespaced; Core fields are never overloaded) |
+| converter requirements (power, voltages, frequency) | `requirements` + `operating_points[0]` with their own evidence |
 
-A future executable adapter must add Core-required role, design status,
-versioned tool attribution for simulation/measurement evidence and artifact
-references. It must preserve source timestamps separately from conversion time,
-retain unknown licence values and test against Core's offline validator.
-Assumption evidence supporting a synthetic example must remain an assumption.
-Neither material selection nor magnetic component suitability is automatic.
+The adapter never promotes an assumption to a measurement, never sets `validation.status` above
+`analytically_checked`, and only emits `analytically_checked` when a passing analytical check with
+analytical evidence is supplied. The demonstration writes the exported state to
+`reports/demo/dab-10kw-engineering-state.json`.
 
-## Import lifecycle
+## Ecosystem check with the real validators
 
-1. Preserve original source bytes in `data/raw/` only when rights permit.
-2. Record source URI/locator, owner, licence/access conditions and acquisition
-   metadata. Use references when redistribution is not authorized.
-3. Map fields and normalize units explicitly. The v0.1 JSON importer only accepts
-   already normalized schema-valid records and adds a checksum of raw bytes.
-4. Validate all related records together, including reference integrity and
-   evidence. `--catalogue` supplies existing records during import.
-5. Review the candidate before adding it to `data/canonical/`. Derived results
-   live separately with methods, input IDs and versions. Never overwrite evidence.
-
-SI spellings include `H`, `T`, `Hz`, `K`, `A`, `m`, `m^2`, `m^3` and `1`.
-Turns are integral dimensionless counts. v0.1 supported physical properties are
-positive; zero/bias sign conventions need a later explicit domain extension.
-Missing quantities are omitted, not zero-filled. Loss coefficients are not
-untyped floating values: this version references an external model artifact and
-method rather than guessing coefficient dimensions or applicability ranges.
-
-The validator rejects unknown record IDs but does not fetch cited artifacts,
-authenticate documents or prove a measurement. The importer records source hash,
-source filename and importer version; unchanged source inputs yield deterministic
-candidate output. Existing provenance is never silently replaced.
+`tests/integrations` contain optional tests (marker `external`) that run AIPE-Core's
+`scripts/validate.py` and AIPE-Registry's `scripts/validate.py` as subprocesses when
+`AIPE_ECOSYSTEM_CHECKOUTS=<dir containing AIPE-Core and AIPE-Registry>` is set. They are skipped with
+an explicit reason otherwise. The release check for v0.2.0 was executed with both checkouts
+(see `docs/release-verification-v0.2.0.md`).
