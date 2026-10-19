@@ -1,0 +1,1129 @@
+{
+  "document": "aipe.magnetics.derived.steinmetz-fits/0.2",
+  "fits": [
+    {
+      "alpha": 1.393257624539527,
+      "beta": 2.5477658899198223,
+      "fit_metrics": {
+        "max_rel_error": 0.28380485175668424,
+        "mean_abs_rel_error": 0.08541754753734622,
+        "rms_log10_residual": 0.04671639644199509
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.24
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 3.8982276773348388,
+      "material": "3C90",
+      "n_points": 399,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.5641343314729492,
+      "beta": 2.598329529809091,
+      "fit_metrics": {
+        "max_rel_error": 0.45265717840000175,
+        "mean_abs_rel_error": 0.13264903797595506,
+        "rms_log10_residual": 0.0714321281430532
+      },
+      "flux_density_range_T": [
+        0.0122,
+        0.2643
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 0.4805688463774318,
+      "material": "3C90",
+      "n_points": 402,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.7728931213860786,
+      "beta": 2.683660664193172,
+      "fit_metrics": {
+        "max_rel_error": 0.5772697432228482,
+        "mean_abs_rel_error": 0.21293152170765464,
+        "rms_log10_residual": 0.11139565586323419
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.2649
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 0.04034623622210926,
+      "material": "3C90",
+      "n_points": 404,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 1.94885816774933,
+      "beta": 2.715941896672232,
+      "fit_metrics": {
+        "max_rel_error": 0.6772575225332342,
+        "mean_abs_rel_error": 0.2674433180719905,
+        "rms_log10_residual": 0.13636070729662794
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.241
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 0.005054394198465652,
+      "material": "3C90",
+      "n_points": 396,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.435911610444602,
+      "beta": 2.4672207419166257,
+      "fit_metrics": {
+        "max_rel_error": 0.3143615630223884,
+        "mean_abs_rel_error": 0.09303268801614464,
+        "rms_log10_residual": 0.049488411398872896
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.2756
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 2.0089455054482186,
+      "material": "3C94",
+      "n_points": 452,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.6829378938133508,
+      "beta": 2.5075865556104535,
+      "fit_metrics": {
+        "max_rel_error": 0.4647387471447376,
+        "mean_abs_rel_error": 0.13835956991813217,
+        "rms_log10_residual": 0.07460652315775998
+      },
+      "flux_density_range_T": [
+        0.0122,
+        0.2754
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 0.08449298896115996,
+      "material": "3C94",
+      "n_points": 451,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.9075534218608696,
+      "beta": 2.5208617974732586,
+      "fit_metrics": {
+        "max_rel_error": 0.47250331129555767,
+        "mean_abs_rel_error": 0.17664832661919527,
+        "rms_log10_residual": 0.09272174435039274
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.276
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 0.004996824042475742,
+      "material": "3C94",
+      "n_points": 441,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 2.039683672338636,
+      "beta": 2.5408629681383097,
+      "fit_metrics": {
+        "max_rel_error": 0.48122142217479436,
+        "mean_abs_rel_error": 0.19744589368173548,
+        "rms_log10_residual": 0.10544476282644057
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.2763
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 0.0009749662428327512,
+      "material": "3C94",
+      "n_points": 432,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.8590307051397215,
+      "beta": 2.171825945888033,
+      "fit_metrics": {
+        "max_rel_error": 0.2560956047847953,
+        "mean_abs_rel_error": 0.0679239162364975,
+        "rms_log10_residual": 0.03846206283226381
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.1922
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.006836285495903666,
+      "material": "3E6",
+      "n_points": 112,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.8249789216645693,
+      "beta": 2.142693129939237,
+      "fit_metrics": {
+        "max_rel_error": 0.21445425208487212,
+        "mean_abs_rel_error": 0.06356805451567983,
+        "rms_log10_residual": 0.036080880752427845
+      },
+      "flux_density_range_T": [
+        0.0122,
+        0.1938
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.01248716882347025,
+      "material": "3E6",
+      "n_points": 112,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.7881611982664705,
+      "beta": 2.1087865897318894,
+      "fit_metrics": {
+        "max_rel_error": 0.20015716028827546,
+        "mean_abs_rel_error": 0.060000381210628846,
+        "rms_log10_residual": 0.03344189932951335
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.1916
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.020074145987389564,
+      "material": "3E6",
+      "n_points": 110,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 1.7356567946568133,
+      "beta": 2.067123318239032,
+      "fit_metrics": {
+        "max_rel_error": 0.17111766399806472,
+        "mean_abs_rel_error": 0.048339002347134466,
+        "rms_log10_residual": 0.026830524434093284
+      },
+      "flux_density_range_T": [
+        0.0123,
+        0.1852
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.03514182754517169,
+      "material": "3E6",
+      "n_points": 106,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.0322499721600085,
+      "beta": 2.8071311590432875,
+      "fit_metrics": {
+        "max_rel_error": 0.20082749953747614,
+        "mean_abs_rel_error": 0.062011897537946385,
+        "rms_log10_residual": 0.035808149440264316
+      },
+      "flux_density_range_T": [
+        0.0194,
+        0.0761
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 1157.2033764796727,
+      "material": "3F4",
+      "n_points": 41,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.0017191784006534,
+      "beta": 2.851353824849381,
+      "fit_metrics": {
+        "max_rel_error": 0.20409641526207123,
+        "mean_abs_rel_error": 0.062190373060125384,
+        "rms_log10_residual": 0.034584692954702095
+      },
+      "flux_density_range_T": [
+        0.0246,
+        0.078
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 1507.6196350905645,
+      "material": "3F4",
+      "n_points": 35,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.0209363856266849,
+      "beta": 2.8592895040867976,
+      "fit_metrics": {
+        "max_rel_error": 0.1748126234535079,
+        "mean_abs_rel_error": 0.06147349317017123,
+        "rms_log10_residual": 0.03226145571046832
+      },
+      "flux_density_range_T": [
+        0.0245,
+        0.0775
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 1105.9498839580508,
+      "material": "3F4",
+      "n_points": 31,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 1.0382298484956611,
+      "beta": 2.945729616724715,
+      "fit_metrics": {
+        "max_rel_error": 0.2100420866643602,
+        "mean_abs_rel_error": 0.06398859634795721,
+        "rms_log10_residual": 0.035763654744057995
+      },
+      "flux_density_range_T": [
+        0.0243,
+        0.0948
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 1157.3514517895032,
+      "material": "3F4",
+      "n_points": 34,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.3658257541715104,
+      "beta": 2.474126784182006,
+      "fit_metrics": {
+        "max_rel_error": 0.28202784170372386,
+        "mean_abs_rel_error": 0.089903714783079,
+        "rms_log10_residual": 0.04730443358552051
+      },
+      "flux_density_range_T": [
+        0.0111,
+        0.2447
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 6.256977779607182,
+      "material": "77",
+      "n_points": 111,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.5367670466380754,
+      "beta": 2.5072571890160065,
+      "fit_metrics": {
+        "max_rel_error": 0.2892195859548419,
+        "mean_abs_rel_error": 0.10079782569948559,
+        "rms_log10_residual": 0.05351958088995698
+      },
+      "flux_density_range_T": [
+        0.0116,
+        0.2454
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.63594039472737,
+      "material": "77",
+      "n_points": 113,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.813901802245234,
+      "beta": 2.572266898415272,
+      "fit_metrics": {
+        "max_rel_error": 0.4465988132300337,
+        "mean_abs_rel_error": 0.1647915657218467,
+        "rms_log10_residual": 0.08624310264775169
+      },
+      "flux_density_range_T": [
+        0.0118,
+        0.2953
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.021322191300620172,
+      "material": "77",
+      "n_points": 115,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 2.027128282330002,
+      "beta": 2.6249470629930185,
+      "fit_metrics": {
+        "max_rel_error": 0.4815771225410741,
+        "mean_abs_rel_error": 0.21112697748721973,
+        "rms_log10_residual": 0.11202260974452662
+      },
+      "flux_density_range_T": [
+        0.0116,
+        0.245
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.001840247866590398,
+      "material": "77",
+      "n_points": 111,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.4082732168178944,
+      "beta": 2.4983473489645616,
+      "fit_metrics": {
+        "max_rel_error": 0.2040337417171767,
+        "mean_abs_rel_error": 0.08565916327244277,
+        "rms_log10_residual": 0.045613193153950175
+      },
+      "flux_density_range_T": [
+        0.0114,
+        0.2411
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 3.5316123581331182,
+      "material": "78",
+      "n_points": 108,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.6283789530263504,
+      "beta": 2.550088951523361,
+      "fit_metrics": {
+        "max_rel_error": 0.3682416336867801,
+        "mean_abs_rel_error": 0.12114847490444389,
+        "rms_log10_residual": 0.06510198476321316
+      },
+      "flux_density_range_T": [
+        0.0119,
+        0.2422
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.2152744494946347,
+      "material": "78",
+      "n_points": 110,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.8688089570218094,
+      "beta": 2.6105705247311457,
+      "fit_metrics": {
+        "max_rel_error": 0.47153935219796883,
+        "mean_abs_rel_error": 0.19133317465643418,
+        "rms_log10_residual": 0.09980260974875677
+      },
+      "flux_density_range_T": [
+        0.012,
+        0.242
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.01187780505154487,
+      "material": "78",
+      "n_points": 111,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 2.0158072151214865,
+      "beta": 2.663086060852819,
+      "fit_metrics": {
+        "max_rel_error": 0.5323136678368123,
+        "mean_abs_rel_error": 0.22030003711109555,
+        "rms_log10_residual": 0.11761153847276103
+      },
+      "flux_density_range_T": [
+        0.0118,
+        0.2425
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.0023672527834926937,
+      "material": "78",
+      "n_points": 111,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.3214418167359931,
+      "beta": 2.460064001743281,
+      "fit_metrics": {
+        "max_rel_error": 0.301120512952066,
+        "mean_abs_rel_error": 0.08336368327577026,
+        "rms_log10_residual": 0.04518365615903988
+      },
+      "flux_density_range_T": [
+        0.0115,
+        0.2465
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 11.269067564592747,
+      "material": "N27",
+      "n_points": 113,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.5091052961052682,
+      "beta": 2.539343716285881,
+      "fit_metrics": {
+        "max_rel_error": 0.26238718511248194,
+        "mean_abs_rel_error": 0.0985370174012692,
+        "rms_log10_residual": 0.05186769970131128
+      },
+      "flux_density_range_T": [
+        0.0118,
+        0.2438
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 1.0394272453672033,
+      "material": "N27",
+      "n_points": 114,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.72457618679669,
+      "beta": 2.599686985150701,
+      "fit_metrics": {
+        "max_rel_error": 0.42565764304281906,
+        "mean_abs_rel_error": 0.149677175246646,
+        "rms_log10_residual": 0.07961946663755758
+      },
+      "flux_density_range_T": [
+        0.012,
+        0.2433
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.0760634527058608,
+      "material": "N27",
+      "n_points": 111,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 1.8580076684242923,
+      "beta": 2.6694461619307317,
+      "fit_metrics": {
+        "max_rel_error": 0.4830869996057664,
+        "mean_abs_rel_error": 0.19242079051379984,
+        "rms_log10_residual": 0.1018440054960076
+      },
+      "flux_density_range_T": [
+        0.0119,
+        0.2446
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.018242971798811843,
+      "material": "N27",
+      "n_points": 109,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.8809264222158772,
+      "beta": 2.420955389152534,
+      "fit_metrics": {
+        "max_rel_error": 0.46427760940214324,
+        "mean_abs_rel_error": 0.1336490182275436,
+        "rms_log10_residual": 0.07323376648934785
+      },
+      "flux_density_range_T": [
+        0.0105,
+        0.1953
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.010609535291429675,
+      "material": "N30",
+      "n_points": 118,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.8438735774452255,
+      "beta": 2.3727729766707304,
+      "fit_metrics": {
+        "max_rel_error": 0.3488198759565454,
+        "mean_abs_rel_error": 0.1166102150352117,
+        "rms_log10_residual": 0.06492766538278988
+      },
+      "flux_density_range_T": [
+        0.0104,
+        0.1916
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.018478322928324964,
+      "material": "N30",
+      "n_points": 115,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.84326766765142,
+      "beta": 2.324576069001701,
+      "fit_metrics": {
+        "max_rel_error": 0.32638808561299415,
+        "mean_abs_rel_error": 0.10517385667269827,
+        "rms_log10_residual": 0.05903070083280417
+      },
+      "flux_density_range_T": [
+        0.0104,
+        0.1917
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.018217959601899307,
+      "material": "N30",
+      "n_points": 114,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 1.8232976371148115,
+      "beta": 2.265126821489707,
+      "fit_metrics": {
+        "max_rel_error": 0.32812276151884334,
+        "mean_abs_rel_error": 0.09435072207076822,
+        "rms_log10_residual": 0.05327704748253312
+      },
+      "flux_density_range_T": [
+        0.0104,
+        0.1858
+      ],
+      "frequency_range_Hz": [
+        50010.0,
+        398100.0
+      ],
+      "k_W_per_m3": 0.02222723836578721,
+      "material": "N30",
+      "n_points": 109,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.101728135033336,
+      "beta": 2.9716334973171463,
+      "fit_metrics": {
+        "max_rel_error": 0.30193907275888954,
+        "mean_abs_rel_error": 0.07499167881328228,
+        "rms_log10_residual": 0.042507583154011146
+      },
+      "flux_density_range_T": [
+        0.031,
+        0.2975
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 287.90156500666274,
+      "material": "N49",
+      "n_points": 75,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.1202151847024708,
+      "beta": 3.1069178217758884,
+      "fit_metrics": {
+        "max_rel_error": 0.36019409462843766,
+        "mean_abs_rel_error": 0.07232040006316316,
+        "rms_log10_residual": 0.042401914614676205
+      },
+      "flux_density_range_T": [
+        0.0393,
+        0.2495
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 280.12509964100826,
+      "material": "N49",
+      "n_points": 67,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.1312672456323194,
+      "beta": 3.163175340163313,
+      "fit_metrics": {
+        "max_rel_error": 0.3653625338704092,
+        "mean_abs_rel_error": 0.08521095571992625,
+        "rms_log10_residual": 0.04831627586467293
+      },
+      "flux_density_range_T": [
+        0.0392,
+        0.2443
+      ],
+      "frequency_range_Hz": [
+        50010.0,
+        398100.0
+      ],
+      "k_W_per_m3": 317.88248775795796,
+      "material": "N49",
+      "n_points": 70,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 1.1502486016572655,
+      "beta": 3.1229151210331194,
+      "fit_metrics": {
+        "max_rel_error": 0.3029229661803199,
+        "mean_abs_rel_error": 0.08169556789316613,
+        "rms_log10_residual": 0.044409005900354785
+      },
+      "flux_density_range_T": [
+        0.0246,
+        0.2438
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        398100.0
+      ],
+      "k_W_per_m3": 300.166067000657,
+      "material": "N49",
+      "n_points": 81,
+      "temperature_degC": 90.0
+    },
+    {
+      "alpha": 1.3452409107313201,
+      "beta": 2.5748590090007264,
+      "fit_metrics": {
+        "max_rel_error": 0.23493764814113494,
+        "mean_abs_rel_error": 0.08145859697402331,
+        "rms_log10_residual": 0.04389239190088061
+      },
+      "flux_density_range_T": [
+        0.011,
+        0.1509
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 12.821928181918144,
+      "material": "N87",
+      "n_points": 338,
+      "temperature_degC": 25.0
+    },
+    {
+      "alpha": 1.5169512304658186,
+      "beta": 2.578746117605005,
+      "fit_metrics": {
+        "max_rel_error": 0.37069062316089085,
+        "mean_abs_rel_error": 0.1073287801906936,
+        "rms_log10_residual": 0.058524900660204444
+      },
+      "flux_density_range_T": [
+        0.0112,
+        0.1659
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 1.190515236628182,
+      "material": "N87",
+      "n_points": 357,
+      "temperature_degC": 50.0
+    },
+    {
+      "alpha": 1.7308690909123214,
+      "beta": 2.603340820287618,
+      "fit_metrics": {
+        "max_rel_error": 0.4797514790838603,
+        "mean_abs_rel_error": 0.15670803888704052,
+        "rms_log10_residual": 0.08384248731378399
+      },
+      "flux_density_range_T": [
+        0.0115,
+        0.1695
+      ],
+      "frequency_range_Hz": [
+        50020.0,
+        446690.0
+      ],
+      "k_W_per_m3": 0.08292093281480084,
+      "material": "N87",
+      "n_points": 364,
+      "temperature_degC": 70.0
+    },
+    {
+      "alpha": 1.952339908481615,
+      "beta": 2.6172609522778516,
+      "fit_metrics": {
+        "max_rel_error": 0.4812711294013049,
+        "mean_abs_rel_error": 0.19859149332583872,
+        "rms_log10_residual": 0.10324160621987769
+      },
+      "flux_density_range_T": [
+        0.0117,
+        0.1693
+      ],
+      "frequency_range_Hz": [
+        50010.0,
+        446690.0
+      ],
+      "k_W_per_m3": 0.005543281878155995,
+      "material": "N87",
+      "n_points": 367,
+      "temperature_degC": 90.0
+    }
+  ],
+  "method": "Ordinary least squares in log space, log(Pv) = log(k) + alpha*log(f) + beta*log(B), on sinusoidal (Duty_P == Duty_N == -1), zero-DC-bias rows, grouped by measured temperature (rounded to 1 degC), restricted to 50000 <= f <= 500000 Hz and 0.01 <= B <= 0.3 T. Units: k in W/m^3 with f in Hz and B (amplitude) in T.",
+  "source": {
+    "citation": "D. Serrano et al., 'Why MagNet: Quantifying the Complexity of Modeling Power Magnetic Material Characteristics', IEEE Trans. Power Electron., 2023, doi:10.1109/TPEL.2023.3291084; H. Li et al., 'How MagNet: Machine Learning Framework for Modeling Power Magnetic Material Characteristics', IEEE Trans. Power Electron., 2023, doi:10.1109/TPEL.2023.3309232",
+    "commit": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
+    "files": {
+      "3C90": {
+        "core": {
+          "Ae": 4.89e-05,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 7,
+          "N2": 7,
+          "Ve": 2.9428e-06,
+          "core": "TX-25-15-10",
+          "le": 0.06018,
+          "material": "3C90",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "3C90_database.h5",
+        "n_points": 108494,
+        "sha256": "421d9fd33e4c1626dd3a22ca26755b2b98a98f4175f44df2622d7ead8d5417f2",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "3C94": {
+        "core": {
+          "Ae": 3.36e-05,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 7,
+          "N2": 7,
+          "Ve": 1.465e-06,
+          "core": "TX-20-10-7",
+          "le": 0.0436,
+          "material": "3C94",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "3C94_database.h5",
+        "n_points": 113691,
+        "sha256": "7859a037a0d1225e3d60c61d285c506445b32fbcf642309a5fd18f07c71fdbd5",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "3E6": {
+        "core": {
+          "Ae": 2.48e-05,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 4,
+          "N2": 4,
+          "Ve": 1.34e-06,
+          "core": "TX-22-14-6.4",
+          "le": 0.0542,
+          "material": "3E6",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "3E6_database.h5",
+        "n_points": 6996,
+        "sha256": "7198d2cfddde46f50e85a9d2e320b402b6322677632ff3697f8916e497e47921",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "3F4": {
+        "core": {
+          "Ae": 0.00013,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 5,
+          "N2": 5,
+          "Ve": 4.56e-06,
+          "core": "E-32-6-20-R",
+          "le": 0.0351,
+          "material": "3F4",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "3F4_database.h5",
+        "n_points": 50630,
+        "sha256": "bc166e60edf37150d30224f785378c0f1b0160f580402f447cd770617ee20de5",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "77": {
+        "core": {
+          "Ae": 4e-05,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 7,
+          "N2": 7,
+          "Ve": 2.44e-06,
+          "core": "0014",
+          "le": 0.062,
+          "material": "77",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "77_database.h5",
+        "n_points": 29986,
+        "sha256": "7e2a9044b92ab6ebea40fa971747a3b3af491c8f7f66c030e53f5e85ee099a39",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "78": {
+        "core": {
+          "Ae": 5.2e-05,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 6,
+          "N2": 6,
+          "Ve": 2.83e-06,
+          "core": "0076",
+          "le": 0.054,
+          "material": "78",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "78_database.h5",
+        "n_points": 24091,
+        "sha256": "160643789e6d210cacbe60364ab64a1decab87f5ab321e6cc1d9f083a9434fcd",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "N27": {
+        "core": {
+          "Ae": 3.363e-05,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 8,
+          "N2": 8,
+          "Ve": 1.465e-06,
+          "core": "R20.0X10.0X7.0",
+          "le": 0.04355,
+          "material": "N27",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "N27_database.h5",
+        "n_points": 42948,
+        "sha256": "1fbfe3e94511c70c5c95a3d9bb768d91040321685c6b3cb8e8bd24e3305093c8",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "N30": {
+        "core": {
+          "Ae": 2.617e-05,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 6,
+          "N2": 6,
+          "Ve": 1.417e-06,
+          "core": "22.1X13.7X6.35",
+          "le": 0.05415,
+          "material": "N30",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "N30_database.h5",
+        "n_points": 14134,
+        "sha256": "f41f08b0516e8bff35968b6b5e0d6730ed713400dd06bdf784e7a09fb8d41b02",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "N49": {
+        "core": {
+          "Ae": 1.973e-05,
+          "CoreN": 1,
+          "Dataset": 1,
+          "N1": 10,
+          "N2": 10,
+          "Ve": 7.6e-07,
+          "core": "R16.0X9.6X6.3",
+          "le": 0.03852,
+          "material": "N49",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "N49_database.h5",
+        "n_points": 41168,
+        "sha256": "860319862452636277260a83f214179f4b964b431b63b9f7d630eb312f1c3f82",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      },
+      "N87": {
+        "core": {
+          "Ae": 8.26e-05,
+          "CoreN": 1,
+          "Dataset": 5,
+          "N1": 5,
+          "N2": 5,
+          "Ve": 6.778e-06,
+          "core": "R34.0X20.5X12.5",
+          "le": 0.08206,
+          "material": "N87",
+          "units": {
+            "Ae": "m^2",
+            "Ve": "m^3",
+            "le": "m"
+          }
+        },
+        "file": "N87_database.h5",
+        "n_points": 142871,
+        "sha256": "263c0087f6f43ccfd1b338d105abb6b9432be2cb85c59528539317f99b25bd63",
+        "temperatures_degC": [
+          25.0,
+          50.0,
+          70.0,
+          90.0
+        ]
+      }
+    },
+    "license": "MIT",
+    "repository": "https://github.com/PrincetonUniversity/magnet"
+  },
+  "tool": {
+    "id": "aipe.magnetics",
+    "script": "benchmarks/fit_steinmetz_from_magnet.py",
+    "version": "0.2.0"
+  }
+}
