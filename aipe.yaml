@@ -115,7 +115,11 @@ validation:
   status: tested
   evidence:
     - tests/test_records.py
-    - tests/
+    - tests/engineering/test_design_capabilities.py
+    - tests/mcp/test_server.py
+    - tests/integrations/test_core_roundtrip.py
+    - tests/integrations/test_registry_manifest.py
+    - tests/plugins/test_packaging.py
     - src/aipe_magnetics/verification/evidence/v0.2.0.json
     - docs/verification-report-v0.2.0.md
     - docs/release-verification-v0.2.0.md
