@@ -135,8 +135,11 @@ def test_compare_materials_ranks_and_reports_missing_data():
     rows = {row["id"]: row for row in r.data["comparison"]}
     assert rows["material.tdk-n87"]["loss_density_W_per_m3"] > 0 and rows["material.ferroxcube-3c94"]["loss_density_W_per_m3"] > 0
     assert rows["material.tdk-n87"]["saturation_margin"] is not None
-    assert rows["material.ferroxcube-3c94"]["saturation_flux_density_T"] is None  # no datasheet Bsat transcribed yet -> reported, not guessed
-    assert any("saturation" in note for note in rows["material.ferroxcube-3c94"]["notes"])
+    # v0.3 transcribed the Ferroxcube 3C94 specification table: Bsat(90 degC) interpolated between the 25 / 100 degC points
+    assert rows["material.ferroxcube-3c94"]["saturation_flux_density_T"] == pytest.approx(0.47 + (0.38 - 0.47) * 65 / 75)
+    assert rows["material.ferroxcube-3c94"]["saturation_status"] == "estimated"
+    assert rows["material.tdk-n49"]["saturation_flux_density_T"] is None  # no datasheet Bsat transcribed -> reported, not guessed
+    assert any("saturation" in note for note in rows["material.tdk-n49"]["notes"])
 
 
 def test_report_renders_markdown_with_status_separation():

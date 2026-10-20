@@ -1,0 +1,100 @@
+{
+  "schema": "aipe.magnetics.physical-properties/0.3",
+  "description": "Thermal and physical properties of the non-magnetic and bulk properties of the materials used by the design layer (windings, insulation, bobbins, cooling media) and generic thermal properties of ferrite classes. Magnetic properties live in the catalogue records; this library holds only what the v0.2 record standard has no field for. Every value carries its basis, a source and, where the literature spread is large, explicit bounds that the thermal analysis propagates as a sensitivity range.",
+  "license": "NOASSERTION",
+  "sources": {
+    "src.tdk-ferrites-general-data": {
+      "kind": "datasheet",
+      "reference": "TDK Electronics, 'Ferrites and accessories - SIFERRIT materials, general data' (typical room-temperature values for MnZn ferrites: specific heat 800 J/(kg K), heat conductivity 1 to 5 W/(m K)); the same figures are reproduced on distributor product pages for TDK ferrite cores",
+      "url": "https://www.tti.com/content/ttiinc/en/manufacturers/tdk/products/tdk-ferrite-cores.html",
+      "note": "the general-data table gives a range, not a per-grade value; the grade datasheets (e.g. N87) do not list thermal properties"
+    },
+    "src.incropera-7ed": {
+      "kind": "publication",
+      "reference": "T.L. Bergman, A.S. Lavine, F.P. Incropera, D.P. DeWitt, Fundamentals of Heat and Mass Transfer, 7th ed., Wiley 2011, Tables A.1 (metallic solids, 300 K) and A.4 (air at atmospheric pressure)"
+    },
+    "src.churchill-chu-1975": {
+      "kind": "publication",
+      "reference": "S.W. Churchill, H.H.S. Chu, 'Correlating equations for laminar and turbulent free convection from a vertical plate', Int. J. Heat Mass Transfer 18(11), 1975, pp. 1323-1329"
+    },
+    "src.dupont-kapton-hn": {
+      "kind": "datasheet",
+      "reference": "DuPont, 'Kapton HN polyimide film - general specifications', thermal conductivity 0.12 W/(m K) at 23 degC",
+      "url": "https://www.dupont.com/electronics-industrial/kapton-hn.html"
+    },
+    "src.engineering-judgement-windings": {
+      "kind": "assumption",
+      "reference": "Engineering judgement: effective transverse thermal conductivity of an impregnated litz / round-wire winding pack ranges from about 0.3 W/(m K) (air-filled, loose) to about 1.5 W/(m K) (vacuum impregnated); the design layer uses the stated nominal value and reports the bounds as a sensitivity range"
+    },
+    "src.engineering-judgement-polymers": {
+      "kind": "assumption",
+      "reference": "Engineering judgement: glass-filled thermoplastic coil formers (PBT, PET, LCP, PA) have thermal conductivities of roughly 0.2 to 0.5 W/(m K) depending on grade and filler"
+    },
+    "src.engineering-judgement-emissivity": {
+      "kind": "assumption",
+      "reference": "Engineering judgement: total hemispherical emissivity of a matt ferrite surface and of a varnished / taped winding surface is about 0.85 to 0.95; polished copper is about 0.03 and is not used for exposed taped windings"
+    }
+  },
+  "materials": {
+    "ferrite_mnzn": {
+      "name": "MnZn power ferrite (generic, applies to every catalogue MnZn grade)",
+      "role": "core",
+      "thermal_conductivity": {"value": 4.0, "unit": "W/m/K", "lower": 1.0, "upper": 5.0, "basis": "datasheet_range_midpoint", "source": "src.tdk-ferrites-general-data", "note": "nominal 4 W/(m K) chosen inside the 1-5 W/(m K) general-data range; the bounds are propagated as a sensitivity range"},
+      "specific_heat": {"value": 800.0, "unit": "J/kg/K", "basis": "datasheet_typical", "source": "src.tdk-ferrites-general-data"},
+      "emissivity": {"value": 0.9, "unit": "1", "lower": 0.85, "upper": 0.95, "basis": "engineering_judgement", "source": "src.engineering-judgement-emissivity"}
+    },
+    "ferrite_nizn": {
+      "name": "NiZn ferrite (generic)",
+      "role": "core",
+      "thermal_conductivity": {"value": 4.0, "unit": "W/m/K", "lower": 1.0, "upper": 5.0, "basis": "datasheet_range_midpoint", "source": "src.tdk-ferrites-general-data"},
+      "specific_heat": {"value": 750.0, "unit": "J/kg/K", "lower": 700.0, "upper": 800.0, "basis": "engineering_judgement", "source": "src.tdk-ferrites-general-data"},
+      "emissivity": {"value": 0.9, "unit": "1", "lower": 0.85, "upper": 0.95, "basis": "engineering_judgement", "source": "src.engineering-judgement-emissivity"}
+    },
+    "copper": {
+      "name": "Annealed copper (pure, 300 K)",
+      "role": "conductor",
+      "thermal_conductivity": {"value": 401.0, "unit": "W/m/K", "basis": "handbook", "source": "src.incropera-7ed"},
+      "density": {"value": 8933.0, "unit": "kg/m^3", "basis": "handbook", "source": "src.incropera-7ed"},
+      "specific_heat": {"value": 385.0, "unit": "J/kg/K", "basis": "handbook", "source": "src.incropera-7ed"}
+    },
+    "winding_pack_litz": {
+      "name": "Litz-wire winding pack, homogenised (copper + insulation + impregnation)",
+      "role": "winding",
+      "thermal_conductivity": {"value": 0.8, "unit": "W/m/K", "lower": 0.3, "upper": 1.5, "basis": "engineering_judgement", "source": "src.engineering-judgement-windings"},
+      "emissivity": {"value": 0.9, "unit": "1", "lower": 0.85, "upper": 0.95, "basis": "engineering_judgement", "source": "src.engineering-judgement-emissivity"}
+    },
+    "winding_pack_round": {
+      "name": "Round magnet-wire winding pack, homogenised (copper + enamel + impregnation)",
+      "role": "winding",
+      "thermal_conductivity": {"value": 1.0, "unit": "W/m/K", "lower": 0.4, "upper": 2.0, "basis": "engineering_judgement", "source": "src.engineering-judgement-windings"},
+      "emissivity": {"value": 0.9, "unit": "1", "lower": 0.85, "upper": 0.95, "basis": "engineering_judgement", "source": "src.engineering-judgement-emissivity"}
+    },
+    "winding_pack_foil": {
+      "name": "Foil winding pack, homogenised across the layers (copper foil + inter-layer film)",
+      "role": "winding",
+      "thermal_conductivity": {"value": 1.5, "unit": "W/m/K", "lower": 0.5, "upper": 3.0, "basis": "engineering_judgement", "source": "src.engineering-judgement-windings", "note": "isotropic homogenisation of a strongly anisotropic pack (high along the foil, low across the films)"},
+      "emissivity": {"value": 0.9, "unit": "1", "lower": 0.85, "upper": 0.95, "basis": "engineering_judgement", "source": "src.engineering-judgement-emissivity"}
+    },
+    "bobbin_thermoplastic": {
+      "name": "Glass-filled thermoplastic coil former (PBT / PET / LCP)",
+      "role": "bobbin",
+      "thermal_conductivity": {"value": 0.3, "unit": "W/m/K", "lower": 0.2, "upper": 0.5, "basis": "engineering_judgement", "source": "src.engineering-judgement-polymers"}
+    },
+    "polyimide_film": {
+      "name": "Polyimide insulation film (Kapton HN type)",
+      "role": "insulation",
+      "thermal_conductivity": {"value": 0.12, "unit": "W/m/K", "basis": "datasheet_typical", "source": "src.dupont-kapton-hn"}
+    },
+    "air": {
+      "name": "Air at 300 K, 1 atm",
+      "role": "coolant",
+      "thermal_conductivity": {"value": 0.0263, "unit": "W/m/K", "basis": "handbook", "source": "src.incropera-7ed"},
+      "kinematic_viscosity": {"value": 1.589e-5, "unit": "m^2/s", "basis": "handbook", "source": "src.incropera-7ed"},
+      "prandtl_number": {"value": 0.707, "unit": "1", "basis": "handbook", "source": "src.incropera-7ed"}
+    }
+  },
+  "material_class_map": {
+    "ferrite_mnzn": "ferrite_mnzn",
+    "ferrite_nizn": "ferrite_nizn"
+  }
+}

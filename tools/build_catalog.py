@@ -92,6 +92,30 @@ EV_MUHLETHALER = evidence(
     url="https://doi.org/10.1109/TPEL.2011.2162252", locator="Table I, p. 970; Sec. IX validity")
 
 
+# Ferroxcube material specifications (edition 2008 Sep 01), transcribed in aipe-magnetics 0.3.0 from the
+# manufacturer PDFs (SHA-256 of the retrieved files recorded); values are the specification-table entries.
+FERROXCUBE_DATASHEETS: dict[str, dict[str, Any]] = {
+    "3C90": {"sha256": "803f0da1bbc44a82a52f323ce7c0fcf631431d823334f0396ab68715e87fd9d6",
+             "bs_mT": {25: 470, 100: 380}, "mu_i": 2300, "tc_C": 220, "density": 4800, "rho": 5.0,
+             "pv": [(100, 200, 100, 450)], "fmax_note": "up to 0.2 MHz"},
+    "3C94": {"sha256": "85baa0ebc78e351bff15026df6c3d7be8c8b7a02e808fa005a09b43665ae0fa9",
+             "bs_mT": {25: 470, 100: 380}, "mu_i": 2300, "tc_C": 220, "density": 4800, "rho": 5.0,
+             "pv": [(100, 100, 100, 50), (100, 200, 100, 350)], "fmax_note": "up to 0.3 MHz"},
+}
+
+
+def ferroxcube_evidence(grade: str) -> dict[str, Any]:
+    data = FERROXCUBE_DATASHEETS[grade]
+    return evidence(
+        f"evidence.ferroxcube-{grade.lower()}-datasheet-2008-09", "source",
+        f"Ferroxcube, '{grade} Material specification', data sheet, 2008 Sep 01 (supersedes data of September 2004)",
+        "Manufacturer specification table: initial permeability (25 degC, <= 10 kHz, 0.25 mT), B at 1200 A/m and 10 kHz (25 and 100 degC, "
+        "'approximately' values), PV typical values at 100 degC, DC resistivity, Curie temperature (lower bound) and density. "
+        "Transcribed by aipe-magnetics 0.3.0; not AIPE measurements.",
+        url=f"https://www.ferroxcube.com/upload/media/product/file/MDS/{grade.lower()}.pdf", version="2008 Sep 01",
+        locator="'SPECIFICATIONS' table, page 2", sha256=data["sha256"])
+
+
 def tdk_core_evidence(core: str, slug: str, *, title: str | None = None, coil_former_locator: str | None = None) -> dict[str, Any]:
     """Evidence item for one TDK core datasheet (October 2024 editions).
 
@@ -204,7 +228,32 @@ def material_records(fits: dict[str, Any]) -> list[dict[str, Any]]:
             "manufacturer_ref": info["manufacturer"], "grade": grade, "material_class": "ferrite_mnzn",
             "steinmetz_parameter_sets": sets,
         }
-        if grade != "N87":
+        if grade in FERROXCUBE_DATASHEETS:
+            ds = FERROXCUBE_DATASHEETS[grade]
+            ev_ds = ferroxcube_evidence(grade)
+            ev.append(ev_ds)
+            sid = ev_ds["id"]
+            props.update({
+                "initial_permeability": {"value": q(ds["mu_i"], "1"), "temperature": q(25, "degC"), "source_ref": sid,
+                                         "note": f"datasheet: mu_i = {ds['mu_i']} +-20 % at 25 degC, <= 10 kHz, 0.25 mT"},
+                "saturation_flux_density": [
+                    {"value": q(b, "mT"), "temperature": q(t, "degC"), "field": q(1200, "A/m"), "frequency": q(10, "kHz"), "source_ref": sid,
+                     "note": f"B ({t} degC) at H = 1200 A/m, f = 10 kHz ('approximately' value)"} for t, b in sorted(ds["bs_mT"].items())],
+                "curie_temperature": {"value": q(ds["tc_C"], "degC"), "source_ref": sid,
+                                      "note": f"datasheet states TC >= {ds['tc_C']} degC (lower bound); stored as the bound"},
+                "density": {"value": q(ds["density"], "kg/m^3"), "source_ref": sid, "note": "datasheet 'approximately' value"},
+                "resistivity": {"value": q(ds["rho"], "Ohm*m"), "source_ref": sid, "note": "DC, 25 degC, 'approximately' value"},
+                "loss_reference_points": [
+                    {"frequency": q(f, "kHz"), "flux_density_peak": q(b, "mT"), "temperature": q(t, "degC"), "loss_density": q(pv, "kW/m^3"),
+                     "source_ref": sid, "basis": "datasheet_typical"} for f, b, t, pv in ds["pv"]],
+            })
+            if info["fmin"] is not None:
+                props["recommended_frequency_range"] = {"min": info["fmin"], "max": info["fmax"], "unit": "Hz"}
+            props["description"] = (f"Ferroxcube {grade} MnZn ferrite (datasheet: 'a low frequency power material for use in power and general "
+                                    f"purpose transformers at frequencies {ds['fmax_note']}'). Loss parameters: Princeton MagNet "
+                                    "derived Steinmetz sets (25-90 degC); datasheet values transcribed in aipe-magnetics 0.3.0. Application tag per "
+                                    f"Princeton MagNet constants.py (material_applications): '{MAGNET_APPLICATIONS[grade]}'.")
+        elif grade != "N87":
             props["initial_permeability"] = {"value": q(info["mu"], "1"), "source_ref": EV_MAGNET_CONSTANTS["id"],
                                              "note": "mu_r_0 as listed in Princeton MagNet constants.py (material_extra); conditions not stated there"}
             if info["fmin"] is not None:
@@ -275,7 +324,7 @@ def material_records(fits: dict[str, Any]) -> list[dict[str, Any]]:
             "provenance": {"created_at": CREATED, "activity": "transcribed from cited sources and derived fits by tools/build_catalog.py",
                            "tool": {"id": "aipe.magnetics", "version": __version__}, "inputs": [e["id"] for e in ev],
                            "normalization": "all quantities converted to SI by aipe_magnetics.common.units with original units retained"},
-            "quality": {"status": "normalized", "flags": [] if grade == "N87" else ["datasheet_parameters_missing"],
+            "quality": {"status": "normalized", "flags": [] if grade == "N87" or grade in FERROXCUBE_DATASHEETS else ["datasheet_parameters_missing"],
                         "notes": ["review_status unreviewed: awaiting owner review of the transcriptions"]},
             # 'power' only where a transcribed application statement says so (N87 datasheet 'Preferred application: Power
             # transformers'; MagNet constants.py material_applications for the other grades)

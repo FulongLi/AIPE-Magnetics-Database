@@ -63,6 +63,9 @@ def _defs() -> Iterable[UnitDef]:
     yield UnitDef("m^3", _d(m=3), _F(1), si=True)
     yield UnitDef("cm^3", _d(m=3), _F(1, 10**6))
     yield UnitDef("mm^3", _d(m=3), _F(1, 10**9))
+    yield UnitDef("m^4", _d(m=4), _F(1), si=True, description="area product / second moment of area")
+    yield UnitDef("cm^4", _d(m=4), _F(1, 10**8))
+    yield UnitDef("mm^4", _d(m=4), _F(1, 10**12))
     yield UnitDef("L", _d(m=3), _F(1, 1000))
     # mass / density
     yield UnitDef("kg", _d(kg=1), _F(1), si=True)
@@ -145,6 +148,9 @@ def _defs() -> Iterable[UnitDef]:
     yield UnitDef("K/W", _d(m=-2, kg=-1, s=3, K=1), _F(1), si=True)
     yield UnitDef("W/m/K", _d(m=1, kg=1, s=-3, K=-1), _F(1), si=True)
     yield UnitDef("1/K", _d(K=-1), _F(1), si=True, description="temperature coefficient")
+    yield UnitDef("W/m^2/K", _d(kg=1, s=-3, K=-1), _F(1), si=True, description="heat transfer coefficient")
+    yield UnitDef("J/kg/K", _d(m=2, s=-2, K=-1), _F(1), si=True, description="specific heat capacity")
+    yield UnitDef("m^2/s", _d(m=2, s=-1), _F(1), si=True, description="kinematic viscosity / diffusivity")
     # velocity, misc
     yield UnitDef("m/s", _d(m=1, s=-1), _F(1), si=True)
     yield UnitDef("T/s", _d(kg=1, s=-3, A=-1), _F(1), si=True, description="flux density slew rate")

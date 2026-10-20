@@ -34,12 +34,26 @@
       "sha256": "421d9fd33e4c1626dd3a22ca26755b2b98a98f4175f44df2622d7ead8d5417f2",
       "url": "https://github.com/PrincetonUniversity/magnet/blob/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/3C90_database.h5",
       "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a"
+    },
+    {
+      "created_at": "2026-10-19T00:00:00Z",
+      "description": "Manufacturer specification table: initial permeability (25 degC, <= 10 kHz, 0.25 mT), B at 1200 A/m and 10 kHz (25 and 100 degC, 'approximately' values), PV typical values at 100 degC, DC resistivity, Curie temperature (lower bound) and density. Transcribed by aipe-magnetics 0.3.0; not AIPE measurements.",
+      "id": "evidence.ferroxcube-3c90-datasheet-2008-09",
+      "kind": "source",
+      "license": "NOASSERTION",
+      "locator": "'SPECIFICATIONS' table, page 2",
+      "reference": "Ferroxcube, '3C90 Material specification', data sheet, 2008 Sep 01 (supersedes data of September 2004)",
+      "review_status": "unreviewed",
+      "sha256": "803f0da1bbc44a82a52f323ce7c0fcf631431d823334f0396ab68715e87fd9d6",
+      "url": "https://www.ferroxcube.com/upload/media/product/file/MDS/3c90.pdf",
+      "version": "2008 Sep 01"
     }
   ],
   "evidence_refs": [
     "evidence.princeton-magnet-constants",
     "evidence.aipe-steinmetz-fit-magnet",
-    "evidence.princeton-magnet-database-3c90"
+    "evidence.princeton-magnet-database-3c90",
+    "evidence.ferroxcube-3c90-datasheet-2008-09"
   ],
   "extensions": {},
   "id": "material.ferroxcube-3c90",
@@ -47,16 +61,82 @@
   "license": "NOASSERTION",
   "name": "3C90",
   "properties": {
-    "description": "MnZn ferrite 3C90; application per Princeton MagNet constants.py (material_applications): 'Power and general purpose transformers'. Datasheet parameters (Bsat, Curie temperature, density) are not yet transcribed for this grade; only Princeton MagNet derived loss parameters are available.",
+    "curie_temperature": {
+      "note": "datasheet states TC >= 220 degC (lower bound); stored as the bound",
+      "source_ref": "evidence.ferroxcube-3c90-datasheet-2008-09",
+      "value": {
+        "original": {
+          "unit": "degC",
+          "value": 220.0
+        },
+        "unit": "K",
+        "value": 493.15
+      }
+    },
+    "density": {
+      "note": "datasheet 'approximately' value",
+      "source_ref": "evidence.ferroxcube-3c90-datasheet-2008-09",
+      "value": {
+        "unit": "kg/m^3",
+        "value": 4800.0
+      }
+    },
+    "description": "Ferroxcube 3C90 MnZn ferrite (datasheet: 'a low frequency power material for use in power and general purpose transformers at frequencies up to 0.2 MHz'). Loss parameters: Princeton MagNet derived Steinmetz sets (25-90 degC); datasheet values transcribed in aipe-magnetics 0.3.0. Application tag per Princeton MagNet constants.py (material_applications): 'Power and general purpose transformers'.",
     "grade": "3C90",
     "initial_permeability": {
-      "note": "mu_r_0 as listed in Princeton MagNet constants.py (material_extra); conditions not stated there",
-      "source_ref": "evidence.princeton-magnet-constants",
+      "note": "datasheet: mu_i = 2300 +-20 % at 25 degC, <= 10 kHz, 0.25 mT",
+      "source_ref": "evidence.ferroxcube-3c90-datasheet-2008-09",
+      "temperature": {
+        "original": {
+          "unit": "degC",
+          "value": 25.0
+        },
+        "unit": "K",
+        "value": 298.15
+      },
       "value": {
         "unit": "1",
         "value": 2300.0
       }
     },
+    "loss_reference_points": [
+      {
+        "basis": "datasheet_typical",
+        "flux_density_peak": {
+          "original": {
+            "unit": "mT",
+            "value": 200.0
+          },
+          "unit": "T",
+          "value": 0.2
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 100.0
+          },
+          "unit": "Hz",
+          "value": 100000.0
+        },
+        "loss_density": {
+          "original": {
+            "unit": "kW/m^3",
+            "value": 450.0
+          },
+          "unit": "W/m^3",
+          "value": 450000.0
+        },
+        "source_ref": "evidence.ferroxcube-3c90-datasheet-2008-09",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        }
+      }
+    ],
     "manufacturer_ref": "manufacturer.ferroxcube",
     "material_class": "ferrite_mnzn",
     "recommended_frequency_range": {
@@ -64,6 +144,80 @@
       "min": 25000.0,
       "unit": "Hz"
     },
+    "resistivity": {
+      "note": "DC, 25 degC, 'approximately' value",
+      "source_ref": "evidence.ferroxcube-3c90-datasheet-2008-09",
+      "value": {
+        "unit": "Ohm*m",
+        "value": 5.0
+      }
+    },
+    "saturation_flux_density": [
+      {
+        "field": {
+          "unit": "A/m",
+          "value": 1200.0
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 10.0
+          },
+          "unit": "Hz",
+          "value": 10000.0
+        },
+        "note": "B (25 degC) at H = 1200 A/m, f = 10 kHz ('approximately' value)",
+        "source_ref": "evidence.ferroxcube-3c90-datasheet-2008-09",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 25.0
+          },
+          "unit": "K",
+          "value": 298.15
+        },
+        "value": {
+          "original": {
+            "unit": "mT",
+            "value": 470.0
+          },
+          "unit": "T",
+          "value": 0.47000000000000003
+        }
+      },
+      {
+        "field": {
+          "unit": "A/m",
+          "value": 1200.0
+        },
+        "frequency": {
+          "original": {
+            "unit": "kHz",
+            "value": 10.0
+          },
+          "unit": "Hz",
+          "value": 10000.0
+        },
+        "note": "B (100 degC) at H = 1200 A/m, f = 10 kHz ('approximately' value)",
+        "source_ref": "evidence.ferroxcube-3c90-datasheet-2008-09",
+        "temperature": {
+          "original": {
+            "unit": "degC",
+            "value": 100.0
+          },
+          "unit": "K",
+          "value": 373.15
+        },
+        "value": {
+          "original": {
+            "unit": "mT",
+            "value": 380.0
+          },
+          "unit": "T",
+          "value": 0.38
+        }
+      }
+    ],
     "steinmetz_parameter_sets": [
       {
         "alpha": 1.393257624539527,
@@ -221,7 +375,8 @@
     "inputs": [
       "evidence.princeton-magnet-constants",
       "evidence.aipe-steinmetz-fit-magnet",
-      "evidence.princeton-magnet-database-3c90"
+      "evidence.princeton-magnet-database-3c90",
+      "evidence.ferroxcube-3c90-datasheet-2008-09"
     ],
     "normalization": "all quantities converted to SI by aipe_magnetics.common.units with original units retained",
     "tool": {
@@ -230,9 +385,7 @@
     }
   },
   "quality": {
-    "flags": [
-      "datasheet_parameters_missing"
-    ],
+    "flags": [],
     "notes": [
       "review_status unreviewed: awaiting owner review of the transcriptions"
     ],
