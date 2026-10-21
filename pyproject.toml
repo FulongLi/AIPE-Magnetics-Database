@@ -35,6 +35,9 @@ dependencies = [
 hdf5 = ["h5py>=3.8"]
 mcp = ["mcp>=2.0,<3"]
 torch = ["torch>=2.1"]
+viz = ["matplotlib>=3.7"]
+mesh = ["gmsh>=4.11"]
+cad = ["cadquery>=2.4"]
 dev = [
   "h5py>=3.8",
   "mcp>=2.0,<3",

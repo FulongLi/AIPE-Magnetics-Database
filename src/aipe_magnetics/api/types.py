@@ -395,3 +395,318 @@ class ReportRequest(_Spec):
     allow_write: bool = Field(default=False, description="explicit authorization to create the file")
     overwrite: bool = False
     include_inputs: bool = True
+
+
+# -------------------------------------------------------------------------------------------------
+# waveform-informed transformer design (v0.3)
+# -------------------------------------------------------------------------------------------------
+def _angle_rad(value: Any, name: str) -> Quantity | None:
+    """Angle as a ``rad`` quantity (``deg`` converted); plain ratios are rejected."""
+    if value is None:
+        return None
+    q = Quantity.parse(value, name=name)
+    if q.unit not in ("rad", "deg"):
+        raise InvalidInputError(f"{name} must be an angle in 'rad' or 'deg', got {q.unit!r}", details={"name": name})
+    q = q.to("rad")
+    if not (0 < q.value <= 1.5707963267948966 + 1e-12):
+        raise InvalidInputError(f"{name} must lie in (0, pi/2] rad for single-phase-shift operation, got {q.value:g} rad")
+    return q
+
+
+def _length_list(values: Any, name: str) -> list[Quantity]:
+    if not isinstance(values, (list, tuple)) or not values:
+        raise InvalidInputError(f"{name} must be a non-empty list of lengths")
+    return [_q(v, "m", name, positive=True) for v in values]  # type: ignore[misc]
+
+
+class WaveformChannelMap(_Spec):
+    """Roles -> channel / column / dataset names of the sampled source (nothing is inferred from names)."""
+
+    primary_current: str = Field(min_length=1, description="transformer primary winding current (A)")
+    secondary_current: str | None = Field(default=None, description="transformer secondary winding current (A); derived from the "
+                                                                      "primary current and the turns-ratio target when omitted")
+    primary_voltage: str | None = Field(default=None, description="transformer primary winding voltage (V); its integral gives the "
+                                                                    "flux linkage; an ideal square wave of 'primary_voltage' amplitude "
+                                                                    "is assumed when omitted")
+    magnetising_current: str | None = Field(default=None, description="optional magnetising current channel (A), reported for comparison")
+
+
+class WaveformWindowSpec(_Spec):
+    """Steady-state window ``[t0, t1]`` of a multi-period record; the last complete period of the window is used."""
+
+    t0: Quantity | None = None
+    t1: Quantity | None = None
+
+    @field_validator("t0", "t1", mode="before")
+    @classmethod
+    def _t(cls, v: Any) -> Quantity | None:
+        return _q(v, "s", "window time", nonnegative=True, optional=True)
+
+
+class SPSWaveformSpec(_Spec):
+    """Single-phase-shift DAB parameters used to synthesise the transformer waveforms analytically."""
+
+    power: Quantity
+    primary_voltage: Quantity
+    secondary_voltage: Quantity
+    phase_shift: Quantity | None = Field(default=None, description="rated phase shift (rad or deg); fixes the series inductance")
+    series_inductance: Quantity | None = Field(default=None, description="total series inductance referred to the primary (H); fixes "
+                                                                           "the phase shift")
+
+    @field_validator("power", mode="before")
+    @classmethod
+    def _p(cls, v: Any) -> Quantity:
+        return _q(v, "W", "power", positive=True)  # type: ignore[return-value]
+
+    @field_validator("primary_voltage", "secondary_voltage", mode="before")
+    @classmethod
+    def _v(cls, v: Any) -> Quantity:
+        return _q(v, "V", "voltage", positive=True)  # type: ignore[return-value]
+
+    @field_validator("phase_shift", mode="before")
+    @classmethod
+    def _phi(cls, v: Any) -> Quantity | None:
+        return _angle_rad(v, "phase_shift")
+
+    @field_validator("series_inductance", mode="before")
+    @classmethod
+    def _l(cls, v: Any) -> Quantity | None:
+        return _q(v, "H", "series_inductance", positive=True, optional=True)
+
+    @model_validator(mode="after")
+    def _one_of(self) -> "SPSWaveformSpec":
+        if (self.phase_shift is None) == (self.series_inductance is None):
+            raise ValueError("give exactly one of phase_shift or series_inductance")
+        return self
+
+
+class WaveformSourceSpec(_Spec):
+    """Where the transformer waveforms come from: a sampled file / document or the analytical SPS model."""
+
+    kind: Literal["hdf5", "csv", "json", "sps"]
+    path: str | None = Field(default=None, description="hdf5 / csv / json: file path")
+    document: dict[str, Any] | None = Field(default=None, description="json: in-memory document instead of a file")
+    channels: WaveformChannelMap | None = Field(default=None, description="hdf5 / csv / json: role -> channel name")
+    units: dict[str, str] | None = Field(default=None, description="csv: unit per column (required for every mapped column)")
+    time_column: str | None = Field(default=None, description="csv: header of the time column")
+    time_unit: str | None = Field(default=None, description="csv: unit of the time column")
+    time_dataset: str = Field(default="time", description="hdf5: time dataset path")
+    channel_group: str = Field(default="channels", description="hdf5: group holding the channel datasets")
+    window: WaveformWindowSpec | None = None
+    delimiter: str = ","
+    sps: SPSWaveformSpec | None = None
+
+    @model_validator(mode="after")
+    def _consistent(self) -> "WaveformSourceSpec":
+        if self.kind == "sps":
+            if self.sps is None:
+                raise ValueError("kind 'sps' needs the 'sps' parameters")
+            return self
+        if self.channels is None:
+            raise ValueError(f"kind {self.kind!r} needs 'channels' (role -> channel name)")
+        if self.kind == "json":
+            if (self.path is None) == (self.document is None):
+                raise ValueError("kind 'json' needs exactly one of path or document")
+        elif not self.path:
+            raise ValueError(f"kind {self.kind!r} needs a file path")
+        if self.kind == "csv":
+            if not self.time_column or not self.time_unit:
+                raise ValueError("kind 'csv' needs time_column and time_unit")
+            names = [n for n in (self.channels.primary_current, self.channels.secondary_current, self.channels.primary_voltage,
+                                 self.channels.magnetising_current) if n]
+            missing = [n for n in names if not (self.units or {}).get(n)]
+            if missing:
+                raise ValueError(f"kind 'csv' needs a unit for every mapped column; missing: {missing}")
+        return self
+
+
+class ConductorOptionsSpec(_Spec):
+    """Winding design space explored for every core / turns combination."""
+
+    conductors: list[Literal["litz", "foil"]] = Field(default_factory=lambda: ["litz"])
+    litz_strand_diameters: list[Quantity] = Field(default_factory=lambda: [Quantity(value=0.1e-3, unit="m")])
+    foil_thicknesses: list[Quantity] = Field(default_factory=lambda: [Quantity(value=0.1e-3, unit="m"), Quantity(value=0.2e-3, unit="m")])
+    current_densities: list[Quantity] = Field(default_factory=lambda: [Quantity(value=4.0e6, unit="A/m^2")],
+                                              description="RMS current densities used to size the conductors")
+    arrangements: list[str] = Field(default_factory=lambda: ["P-S", "P-S-P"], description="radial winding order, e.g. 'P-S', 'P-S-P', 'S-P-S'")
+    max_window_fill: float = Field(default=0.45, gt=0, le=1, strict=True, description="bare copper area / coil-former window area")
+    max_current_density: Quantity = Field(default_factory=lambda: Quantity(value=6.0e6, unit="A/m^2"))
+
+    @field_validator("litz_strand_diameters", "foil_thicknesses", mode="before")
+    @classmethod
+    def _lengths(cls, v: Any, info: Any) -> list[Quantity]:
+        return _length_list(v, info.field_name)
+
+    @field_validator("current_densities", mode="before")
+    @classmethod
+    def _js(cls, v: Any) -> list[Quantity]:
+        if not isinstance(v, (list, tuple)) or not v:
+            raise InvalidInputError("current_densities must be a non-empty list")
+        return [_q(j, "A/m^2", "current_density", positive=True) for j in v]  # type: ignore[misc]
+
+    @field_validator("max_current_density", mode="before")
+    @classmethod
+    def _jmax(cls, v: Any) -> Quantity:
+        return _q(v, "A/m^2", "max_current_density", positive=True)  # type: ignore[return-value]
+
+    @field_validator("conductors")
+    @classmethod
+    def _non_empty(cls, v: list[str]) -> list[str]:
+        if not v:
+            raise ValueError("conductors must not be empty")
+        return v
+
+    @field_validator("arrangements")
+    @classmethod
+    def _arr(cls, v: list[str]) -> list[str]:
+        if not v or any(not isinstance(a, str) or not a.strip() for a in v):
+            raise ValueError("arrangements must be non-empty strings such as 'P-S'")
+        return v
+
+
+class ThermalSpec(_Spec):
+    """Cooling boundary condition and temperature limits of the thermal estimate."""
+
+    cooling: Literal["natural", "forced"] = "forced"
+    ambient: Quantity = Field(default_factory=lambda: Quantity(value=313.15, unit="K"))
+    heat_transfer_coefficient: Quantity | None = Field(default=None, description="forced: h in W/m^2/K (default 40 W/m^2/K)")
+    radiation: bool = True
+    emissivity: float = Field(default=0.9, gt=0, le=1, strict=True)
+    max_winding_hotspot: Quantity = Field(default_factory=lambda: Quantity(value=393.15, unit="K"))
+    max_core_hotspot: Quantity = Field(default_factory=lambda: Quantity(value=383.15, unit="K"))
+
+    @field_validator("ambient", "max_winding_hotspot", "max_core_hotspot", mode="before")
+    @classmethod
+    def _t(cls, v: Any) -> Quantity:
+        return _q(v, "K", "temperature", positive=True)  # type: ignore[return-value]
+
+    @field_validator("heat_transfer_coefficient", mode="before")
+    @classmethod
+    def _h(cls, v: Any) -> Quantity | None:
+        return _q(v, "W/m^2/K", "heat_transfer_coefficient", positive=True, optional=True)
+
+
+class IsolationSpec(_Spec):
+    """Insulation inputs that affect the layout (the insulation system itself is not designed here)."""
+
+    creepage_margin: Quantity = Field(default_factory=lambda: Quantity(value=0.0, unit="m"),
+                                      description="margin at both ends of every layer (reduces the winding height)")
+    interwinding_insulation: Quantity = Field(default_factory=lambda: Quantity(value=0.2e-3, unit="m"),
+                                              description="insulation thickness between winding sections")
+    working_voltage: Quantity | None = None
+    insulation_class: Literal["functional", "basic", "supplementary", "reinforced"] | None = None
+    standard: str | None = None
+
+    @field_validator("creepage_margin", "interwinding_insulation", mode="before")
+    @classmethod
+    def _len(cls, v: Any) -> Quantity:
+        return _q(v, "m", "insulation length", nonnegative=True)  # type: ignore[return-value]
+
+    @field_validator("working_voltage", mode="before")
+    @classmethod
+    def _v(cls, v: Any) -> Quantity | None:
+        return _q(v, "V", "working_voltage", positive=True, optional=True)
+
+
+class WaveformInformedTransformerRequest(_Spec):
+    """Transformer design driven by the converter's actual (sampled or SPS-synthesised) winding waveforms."""
+
+    frequency: Quantity = Field(description="switching frequency (also the period-detection hint for sampled sources)")
+    waveforms: WaveformSourceSpec
+    turns_ratio_target: float = Field(gt=0, description="N1 / N2 target, e.g. 2.0 for 800 V : 400 V")
+    turns_ratio_tolerance: float = Field(default=0.05, ge=0, lt=1, strict=True)
+    primary_voltage: Quantity | None = Field(default=None, description="square-wave amplitude; required when the source has no voltage channel")
+    series_inductance_total: Quantity | None = Field(default=None, description="total series inductance referred to the primary (H); taken "
+                                                                                 "from the HDF5 metadata (l_ext + leakages) when omitted")
+    materials: list[str] | None = Field(default=None, description="candidate materials; None = every catalogue material with sufficient data")
+    cores: list[str] | None = Field(default=None, description="candidate core ids; None = every catalogue core offered in the material")
+    material_offer_policy: Literal["catalogue", "standard_size_equivalent"] = "catalogue"
+    temperature: Quantity = Field(default_factory=lambda: Quantity(value=373.15, unit="K"), description="design (core) temperature")
+    flux_limit: FluxLimitSpec = Field(default_factory=FluxLimitSpec)
+    loss_density_target: Quantity | None = Field(default=None, description="optional core-loss density ceiling (W/m^3)")
+    windings: ConductorOptionsSpec = Field(default_factory=ConductorOptionsSpec)
+    thermal: ThermalSpec = Field(default_factory=ThermalSpec)
+    isolation: IsolationSpec = Field(default_factory=IsolationSpec)
+    turn_steps: int = Field(default=4, ge=0, le=20, strict=True, description="primary turn counts above the minimum that are explored")
+    harmonics: int = Field(default=41, ge=1, le=201, strict=True, description="highest current harmonic in the winding-loss sums")
+    max_candidates: int = Field(default=10, ge=1, le=100, strict=True)
+    reference_core: str | None = Field(default=None, description="core for the material comparison (default: the selected core)")
+    policy: DomainPolicy = "warn"
+
+    @field_validator("frequency", mode="before")
+    @classmethod
+    def _f(cls, v: Any) -> Quantity:
+        return _q(v, "Hz", "frequency", positive=True)  # type: ignore[return-value]
+
+    @field_validator("primary_voltage", mode="before")
+    @classmethod
+    def _v(cls, v: Any) -> Quantity | None:
+        return _q(v, "V", "primary_voltage", positive=True, optional=True)
+
+    @field_validator("series_inductance_total", mode="before")
+    @classmethod
+    def _l(cls, v: Any) -> Quantity | None:
+        return _q(v, "H", "series_inductance_total", positive=True, optional=True)
+
+    @field_validator("temperature", mode="before")
+    @classmethod
+    def _t(cls, v: Any) -> Quantity:
+        return _q(v, "K", "temperature", positive=True)  # type: ignore[return-value]
+
+    @field_validator("loss_density_target", mode="before")
+    @classmethod
+    def _pv(cls, v: Any) -> Quantity | None:
+        return _q(v, "W/m^3", "loss_density_target", positive=True, optional=True)
+
+    @model_validator(mode="after")
+    def _voltage_available(self) -> "WaveformInformedTransformerRequest":
+        src = self.waveforms
+        if src.kind != "sps" and src.channels is not None and src.channels.primary_voltage is None and self.primary_voltage is None:
+            raise ValueError("without a primary_voltage channel the request needs primary_voltage (square-wave amplitude) to derive the flux")
+        return self
+
+
+class MeasurementRequestSpec(_Spec):
+    """Excitation conditions for which magnetic-material measurement requests are generated."""
+
+    materials: list[str] | None = Field(default=None, description="catalogue materials; None = every non-synthetic material")
+    frequency: Quantity
+    flux_density_peak: Quantity | None = Field(default=None, description="design peak flux density; sets the requested B range")
+    temperature: Quantity = Field(default_factory=lambda: Quantity(value=373.15, unit="K"), description="design temperature")
+    temperature_range: list[Quantity] | None = Field(default=None, description="[min, max] operating temperature range")
+    excitation: Literal["sinusoidal", "triangular", "trapezoidal", "piecewise_linear", "sampled"] = "triangular"
+    dc_bias_field_max: Quantity | None = Field(default=None, description="largest DC bias field the application can produce (A/m)")
+    harmonics: int = Field(default=5, ge=1, le=51, strict=True, description="highest current harmonic for winding AC-resistance tests")
+    include_available: bool = Field(default=True, description="also list categories the catalogue already covers")
+
+    @field_validator("frequency", mode="before")
+    @classmethod
+    def _f(cls, v: Any) -> Quantity:
+        return _q(v, "Hz", "frequency", positive=True)  # type: ignore[return-value]
+
+    @field_validator("flux_density_peak", mode="before")
+    @classmethod
+    def _b(cls, v: Any) -> Quantity | None:
+        return _q(v, "T", "flux_density_peak", positive=True, optional=True)
+
+    @field_validator("temperature", mode="before")
+    @classmethod
+    def _t(cls, v: Any) -> Quantity:
+        return _q(v, "K", "temperature", positive=True)  # type: ignore[return-value]
+
+    @field_validator("temperature_range", mode="before")
+    @classmethod
+    def _tr(cls, v: Any) -> list[Quantity] | None:
+        if v is None:
+            return None
+        if not isinstance(v, (list, tuple)) or len(v) != 2:
+            raise InvalidInputError("temperature_range must be [min, max]")
+        lo, hi = (_q(x, "K", "temperature_range", positive=True) for x in v)
+        if lo.value >= hi.value:  # type: ignore[union-attr]
+            raise InvalidInputError("temperature_range min must be below max")
+        return [lo, hi]  # type: ignore[list-item]
+
+    @field_validator("dc_bias_field_max", mode="before")
+    @classmethod
+    def _h(cls, v: Any) -> Quantity | None:
+        return _q(v, "A/m", "dc_bias_field_max", nonnegative=True, optional=True)

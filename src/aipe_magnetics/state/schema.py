@@ -17,9 +17,10 @@ PACKAGED_SCHEMA = Path(__file__).resolve().parents[1] / "schemas" / "state" / "v
 
 def state_json_schema() -> dict[str, Any]:
     schema = MagneticEngineeringState.model_json_schema(mode="validation")
-    schema = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": SCHEMA_ID,
+    # the explicit metadata comes last so that the model's generated title / description do not override it
+    schema = {**schema, "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": SCHEMA_ID,
               "title": "AIPE Magnetics - Magnetic Engineering State 0.3.0",
-              "description": f"{STATE_SCHEMA}: versioned record of a magnetic component design lifecycle (AIPE Magnetics).", **schema}
+              "description": f"{STATE_SCHEMA}: versioned record of a magnetic component design lifecycle (AIPE Magnetics)."}
     return schema
 
 

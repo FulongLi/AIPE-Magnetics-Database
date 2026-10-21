@@ -5,10 +5,22 @@ description: Basic high-frequency transformer design with the AIPE Magnetics eng
 
 # Transformer design (basic analytical sizing)
 
-Tools: `design_transformer`, `validate_design`, `estimate_core_loss`, `compare_materials`,
-`get_material`, `generate_report` (MCP) or `aipe-magnetics design transformer ...` (CLI). The
+Tools: `design_transformer`, `design_transformer_from_waveforms`, `validate_design`, `estimate_core_loss`,
+`compare_materials`, `get_material`, `measurement_requests`, `generate_report` (MCP) or
+`aipe-magnetics design transformer ...` / `aipe-magnetics design waveform-transformer ...` (CLI). The
 repository ships a fully executable reference: `aipe-magnetics demo dab-10kw` (10 kW, 800 V to 400 V,
 100 kHz dual-active-bridge transformer).
+
+When the user has simulated or measured converter waveforms (HDF5 with `/time` and `/channels/<name>` datasets
+carrying `unit` attributes, CSV with known units, or JSON samples), prefer `design_transformer_from_waveforms`:
+it uses the actual current RMS and harmonics and the flux from the integral of the transformer voltage instead of
+the `P / V` square-current approximation, and reports per candidate the leakage inductance, the external inductance
+still required (`L_total - L_leak`), the magnetising inductance, the temperature rise and the window fill. Pass the
+channel names explicitly (`channels: {primary_current, secondary_current, primary_voltage}`), the steady-state
+window and the turns-ratio target; without a voltage channel pass `primary_voltage`. Quote
+`data.square_current_comparison` when explaining the difference to `design_transformer`, repeat
+`data.material_comparison` (materials without saturation data are not evaluable) and offer
+`data.measurement_requests` / `measurement_requests` when catalogue data are missing.
 
 ## 1. Specification to collect
 
