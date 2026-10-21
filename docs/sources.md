@@ -55,3 +55,10 @@ H. Li et al., "How MagNet", IEEE TPEL 2023, doi:10.1109/TPEL.2023.3309232; H. Li
 M. Chen, "MagNet-AI", IEEE TPEL 2023, doi:10.1109/TPEL.2023.3309233.
 Paderborn HARDCORE model: T. Förster et al., arXiv:2401.11488. Paderborn materialdatabase: LEA,
 Paderborn University (GPL-3.0). MagNet Challenge 2: M. Chen et al., IEEE PELS MagNet Challenge 2025.
+
+## Reference projects and attribution (summary)
+
+Princeton MagNet (MIT), MagNet Challenge 2 (no licence; reference only), Paderborn LEA
+materialdatabase (GPL-3.0; no code or data copied), Paderborn mag-net-hub (MIT), AIPE-Core and
+AIPE-Registry (MIT). Equations follow Steinmetz, Venkatachalam et al. 2002 (iGSE), Bertotti 1988,
+Jiles & Atherton 1986 / Jiles, Thoelke & Devine 1992, Dowell 1966 (see [models.md](models.md)).
