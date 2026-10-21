@@ -124,6 +124,40 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--waveform", default="square", choices=["square", "sinusoidal", "trapezoidal"]); p.add_argument("--duty", type=float, default=0.5)
     p.add_argument("--conductor", default="litz", choices=["round", "litz", "foil"]); p.add_argument("--flux-fraction", type=float)
     p.add_argument("--loss-target", help="core-loss density ceiling, e.g. '300 kW/m^3'"); _add_json_flag(p)
+    p = d.add_parser("waveform-transformer", help="transformer design from the converter's actual waveforms (HDF5 / CSV / JSON) or SPS parameters")
+    p.add_argument("--source", help="waveform file (HDF5 / CSV / JSON); omit with --sps-power to synthesise SPS waveforms")
+    p.add_argument("--kind", choices=["hdf5", "csv", "json"], help="container kind (default: from the file suffix)")
+    p.add_argument("--channel", action="append", default=[], metavar="ROLE=NAME",
+                   help="role -> channel: primary_current (required), secondary_current, primary_voltage, magnetising_current (repeatable)")
+    p.add_argument("--unit", action="append", default=[], metavar="NAME=UNIT", help="csv: unit of a mapped column (repeatable)")
+    p.add_argument("--time-column", help="csv: time column header"); p.add_argument("--time-unit", help="csv: time unit, e.g. us")
+    p.add_argument("--window", nargs=2, metavar=("T0", "T1"), help="steady-state window, e.g. '200 us' '240 us'")
+    p.add_argument("--frequency", "-f", required=True); p.add_argument("--turns-ratio", type=float, required=True, help="N1/N2 target")
+    p.add_argument("--primary-voltage", help="square-wave amplitude, needed when the source has no voltage channel")
+    p.add_argument("--series-inductance", help="total series inductance referred to the primary, e.g. '35 uH'")
+    p.add_argument("--material", action="append", help="candidate material (repeatable; default: every material with sufficient data)")
+    p.add_argument("--core", action="append", help="candidate core id (repeatable)")
+    p.add_argument("--offer-policy", default="catalogue", choices=["catalogue", "standard_size_equivalent"])
+    p.add_argument("--temperature", "-t", help="design (core) temperature, default 100 degC")
+    p.add_argument("--flux-fraction", type=float); p.add_argument("--loss-target", help="core-loss density ceiling, e.g. '300 kW/m^3'")
+    p.add_argument("--conductor", action="append", choices=["litz", "foil"], help="conductor kinds explored (repeatable; default litz)")
+    p.add_argument("--arrangement", action="append", help="winding arrangements explored (repeatable; default P-S and P-S-P)")
+    p.add_argument("--cooling", choices=["natural", "forced"]); p.add_argument("--ambient"); p.add_argument("--heat-transfer-coefficient")
+    p.add_argument("--turn-steps", type=int); p.add_argument("--max-candidates", type=int)
+    p.add_argument("--sps-power"); p.add_argument("--sps-primary-voltage"); p.add_argument("--sps-secondary-voltage")
+    p.add_argument("--sps-phase-shift", help="e.g. '22.5 deg'"); p.add_argument("--sps-series-inductance", help="e.g. '35 uH'")
+    p.add_argument("--state-output", type=Path, help="write the AIPE-Core Engineering State of the selected design to this file")
+    p.add_argument("--created-at", help="RFC 3339 timestamp recorded in the result and the state (default: now, UTC)")
+    p.add_argument("--overwrite", action="store_true"); _add_json_flag(p)
+
+    p = sub.add_parser("measurement-requests", help="magnetic-material measurement requests for an excitation (structured JSON)")
+    p.add_argument("--material", action="append", help="material (repeatable; default: every non-synthetic catalogue material)")
+    p.add_argument("--frequency", "-f", required=True); p.add_argument("--flux", "-b", help="design peak flux density, e.g. '178 mT'")
+    p.add_argument("--temperature", "-t", help="design temperature, default 100 degC")
+    p.add_argument("--temperature-range", nargs=2, metavar=("TMIN", "TMAX"), help="operating temperature range, e.g. '25 degC' '120 degC'")
+    p.add_argument("--excitation", default="triangular", choices=["sinusoidal", "triangular", "trapezoidal", "piecewise_linear", "sampled"])
+    p.add_argument("--dc-bias-max", help="largest DC bias field, e.g. '100 A/m'"); p.add_argument("--harmonics", type=int, default=5)
+    p.add_argument("--output", type=Path, help="write the JSON envelope to this file"); p.add_argument("--overwrite", action="store_true"); _add_json_flag(p)
 
     p = sub.add_parser("validate", help="validate an existing design"); p.add_argument("--material", required=True); p.add_argument("--core", required=True)
     p.add_argument("--turns", type=int, required=True); p.add_argument("--frequency", "-f", required=True); p.add_argument("--temperature", "-t")
@@ -160,6 +194,105 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _winding(conductor: str) -> dict[str, Any]:
     return {"conductor_type": conductor}
+
+
+def _pairs(items: list[str], option: str) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for item in items:
+        key, sep, value = item.partition("=")
+        if not sep or not key.strip() or not value.strip():
+            raise InvalidInputError(f"{option} expects KEY=VALUE, got {item!r}")
+        out[key.strip()] = value.strip()
+    return out
+
+
+def _write_json(path: Path, payload: Any, overwrite: bool) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w" if overwrite else "x", encoding="utf-8", newline="\n") as stream:
+        json.dump(payload, stream, indent=2, ensure_ascii=False, sort_keys=True)
+        stream.write("\n")
+
+
+def _waveform_transformer(args: argparse.Namespace) -> int:
+    import aipe_magnetics.api as api
+
+    roles = ("primary_current", "secondary_current", "primary_voltage", "magnetising_current")
+    if args.sps_power:
+        for name in ("sps_primary_voltage", "sps_secondary_voltage"):
+            if not getattr(args, name):
+                raise InvalidInputError(f"--{name.replace('_', '-')} is required with --sps-power")
+        if bool(args.sps_phase_shift) == bool(args.sps_series_inductance):
+            raise InvalidInputError("give exactly one of --sps-phase-shift and --sps-series-inductance")
+        sps: dict[str, Any] = {"power": _qty(args.sps_power, "sps-power"), "primary_voltage": _qty(args.sps_primary_voltage, "sps-primary-voltage"),
+                               "secondary_voltage": _qty(args.sps_secondary_voltage, "sps-secondary-voltage")}
+        if args.sps_phase_shift:
+            sps["phase_shift"] = _qty(args.sps_phase_shift, "sps-phase-shift")
+        else:
+            sps["series_inductance"] = _qty(args.sps_series_inductance, "sps-series-inductance")
+        waveforms: dict[str, Any] = {"kind": "sps", "sps": sps}
+    else:
+        if not args.source:
+            raise InvalidInputError("--source (waveform file) or --sps-power is required")
+        channels = _pairs(args.channel, "--channel")
+        unknown = sorted(set(channels) - set(roles))
+        if unknown:
+            raise InvalidInputError(f"--channel roles must be one of {list(roles)}; unknown: {unknown}")
+        if "primary_current" not in channels:
+            raise InvalidInputError("--channel primary_current=<name> is required")
+        suffix = Path(args.source).suffix.lower()
+        kind = args.kind or {".h5": "hdf5", ".hdf5": "hdf5", ".csv": "csv", ".json": "json"}.get(suffix)
+        if kind is None:
+            raise InvalidInputError(f"cannot tell the container kind of {args.source!r}; pass --kind")
+        waveforms = {"kind": kind, "path": args.source, "channels": channels}
+        if args.window:
+            waveforms["window"] = {"t0": _qty(args.window[0], "window"), "t1": _qty(args.window[1], "window")}
+        if kind == "csv":
+            waveforms.update({"time_column": args.time_column, "time_unit": args.time_unit, "units": _pairs(args.unit, "--unit")})
+    payload: dict[str, Any] = {"frequency": _qty(args.frequency, "frequency"), "turns_ratio_target": args.turns_ratio, "waveforms": waveforms,
+                               "material_offer_policy": args.offer_policy}
+    if args.primary_voltage:
+        payload["primary_voltage"] = _qty(args.primary_voltage, "primary-voltage")
+    if args.series_inductance:
+        payload["series_inductance_total"] = _qty(args.series_inductance, "series-inductance")
+    if args.material:
+        payload["materials"] = args.material
+    if args.core:
+        payload["cores"] = args.core
+    if args.temperature:
+        payload["temperature"] = _qty(args.temperature, "temperature")
+    if args.flux_fraction is not None:
+        payload["flux_limit"] = {"mode": "fraction_of_saturation", "fraction": args.flux_fraction}
+    if args.loss_target:
+        payload["loss_density_target"] = _qty(args.loss_target, "loss-target")
+    windings: dict[str, Any] = {}
+    if args.conductor:
+        windings["conductors"] = args.conductor
+    if args.arrangement:
+        windings["arrangements"] = args.arrangement
+    if windings:
+        payload["windings"] = windings
+    thermal: dict[str, Any] = {}
+    if args.cooling:
+        thermal["cooling"] = args.cooling
+    if args.ambient:
+        thermal["ambient"] = _qty(args.ambient, "ambient")
+    if args.heat_transfer_coefficient:
+        thermal["heat_transfer_coefficient"] = _qty(args.heat_transfer_coefficient, "heat-transfer-coefficient")
+    if thermal:
+        payload["thermal"] = thermal
+    if args.turn_steps is not None:
+        payload["turn_steps"] = args.turn_steps
+    if args.max_candidates is not None:
+        payload["max_candidates"] = args.max_candidates
+    created_at = args.created_at
+    if created_at is None:
+        from datetime import datetime, timezone
+        created_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    result = api.design_transformer_from_waveforms(payload, created_at=created_at, export_state=bool(args.state_output))
+    if args.state_output and result.status == "ok" and result.data.get("engineering_state") is not None:
+        _write_json(args.state_output, result.data["engineering_state"], args.overwrite)
+        print(f"wrote {args.state_output}")
+    return _emit(result, args)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -261,6 +394,25 @@ def _dispatch(parser: argparse.ArgumentParser, args: argparse.Namespace) -> int:
         if args.loss_target:
             payload["loss_density_target"] = _qty(args.loss_target, "loss-target")
         return _emit(api.design_transformer(payload), args)
+    if args.command == "design" and args.action == "waveform-transformer":
+        return _waveform_transformer(args)
+    if args.command == "measurement-requests":
+        payload = {"frequency": _qty(args.frequency, "frequency"), "excitation": args.excitation, "harmonics": args.harmonics}
+        if args.material:
+            payload["materials"] = args.material
+        if args.flux:
+            payload["flux_density_peak"] = _qty(args.flux, "flux")
+        if args.temperature:
+            payload["temperature"] = _qty(args.temperature, "temperature")
+        if args.temperature_range:
+            payload["temperature_range"] = [_qty(args.temperature_range[0], "temperature-range"), _qty(args.temperature_range[1], "temperature-range")]
+        if args.dc_bias_max:
+            payload["dc_bias_field_max"] = _qty(args.dc_bias_max, "dc-bias-max")
+        res = api.measurement_requests(payload)
+        if args.output:
+            _write_json(args.output, res.to_json_dict(), args.overwrite)
+            print(f"wrote {args.output}")
+        return _emit(res, args)
     if args.command == "validate":
         payload = {"material": args.material, "core": args.core, "turns": args.turns, "frequency": _qty(args.frequency, "frequency"),
                    "voltage_waveform": args.waveform}

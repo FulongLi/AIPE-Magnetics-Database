@@ -68,7 +68,7 @@ class WorkflowOptions:
     mesh_refinement_check: bool = True
     natural_convection_sensitivity: bool = True
     baseline_comparison: bool = True
-    created_at: str = "2026-10-20T00:00:00Z"
+    created_at: str | None = None   # RFC 3339, supplied by the caller (the actual run time); never a build-time literal
     em_settings: Any = None
     log: Callable[[str], None] | None = None
     max_candidates: int | None = None
@@ -97,6 +97,10 @@ def run_dab_workflow(output_dir: str | Path, spec: DABTransformerSpec | dict | N
                      *, strict: bool = False) -> WorkflowResult:
     t0 = time.perf_counter()
     opts = options or WorkflowOptions()
+    if not opts.created_at:
+        from aipe_magnetics.common.errors import InvalidInputError
+        raise InvalidInputError("WorkflowOptions.created_at (RFC 3339 timestamp of this run) must be supplied by the caller; "
+                                "the workflow never invents a timestamp")
     log = opts.log or (lambda m: None)
     spec = spec if isinstance(spec, DABTransformerSpec) else DABTransformerSpec.model_validate(spec or {})
     store = wc.ArtifactStore(Path(output_dir))
@@ -338,18 +342,7 @@ def run_dab_workflow(output_dir: str | Path, spec: DABTransformerSpec | dict | N
         ext_refs["litz_proximity_fea_vs_1d"] = (prox, rep_nom.value("litz_proximity_loss_1d"))
     checks.append({"kind": "reference_comparison", "id": "fea-vs-analytical", "status": "recorded",
                    "comparisons": {k: {"fea": a, "reference": b, "ratio": a / b if b else None} for k, (a, b) in ext_refs.items()}})
-    verification = VerificationRecord(levels=[
-        VerificationLevelStatus(level="software_schema", status="passed", statement="State validated against the MES 0.3.0 JSON Schema; CAD exported "
-                                "and (when CadQuery is installed) re-imported by the test suite; package test suite in docs/release-verification-v0.3.0.md."),
-        VerificationLevelStatus(level="numerical_physical", status="passed" if all(c["status"] in ("pass", "recorded") for c in checks) else "partial",
-                                statement="Thermal energy balance closed, electrothermal fixed point converged, mesh refinement within tolerance "
-                                          "(see checks); solver verification checks in the bundled evidence (Dowell, manufactured solutions)."),
-        VerificationLevelStatus(level="external_reference", status="partial", statement="FEA compared with published analytical references "
-                                "(1-D leakage, Dowell, Ve-based core loss, litz 1-D); discrepancies are reported, not tuned."),
-        VerificationLevelStatus(level="experimental", status="not_performed", statement="No prototype was built or measured.")],
-        checks=checks, manufacturing_readiness="preliminary_design",
-        statement="Preliminary engineering design: insulation / creepage, mechanical, safety and production verification are not performed; "
-                  "isolation requirements are an open question.")
+    verification = build_verification_record(checks, schema_validated=None)
     unc = [UncertaintyItem(quantity="ferrite thermal conductivity", kind="bounds", lower=1.0, upper=5.0, unit="W/m/K",
                            basis="TDK general data range; nominal 4 W/m/K used"),
            UncertaintyItem(quantity="winding pack thermal conductivity", kind="bounds", lower=0.3, upper=1.5, unit="W/m/K", basis="engineering judgement"),
@@ -404,6 +397,11 @@ def run_dab_workflow(output_dir: str | Path, spec: DABTransformerSpec | dict | N
     errs = validate_state(state.model_dump(mode="json", exclude_none=True))
     if errs:
         errors += [f"state validation: {e}" for e in errs[:10]]
+    # the software/schema level is recorded from the validation that was actually executed on this state, never asserted up front
+    state = state.model_copy(update={"verification": build_verification_record(checks, schema_validated=not errs)})
+    final_errs = validate_state(state.model_dump(mode="json", exclude_none=True))
+    if final_errs:
+        errors += [f"state validation (after recording the verification outcome): {e}" for e in final_errs[:10]]
     dump_state(state, store.root / "state" / "magnetic-engineering-state.json", overwrite=True)
     store.file(store.root / "state" / "magnetic-engineering-state.json", "state", "Magnetic Engineering State 0.3.0")
     try:
@@ -424,6 +422,42 @@ def run_dab_workflow(output_dir: str | Path, spec: DABTransformerSpec | dict | N
     store.json("results/workflow-summary.json", summary, "results", "Compact workflow summary")
     log(f"10 exported {len(store.records)} artifacts in {summary['elapsed_s']} s")
     return WorkflowResult("ok" if not errors else "ok_with_warnings", store.root, state, summary, store.compact(), errors)
+
+
+def build_verification_record(checks: list[dict[str, Any]], *, schema_validated: bool | None) -> VerificationRecord:
+    """Verification record whose statuses follow from what was executed.
+
+    * ``software_schema``: ``passed`` only when ``schema_validated`` is True (the state validated against the MES 0.3.0 JSON Schema
+      in this run), ``failed`` when False, ``partial`` while the validation has not run yet (``None``);
+    * ``numerical_physical``: the workflow's own self-consistency checks (energy balance, electrothermal convergence, mesh refinement,
+      FEA-vs-analytical comparison) - these are internal consistency checks, so the level is ``partial`` at best; it is ``failed``
+      when one of them failed. Independent numerical verification lives in the bundled evidence of the solvers, not here;
+    * ``external_reference``: ``partial`` (comparison with analytical references, discrepancies reported, not tuned);
+    * ``experimental``: ``not_performed``.
+    """
+    self_checks = [c for c in checks if c.get("status") not in (None, "recorded")]
+    if any(c["status"] == "fail" for c in self_checks):
+        numerical_status = "failed"
+    else:
+        numerical_status = "partial"
+    if schema_validated is None:
+        schema_status, schema_statement = "partial", "JSON Schema validation of this state has not been recorded yet."
+    elif schema_validated:
+        schema_status, schema_statement = "passed", "This state validated against the MES 0.3.0 JSON Schema and the model's cross-reference rules in this run."
+    else:
+        schema_status, schema_statement = "failed", "This state did not validate against the MES 0.3.0 JSON Schema (see the workflow errors)."
+    return VerificationRecord(levels=[
+        VerificationLevelStatus(level="software_schema", status=schema_status, statement=schema_statement),
+        VerificationLevelStatus(level="numerical_physical", status=numerical_status,
+                                statement="Self-consistency checks of this run only (thermal energy balance, electrothermal convergence, mesh refinement, "
+                                          "FEA versus analytical references; see checks). These are the workflow's own checks, not independent "
+                                          "verification; the solvers' independent evidence is the bundled verification registry."),
+        VerificationLevelStatus(level="external_reference", status="partial", statement="FEA compared with published analytical references "
+                                "(1-D leakage, Dowell, Ve-based core loss, litz 1-D); discrepancies are reported, not tuned."),
+        VerificationLevelStatus(level="experimental", status="not_performed", statement="No prototype was built or measured.")],
+        checks=checks, manufacturing_readiness="preliminary_design",
+        statement="Preliminary engineering design: insulation / creepage, mechanical, safety and production verification are not performed; "
+                  "isolation requirements are an open question.")
 
 
 def abs_b(b: Any):
@@ -616,4 +650,4 @@ def render_verification_report(state: MagneticEngineeringState, checks: list[dic
     return "\n".join(lines)
 
 
-__all__ = ["V02_BASELINE", "WorkflowOptions", "WorkflowResult", "render_dab_report", "run_dab_workflow"]
+__all__ = ["V02_BASELINE", "WorkflowOptions", "WorkflowResult", "build_verification_record", "render_dab_report", "run_dab_workflow"]

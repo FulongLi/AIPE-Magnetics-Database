@@ -28,7 +28,8 @@ def component_summary_from_design(result: EngineeringResult, *, role: str, creat
     """Summarise a successful design result as a Core magnetics component with assumption + analytical evidence."""
     if result.status != "ok":
         raise InvalidInputError(f"cannot export a {result.status} design result")
-    is_transformer = result.capability.endswith("design_transformer")
+    # design_transformer and the waveform-informed design_transformer_from_waveforms both describe transformers
+    is_transformer = "design_transformer" in result.capability or result.data.get("component_kind") == "transformer"
     kind = "transformer" if is_transformer else "inductor"
     selected = result.data.get("selected")
     component_id = component_id or f"magnetic.{_slug(role)}"

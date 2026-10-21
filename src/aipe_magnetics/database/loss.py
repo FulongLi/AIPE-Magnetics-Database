@@ -110,13 +110,31 @@ def _set_temperature(s: SteinmetzParameterSet) -> float | None:
     return None if s.temperature is None else s.temperature.magnitude("K")
 
 
-def _covers(rng, value: float, unit: str) -> bool:
-    if rng is None:
-        return True
+def _bounds(rng, unit: str) -> tuple[float | None, float | None]:
     from aipe_magnetics.common.units import units
     lo = None if rng.min is None else units.convert(float(rng.min), rng.unit, unit)
     hi = None if rng.max is None else units.convert(float(rng.max), rng.unit, unit)
-    return (lo is None or value >= lo * (1 - 1e-9)) and (hi is None or value <= hi * (1 + 1e-9))
+    return lo, hi
+
+
+def _above(rng, value: float, unit: str) -> bool:
+    """True when ``value`` exceeds the range maximum (a range without maximum is never exceeded)."""
+    if rng is None:
+        return False
+    _, hi = _bounds(rng, unit)
+    return hi is not None and value > hi * (1 + 1e-9)
+
+
+def _below(rng, value: float, unit: str) -> bool:
+    """True when ``value`` lies below the range minimum (a range without minimum is never undershot)."""
+    if rng is None:
+        return False
+    lo, _ = _bounds(rng, unit)
+    return lo is not None and value < lo * (1 - 1e-9)
+
+
+def _covers(rng, value: float, unit: str) -> bool:
+    return not (_above(rng, value, unit) or _below(rng, value, unit))
 
 
 class LossEvaluator:
@@ -209,11 +227,12 @@ class LossEvaluator:
         bmin_pos = float(np.min(peak[peak > 0])) if np.any(peak > 0) else 0.0
         for s in sets:
             if s.flux_density_range is not None and bmax > 0:
-                hi_ok = _covers(s.flux_density_range, bmax, "T")
-                if not hi_ok:
+                # upper and lower bounds are checked separately so that each message names the bound that is violated
+                if _above(s.flux_density_range, bmax, "T"):
                     warnings.append(f"{s.id}: peak flux density {bmax:.3f} T exceeds the set's fitted range")
-                if s.flux_density_range.min is not None and peak.ndim == 0 and 0 < bmin_pos and not _covers(s.flux_density_range, bmin_pos, "T"):
-                    warnings.append(f"{s.id}: peak flux density {bmin_pos:.3f} T is below the set's fitted range")
+                if 0 < bmin_pos and _below(s.flux_density_range, bmin_pos, "T"):
+                    warnings.append(f"{s.id}: peak flux density {bmin_pos:.3f} T is below the set's fitted range"
+                                    + (" (smallest non-zero element)" if peak.ndim else ""))
         value = sum(w * self._single(s, frequency, peak, shape) for s, w in zip(sets, weights))
         out = value if peak.ndim else float(value)
         return LossEvaluation(loss_density=out, sets=[s.id for s in sets], weights=list(weights),

@@ -1,0 +1,1810 @@
+{
+  "$defs": {
+    "ArtifactRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "media_type": {
+          "title": "Media Type",
+          "type": "string"
+        },
+        "path": {
+          "description": "path relative to the state file directory",
+          "title": "Path",
+          "type": "string"
+        },
+        "produced_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Produced By"
+        },
+        "role": {
+          "enum": [
+            "specification",
+            "cad",
+            "mesh",
+            "solver_configuration",
+            "field_data",
+            "results",
+            "plot",
+            "report",
+            "bom",
+            "selection_record",
+            "verification_report",
+            "state",
+            "other"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "size_bytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Size Bytes"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "media_type",
+        "role"
+      ],
+      "title": "ArtifactRecord",
+      "type": "object"
+    },
+    "Component": {
+      "additionalProperties": false,
+      "properties": {
+        "application": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Application"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "topology": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Topology"
+        },
+        "type": {
+          "enum": [
+            "inductor",
+            "transformer",
+            "coupled_inductor"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "windings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Windings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "Component",
+      "type": "object"
+    },
+    "CoreSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "dimensions": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Dimensions",
+          "type": "object"
+        },
+        "effective_parameters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Effective Parameters",
+          "type": "object"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "part_number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Part Number"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "selected": {
+          "default": false,
+          "title": "Selected",
+          "type": "boolean"
+        },
+        "shape": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shape"
+        }
+      },
+      "required": [
+        "record_id",
+        "name"
+      ],
+      "title": "CoreSelection",
+      "type": "object"
+    },
+    "Excitation": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "fundamental_frequency": {
+          "$ref": "#/$defs/QV"
+        },
+        "operating_points": {
+          "items": {
+            "$ref": "#/$defs/OperatingPoint"
+          },
+          "title": "Operating Points",
+          "type": "array"
+        }
+      },
+      "required": [
+        "fundamental_frequency"
+      ],
+      "title": "Excitation",
+      "type": "object"
+    },
+    "GeometryRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "checks": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "derived": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Derived",
+          "type": "object"
+        },
+        "model": {
+          "additionalProperties": true,
+          "description": "complete parameter set (ECoreMagnetic JSON) for regeneration",
+          "title": "Model",
+          "type": "object"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "model_version": {
+          "title": "Model Version",
+          "type": "string"
+        },
+        "parameter_hash": {
+          "title": "Parameter Hash",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "description": "editable parameters (path -> value)",
+          "title": "Parameters",
+          "type": "object"
+        }
+      },
+      "required": [
+        "model_id",
+        "model_version",
+        "parameter_hash"
+      ],
+      "title": "GeometryRecord",
+      "type": "object"
+    },
+    "HistoryEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "At"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "specification",
+            "database_selection",
+            "candidate_generation",
+            "geometry",
+            "electromagnetic_analysis",
+            "thermal_analysis",
+            "optimisation",
+            "verification",
+            "exported"
+          ],
+          "title": "Stage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage",
+        "description"
+      ],
+      "title": "HistoryEvent",
+      "type": "object"
+    },
+    "LossBreakdown": {
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QV"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "operating_point_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Operating Point Ref"
+        },
+        "total": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QV"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "windings": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Windings",
+          "type": "object"
+        }
+      },
+      "title": "LossBreakdown",
+      "type": "object"
+    },
+    "MaterialSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "origin": {
+          "default": "catalogue",
+          "enum": [
+            "catalogue",
+            "property_library",
+            "user"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "properties": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Properties",
+          "type": "object"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "record_schema_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Record Schema Version"
+        },
+        "role": {
+          "enum": [
+            "core",
+            "conductor",
+            "winding_pack",
+            "bobbin",
+            "insulation",
+            "coolant"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "selected": {
+          "default": true,
+          "title": "Selected",
+          "type": "boolean"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/SourceReference"
+          },
+          "title": "Sources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "record_id"
+      ],
+      "title": "MaterialSelection",
+      "type": "object"
+    },
+    "OpenQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "assumed_answer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assumed Answer"
+        },
+        "critical": {
+          "default": false,
+          "title": "Critical",
+          "type": "boolean"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "field",
+        "question"
+      ],
+      "title": "OpenQuestion",
+      "type": "object"
+    },
+    "OperatingPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "frequency": {
+          "$ref": "#/$defs/QV"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "quantities": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Quantities",
+          "type": "object"
+        },
+        "role": {
+          "default": "other",
+          "enum": [
+            "nominal",
+            "worst_case",
+            "corner",
+            "other"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "waveforms": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Waveform"
+          },
+          "description": "winding / quantity name -> waveform",
+          "title": "Waveforms",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "frequency"
+      ],
+      "title": "OperatingPoint",
+      "type": "object"
+    },
+    "OptimisationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Constraints",
+          "type": "array"
+        },
+        "history": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "History",
+          "type": "array"
+        },
+        "objectives": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Objectives",
+          "type": "array"
+        },
+        "pareto": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Pareto",
+          "type": "array"
+        },
+        "primary_objective": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Primary Objective"
+        },
+        "ranked": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Ranked",
+          "type": "array"
+        },
+        "rejection_reasons": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Rejection Reasons",
+          "type": "array"
+        },
+        "selected": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Selected"
+        },
+        "stages": {
+          "additionalProperties": true,
+          "title": "Stages",
+          "type": "object"
+        },
+        "strategy": {
+          "title": "Strategy",
+          "type": "string"
+        },
+        "variables": {
+          "additionalProperties": true,
+          "title": "Variables",
+          "type": "object"
+        }
+      },
+      "required": [
+        "strategy"
+      ],
+      "title": "OptimisationRecord",
+      "type": "object"
+    },
+    "ProvenanceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "database": {
+          "additionalProperties": true,
+          "title": "Database",
+          "type": "object"
+        },
+        "inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "software": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Software",
+          "type": "object"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/SourceReference"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tool": {
+          "$ref": "#/$defs/ToolRef"
+        }
+      },
+      "required": [
+        "tool"
+      ],
+      "title": "ProvenanceRecord",
+      "type": "object"
+    },
+    "QV": {
+      "additionalProperties": false,
+      "description": "Physical value with unit and the method that produced it.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "method": {
+          "anyOf": [
+            {
+              "enum": [
+                "specified",
+                "assumed",
+                "looked_up",
+                "analytical",
+                "fea",
+                "fea_post_processed",
+                "fea_2p5d",
+                "analytical_thermal_network",
+                "measured",
+                "derived"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uncertainty"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "QV",
+      "type": "object"
+    },
+    "Requirements": {
+      "additionalProperties": false,
+      "properties": {
+        "constraints": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Constraints",
+          "type": "object"
+        },
+        "cooling": {
+          "additionalProperties": true,
+          "title": "Cooling",
+          "type": "object"
+        },
+        "electrical": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Electrical",
+          "type": "object"
+        },
+        "environment": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Environment",
+          "type": "object"
+        },
+        "isolation": {
+          "additionalProperties": true,
+          "title": "Isolation",
+          "type": "object"
+        },
+        "specified_fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Specified Fields",
+          "type": "array"
+        }
+      },
+      "title": "Requirements",
+      "type": "object"
+    },
+    "ResultSet": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "data": {
+          "additionalProperties": true,
+          "title": "Data",
+          "type": "object"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "operating_point_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Operating Point Ref"
+        },
+        "quantities": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QV"
+          },
+          "title": "Quantities",
+          "type": "object"
+        },
+        "solver_ref": {
+          "title": "Solver Ref",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "solver_ref"
+      ],
+      "title": "ResultSet",
+      "type": "object"
+    },
+    "Results": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison": {
+          "additionalProperties": true,
+          "description": "e.g. against a baseline design",
+          "title": "Comparison",
+          "type": "object"
+        },
+        "electromagnetic": {
+          "items": {
+            "$ref": "#/$defs/ResultSet"
+          },
+          "title": "Electromagnetic",
+          "type": "array"
+        },
+        "losses": {
+          "items": {
+            "$ref": "#/$defs/LossBreakdown"
+          },
+          "title": "Losses",
+          "type": "array"
+        },
+        "thermal": {
+          "items": {
+            "$ref": "#/$defs/ResultSet"
+          },
+          "title": "Thermal",
+          "type": "array"
+        }
+      },
+      "title": "Results",
+      "type": "object"
+    },
+    "SolverConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "title": "Backend",
+          "type": "string"
+        },
+        "configuration_artifact": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Configuration Artifact"
+        },
+        "domain": {
+          "enum": [
+            "electromagnetic",
+            "thermal",
+            "optimisation",
+            "geometry"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "fidelity": {
+          "enum": [
+            "specified",
+            "assumed",
+            "looked_up",
+            "analytical",
+            "fea",
+            "fea_post_processed",
+            "fea_2p5d",
+            "analytical_thermal_network",
+            "measured",
+            "derived"
+          ],
+          "title": "Fidelity",
+          "type": "string"
+        },
+        "formulation": {
+          "title": "Formulation",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "settings": {
+          "additionalProperties": true,
+          "title": "Settings",
+          "type": "object"
+        },
+        "status": {
+          "default": "completed",
+          "enum": [
+            "configured",
+            "completed",
+            "failed",
+            "not_run"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "domain",
+        "backend",
+        "version",
+        "fidelity",
+        "formulation"
+      ],
+      "title": "SolverConfiguration",
+      "type": "object"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "description": "Where a number, parameter or equation came from.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "datasheet",
+            "publication",
+            "repository",
+            "dataset",
+            "standard",
+            "assumption",
+            "internal",
+            "measurement_record",
+            "user_input"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "license": {
+          "default": "NOASSERTION",
+          "description": "SPDX identifier or NOASSERTION",
+          "title": "License",
+          "type": "string"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "page, table, figure, column, record field",
+          "title": "Locator"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "reference": {
+          "description": "human-readable citation or title",
+          "title": "Reference",
+          "type": "string"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "edition / commit / dataset version",
+          "title": "Version"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "reference"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    },
+    "StateAssumption": {
+      "additionalProperties": false,
+      "properties": {
+        "affects": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Affects",
+          "type": "array"
+        },
+        "basis": {
+          "default": "default",
+          "enum": [
+            "user_input",
+            "default",
+            "datasheet",
+            "engineering_judgement",
+            "model_assumption"
+          ],
+          "title": "Basis",
+          "type": "string"
+        },
+        "critical": {
+          "default": false,
+          "title": "Critical",
+          "type": "boolean"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "status": {
+          "default": "assumed",
+          "enum": [
+            "specified",
+            "assumed",
+            "requested"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "statement"
+      ],
+      "title": "StateAssumption",
+      "type": "object"
+    },
+    "ToolRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "default": "aipe.magnetics",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "default": "AIPE Magnetics",
+          "title": "Name",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version"
+      ],
+      "title": "ToolRef",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "additionalProperties": false,
+      "description": "Uncertainty statement attached to a quantity.\n\n``kind='unknown'`` is the honest default when no quantitative basis exists.",
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "how the uncertainty was obtained",
+          "title": "Basis"
+        },
+        "coverage_factor": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "k for expanded uncertainty",
+          "title": "Coverage Factor"
+        },
+        "kind": {
+          "default": "unknown",
+          "enum": [
+            "standard",
+            "expanded",
+            "bounds",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "lower bound (kind='bounds')",
+          "title": "Lower"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "upper bound (kind='bounds')",
+          "title": "Upper"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "standard/expanded uncertainty in the quantity unit",
+          "title": "Value"
+        }
+      },
+      "title": "Uncertainty",
+      "type": "object"
+    },
+    "UncertaintyItem": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "title": "Basis",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "bounds",
+            "standard",
+            "sensitivity",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lower"
+        },
+        "quantity": {
+          "title": "Quantity",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upper"
+        }
+      },
+      "required": [
+        "quantity",
+        "kind",
+        "basis"
+      ],
+      "title": "UncertaintyItem",
+      "type": "object"
+    },
+    "VerificationLevelStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "level": {
+          "enum": [
+            "software_schema",
+            "numerical_physical",
+            "external_reference",
+            "experimental"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "partial",
+            "failed",
+            "not_performed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "level",
+        "status",
+        "statement"
+      ],
+      "title": "VerificationLevelStatus",
+      "type": "object"
+    },
+    "VerificationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "checks": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "levels": {
+          "items": {
+            "$ref": "#/$defs/VerificationLevelStatus"
+          },
+          "title": "Levels",
+          "type": "array"
+        },
+        "manufacturing_readiness": {
+          "default": "preliminary_design",
+          "enum": [
+            "preliminary_design",
+            "prototype_ready",
+            "manufacturing_qualified"
+          ],
+          "title": "Manufacturing Readiness",
+          "type": "string"
+        },
+        "statement": {
+          "default": "",
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "title": "VerificationRecord",
+      "type": "object"
+    },
+    "Waveform": {
+      "additionalProperties": false,
+      "properties": {
+        "breakpoints": {
+          "description": "[[t/T, value], ...]",
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Breakpoints",
+          "type": "array"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "kind": {
+          "default": "piecewise_linear",
+          "enum": [
+            "piecewise_linear",
+            "sinusoidal",
+            "square"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "mean": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mean"
+        },
+        "peak": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Peak"
+        },
+        "quantity": {
+          "enum": [
+            "current",
+            "voltage",
+            "flux_density",
+            "flux_linkage"
+          ],
+          "title": "Quantity",
+          "type": "string"
+        },
+        "rms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rms"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "quantity",
+        "unit"
+      ],
+      "title": "Waveform",
+      "type": "object"
+    },
+    "WindingDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "conductor": {
+          "additionalProperties": true,
+          "title": "Conductor",
+          "type": "object"
+        },
+        "conductor_length": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QV"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "layers": {
+          "items": {
+            "$ref": "#/$defs/WindingLayer"
+          },
+          "title": "Layers",
+          "type": "array"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "resistance_dc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QV"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sections": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Sections",
+          "type": "integer"
+        },
+        "turns": {
+          "minimum": 1,
+          "title": "Turns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "turns",
+        "conductor"
+      ],
+      "title": "WindingDefinition",
+      "type": "object"
+    },
+    "WindingLayer": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "inner_distance": {
+          "$ref": "#/$defs/QV"
+        },
+        "mean_turn_length": {
+          "$ref": "#/$defs/QV"
+        },
+        "outer_distance": {
+          "$ref": "#/$defs/QV"
+        },
+        "turns": {
+          "minimum": 1,
+          "title": "Turns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "turns",
+        "inner_distance",
+        "outer_distance",
+        "mean_turn_length"
+      ],
+      "title": "WindingLayer",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/FulongLi/AIPE-Magnetics-Database/schemas/state/v0.3.0/magnetic-engineering-state.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "aipe.magnetics.engineering-state/0.3.0: versioned record of a magnetic component design lifecycle (AIPE Magnetics).",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRecord"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "assumptions": {
+      "items": {
+        "$ref": "#/$defs/StateAssumption"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "component": {
+      "$ref": "#/$defs/Component"
+    },
+    "cores": {
+      "items": {
+        "$ref": "#/$defs/CoreSelection"
+      },
+      "title": "Cores",
+      "type": "array"
+    },
+    "created_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "RFC 3339, caller supplied (never wall-clock by default)",
+      "title": "Created At"
+    },
+    "excitation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Excitation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "extensions": {
+      "additionalProperties": true,
+      "title": "Extensions",
+      "type": "object"
+    },
+    "geometry": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/GeometryRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "history": {
+      "items": {
+        "$ref": "#/$defs/HistoryEvent"
+      },
+      "title": "History",
+      "type": "array"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "lifecycle_stage": {
+      "default": "specification",
+      "enum": [
+        "specification",
+        "database_selection",
+        "candidate_generation",
+        "geometry",
+        "electromagnetic_analysis",
+        "thermal_analysis",
+        "optimisation",
+        "verification",
+        "exported"
+      ],
+      "title": "Lifecycle Stage",
+      "type": "string"
+    },
+    "materials": {
+      "items": {
+        "$ref": "#/$defs/MaterialSelection"
+      },
+      "title": "Materials",
+      "type": "array"
+    },
+    "open_questions": {
+      "items": {
+        "$ref": "#/$defs/OpenQuestion"
+      },
+      "title": "Open Questions",
+      "type": "array"
+    },
+    "optimisation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OptimisationRecord"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "provenance": {
+      "$ref": "#/$defs/ProvenanceRecord"
+    },
+    "requirements": {
+      "$ref": "#/$defs/Requirements"
+    },
+    "results": {
+      "$ref": "#/$defs/Results"
+    },
+    "solvers": {
+      "items": {
+        "$ref": "#/$defs/SolverConfiguration"
+      },
+      "title": "Solvers",
+      "type": "array"
+    },
+    "state_schema": {
+      "const": "aipe.magnetics.engineering-state/0.3.0",
+      "default": "aipe.magnetics.engineering-state/0.3.0",
+      "title": "State Schema",
+      "type": "string"
+    },
+    "state_version": {
+      "const": "0.3.0",
+      "default": "0.3.0",
+      "title": "State Version",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "uncertainty": {
+      "items": {
+        "$ref": "#/$defs/UncertaintyItem"
+      },
+      "title": "Uncertainty",
+      "type": "array"
+    },
+    "verification": {
+      "$ref": "#/$defs/VerificationRecord"
+    },
+    "windings": {
+      "items": {
+        "$ref": "#/$defs/WindingDefinition"
+      },
+      "title": "Windings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "component",
+    "provenance"
+  ],
+  "title": "AIPE Magnetics - Magnetic Engineering State 0.3.0",
+  "type": "object"
+}

@@ -20,7 +20,8 @@ from aipe_magnetics.common.errors import UnsupportedOperationError  # noqa: E402
 from aipe_magnetics.mcp.server import ServerConfig, build_server, env_flag  # noqa: E402
 
 EXPECTED_TOOLS = {"list_capabilities", "list_materials", "get_material", "compare_materials", "estimate_core_loss", "evaluate_hysteresis",
-                  "design_inductor", "design_transformer", "validate_design", "generate_report", "verification_status"}
+                  "design_inductor", "design_transformer", "design_transformer_from_waveforms", "validate_design", "measurement_requests",
+                  "generate_report", "verification_status"}
 KHZ100 = {"value": 100, "unit": "kHz"}
 MT150 = {"value": 150, "unit": "mT"}
 C100 = {"value": 100, "unit": "degC"}

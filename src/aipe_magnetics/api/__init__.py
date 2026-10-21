@@ -9,8 +9,8 @@ error records; programming errors still raise.
 Capabilities
 ------------
 ``list_materials``, ``get_material``, ``compare_materials``, ``estimate_core_loss``,
-``evaluate_hysteresis``, ``design_inductor``, ``design_transformer``, ``validate_design``,
-``generate_report``, ``verification_status``, ``list_capabilities``.
+``evaluate_hysteresis``, ``design_inductor``, ``design_transformer``, ``design_transformer_from_waveforms``,
+``validate_design``, ``measurement_requests``, ``generate_report``, ``verification_status``, ``list_capabilities``.
 """
 
 from __future__ import annotations
@@ -25,9 +25,11 @@ from aipe_magnetics.api.types import (
     DesignValidationRequest,
     HysteresisRequest,
     InductorDesignRequest,
+    MeasurementRequestSpec,
     OperatingPointSpec,
     ReportRequest,
     TransformerDesignRequest,
+    WaveformInformedTransformerRequest,
     WaveformSpec,
 )
 from aipe_magnetics.api.types import _q as _typed_q
@@ -37,8 +39,8 @@ from aipe_magnetics.common.results import EngineeringResult
 
 __all__ = [
     "list_materials", "get_material", "compare_materials", "estimate_core_loss", "evaluate_hysteresis",
-    "design_inductor", "design_transformer", "validate_design", "generate_report", "verification_status",
-    "list_capabilities", "CAPABILITIES", "__version__",
+    "design_inductor", "design_transformer", "design_transformer_from_waveforms", "validate_design", "measurement_requests",
+    "generate_report", "verification_status", "list_capabilities", "CAPABILITIES", "__version__",
 ]
 
 CAPABILITIES: dict[str, dict[str, str]] = {
@@ -56,8 +58,16 @@ CAPABILITIES: dict[str, dict[str, str]] = {
                         "description": "Basic gapped inductor sizing: turns, gap, flux density, losses."},
     "design_transformer": {"id": "aipe.magnetics.design_transformer", "kind": "deterministic",
                            "description": "Basic transformer sizing: candidate cores, turns, flux density, losses."},
+    "design_transformer_from_waveforms": {"id": "aipe.magnetics.design_transformer_from_waveforms", "kind": "deterministic",
+                                          "description": "Waveform-informed transformer design: actual (sampled or SPS-synthesised) winding waveforms -> "
+                                                         "exact RMS / harmonics, flux from the voltage integral, iGSE core loss, per-layer harmonic Dowell "
+                                                         "copper loss, leakage / magnetising inductance, fill, thermal estimate; ranked integer-turn "
+                                                         "candidates, square-current comparison, material comparison, optional Core state export."},
     "validate_design": {"id": "aipe.magnetics.validate_design", "kind": "deterministic",
                         "description": "Saturation screening and operating-point validation of a design."},
+    "measurement_requests": {"id": "aipe.magnetics.measurement_requests", "kind": "read_only",
+                             "description": "Structured magnetic-material measurement requests (B-H, core loss vs f/B/T, DC bias, saturation vs T, "
+                                            "complex permeability, winding AC resistance, thermal conductivity) with test conditions and priority."},
     "generate_report": {"id": "aipe.magnetics.generate_report", "kind": "write_optional",
                         "description": "Render Markdown/JSON engineering reports (writing requires authorisation)."},
     "verification_status": {"id": "aipe.magnetics.verification_status", "kind": "read_only",
@@ -170,6 +180,23 @@ def design_transformer(request: TransformerDesignRequest | dict | None = None, *
     return _guard(tr.CAP_TRANSFORMER, lambda: tr.design_transformer(req, catalog=catalog), req.model_dump(mode="json", exclude_none=True))
 
 
+def design_transformer_from_waveforms(request: WaveformInformedTransformerRequest | dict | None = None, *, created_at: str | None = None,
+                                      export_state: bool = False, **kwargs: Any) -> EngineeringResult:
+    """Design a transformer from the converter's actual waveforms (HDF5 / CSV / JSON) or SPS parameters.
+
+    ``created_at`` (RFC 3339, supplied by the caller) is recorded as ``produced_at`` and is required when
+    ``export_state`` asks for the AIPE-Core Engineering State of the selected design (``data.engineering_state``).
+    """
+    from aipe_magnetics.design.transformers import waveform_informed as wd
+
+    try:
+        req = _coerce(WaveformInformedTransformerRequest, request, kwargs)
+    except AIPEMagneticsError as error:
+        return EngineeringResult.rejected(wd.CAP_WAVEFORM_DESIGN, error, inputs=kwargs)
+    return _guard(wd.CAP_WAVEFORM_DESIGN, lambda: wd.design_transformer_from_waveforms(req, created_at=created_at, export_state=export_state),
+                  req.model_dump(mode="json", exclude_none=True))
+
+
 def validate_design(request: DesignValidationRequest | dict | None = None, *, catalog: Any | None = None, **kwargs: Any) -> EngineeringResult:
     from aipe_magnetics.engineering import design_validation as dv
 
@@ -178,6 +205,19 @@ def validate_design(request: DesignValidationRequest | dict | None = None, *, ca
     except AIPEMagneticsError as error:
         return EngineeringResult.rejected(dv.CAP_VALIDATE, error, inputs=kwargs)
     return _guard(dv.CAP_VALIDATE, lambda: dv.validate_design(req, catalog=catalog), req.model_dump(mode="json", exclude_none=True))
+
+
+def measurement_requests(request: MeasurementRequestSpec | dict | None = None, *, catalog: Any | None = None,
+                         winding_context: dict[str, Any] | None = None, **kwargs: Any) -> EngineeringResult:
+    """Magnetic-material measurement requests (missing / partial catalogue data for an excitation) as structured JSON."""
+    from aipe_magnetics.engineering import measurement_requests as mr
+
+    try:
+        req = _coerce(MeasurementRequestSpec, request, kwargs)
+    except AIPEMagneticsError as error:
+        return EngineeringResult.rejected(mr.CAP_MEASUREMENT_REQUESTS, error, inputs=kwargs)
+    return _guard(mr.CAP_MEASUREMENT_REQUESTS, lambda: mr.measurement_requests(req, catalog, winding_context=winding_context),
+                  req.model_dump(mode="json", exclude_none=True))
 
 
 # -------------------------------------------------------------------------------------------------

@@ -21,6 +21,8 @@ capabilities:
   - magnetics-hysteresis-evaluation
   - magnetics-inductor-design
   - magnetics-transformer-design
+  - magnetics-waveform-informed-transformer-design
+  - magnetics-measurement-requests
   - magnetics-design-validation
   - magnetics-engineering-report
   - magnetics-verification-suite
@@ -32,6 +34,8 @@ inputs:
     description: "Magnetic record (schema 0.1.0 or 0.2.0) with explicit evidence and SI units."
   - name: waveform-dataset
     description: "HDF5 waveform container in the aipe.magnetics.waveforms/0.2 layout with per-array units and checksums."
+  - name: converter-waveforms
+    description: "Sampled converter winding waveforms (AIPE DAB HDF5 layout /time + /channels/<name> with unit attributes, CSV with explicit units, or JSON) used as the excitation of the waveform-informed transformer design; SHA-256 of the file is recorded as evidence."
   - name: design-request
     description: "Typed inductor, transformer, core-loss or validation request (aipe_magnetics.api.types) in any registered unit."
   - name: engineering-state
@@ -44,6 +48,8 @@ outputs:
     description: "Review candidate with original-byte checksum, importer version and normalisation record."
   - name: verification-report
     description: "Machine-readable (JSON) and human-readable (Markdown) evidence per capability and operating range."
+  - name: measurement-request
+    description: "Structured magnetic-material measurement requests (aipe.magnetics.measurement-request/0.3): per material and data category the catalogue coverage, test conditions and priority."
   - name: engineering-state
     description: "AIPE-Core Engineering State 0.1.0 fragment (magnetics entry plus evidence) produced by the tested round-trip adapter."
     schema: "https://raw.githubusercontent.com/FulongLi/AIPE-Core/v0.1.0/schemas/engineering-state.schema.json"
@@ -53,7 +59,7 @@ compatibility: {core: 0.1.x, engineering_state: 0.1.x, integration: native}
 tools:
   - id: python
     name: Python
-    capabilities: [magnetics-record-schema, magnetics-data-import, magnetics-data-validation, magnetics-data-migration, magnetics-waveform-storage, magnetics-source-adapters, magnetics-material-lookup, magnetics-material-comparison, magnetics-core-loss-estimation, magnetics-hysteresis-evaluation, magnetics-inductor-design, magnetics-transformer-design, magnetics-design-validation, magnetics-engineering-report, magnetics-verification-suite, magnetics-mcp-server, magnetics-core-state-export]
+    capabilities: [magnetics-record-schema, magnetics-data-import, magnetics-data-validation, magnetics-data-migration, magnetics-waveform-storage, magnetics-source-adapters, magnetics-material-lookup, magnetics-material-comparison, magnetics-core-loss-estimation, magnetics-hysteresis-evaluation, magnetics-inductor-design, magnetics-transformer-design, magnetics-waveform-informed-transformer-design, magnetics-measurement-requests, magnetics-design-validation, magnetics-engineering-report, magnetics-verification-suite, magnetics-mcp-server, magnetics-core-state-export]
     licence_class: open_source
     optional: false
     interfaces: [cli, python, mcp]
@@ -146,6 +152,7 @@ documentation:
   - docs/core-integration.md
   - docs/sources.md
   - docs/demo-dab-10kw.md
+  - docs/waveform-informed-design.md
   - LICENSING.md
 extensions:
   aipe.magnetics:
@@ -153,7 +160,7 @@ extensions:
     python: ">=3.10"
     runtime_requirements:
       required: [numpy, scipy, pydantic, jsonschema, referencing, PyYAML]
-      optional: {hdf5: [h5py], mcp: [mcp], torch: [torch], magnethub: [magnethub]}
+      optional: {hdf5: [h5py], mcp: [mcp], torch: [torch], magnethub: [magnethub], viz: [matplotlib], mesh: [gmsh], cad: [cadquery]}
     interfaces:
       python_api: aipe_magnetics.api
       cli: aipe-magnetics
@@ -170,6 +177,8 @@ extensions:
       aipe.magnetics.design_transformer: {family: engineering, maturity: usable, verification: L2}
       aipe.magnetics.design_inductor: {family: engineering, maturity: usable, verification: L2}
       aipe.magnetics.validate_design: {family: engineering, maturity: usable, verification: L2}
+      aipe.magnetics.design_transformer_from_waveforms: {family: engineering, maturity: prototype, notes: "no verification level claimed: pytest-covered (synthetic and executed DAB waveforms) but no evidence record in the bundled registry yet, so results report the sizing as unverified while the iGSE loss model keeps its own status"}
+      aipe.magnetics.measurement_requests: {family: engineering, maturity: prototype, notes: "no verification level claimed: deterministic catalogue coverage assessment covered by pytest; no physical claim"}
     verification_evidence: [src/aipe_magnetics/verification/evidence/v0.2.0.json]
     optional_integrations:
       - {id: aipe.core, kind: schema-roundtrip, status: tested-offline, notes: "Executable export/import adapter validated against pinned Core v0.1.0 schemas."}
@@ -180,6 +189,7 @@ extensions:
       - {id: minjiechen/magnetchallenge-2, kind: source-adapter, status: reference-and-user-import, license: NOASSERTION}
     engineering_limitations:
       - "Basic analytical sizing (Faraday, reluctance, window fill, Dowell 1-D); every catalogue core offered in the material is evaluated, no area-product pre-screening; no FEM, thermal, insulation or manufacturing analysis."
+      - "Waveform-informed transformer design: 1-D Dowell / leakage models, iGSE on the actual flux waveform, network or lumped thermal estimate with generic class conductivities; valid for the supplied operating point only; no FEM, insulation-system or manufacturing analysis."
       - "Core-loss models need parameter sets covering the operating point; otherwise the request is rejected rather than extrapolated."
       - "Uncertainty is reported as unknown unless a source quantifies it."
     standalone_operation: {requires_aipe_orchestrator: false, requires_registry_service: false, requires_other_domain_experts: false, requires_commercial_software: false, requires_llm_credentials: false}

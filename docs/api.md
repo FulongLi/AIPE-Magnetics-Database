@@ -27,10 +27,43 @@ All functions live in `aipe_magnetics.api` and accept a typed request object fro
 | `evaluate_hysteresis(...)` | `HysteresisRequest` | `flux_density_peak`, `remanence`, `coercivity`, `loop_energy_density` |
 | `design_inductor(...)` | `InductorDesignRequest` | `turns`, `air_gap`, `flux_density_peak`, `core_loss`, `copper_loss`, `total_loss` |
 | `design_transformer(...)` | `TransformerDesignRequest` | `turns_<winding>`, `flux_density_peak`, `core_loss`, `copper_loss`, `total_loss`, `data.candidates` |
+| `design_transformer_from_waveforms(..., created_at=None, export_state=False)` | `WaveformInformedTransformerRequest` | `turns_primary`, `turns_secondary`, `turns_ratio`, `flux_linkage_peak_to_peak`, `flux_density_peak`, `saturation_margin`, `loss_density`, `core_loss`, `copper_loss`, `total_loss`, `leakage_inductance`, `external_inductance_required`, `magnetising_inductance`, `window_fill`, `temperature_rise`, `hotspot_winding`, `hotspot_core`, `current_rms_<winding>`; `data.excitation`, `data.candidates` (ranked), `data.square_current_comparison`, `data.material_comparison`, `data.measurement_requests`, `data.engineering_state` (with `export_state=True`) |
+| `measurement_requests(...)` | `MeasurementRequestSpec` | `data.requests[]` (per material: `coverage`, `requests[]` with `category`, `priority`, `test_conditions`, `deliverable`), `data.summary` |
 | `validate_design(...)` | `DesignValidationRequest` | `saturation_margin`, `loss_density`; `data.checks`, `data.passed` (`true` / `false` / `null` = inconclusive because a check could not be evaluated) |
 | `generate_report(results, ...)` | `ReportRequest` | `data.content`, `data.written_to` |
 | `verification_status(capability=None, ...)` | - | `verification`, `data.records` |
 | `list_capabilities()` | - | `data.capabilities` |
+
+### Waveform-informed transformer design
+
+`design_transformer_from_waveforms` replaces the `P / V` square-current approximation of `design_transformer` with
+the converter's **actual** winding waveforms. The waveform source (`waveforms`) is one of
+
+| `kind` | Fields | Notes |
+| --- | --- | --- |
+| `hdf5` | `path`, `channels` (`primary_current` required; `secondary_current`, `primary_voltage`, `magnetising_current` optional), `window` `{t0, t1}`, `time_dataset` (`time`), `channel_group` (`channels`) | AIPE DAB layout: `/time` [s], `/channels/<name>` with `unit` / `description` / `sign_convention` attributes, root attribute `metadata` (JSON; `spec.l_ext`, `l_lk_p`, `l_lk_s`, `n_ratio` give the total series inductance when `series_inductance_total` is omitted). Needs `h5py` (`aipe-magnetics[hdf5]`). |
+| `csv` | `path`, `channels`, `time_column`, `time_unit`, `units` (unit per mapped column), `delimiter`, `window` | units are never inferred from headers |
+| `json` | `path` or inline `document`, `channels`, `window` | `{"time": {"unit", "values"}, "channels": {name: {"unit", "values"}}}` or one uniform period `{"frequency": {...}, "channels": {...}}` |
+| `sps` | `sps`: `power`, `primary_voltage`, `secondary_voltage`, `phase_shift` **or** `series_inductance` | lossless single-phase-shift model (`design/transformers/dab.py`) synthesises the trapezoidal current and the triangular flux |
+
+Processing: window -> period detection (autocorrelation, checked against `frequency`) -> last complete period ->
+exact RMS / Fourier harmonics (`harmonics`, default 41) of each winding current -> flux linkage from the integral of the
+primary voltage (drift removed) -> for every evaluable material (Bsat at `temperature`, loss set covering the
+frequency; extrapolated sets are flagged) and every candidate core: minimum primary turns from the flux-limit policy
+(and `loss_density_target`), `turn_steps` further turn counts, `N2 = round(N1 / turns_ratio_target)` within
+`turns_ratio_tolerance`, iGSE core loss on the actual flux waveform, winding layout (parametric E-core layers or a
+generic stack on the coil-former data) for every conductor option (`windings.conductors`, litz strand diameters, foil
+thicknesses, current densities) and arrangement (`P-S`, `P-S-P`, ...), per-layer harmonic Dowell copper loss (litz as
+strand sub-layers), 1-D leakage inductance, `external_inductance_required = L_total - L_leak`, magnetising inductance,
+window fill, current density, thermal estimate (`thermal`: forced convection 40 W/m^2/K at 40 degC by default - an
+explicit assumption - or natural convection; hot-spot limits). Feasible candidates are ranked by total loss at the
+design temperature; `data.infeasible_summary` counts the violated constraints. Results hold for the supplied operating
+point only; everything is analytical (limitations are listed in every result).
+
+`measurement_requests` assesses, per material, the catalogue coverage of B-H data, core loss vs f/B/T, DC bias,
+saturation vs temperature, complex permeability, winding AC resistance and thermal conductivity for the given
+excitation and returns one request per gap with test conditions and a priority (`high` blocks the design, `medium`
+limits accuracy, `low` not consumed by the current models); schema `aipe.magnetics.measurement-request/0.3`.
 
 ## Result envelope (`aipe.magnetics.result/0.2`)
 
@@ -66,6 +99,12 @@ aipe-magnetics loss estimate N87 -f "100 kHz" -b "150 mT" -t "100 degC" --wavefo
 aipe-magnetics hysteresis evaluate --field-peak "500 A/m" --periods 4
 aipe-magnetics design inductor -L "100 uH" --current-peak "20 A" --current-rms "14 A" --ripple "4 A" [--ripple-duty 0.5] -f "100 kHz" --material N87
 aipe-magnetics design transformer -P "10 kW" -f "100 kHz" --primary-voltage "800 V" --secondary-voltage "400 V" --material N87 -t "100 degC" --loss-target "300 kW/m^3"
+aipe-magnetics design waveform-transformer --source runs/dab/waveforms.h5 --channel primary_current=i_L --channel secondary_current=i_s \
+    --channel primary_voltage=v_tp --window "200 us" "240 us" -f "100 kHz" --turns-ratio 2 --loss-target "300 kW/m^3" \
+    [--material N87] [--core core.tdk-e65-32-27] [--conductor litz --conductor foil] [--arrangement P-S-P] [--cooling forced --heat-transfer-coefficient "40 W/m^2/K"] \
+    [--state-output state.json --created-at 2026-10-21T12:00:00Z] [--json]
+aipe-magnetics design waveform-transformer --sps-power "10 kW" --sps-primary-voltage "800 V" --sps-secondary-voltage "400 V" --sps-phase-shift "22.5 deg" -f "100 kHz" --turns-ratio 2
+aipe-magnetics measurement-requests -f "100 kHz" -b "178 mT" -t "100 degC" [--material N87 --material 3C94] [--temperature-range "25 degC" "120 degC"] [--output requests.json]
 aipe-magnetics validate --material N87 --core core.tdk-e65-32-27 --turns 14 -f "100 kHz" --voltage-peak "800 V" -t "100 degC"
 aipe-magnetics report result1.json result2.json --output report.md     # envelopes, JSON reports (results[]) or demo output (steps[].result)
 aipe-magnetics verify --output reports/verification --check-bundled     # exits 1 until the maintainer's bundled evidence file exists

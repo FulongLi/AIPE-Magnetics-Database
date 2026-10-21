@@ -1,5 +1,62 @@
 # Changelog
 
+## Unreleased — branch `feat/dab-10kw-workflow` (package version stays 0.2.0 until the release step records new evidence)
+
+### Added
+- **Waveform import** (`aipe_magnetics.engineering.waveform_import`): sampled converter waveforms from the AIPE DAB
+  HDF5 layout (`/time`, `/channels/<name>` with `unit` / `description` / `sign_convention` attributes, JSON
+  `metadata`; optional `h5py`), CSV (explicit units, strict numerals) and JSON documents; window selection, period
+  detection (unbiased autocorrelation + zero-crossing refinement, checked against a frequency hint), extraction of the
+  last complete period with explicit closure residual and steady-state metrics, exact piecewise-linear waveforms
+  (`PiecewiseLinear`), flux linkage by trapezoidal integration of a voltage (drift removed), flux-density waveforms.
+- **Waveform-informed DAB transformer design** - public capability `design_transformer_from_waveforms`
+  (`WaveformInformedTransformerRequest`, CLI `design waveform-transformer`, MCP tool): actual primary / secondary
+  currents and the transformer voltage (or SPS parameters synthesised with `design/transformers/dab.py`) -> exact RMS
+  and Fourier harmonics, flux from the voltage integral, iGSE core loss on that flux at the design temperature
+  (temperature interpolation / flagged extrapolation), per-layer harmonic Dowell copper loss for litz (strand
+  sub-layers) and foil with the MMF profile of the arrangement, 1-D leakage inductance and the external inductance
+  still required (`L_total - L_leak`), magnetising inductance (reluctance model with a stated residual gap and the
+  datasheet AL where recorded), window fill, current density, thermal network (E cores, electrothermal) or lumped
+  surface estimate; ranked integer-turn candidates with explicit violations, comparison with the square-current
+  approximation (same geometry with `P / V` RMS and Dowell at the fundamental, actual RMS at the fundamental, and the
+  public `design_transformer`), material comparison for the excitation (missing data listed), optional AIPE-Core
+  Engineering State export whose analytical evidence derives from the waveform source evidence (path + SHA-256;
+  evidence kinds stay assumption / analytical / source).
+- **Measurement requests** - public capability `measurement_requests` (`MeasurementRequestSpec`, CLI
+  `measurement-requests`, MCP tool): per material the coverage of B-H data, core loss vs f/B/T, DC bias, saturation vs
+  temperature, complex permeability, winding AC resistance and thermal conductivity, and one structured request per
+  gap with test conditions and priority (schema `aipe.magnetics.measurement-request/0.3`).
+- Packaged MES 0.3.0 JSON Schema (`src/aipe_magnetics/schemas/state/v0.3.0/magnetic-engineering-state.schema.json`,
+  mirrored under `schemas/state/v0.3.0/`), which `state/schema.py` already referenced.
+- Optional-dependency extras `viz` (matplotlib), `mesh` (gmsh), `cad` (cadquery) named by the v0.3 install hints.
+- Tests for the v0.3 `design/transformers/dab.py` path (SPS power / inductance / phase-shift relations, exact
+  piecewise-linear current against the executed ngspice metrics), the waveform import, the waveform-informed design
+  (synthetic sources and, when present, the executed DAB waveform file), the measurement requests, the loss-evaluator
+  range check, the packaged state schema, the workflow verification record and the new CLI commands.
+- `aipe.yaml`: capabilities `magnetics-waveform-informed-transformer-design`, `magnetics-measurement-requests`,
+  inputs / outputs for converter waveforms and measurement requests, optional extras, model maturity entries.
+
+### Fixed
+- `database/loss.py`: the flux-density range check tested the lower bound with the two-sided `_covers`, so a value
+  above the fitted range also produced the "below the fitted range" message and a value below produced "exceeds";
+  upper and lower bounds are now checked separately (array inputs report the smallest non-zero element).
+- `workflows/dab_transformer.py`: `WorkflowOptions.created_at` no longer defaults to a literal date; the caller must
+  pass the run timestamp. The verification record is built from what was executed (`build_verification_record`):
+  the software/schema level is `passed` only after the state validated in that run, the numerical level is at most
+  `partial` because the workflow's energy-balance / convergence / mesh checks are self-consistency checks, and the
+  reference to a non-existent `docs/release-verification-v0.3.0.md` is gone.
+- `integrations/aipe_core/bridge.py`: a design result of any `design_transformer*` capability is exported as a
+  transformer (previously only an exact `design_transformer` suffix).
+
+### Known limitations of the new capability
+- No evidence record exists yet in the bundled registry for `aipe.magnetics.design_transformer_from_waveforms`;
+  its results therefore report `L0 unverified` for the sizing relations (the iGSE loss model keeps its own L2
+  status in `data.loss_model_verification`). Adding `@check` evidence changes the bundle fingerprint and needs the
+  maintainer's `verify --update-bundled` release step.
+- Catalogue materials other than N87 carry loss parameter sets up to 90 degC only; at a 100 degC design temperature
+  their losses are extrapolated from the 90 degC set and flagged. Only N87, 3C90 and 3C94 have saturation data; the
+  other grades are listed as not evaluable with the missing data named, and the measurement requests ask for it.
+
 ## 0.2.0 — AIPE Magnetics v0.2 (unified magnetic engineering & standalone expert plugin)
 
 Branch `feature/aipe-magnetics-v0.2`. The v0.1 files, commands and tests are preserved unchanged.

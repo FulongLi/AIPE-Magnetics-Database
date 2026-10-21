@@ -15,7 +15,7 @@ Version 0.2.0 (`feature/aipe-magnetics-v0.2`). The v0.1 record scaffold is prese
 | --- | --- |
 | Data | Magnetic Data Schema v0.2 (materials, manufacturers, datasheet parameters, cores, windings, measurements, B-H loops, loss tables, waveforms, model metadata), SI with original units, checksums, provenance, licence; v0.1 migration; HDF5 waveform store; bundled catalogue (TDK N87 datasheet, 10 ferrites with MagNet-derived Steinmetz sets, 5 TDK cores); source adapters for Princeton MagNet, MagNet Challenge 2, Paderborn materialdatabase and mag-net-hub |
 | Models | Steinmetz, iGSE, Bertotti, Jiles-Atherton (ODE framework), data-driven adapter (ANN / LSTM / Transformer / Neural ODE; numpy + optional torch / magnethub backends) behind one Magnetic Model Contract with declared validity domains |
-| Engineering | material lookup and comparison, flux density, core-loss estimation, inductor and transformer sizing (every catalogue core offered in the material evaluated and ranked), saturation screening, Dowell winding loss, operating-point validation, Markdown/JSON reports |
+| Engineering | material lookup and comparison, flux density, core-loss estimation, inductor and transformer sizing (every catalogue core offered in the material evaluated and ranked), saturation screening, Dowell winding loss, operating-point validation, Markdown/JSON reports; **waveform-informed transformer design** from the converter's actual waveforms (HDF5 / CSV / JSON import or SPS synthesis: exact RMS and harmonics, flux from the voltage integral, iGSE on the real flux, per-layer harmonic Dowell copper loss, leakage and external inductance, thermal estimate, ranked integer-turn candidates, material comparison) and structured **material measurement requests** |
 | Verification | evidence per capability and operating range (L1 software, L2 numerical/physical, L3 engineering), check suite with machine- and human-readable reports, verification status in every result derived from the bundled evidence file (`L0 unverified`, stated explicitly, until the release step records that file) |
 | Interfaces | typed Python API, `aipe-magnetics` CLI, stdio MCP server, Codex plugin, Claude Code plugin, AIPE-Core round-trip adapter, AIPE-Registry manifest |
 
@@ -111,8 +111,11 @@ hardware was built or measured.
 
 ## Current limitations
 
-* Analytical sizing only: no finite-element, thermal, leakage/fringing, insulation or
-  manufacturing analysis; results are design estimates with explicit assumptions.
+* `design_transformer` is analytical sizing with the `P / V` square-current approximation; the
+  waveform-informed design adds exact waveform RMS / harmonics, 1-D leakage, per-layer Dowell and a
+  network / lumped thermal estimate, still without finite-element, insulation or manufacturing analysis
+  (the v0.3 FEA / thermal-FE workflow layer is present but not yet released). Results are design
+  estimates with explicit assumptions.
 * Core-loss models need a parameter set covering the operating temperature, frequency and flux
   density; the engine refuses to extrapolate. Steinmetz/iGSE ignore DC bias and minor loops (flagged).
 * Datasheet parameters are transcribed for N87 only; other catalogue materials carry MagNet-derived
@@ -138,7 +141,7 @@ Jiles & Atherton 1986 / Jiles, Thoelke & Devine 1992, Dowell 1966. See [docs/sou
 [architecture](docs/architecture.md) · [v0.1 audit](docs/audit-v0.1.md) · [data standard v0.2](docs/data-standard-v0.2.md) ·
 [models](docs/models.md) · [verification](docs/verification.md) · [API and CLI](docs/api.md) · [MCP](docs/mcp.md) ·
 [plugins](docs/plugins.md) · [Core/Registry integration](docs/core-integration.md) · [sources](docs/sources.md) ·
-[DAB demo](docs/demo-dab-10kw.md) · [licensing](LICENSING.md) · [contributing](CONTRIBUTING.md)
+[DAB demo](docs/demo-dab-10kw.md) · [waveform-informed design](docs/waveform-informed-design.md) · [licensing](LICENSING.md) · [contributing](CONTRIBUTING.md)
 
 ## Licence
 

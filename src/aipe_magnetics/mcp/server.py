@@ -189,6 +189,52 @@ def build_server(config: ServerConfig | None = None):
                 payload[key] = value
         return run(api.design_transformer, payload)
 
+    @server.tool(name="design_transformer_from_waveforms", title="Design transformer from waveforms", annotations=read_only,
+                 description=("Transformer design from the converter's ACTUAL winding waveforms: exact RMS and harmonics of the currents, flux from "
+                              "the integral of the primary voltage, iGSE core loss on that flux at the design temperature, per-layer harmonic Dowell "
+                              "copper loss (litz / foil, P-S / P-S-P), 1-D leakage inductance and the external inductance still required "
+                              "(L_total - L_leak), magnetising inductance, window fill, thermal estimate; ranked integer-turn candidates, comparison "
+                              "with the square-current approximation, material comparison for this excitation. waveforms: {'kind': 'hdf5'|'csv'|'json'|'sps', "
+                              "'path': ..., 'channels': {'primary_current': name, 'secondary_current'?: name, 'primary_voltage'?: name, "
+                              "'magnetising_current'?: name}, 'window'?: {'t0': {...s}, 't1': {...s}}, csv: 'time_column', 'time_unit', 'units': {name: unit}, "
+                              "json: 'document' inline instead of 'path', sps: {'power', 'primary_voltage', 'secondary_voltage', 'phase_shift'|'series_inductance'}}. "
+                              "The tool only READS the named file. export_state=true with created_at (RFC 3339) adds the AIPE-Core Engineering State "
+                              f"of the selected design to data.engineering_state. Quantities are {QUANTITY_DOC}."))
+    def design_transformer_from_waveforms(frequency: dict[str, Any], waveforms: dict[str, Any], turns_ratio_target: float,
+                                          turns_ratio_tolerance: float = 0.05, primary_voltage: dict[str, Any] | None = None,
+                                          series_inductance_total: dict[str, Any] | None = None, materials: list[str] | None = None,
+                                          cores: list[str] | None = None, material_offer_policy: str = "catalogue",
+                                          temperature: dict[str, Any] | None = None, flux_limit: dict[str, Any] | None = None,
+                                          loss_density_target: dict[str, Any] | None = None, windings: dict[str, Any] | None = None,
+                                          thermal: dict[str, Any] | None = None, isolation: dict[str, Any] | None = None, turn_steps: int = 4,
+                                          harmonics: int = 41, max_candidates: int = 10, reference_core: str | None = None, policy: str = "warn",
+                                          export_state: bool = False, created_at: str | None = None) -> dict[str, Any]:
+        payload: dict[str, Any] = {"frequency": frequency, "waveforms": waveforms, "turns_ratio_target": turns_ratio_target,
+                                   "turns_ratio_tolerance": turns_ratio_tolerance, "material_offer_policy": material_offer_policy, "turn_steps": turn_steps,
+                                   "harmonics": harmonics, "max_candidates": max_candidates, "policy": policy}
+        for key, value in (("primary_voltage", primary_voltage), ("series_inductance_total", series_inductance_total), ("materials", materials),
+                           ("cores", cores), ("temperature", temperature), ("flux_limit", flux_limit), ("loss_density_target", loss_density_target),
+                           ("windings", windings), ("thermal", thermal), ("isolation", isolation), ("reference_core", reference_core)):
+            if value is not None:
+                payload[key] = value
+        return run(api.design_transformer_from_waveforms, payload, created_at=created_at, export_state=export_state)
+
+    @server.tool(name="measurement_requests", title="Measurement requests", annotations=read_only,
+                 description=("Structured magnetic-material measurement requests for an excitation: for every (or the named) catalogue material the "
+                              "coverage of B-H data, core loss vs f/B/T, DC bias, saturation vs temperature, complex permeability, winding AC resistance "
+                              "and thermal conductivity is assessed and each gap becomes a request with test conditions and a priority "
+                              f"(high / medium / low). Quantities are {QUANTITY_DOC}; temperature_range is [min, max]."))
+    def measurement_requests(frequency: dict[str, Any], materials: list[str] | None = None, flux_density_peak: dict[str, Any] | None = None,
+                             temperature: dict[str, Any] | None = None, temperature_range: list[dict[str, Any]] | None = None,
+                             excitation: str = "triangular", dc_bias_field_max: dict[str, Any] | None = None, harmonics: int = 5,
+                             include_available: bool = True) -> dict[str, Any]:
+        payload: dict[str, Any] = {"frequency": frequency, "excitation": excitation, "harmonics": harmonics, "include_available": include_available}
+        for key, value in (("materials", materials), ("flux_density_peak", flux_density_peak), ("temperature", temperature),
+                           ("temperature_range", temperature_range), ("dc_bias_field_max", dc_bias_field_max)):
+            if value is not None:
+                payload[key] = value
+        return run(api.measurement_requests, payload)
+
     @server.tool(name="validate_design", title="Validate design", annotations=read_only,
                  description=("Saturation screening and operating-point validation of an existing design (material, core, turns, voltage or flux "
                               f"density, frequency, temperature, optional current and air gap). Quantities are {QUANTITY_DOC}."))
