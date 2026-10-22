@@ -91,3 +91,19 @@ AIPE-Magnetics-Database/
 ├── scripts/, importers/       v0.1 tooling, kept working
 ├── pyproject.toml, aipe.yaml, README.md, CHANGELOG.md
 ```
+
+## Capability overview
+
+| Area | What you get |
+| --- | --- |
+| Data | Magnetic Data Schema v0.2 (materials, manufacturers, datasheet parameters, cores, windings, measurements, B-H loops, loss tables, waveforms, model metadata), SI with original units, checksums, provenance, licence; v0.1 migration; HDF5 waveform store; bundled catalogue (TDK N87 datasheet, 10 ferrites with MagNet-derived Steinmetz sets, 5 TDK cores); source adapters for Princeton MagNet, MagNet Challenge 2, Paderborn materialdatabase and mag-net-hub |
+| Models | Steinmetz, iGSE, Bertotti, Jiles-Atherton (ODE framework), data-driven adapter (ANN / LSTM / Transformer / Neural ODE; numpy + optional torch / magnethub backends) behind one Magnetic Model Contract with declared validity domains |
+| Engineering | material lookup and comparison, flux density, core-loss estimation, inductor and transformer sizing (every catalogue core offered in the material evaluated and ranked), saturation screening, Dowell winding loss, operating-point validation, Markdown/JSON reports; **waveform-informed transformer design** from the converter's actual waveforms (HDF5 / CSV / JSON import or SPS synthesis: exact RMS and harmonics, flux from the voltage integral, iGSE on the real flux, per-layer harmonic Dowell copper loss, leakage and external inductance, thermal estimate, ranked integer-turn candidates, material comparison) and structured **material measurement requests** |
+| Verification | evidence per capability and operating range (L1 software, L2 numerical/physical, L3 engineering), check suite with machine- and human-readable reports, verification status in every result derived from the bundled evidence file (`L0 unverified`, stated explicitly, until the release step records that file) |
+| Interfaces | typed Python API, `aipe-magnetics` CLI, stdio MCP server, Codex plugin, Claude Code plugin, AIPE-Core round-trip adapter, AIPE-Registry manifest |
+
+Every result is an envelope with values + units, assumptions, model identity and version, input
+conditions, sources, verification status, warnings and limitations. Invalid or out-of-domain inputs
+are rejected explicitly, never clipped; uncertainty is reported as unknown when it is unknown.
+Version 0.2.0 was developed on `feature/aipe-magnetics-v0.2`; the v0.1 record scaffold is preserved
+unchanged (see [audit-v0.1.md](audit-v0.1.md) and the [CHANGELOG](../CHANGELOG.md)).

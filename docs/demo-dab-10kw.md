@@ -75,3 +75,22 @@ registry: `L0 unverified` with a statement naming the missing file while the rel
 `src/aipe_magnetics/verification/evidence/v0.2.0.json` has not been recorded by the maintainer's release
 step, L1/L2 per capability once it has. The zero-DC-bias assumption is recorded as `zero_dc_bias` in the
 design result.
+
+## Result summary of the release run
+
+Output of the release run ([demo-dab-10kw-report.md](demo-dab-10kw-report.md), selected core E 65/32/27):
+
+| Quantity | Value | Status |
+| --- | --- | --- |
+| turns primary : secondary | 21 : 10 | calculated (Faraday, integer turns) |
+| peak flux density | 0.178 T (Bsat at 100 degC: 0.39 T, margin 54 %) | calculated |
+| core loss density / core loss | 274 kW/m^3 / 21.5 W | estimated (iGSE, TDK 100 degC datasheet-fit set) |
+| copper loss (litz, Dowell 1-D) | 17.7 W | estimated |
+| total estimated loss | 39.2 W | estimated |
+| window fill | 0.30 | estimated |
+| verification | L2 (sizing relations and iGSE verified against analytical references) | - |
+
+Other candidates: E 70/33/32 44.8 W, PM 87/70 44.9 W; ETD 59/31/22 rejected (window fill 0.51 > 0.40);
+UU 93/152/30 not evaluable (no mean turn length / window area in the datasheet record). See
+[release-verification-v0.2.0.md](release-verification-v0.2.0.md) for the record of what was executed for
+the release. Values are analytical design estimates with stated assumptions; no hardware was built or measured.
