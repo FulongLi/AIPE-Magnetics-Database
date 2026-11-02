@@ -19,10 +19,12 @@ def test_mas_catalogue_records_validate_and_resolve():
     for relative_path in paths:
         path = DATA / relative_path
         assert path.is_file(), relative_path
-        lines = path.read_text(encoding="utf-8").splitlines()
-        assert lines, relative_path
-        for line in lines:
-            record = MagneticRecord.model_validate(json.loads(line))
+        text = path.read_text(encoding="utf-8")
+        # shards are JSONL; dataset records are single pretty-printed JSON objects
+        objects = [json.loads(text)] if path.suffix == ".json" else [json.loads(line) for line in text.splitlines()]
+        assert objects, relative_path
+        for obj in objects:
+            record = MagneticRecord.model_validate(obj)
             assert record.id not in ids, record.id
             ids.add(record.id)
             assert record.license == "Apache-2.0"
@@ -50,3 +52,9 @@ def test_mas_shape_dimensions_retain_tolerance_not_fabricated_nominals():
                     assert key in {"minimum_m", "maximum_m"}
                 if "minimum_m" in dimensions and "maximum_m" in dimensions:
                     assert dimensions["minimum_m"] <= dimensions["maximum_m"]
+            # upstream rows with minimum > maximum are kept verbatim but excluded from the usable ranges
+            inconsistent = record["extensions"]["aipe.mas"].get("inconsistent_dimension_ranges_m", {})
+            assert bool(inconsistent) == ("upstream_dimension_range_inverted" in record["quality"]["flags"])
+            for name, dimensions in inconsistent.items():
+                assert name not in ranges
+                assert dimensions["minimum_m"] > dimensions["maximum_m"]

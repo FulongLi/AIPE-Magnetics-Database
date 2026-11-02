@@ -21,7 +21,7 @@ Normalised fields: manufacturer-qualified name, grade, material class, certain i
 
 ### Core shape records
 
-Each record identifies the standard shape and its named dimension tolerance ranges in \`extensions["aipe.mas"]["dimensions_range_m"]\` using explicit \`minimum_m\` and \`maximum_m\`. No midpoints, effective magnetic dimensions (\`A_e\`, \`l_e\`, \`V_e\`) or parts have been fabricated. These shapes **must not** be used to compute transformer geometry without a suitable verified part specification.
+Each record identifies the standard shape and its named dimension tolerance ranges in \`extensions["aipe.mas"]["dimensions_range_m"]\` using explicit \`minimum_m\` and \`maximum_m\`. No midpoints, effective magnetic dimensions (\`A_e\`, \`l_e\`, \`V_e\`) or parts have been fabricated. Three upstream rows state a minimum larger than the maximum (P 4.6/3.1 \`H\`, EC 120 \`T\`, U 30/25/16 \`D\`); those bounds are not swapped or corrected but kept verbatim in \`inconsistent_dimension_ranges_m\`, excluded from \`dimensions_range_m\`, and the record is flagged \`upstream_dimension_range_inverted\`. These shapes **must not** be used to compute transformer geometry without a suitable verified part specification.
 
 ### Source and quality
 
