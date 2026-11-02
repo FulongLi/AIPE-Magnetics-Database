@@ -76,3 +76,7 @@ stated assumptions, nothing built or measured.
 - [Sources, adapters and attribution](docs/sources.md) · [Core/Registry integration](docs/core-integration.md) ·
   [v0.1 audit](docs/audit-v0.1.md)
 - [CHANGELOG.md](CHANGELOG.md) · [LICENSING.md](LICENSING.md) · [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Material and core-shape data
+
+The initial [normalised MAS catalogue](docs/mas-catalogue.md) adds **1,137 magnetic-material records and 2,294 standard core-shape records**, in versioned v0.2 JSONL under `data/normalized/mas/`. The [source manifest](data/raw/mas/SOURCES.json) pins the upstream dataset. Records are third-party unreviewed values, not independently tested by AIPE; complex-loss data and other external sources are not yet fully ingested. Validate with `python -m pytest -q tests/data/test_mas_catalogue.py`.
