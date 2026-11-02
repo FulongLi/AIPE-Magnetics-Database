@@ -1,0 +1,74 @@
+{
+  "source_id": "princeton_magnet",
+  "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
+  "license": "MIT",
+  "redistribution": "permitted (MIT; cite the three IEEE TPEL MagNet papers)",
+  "importer_version": "0.3.0",
+  "inputs": [
+    {
+      "path": "src/magnet/data/3C90_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/3C90_database.h5",
+      "sha256": "421d9fd33e4c1626dd3a22ca26755b2b98a98f4175f44df2622d7ead8d5417f2"
+    },
+    {
+      "path": "src/magnet/data/3C94_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/3C94_database.h5",
+      "sha256": "7859a037a0d1225e3d60c61d285c506445b32fbcf642309a5fd18f07c71fdbd5"
+    },
+    {
+      "path": "src/magnet/data/3E6_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/3E6_database.h5",
+      "sha256": "7198d2cfddde46f50e85a9d2e320b402b6322677632ff3697f8916e497e47921"
+    },
+    {
+      "path": "src/magnet/data/3F4_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/3F4_database.h5",
+      "sha256": "bc166e60edf37150d30224f785378c0f1b0160f580402f447cd770617ee20de5"
+    },
+    {
+      "path": "src/magnet/data/77_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/77_database.h5",
+      "sha256": "7e2a9044b92ab6ebea40fa971747a3b3af491c8f7f66c030e53f5e85ee099a39"
+    },
+    {
+      "path": "src/magnet/data/78_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/78_database.h5",
+      "sha256": "160643789e6d210cacbe60364ab64a1decab87f5ab321e6cc1d9f083a9434fcd"
+    },
+    {
+      "path": "src/magnet/data/N27_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/N27_database.h5",
+      "sha256": "1fbfe3e94511c70c5c95a3d9bb768d91040321685c6b3cb8e8bd24e3305093c8"
+    },
+    {
+      "path": "src/magnet/data/N30_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/N30_database.h5",
+      "sha256": "f41f08b0516e8bff35968b6b5e0d6730ed713400dd06bdf784e7a09fb8d41b02"
+    },
+    {
+      "path": "src/magnet/data/N49_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/N49_database.h5",
+      "sha256": "860319862452636277260a83f214179f4b964b431b63b9f7d630eb312f1c3f82"
+    },
+    {
+      "path": "src/magnet/data/N87_database.h5",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/src/magnet/data/N87_database.h5",
+      "sha256": "263c0087f6f43ccfd1b338d105abb6b9432be2cb85c59528539317f99b25bd63"
+    }
+  ],
+  "counts": {
+    "magnetic_material": 10,
+    "measurement": 10,
+    "records.dataset": 1,
+    "records.magnetic_material": 10,
+    "records.measurement": 10
+  },
+  "table_rows": {
+    "core_loss": 575009
+  },
+  "flags": {
+    "rows_with_negative_dc_bias": 5307
+  },
+  "exclusions": [],
+  "notes": []
+}

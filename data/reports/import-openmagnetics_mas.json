@@ -1,0 +1,1290 @@
+{
+  "source_id": "openmagnetics_mas",
+  "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+  "license": "Apache-2.0",
+  "redistribution": "permitted (Apache-2.0; upstream values originate from manufacturer datasheets)",
+  "importer_version": "0.3.0",
+  "inputs": [
+    {
+      "path": "data/core_materials.ndjson",
+      "url": "https://raw.githubusercontent.com/Power-Supply-Manufacturers-Association/MAS/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/core_materials.ndjson",
+      "sha256": "10a6b3f3e72f5d963d05a4f9d11ed3595d25c14634a739e8ade263f3edff44b2",
+      "size": 11010297
+    },
+    {
+      "path": "data/core_shapes.ndjson",
+      "url": "https://raw.githubusercontent.com/Power-Supply-Manufacturers-Association/MAS/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/core_shapes.ndjson",
+      "sha256": "84eeed999eb06c69c09c0fb38e8f693dac79c284e32cf372b5a6c08a80bc50f2",
+      "size": 639486
+    },
+    {
+      "path": "data/cores.ndjson",
+      "url": "https://raw.githubusercontent.com/Power-Supply-Manufacturers-Association/MAS/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/cores.ndjson",
+      "sha256": "6fb6142385c5541477bbf99bab4d2c6ade4a87bbb9470002bdcdad72ff1cd81e",
+      "size": 8196923
+    },
+    {
+      "path": "data/advanced_core_materials.ndjson",
+      "url": "https://media.githubusercontent.com/media/Power-Supply-Manufacturers-Association/MAS/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/advanced_core_materials.ndjson",
+      "sha256": "0157ea8bbb361acc06093a3955928a436b136d7e10d948dbc27259c48f20d620",
+      "size": 145044312
+    }
+  ],
+  "counts": {
+    "core_part": 18943,
+    "core_shape": 2294,
+    "loss_model": 664,
+    "magnetic_material": 1137,
+    "measurement": 1627,
+    "records.core_geometry": 21237,
+    "records.dataset": 4,
+    "records.magnetic_material": 1137,
+    "records.measurement": 1627,
+    "records.model_metadata": 664
+  },
+  "table_rows": {
+    "amplitude_permeability": 3752,
+    "bh_curve": 1515191,
+    "complex_permeability": 63369,
+    "complex_permittivity": 80,
+    "core_loss": 48107,
+    "initial_permeability": 12193,
+    "loss_factor": 18601,
+    "mass_core_loss": 1363
+  },
+  "flags": {
+    "bh_cycle_flux_above_3T_records": 1,
+    "complex_permeability_negative_rows": 9552,
+    "permeability_nonpositive_points_not_typed": 45,
+    "resistivity_multiple_points_not_typed": 1,
+    "shape_dimension_range_inverted": 3
+  },
+  "exclusions": [
+    {
+      "what": "loss_model",
+      "reason": "placeholder coefficients (all 1)",
+      "count": 1,
+      "material": "material.mas-tdk-n27-0007",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-n49-0012",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-n87-0015",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pc95-0022",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-ferroxcube-3c92a-0035",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-ferroxcube-3c95a-0038",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-ferroxcube-3c95f-0039",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-ferroxcube-3f46-0045",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-ferroxcube-3c99-0046",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-61-0050",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-67-0051",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-77-0052",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-78-0053",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-79-0054",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-80-0055",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-95-0056",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-97-0057",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-fair-rite-98-0058",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-shandong-jianuo-jnp96-0234",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-shandong-jianuo-jnp96a-0235",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-shandong-jianuo-jnp95-0236",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-shandong-jianuo-jnp44-0237",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr25-0251",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr24-0252",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr40b-0253",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr55-0254",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr28-0255",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr96-0256",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr90-0257",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr71-0258",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr73-0259",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr70-0260",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-r10kz-0261",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr50b-0262",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr51-0263",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr52-0264",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn30b-0265",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn40b-0266",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn50b-0267",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn85h-0268",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn150h-0269",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr91-0271",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-r7kc-0272",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-r12kz-0273",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-r15kz-0274",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-r5kc-0275",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-r5kz-0276",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-r10kc-0277",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr51w-0278",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dmr52w-0279",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn15p-0280",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn20f-0281",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn2s-0282",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn33l-0283",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-dmegc-dn100h-0284",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a064-0293",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a103-0294",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-d30-0295",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-d35-0296",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a151-0297",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-d37-0298",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p491-0299",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-n43-0300",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a13-0301",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-n5-0302",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a05-0303",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p452-0304",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a06-0305",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-k081-0306",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p61-0307",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-k12-0308",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a071-0309",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p451-0310",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-d1c-0311",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-n10-0312",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-k13-0313",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-n07-0314",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-n42-0315",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-acme-k10-0316",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p4-0317",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p41-0318",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a102-0319",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-n4-0320",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a043-0321",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p45-0322",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-k151-0323",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-k20-0324",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p48-0325",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p51-0326",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p492-0327",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p47-0328",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p63-0329",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-d25-0330",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-d28-0331",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-acme-d27-0332",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a044-0333",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a072-0334",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-k25-0335",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p42-0336",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p5-0337",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p49-0338",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p53-0339",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a121-0340",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-k15-0341",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a104-0342",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-p52-0343",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a10-0344",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-d40-0345",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-acme-a062-0346",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pc40-0475",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pc44-0476",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pc90-0477",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-ferroxcube-3f37-0478",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pc91-0508",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pcl47-0509",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pe22-0510",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pel95-0511",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-pem95-0512",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdk-peh95-0513",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-ml91s-0534",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-ml95s-0535",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-ml27d-0536",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-samwha-pl-5-0537",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-samwha-pl-7-0538",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-samwha-pl-11-0539",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-samwha-pl-13-0540",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-ml24d-0561",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-ml25d-0562",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-ml33d-0568",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-mb19d-0569",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-mb20d-0570",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-proterial-mb28d-0571",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf124-0576",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf130-0577",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf138-0578",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf139-0579",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf297-0580",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf297a-0581",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf292-0582",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf295-0583",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf296-0584",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf296a-0585",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-cosmo-ferrites-cf249-0586",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-jfe-mb1-0597",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-jfe-mb1h-0598",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-jfe-mb3-0599",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-jfe-mb4-0600",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-jfe-mbt1-0601",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-jfe-mbt2-0602",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-jfe-mbf4-0603",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-jfe-mc2-0604",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tp4b-0620",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tp4c-0621",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tp4d-0622",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tp4e-0623",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tp4f-0624",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tp4s-0625",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tpw30-0626",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tpg30-0627",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tpb12-0628",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tp5e-0629",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-tp5i-0630",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tdg-td3-0636",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-sinomag-smp40-0650",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-sinomag-smp90-0651",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-196-1119",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-196b-1120",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-198-1121",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-198a-1122",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-102-1123",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-104-1124",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-106-1125",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-108-1126",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-114-1127",
+      "method": "roshen"
+    },
+    {
+      "what": "loss_model",
+      "reason": "method named without coefficients",
+      "count": 1,
+      "material": "material.mas-tridelta-manifer-95-1128",
+      "method": "roshen"
+    }
+  ],
+  "notes": []
+}

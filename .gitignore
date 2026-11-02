@@ -9,7 +9,7 @@ htmlcov/
 build/
 dist/
 data/derived/*.json
-reports/
+/reports/
 .aipe-cache/
 .mypy_cache/
 .ruff_cache/
