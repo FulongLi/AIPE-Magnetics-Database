@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.2.0",
+  "id": "dataset.mas-core-shapes",
+  "kind": "dataset",
+  "name": "MAS core shapes catalogue",
+  "synthetic": false,
+  "license": "Apache-2.0",
+  "properties": {
+    "source_id": "openmagnetics_mas",
+    "title": "MAS core-shapes catalogue",
+    "publisher": "OpenMagnetics / Power Supply Manufacturers Association",
+    "url": "https://github.com/Power-Supply-Manufacturers-Association/MAS/blob/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/core_shapes.ndjson",
+    "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+    "source_commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+    "license": "Apache-2.0",
+    "redistribution_permitted": true,
+    "record_count": 2294,
+    "description": "Unreviewed third-party records; no independent AIPE physical verification. Exact upstream file is pinned by Git blob SHA-1 in extensions."
+  },
+  "evidence_refs": [
+    "evidence.mas-source"
+  ],
+  "evidence": [
+    {
+      "id": "evidence.mas-source",
+      "kind": "source",
+      "reference": "Power-Supply-Manufacturers-Association/MAS",
+      "description": "Apache-2.0 MAS catalogue source.",
+      "created_at": "2026-11-02T20:52:36Z",
+      "review_status": "unreviewed",
+      "license": "Apache-2.0",
+      "url": "https://github.com/Power-Supply-Manufacturers-Association/MAS/tree/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data",
+      "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc"
+    }
+  ],
+  "quality": {
+    "status": "normalized",
+    "flags": [
+      "third_party_unreviewed"
+    ]
+  },
+  "provenance": {
+    "activity": "MAS catalogue ingestion",
+    "source_commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc"
+  },
+  "extensions": {
+    "aipe.mas": {
+      "source_git_blob_sha1": "3c75852eac6f38245e4c4dfc035bfec7bb10c9a3"
+    }
+  }
+}
