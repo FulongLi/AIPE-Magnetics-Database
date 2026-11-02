@@ -20,6 +20,8 @@ licence is an owner decision; until then, rights in the code are reserved by its
 | Paderborn `mag-net-hub` | MIT | optional model backend through the `magnethub` package; no weights vendored |
 | Paderborn `materialdatabase` | GPL-3.0 | **no code copied, no data bundled**; adapter reads a user checkout; records produced from it carry `license: GPL-3.0` |
 | MagNet Challenge 2 (`minjiechen/magnetchallenge-2`) | none published | reference and user-supplied import only |
+
+| MAS (Magnetic Agnostic Structure / OpenMagnetics) | Apache-2.0 | Normalised third-party magnetic-material and core-shape catalogue with source attribution; upstream Apache licence is retained at `data/raw/mas/LICENSE.upstream.md`; original manufacturer documentation is linked, not copied. Pinned source/version and limitations in `data/raw/mas/SOURCES.json` and `docs/mas-catalogue.md`. |
 | TDK / EPCOS datasheets | manufacturer copyright | individual typical values transcribed with page/table locators as evidence; documents are referenced, never copied |
 
 Each source evidence record declares its known licence or `NOASSERTION`. Public availability is

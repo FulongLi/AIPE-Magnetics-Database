@@ -1,0 +1,28 @@
+{
+  "source_id": "openmagnetics_mas",
+  "upstream": "https://github.com/Power-Supply-Manufacturers-Association/MAS",
+  "commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+  "license": "Apache-2.0",
+  "checked_at": "2026-11-02",
+  "files": [
+    {
+      "upstream_path": "data/core_materials.ndjson",
+      "git_blob_sha1": "fc49e78c22bff9350f2f3649dcc9017662bfd1c8",
+      "records": 1137,
+      "normalized_glob": "data/normalized/mas/materials/*.jsonl",
+      "raw_policy": "retrieve on demand at pinned commit; not committed"
+    },
+    {
+      "upstream_path": "data/core_shapes.ndjson",
+      "git_blob_sha1": "3c75852eac6f38245e4c4dfc035bfec7bb10c9a3",
+      "records": 2294,
+      "normalized_glob": "data/normalized/mas/shapes/*.jsonl",
+      "raw_policy": "retrieve on demand at pinned commit; not committed"
+    }
+  ],
+  "notes": [
+    "Source content is referenced, not relicensed by AIPE.",
+    "Only selected typed properties are normalised; original MAS material curves and detailed provenance remain available at pinned upstream commit.",
+    "Third-party values are unreviewed, not primary AIPE measurements."
+  ]
+}
