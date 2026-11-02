@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.2.0",
+  "catalogue": "mas",
+  "source_commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+  "datasets": [
+    "datasets/core-materials.json",
+    "datasets/core-shapes.json"
+  ],
+  "material_shards": [
+    "materials/materials-001.jsonl",
+    "materials/materials-002.jsonl",
+    "materials/materials-003.jsonl",
+    "materials/materials-004.jsonl",
+    "materials/materials-005.jsonl",
+    "materials/materials-006.jsonl",
+    "materials/materials-007.jsonl",
+    "materials/materials-008.jsonl",
+    "materials/materials-009.jsonl",
+    "materials/materials-010.jsonl",
+    "materials/materials-011.jsonl",
+    "materials/materials-012.jsonl"
+  ],
+  "shape_shards": [
+    "shapes/shapes-001.jsonl",
+    "shapes/shapes-002.jsonl",
+    "shapes/shapes-003.jsonl",
+    "shapes/shapes-004.jsonl",
+    "shapes/shapes-005.jsonl"
+  ],
+  "record_counts": {
+    "magnetic_material": 1137,
+    "core_geometry": 2294,
+    "dataset": 2
+  },
+  "source_manifest": "../../raw/mas/SOURCES.json",
+  "review_state": "third_party_unreviewed"
+}
