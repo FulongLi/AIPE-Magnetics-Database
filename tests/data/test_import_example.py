@@ -10,10 +10,10 @@ from unittest.mock import patch
 
 import pytest
 
-from aipe_magnetics.common.jsonio import load, sha256_file
-from aipe_magnetics.data.hdf5 import WaveformStore
-from aipe_magnetics.data.records import MagneticRecord
-from aipe_magnetics.data.schema import validate_catalogue, validate_record
+from aipe_magnetics_database.common.jsonio import load, sha256_file
+from aipe_magnetics_database.data.hdf5 import WaveformStore
+from aipe_magnetics_database.data.records import MagneticRecord
+from aipe_magnetics_database.data.schema import validate_catalogue, validate_record
 
 pytestmark = pytest.mark.usefixtures("require_h5py")
 

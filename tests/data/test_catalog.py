@@ -13,12 +13,12 @@ from pathlib import Path
 
 import pytest
 
-from aipe_magnetics.common.errors import DataIntegrityError, DataNotFoundError, InvalidInputError
-from aipe_magnetics.common.jsonio import dump
-from aipe_magnetics.data.catalog import BUNDLED_CATALOG_DIR, Catalog, load_record_file
-from aipe_magnetics.data.fixtures import v01_fixture_records
-from aipe_magnetics.data.migrate import migrate_record
-from aipe_magnetics.data.records import MagneticRecord
+from aipe_magnetics_database.common.errors import DataIntegrityError, DataNotFoundError, InvalidInputError
+from aipe_magnetics_database.common.jsonio import dump
+from aipe_magnetics_database.data.catalog import BUNDLED_CATALOG_DIR, Catalog, load_record_file
+from aipe_magnetics_database.data.fixtures import v01_fixture_records
+from aipe_magnetics_database.data.migrate import migrate_record
+from aipe_magnetics_database.data.records import MagneticRecord
 
 SYNTHETIC_IDS = {"manufacturer.example-synthetic", "material.example-synthetic-ferrite", "core.example-synthetic-e42"}
 REAL_EVIDENCE_KINDS = {"source", "measurement", "analytical", "simulation"}

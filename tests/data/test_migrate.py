@@ -7,14 +7,14 @@ from pathlib import Path
 
 import pytest
 
-from aipe_magnetics import __version__
-from aipe_magnetics.common.errors import DataIntegrityError, InvalidInputError
-from aipe_magnetics.common.jsonio import load, sha256_bytes
-from aipe_magnetics.data import migrate as migrate_module
-from aipe_magnetics.data.fixtures import V01_KINDS, v01_fixture_paths, v01_fixture_records
-from aipe_magnetics.data.migrate import MIGRATION_EXTENSION, migrate_file, migrate_record
-from aipe_magnetics.data.records import MagneticRecord
-from aipe_magnetics.data.schema import validate_catalogue, validate_legacy_records, validate_record
+from aipe_magnetics_database import __version__
+from aipe_magnetics_database.common.errors import DataIntegrityError, InvalidInputError
+from aipe_magnetics_database.common.jsonio import load, sha256_bytes
+from aipe_magnetics_database.data import migrate as migrate_module
+from aipe_magnetics_database.data.fixtures import V01_KINDS, v01_fixture_paths, v01_fixture_records
+from aipe_magnetics_database.data.migrate import MIGRATION_EXTENSION, migrate_file, migrate_record
+from aipe_magnetics_database.data.records import MagneticRecord
+from aipe_magnetics_database.data.schema import validate_catalogue, validate_legacy_records, validate_record
 
 
 def test_example_migrates_and_keeps_meaning(v01_example):
@@ -29,7 +29,7 @@ def test_example_migrates_and_keeps_meaning(v01_example):
     assert migrated["license"] == "NOASSERTION"
     assert migrated["provenance"] == {
         "activity": f"migrated from schema 0.1.0 by aipe-magnetics {__version__}",
-        "tool": {"id": "aipe.magnetics", "name": "AIPE Magnetics", "version": __version__},
+        "tool": {"id": "aipe.magnetics.database", "name": "AIPE Magnetics Database", "version": __version__},
         "inputs": [], "normalization": "none",
     }
     assert migrated["extensions"] == {MIGRATION_EXTENSION: {"from": "0.1.0", "to": "0.2.0", "tool_version": __version__}}

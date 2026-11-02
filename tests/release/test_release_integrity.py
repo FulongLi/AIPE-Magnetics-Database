@@ -10,7 +10,7 @@ from pathlib import Path
 
 import yaml
 
-from aipe_magnetics import __version__
+from aipe_magnetics_database import __version__
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -22,8 +22,8 @@ def _toml(path: Path) -> dict:
 
 def test_versions_agree_everywhere():
     assert _toml(ROOT / "pyproject.toml")["project"]["version"] == __version__
-    for manifest in (ROOT / "plugins/claude/aipe-magnetics/.claude-plugin/plugin.json",
-                     ROOT / "plugins/codex/aipe-magnetics/.codex-plugin/plugin.json"):
+    for manifest in (ROOT / "plugins/claude/aipe-magnetics-database/.claude-plugin/plugin.json",
+                     ROOT / "plugins/codex/aipe-magnetics-database/.codex-plugin/plugin.json"):
         assert json.loads(manifest.read_text(encoding="utf-8"))["version"] == __version__
     for marketplace in (ROOT / ".claude-plugin/marketplace.json", ROOT / ".agents/plugins/marketplace.json"):
         data = json.loads(marketplace.read_text(encoding="utf-8"))
@@ -31,7 +31,7 @@ def test_versions_agree_everywhere():
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     assert f"## {__version__}" in changelog
     manifest = yaml.safe_load((ROOT / "aipe.yaml").read_text(encoding="utf-8"))
-    assert manifest["extensions"]["aipe.magnetics"]["package"] == f"aipe-magnetics {__version__}"
+    assert manifest["extensions"]["aipe.magnetics"]["package"] == f"aipe-magnetics-database {__version__}"
 
 
 def test_manifest_documentation_and_evidence_paths_exist():

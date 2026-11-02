@@ -8,13 +8,13 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from aipe_magnetics import __version__
-from aipe_magnetics.common.errors import DataIntegrityError, InvalidInputError, UnitError, UnsupportedOperationError
-from aipe_magnetics.common.jsonio import dump, load, sha256_file
-from aipe_magnetics.data.catalog import Catalog
-from aipe_magnetics.data.fixtures import v01_fixture_records
-from aipe_magnetics.data.hdf5 import WaveformMeta, WaveformStore
-from aipe_magnetics.data.importers import (
+from aipe_magnetics_database import __version__
+from aipe_magnetics_database.common.errors import DataIntegrityError, InvalidInputError, UnitError, UnsupportedOperationError
+from aipe_magnetics_database.common.jsonio import dump, load, sha256_file
+from aipe_magnetics_database.data.catalog import Catalog
+from aipe_magnetics_database.data.fixtures import v01_fixture_records
+from aipe_magnetics_database.data.hdf5 import WaveformMeta, WaveformStore
+from aipe_magnetics_database.data.importers import (
     IMPORT_EXTENSION,
     ImportResult,
     import_csv_loss_table,
@@ -23,12 +23,12 @@ from aipe_magnetics.data.importers import (
     import_waveform_sequences,
     parse_loss_table,
 )
-from aipe_magnetics.data.importers import hdf5_waveforms as hdf5_waveforms_module
-from aipe_magnetics.data.importers import json_record as json_record_module
-from aipe_magnetics.data.importers.base import coerce_evidence, explicit_null_paths, relative_uri
-from aipe_magnetics.data.migrate import migrate_record
-from aipe_magnetics.data.records import MagneticRecord
-from aipe_magnetics.data.schema import validate_catalogue, validate_record
+from aipe_magnetics_database.data.importers import hdf5_waveforms as hdf5_waveforms_module
+from aipe_magnetics_database.data.importers import json_record as json_record_module
+from aipe_magnetics_database.data.importers.base import coerce_evidence, explicit_null_paths, relative_uri
+from aipe_magnetics_database.data.migrate import migrate_record
+from aipe_magnetics_database.data.records import MagneticRecord
+from aipe_magnetics_database.data.schema import validate_catalogue, validate_record
 
 COLUMNS = {"f_kHz": ("frequency", "kHz"), "B_mT": ("flux_density_peak", "mT"), "T_C": ("temperature", "degC"),
            "Pv": ("loss_density", "kW/m^3")}
@@ -447,7 +447,7 @@ def test_relative_uri_falls_back_to_a_file_uri_across_drives(tmp_path: Path):
 
 
 def test_waveform_import_without_h5py_is_an_explicit_unsupported_operation(monkeypatch, tmp_path: Path, waveform_source, evidence_source):
-    from aipe_magnetics.data import hdf5 as hdf5_module
+    from aipe_magnetics_database.data import hdf5 as hdf5_module
 
     monkeypatch.setattr(hdf5_module, "h5py", None)
     monkeypatch.setattr(hdf5_waveforms_module, "h5py_available", lambda: False)

@@ -8,12 +8,12 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from aipe_magnetics.common.errors import DataIntegrityError, InvalidInputError, UnitError, UnsupportedOperationError
-from aipe_magnetics.common.jsonio import sha256_file
-from aipe_magnetics.common.quantity import Quantity
-from aipe_magnetics.common.units import convert
-from aipe_magnetics.data import hdf5 as hdf5_module
-from aipe_magnetics.data.hdf5 import (
+from aipe_magnetics_database.common.errors import DataIntegrityError, InvalidInputError, UnitError, UnsupportedOperationError
+from aipe_magnetics_database.common.jsonio import sha256_file
+from aipe_magnetics_database.common.quantity import Quantity
+from aipe_magnetics_database.common.units import convert
+from aipe_magnetics_database.data import hdf5 as hdf5_module
+from aipe_magnetics_database.data.hdf5 import (
     CONDITION_QUANTITIES,
     LAYOUT_VERSION,
     SEQUENCE_QUANTITIES,
@@ -25,7 +25,7 @@ from aipe_magnetics.data.hdf5 import (
     convert_array,
     missing_mask,
 )
-from aipe_magnetics.data.records import MagneticRecord
+from aipe_magnetics_database.data.records import MagneticRecord
 
 pytestmark = pytest.mark.usefixtures("require_h5py")
 
@@ -65,7 +65,7 @@ def test_roundtrip_units_missing_values_and_metadata(tmp_path: Path, sample):
     assert int(missing_mask(data.arrays["flux_density"]).sum()) == 1 and data.mask("flux_density")[2, 5]
     assert data.condition_original_units == {"frequency": "kHz", "temperature": "degC"}
     assert data.attrs["layout_version"] == LAYOUT_VERSION and data.attrs["schema_version"] == "0.2.0"
-    assert data.attrs["created_by_tool"] == "aipe.magnetics" and data.attrs["source_id"] == "aipe.test"
+    assert data.attrs["created_by_tool"] == "aipe.magnetics.database" and data.attrs["source_id"] == "aipe.test"
     assert data.attrs["timebase"] == "uniform_per_period" and data.attrs["license"] == "NOASSERTION"
     assert "sign_convention" in data.attrs and "coordinate_definition" in data.attrs
     assert data.n_sequences == N_SEQ and data.n_samples == N_SAMP
@@ -386,7 +386,7 @@ def test_missing_h5py_raises_unsupported_operation(monkeypatch, tmp_path: Path):
     assert hdf5_module.h5py_available() is False
     store = WaveformStore()
     meta = WaveformMeta(source_id="aipe.test", dataset_version="t1", timebase="uniform_absolute", sampling_rate=Quantity(value=1.0, unit="Hz"))
-    with pytest.raises(UnsupportedOperationError, match=r"aipe-magnetics\[hdf5\]"):
+    with pytest.raises(UnsupportedOperationError, match=r"aipe-magnetics-database\[hdf5\]"):
         store.write(tmp_path / "x.h5", {"flux_density": (np.zeros((2, 4)), "T")}, None, meta=meta)
     with pytest.raises(UnsupportedOperationError):
         store.read(tmp_path / "x.h5")

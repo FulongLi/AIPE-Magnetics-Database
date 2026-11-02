@@ -26,11 +26,11 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
-from aipe_magnetics.common.errors import AIPEMagneticsError
-from aipe_magnetics.common.jsonio import load
-from aipe_magnetics.data.records import MagneticRecord
-from aipe_magnetics.data.schema import validate_catalogue, validate_record
-from aipe_magnetics.data.sources import LocalCache, PrincetonMagnetAdapter, TableStore
+from aipe_magnetics_database.common.errors import AIPEMagneticsError
+from aipe_magnetics_database.common.jsonio import load
+from aipe_magnetics_database.data.records import MagneticRecord
+from aipe_magnetics_database.data.schema import validate_catalogue, validate_record
+from aipe_magnetics_database.data.sources import LocalCache, PrincetonMagnetAdapter, TableStore
 
 
 def run(source: Path, out: Path, *, material: str, max_json_points: int, temperature_degc: float | None = None,
