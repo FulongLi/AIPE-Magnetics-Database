@@ -135,7 +135,7 @@ def test_trapezoidal_segments_and_validation():
 def test_trapezoidal_without_flat_degenerates_to_triangle():
     wf = Waveform.trapezoidal(peak=0.1, frequency=F, duty_rise=0.5, duty_flat=0.0)
     assert wf.breakpoints.tolist() == [[0.0, -0.1], [0.5, 0.1], [1.0, -0.1]]
-    assert wf.segments() == pytest.approx([(0.5e-5, 0.2), (0.5e-5, -0.2)])
+    assert np.asarray(wf.segments()) == pytest.approx(np.array([(0.5e-5, 0.2), (0.5e-5, -0.2)]))
 
 
 # --------------------------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ def test_piecewise_linear_descriptors():
 
 def test_piecewise_linear_accepts_numpy_array_breakpoints():
     wf = Waveform.piecewise_linear(F, np.array([[0.0, 0.0], [0.5, 1.0], [1.0, 0.0]]))
-    assert wf.segments() == pytest.approx([(0.5e-5, 1.0), (0.5e-5, -1.0)])
+    assert np.asarray(wf.segments()) == pytest.approx(np.array([(0.5e-5, 1.0), (0.5e-5, -1.0)]))
 
 
 @pytest.mark.parametrize("breakpoints", [
