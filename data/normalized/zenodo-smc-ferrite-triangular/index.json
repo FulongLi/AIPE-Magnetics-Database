@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.2.0",
+  "source_id": "zenodo_21626116_smc_ferrite_triangular",
+  "version": "doi:10.5281/zenodo.21626116",
+  "license": "CC-BY-4.0",
+  "shards": {
+    "materials": [
+      "materials/materials-001.jsonl"
+    ],
+    "measurements": [
+      "measurements/measurements-001.jsonl"
+    ]
+  },
+  "datasets": [
+    "datasets/zenodo-21626116.json"
+  ],
+  "tables": [],
+  "tables_local": [],
+  "record_counts": {
+    "dataset": 1,
+    "magnetic_material": 2,
+    "measurement": 4
+  },
+  "table_rows": {
+    "energy_loss": 54
+  },
+  "review_state": "third_party_unreviewed"
+}

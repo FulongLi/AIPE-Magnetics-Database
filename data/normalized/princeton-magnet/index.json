@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.2.0",
+  "source_id": "princeton_magnet",
+  "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
+  "license": "MIT",
+  "shards": {
+    "materials": [
+      "materials/materials-001.jsonl"
+    ],
+    "measurements": [
+      "measurements/measurements-001.jsonl"
+    ]
+  },
+  "datasets": [
+    "datasets/princeton-magnet.json"
+  ],
+  "tables": [
+    "tables/princeton-magnet-3c90-core-loss.jsonl",
+    "tables/princeton-magnet-3c94-core-loss.jsonl",
+    "tables/princeton-magnet-3e6-core-loss.jsonl",
+    "tables/princeton-magnet-3f4-core-loss.jsonl",
+    "tables/princeton-magnet-77-core-loss.jsonl",
+    "tables/princeton-magnet-78-core-loss.jsonl",
+    "tables/princeton-magnet-n27-core-loss.jsonl",
+    "tables/princeton-magnet-n30-core-loss.jsonl",
+    "tables/princeton-magnet-n49-core-loss.jsonl",
+    "tables/princeton-magnet-n87-core-loss.jsonl"
+  ],
+  "tables_local": [],
+  "record_counts": {
+    "dataset": 1,
+    "magnetic_material": 10,
+    "measurement": 10
+  },
+  "table_rows": {
+    "core_loss": 575009
+  },
+  "review_state": "third_party_unreviewed"
+}

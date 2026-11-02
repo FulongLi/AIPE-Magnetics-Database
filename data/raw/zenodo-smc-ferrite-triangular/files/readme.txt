@@ -1,0 +1,3 @@
+The files SMC_sin.txt and Ferrite_sin.txt contain measurement data obtained on the soft magnetic composite (Magnetics, XFlux Ultra) and soft magnetic ferrite (TDK Electronics, N30) cores under sinusoidal polarization: the first column lists the frequency in hertz (Hz), and the second column provides the corresponding magnetic losses in joules per cubic meter (J/m³). 
+The files X_tri_YkHz.txt, where X = SMC or Ferrite and Y = 1, 10, or 100 contain the data regarding the triangular polarization with different duty cycle at the frequency of Y kHz: the first column lists the duty cycle, and the second column provides the corresponding magnetic losses in joules per cubic meter (J/m³). 
+All measurements were performed at a peak induction of 100 mT.

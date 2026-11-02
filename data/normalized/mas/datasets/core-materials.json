@@ -8,14 +8,17 @@
   "properties": {
     "source_id": "openmagnetics_mas",
     "title": "MAS core-materials catalogue",
-    "publisher": "OpenMagnetics / Power Supply Manufacturers Association",
     "url": "https://github.com/Power-Supply-Manufacturers-Association/MAS/blob/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/core_materials.ndjson",
     "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
-    "source_commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
     "license": "Apache-2.0",
     "redistribution_permitted": true,
     "record_count": 1137,
-    "description": "Unreviewed third-party records; no independent AIPE physical verification. Exact upstream file is pinned by Git blob SHA-1 in extensions."
+    "publisher": "OpenMagnetics / Power Supply Manufacturers Association",
+    "source_commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+    "description": "Unreviewed third-party records; no independent AIPE physical verification. Values largely originate from manufacturer datasheets, whose own terms are not covered by the MAS licence.",
+    "checksums": {
+      "data/core_materials.ndjson": "10a6b3f3e72f5d963d05a4f9d11ed3595d25c14634a739e8ade263f3edff44b2"
+    }
   },
   "evidence_refs": [
     "evidence.mas-source"
@@ -33,19 +36,27 @@
       "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc"
     }
   ],
+  "provenance": {
+    "activity": "MAS catalogue ingestion",
+    "tool": {
+      "id": "aipe.magnetics.database.ingest.mas",
+      "version": "0.3.0",
+      "name": "AIPE Magnetics Database importer"
+    },
+    "source_commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+    "normalization": "See docs/provenance-and-limitations.md."
+  },
   "quality": {
     "status": "normalized",
     "flags": [
       "third_party_unreviewed"
     ]
   },
-  "provenance": {
-    "activity": "MAS catalogue ingestion",
-    "source_commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc"
-  },
   "extensions": {
     "aipe.mas": {
-      "source_git_blob_sha1": "fc49e78c22bff9350f2f3649dcc9017662bfd1c8"
+      "source_file": "data/core_materials.ndjson",
+      "sha256": "10a6b3f3e72f5d963d05a4f9d11ed3595d25c14634a739e8ade263f3edff44b2",
+      "git_blob_sha1": "fc49e78c22bff9350f2f3649dcc9017662bfd1c8"
     }
   }
 }

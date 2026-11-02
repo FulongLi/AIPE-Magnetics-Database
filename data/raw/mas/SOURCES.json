@@ -1,28 +1,36 @@
 {
   "source_id": "openmagnetics_mas",
+  "title": "OpenMagnetics / PSMA MAS",
   "upstream": "https://github.com/Power-Supply-Manufacturers-Association/MAS",
-  "commit": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+  "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
   "license": "Apache-2.0",
-  "checked_at": "2026-11-02",
+  "redistribution": "permitted (Apache-2.0; upstream values originate from manufacturer datasheets)",
+  "raw_policy": "retrieved on demand at the pinned version and verified by SHA-256; not committed",
   "files": [
     {
-      "upstream_path": "data/core_materials.ndjson",
-      "git_blob_sha1": "fc49e78c22bff9350f2f3649dcc9017662bfd1c8",
-      "records": 1137,
-      "normalized_glob": "data/normalized/mas/materials/*.jsonl",
-      "raw_policy": "retrieve on demand at pinned commit; not committed"
+      "path": "data/core_materials.ndjson",
+      "url": "https://raw.githubusercontent.com/Power-Supply-Manufacturers-Association/MAS/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/core_materials.ndjson",
+      "sha256": "10a6b3f3e72f5d963d05a4f9d11ed3595d25c14634a739e8ade263f3edff44b2",
+      "size": 11010297
     },
     {
-      "upstream_path": "data/core_shapes.ndjson",
-      "git_blob_sha1": "3c75852eac6f38245e4c4dfc035bfec7bb10c9a3",
-      "records": 2294,
-      "normalized_glob": "data/normalized/mas/shapes/*.jsonl",
-      "raw_policy": "retrieve on demand at pinned commit; not committed"
+      "path": "data/core_shapes.ndjson",
+      "url": "https://raw.githubusercontent.com/Power-Supply-Manufacturers-Association/MAS/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/core_shapes.ndjson",
+      "sha256": "84eeed999eb06c69c09c0fb38e8f693dac79c284e32cf372b5a6c08a80bc50f2",
+      "size": 639486
+    },
+    {
+      "path": "data/cores.ndjson",
+      "url": "https://raw.githubusercontent.com/Power-Supply-Manufacturers-Association/MAS/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/cores.ndjson",
+      "sha256": "6fb6142385c5541477bbf99bab4d2c6ade4a87bbb9470002bdcdad72ff1cd81e",
+      "size": 8196923
+    },
+    {
+      "path": "data/advanced_core_materials.ndjson",
+      "url": "https://media.githubusercontent.com/media/Power-Supply-Manufacturers-Association/MAS/c33ccfec8e00e156d632c9a52b02bc1cfdf714dc/data/advanced_core_materials.ndjson",
+      "sha256": "0157ea8bbb361acc06093a3955928a436b136d7e10d948dbc27259c48f20d620",
+      "size": 145044312
     }
   ],
-  "notes": [
-    "Source content is referenced, not relicensed by AIPE.",
-    "Only selected typed properties are normalised; original MAS material curves and detailed provenance remain available at pinned upstream commit.",
-    "Third-party values are unreviewed, not primary AIPE measurements."
-  ]
+  "importer": "aipe_magnetics_database.ingest.sources.mas"
 }

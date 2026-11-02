@@ -1,0 +1,69 @@
+{
+  "schema_version": "0.2.0",
+  "id": "dataset.zenodo-21626116",
+  "kind": "dataset",
+  "name": "SMC and Mn-Zn ferrite loss under triangular polarization",
+  "synthetic": false,
+  "license": "CC-BY-4.0",
+  "properties": {
+    "source_id": "zenodo_21626116_smc_ferrite_triangular",
+    "title": "Data Sets of Magnetic Loss Measurements on Soft Magnetic Composite and Mn-Zn Ferrite under Symmetric and Asymmetric Triangular Magnetic Polarization Profiles",
+    "url": "https://zenodo.org/records/21626116",
+    "version": "10.5281/zenodo.21626116",
+    "license": "CC-BY-4.0",
+    "redistribution_permitted": true,
+    "record_count": 4,
+    "publisher": "Zenodo",
+    "citation": "S. Dobak, F. Onderko, J. Fuzer, P. Kollar, 'Data Sets of Magnetic Loss Measurements on Soft Magnetic Composite and Mn-Zn Ferrite under Symmetric and Asymmetric Triangular Magnetic Polarization Profiles', Zenodo, doi:10.5281/zenodo.21626116 (CC BY 4.0)",
+    "description": "Independent laboratory measurements at 100 mT peak; temperature, DC bias and core geometry not stated.",
+    "checksums": {
+      "Ferrite_sin.txt": "018b0267ac4ab1ba56a68c6e508a863b8864ae5103cd511b7d2bdc2c91c97f52",
+      "Ferrite_tri_100kHz.txt": "7f273218aacbbd1da417e82addc6b8de88e206b95200e37c9431550001eb2af1",
+      "Ferrite_tri_10kHz.txt": "08bc89e4739a7637937eff407e91ffae853fe7d06c8e6c22db96e31477471d0c",
+      "Ferrite_tri_1kHz.txt": "32ce229d715433f7bb222404790781b0feaf96aa59e68b26c6568e0f176a0027",
+      "SMC_sin.txt": "06edbedd4d8777cef53c3ee506c88e704bb94f5d2d04944ceeac0dbe9c806b32",
+      "SMC_tri_100kHz.txt": "f4ee79a2e3e65c3ac5b4c92a9ff96bcd9ee95b69781a6cf856a75f3fb2f9b447",
+      "SMC_tri_10kHz.txt": "eb445188b30badc17257d8fa2d95610845286f0c2f85b15aca7f7d8096658a2c",
+      "SMC_tri_1kHz.txt": "7e71c73658311487d2aa441fc8354deac61aaaed41ba30213957eaf18f9ebd71",
+      "readme.txt": "40a8251dfd8b76ab64b6050b7a9053089edff3f0cb13fce4e72223fabdddac27"
+    },
+    "materials": [
+      "Magnetics XFlux Ultra",
+      "TDK N30"
+    ]
+  },
+  "evidence_refs": [
+    "evidence.zenodo-21626116-source"
+  ],
+  "evidence": [
+    {
+      "id": "evidence.zenodo-21626116-source",
+      "kind": "source",
+      "reference": "Zenodo 10.5281/zenodo.21626116",
+      "description": "CC-BY-4.0 data set record.",
+      "created_at": "2026-07-27T00:00:00Z",
+      "review_status": "unreviewed",
+      "license": "CC-BY-4.0",
+      "locator": "readme.txt",
+      "url": "https://zenodo.org/records/21626116",
+      "version": "10.5281/zenodo.21626116",
+      "sha256": "40a8251dfd8b76ab64b6050b7a9053089edff3f0cb13fce4e72223fabdddac27"
+    }
+  ],
+  "provenance": {
+    "activity": "normalize_zenodo_triangular",
+    "tool": {
+      "id": "aipe.magnetics.database.ingest.zenodo_triangular",
+      "version": "0.3.0",
+      "name": "AIPE Magnetics Database importer"
+    },
+    "dataset_version": "10.5281/zenodo.21626116",
+    "normalization": "Tab-separated columns mapped as documented in the record readme; header and stray label lines skipped; rows with empty cells excluded; mT -> T for the peak-induction condition; loss kept as J/m^3 per cycle."
+  },
+  "quality": {
+    "status": "normalized",
+    "flags": [
+      "third_party_unreviewed"
+    ]
+  }
+}
