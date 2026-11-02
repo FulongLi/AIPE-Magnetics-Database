@@ -1,8 +1,8 @@
 # AIPE Magnetic Data Schema v0.2
 
-Normative definition: `aipe_magnetics.data.records` (pydantic). Machine-readable schema:
+Normative definition: `aipe_magnetics_database.data.records` (pydantic). Machine-readable schema:
 `src/aipe_magnetics/schemas/v0.2/magnetic-record.schema.json` (JSON Schema 2020-12), mirrored
-under `schemas/v0.2/`. Large numerical arrays use HDF5 (`aipe_magnetics.data.hdf5.WaveformStore`,
+under `schemas/v0.2/`. Large numerical arrays use HDF5 (`aipe_magnetics_database.data.hdf5.WaveformStore`,
 layout `aipe.magnetics.waveforms/0.2`), never JSON.
 
 ## 1. Record kinds
@@ -53,7 +53,7 @@ measurement evidence; cross-record references resolve to the right kind (`valida
 | --- | --- |
 | SI units | Stored quantities are coherent SI with canonical spellings: `T`, `A/m`, `Hz`, `K`, `W/m^3`, `J/m^3`, `m`, `m^2`, `m^3`, `kg`, `kg/m^3`, `Ohm*m`, `H`, `V`, `A`, `W`, `s`, `1`. Temperatures are kelvin (`degC` is converted). |
 | Original units | A converted quantity keeps `original: {value, unit}`; arrays keep `original_unit` attributes in HDF5. |
-| Data conversion | Conversions use the fixed factors of `aipe_magnetics.common.units` (exact rationals); `provenance.normalization` describes the applied normalisation; the importer records tool version and source checksum, so normalisation is reproducible. No unit inference: importers require an explicit column→unit mapping. |
+| Data conversion | Conversions use the fixed factors of `aipe_magnetics_database.common.units` (exact rationals); `provenance.normalization` describes the applied normalisation; the importer records tool version and source checksum, so normalisation is reproducible. No unit inference: importers require an explicit column→unit mapping. |
 | Sign conventions | B, H, voltage and current are positive along the stated winding reference direction (right-hand rule); a B-H loop traverses counter-clockwise in the (H, B) plane for a dissipative cycle so ∮H dB ≥ 0. Each waveform record states `sign_convention` / `reference_direction`. |
 | Coordinate definitions | Scalar quantities along the magnetic path (`coordinate_definition` in waveform datasets); vector fields are out of scope for 0.2. |
 | Sampling rate and timebase | `sampling_rate` (Hz) or explicit time arrays; `timebase` ∈ {`uniform_per_period`, `explicit_time_array`, `uniform_absolute`}; `samples_per_sequence`; periodic sequences start at t = 0 of one steady-state period. |
@@ -77,8 +77,8 @@ checksums; they are not committed.
 
 ## 5. Compatibility and migration
 
-v0.1 records remain valid under the v0.1 schema. `aipe_magnetics.data.migrate` (CLI:
-`aipe-magnetics schema migrate <in> <out>`) upgrades a v0.1 record to v0.2: it bumps the version,
+v0.1 records remain valid under the v0.1 schema. `aipe_magnetics_database.data.migrate` (CLI:
+`aipe-magnetics-db schema migrate <in> <out>`) upgrades a v0.1 record to v0.2: it bumps the version,
 keeps every field, derives the record licence from the referenced evidence when unambiguous (else
 `NOASSERTION`), and records the migration in `provenance` and `extensions["aipe.migration"]`.
 No physical value is added or guessed during migration.

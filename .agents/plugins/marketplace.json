@@ -1,14 +1,14 @@
 {
-  "name": "aipe-magnetics",
+  "name": "aipe-magnetics-database",
   "interface": {
-    "displayName": "AIPE Magnetics"
+    "displayName": "AIPE Magnetics Database"
   },
   "plugins": [
     {
-      "name": "aipe-magnetics",
-      "source": "./plugins/codex/aipe-magnetics",
-      "description": "Magnetic material analysis, inductor design, transformer design, loss modelling and engineering review backed by the aipe-magnetics Python engine and its local MCP server.",
-      "version": "0.2.0",
+      "name": "aipe-magnetics-database",
+      "source": "./plugins/codex/aipe-magnetics-database",
+      "description": "Magnetic material, core and measurement data lookup with provenance, backed by the aipe-magnetics-database package and its local MCP server.",
+      "version": "0.3.0",
       "category": "Engineering",
       "policy": {
         "installation": "AVAILABLE",

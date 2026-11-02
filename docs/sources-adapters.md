@@ -1,8 +1,8 @@
 # External source adapters
 
-`aipe_magnetics.data.sources` turns the four audited upstream sources into v0.2 records without
+`aipe_magnetics_database.data.sources` turns the four audited upstream sources into v0.2 records without
 bundling or inventing anything. Every adapter implements the same contract
-(`aipe_magnetics.data.sources.base.SourceAdapter`):
+(`aipe_magnetics_database.data.sources.base.SourceAdapter`):
 
 | Method | Purpose |
 | --- | --- |
@@ -91,7 +91,7 @@ imported or executed.
 ## Princeton MagNet
 
 ```python
-from aipe_magnetics.data.sources import PrincetonMagnetAdapter, LocalCache
+from aipe_magnetics_database.data.sources import PrincetonMagnetAdapter, LocalCache
 
 adapter = PrincetonMagnetAdapter(LocalCache())
 items = adapter.discover("path/to/magnet-checkout")          # or discover() for an installed package / cache / remote list
@@ -153,7 +153,7 @@ The existing reader `princeton_magnet_db.read_magnet_database` / `find_database_
 ## MagNet Challenge 2
 
 ```python
-from aipe_magnetics.data.sources import MagnetChallenge2Adapter
+from aipe_magnetics_database.data.sources import MagnetChallenge2Adapter
 
 adapter = MagnetChallenge2Adapter()
 adapter.discover("path/with/downloaded/csvs")                 # groups <Material>_<k>_{B,H,T}.csv and testing files
@@ -184,7 +184,7 @@ and locations (two Dropbox folders, `docs/README.pdf`, the MagNetX mirror) are i
 ## Paderborn materialdatabase (GPL-3.0)
 
 ```python
-from aipe_magnetics.data.sources import PaderbornMaterialDatabaseAdapter, LocalCache
+from aipe_magnetics_database.data.sources import PaderbornMaterialDatabaseAdapter, LocalCache
 
 adapter = PaderbornMaterialDatabaseAdapter(LocalCache())
 items = adapter.discover("path/to/materialdatabase-checkout")   # or discover(allow_download=True) to clone the pinned commit
@@ -260,7 +260,7 @@ rewrites CSVs and writes `*_backup` files.
 ## Paderborn MagNet-Hub
 
 ```python
-from aipe_magnetics.data.sources import MagnetHubAdapter, LocalCache
+from aipe_magnetics_database.data.sources import MagnetHubAdapter, LocalCache
 
 adapter = MagnetHubAdapter(LocalCache())
 adapter.discover("path/to/mag-net-hub")                      # fixtures + model directories (opaque weights, names and sizes only)
@@ -285,7 +285,7 @@ not identified upstream (evidence kind `source`, note in the records). `SourceIt
 fixture is its computed digest (the pinned digest is `extra["expected_sha256"]`); a fixture that
 differs from the pinned file is refused by `to_records` / `import_test_fixture` unless
 `allow_unpinned=True`. `run_model` delegates to
-`aipe_magnetics.models.datadriven.magnethub_backend`; frequency and temperature must be `Quantity` or
+`aipe_magnetics_database.models.datadriven.magnethub_backend`; frequency and temperature must be `Quantity` or
 `(value, unit)` pairs (bare numbers are rejected); it raises `UnsupportedOperationError` when
 `magnethub` is not installed.
 
@@ -315,7 +315,7 @@ differs from the pinned file is refused by `to_records` / `import_test_fixture` 
 
 ## Verification checks (L1, offline)
 
-`aipe_magnetics.verification.checks.check_sources` registers `sources.descriptors-valid`,
+`aipe_magnetics_database.verification.checks.check_sources` registers `sources.descriptors-valid`,
 `sources.cache-tamper-detected`, `sources.license-policy-enforced` and `sources.unit-mapping-explicit`
 (capability `aipe.magnetics.data.sources`). They use temporary directories and an in-memory transport;
 no network and no upstream checkout is touched.

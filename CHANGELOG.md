@@ -1,5 +1,26 @@
 # Changelog
 
+
+## 0.3.0
+
+Repository separation and open-data integration. The engineering half of 0.2.0 (models, design, simulation,
+verification, workflows, design API/CLI/MCP) moved to **AIPE-Magnetics-Design**, which depends on this package.
+
+- Distribution `aipe-magnetics-database`, import package `aipe_magnetics_database` (data-only runtime: numpy,
+  pydantic, jsonschema, referencing; optional h5py and mcp). CLI `aipe-magnetics-db`, MCP server
+  `aipe-magnetics-db-mcp` (read-only), Claude Code / Codex plugin `aipe-magnetics-database`.
+- `aipe_magnetics_database.ingest`: pinned, SHA-256-verified, idempotent importers for OpenMagnetics MAS
+  (materials, shapes, 18,943 core parts, fitted loss models, loss / permeability / permittivity / B-H tables),
+  Princeton MagNet (575,009 rows), Paderborn LEA materialdatabase (GPL-3.0 subtree), HEFMAG (Zenodo 8292861) and
+  the SMC / ferrite triangular-excitation set (Zenodo 21626116); user-supplied-file adapters for PSMA and ASU data.
+- `aipe.magnetics.table/0.1` layout for tabulated data inside v0.2 `measurement` records (schema unchanged).
+- Canonical catalogue (`data/canonical/`): source-aware deduplication (MAS re-publications of MagNet match the
+  Princeton rows 1:1), derived views, cross-material copy flags; 1,142 canonical materials.
+- `aipe_magnetics_database.store` / `api`: query materials, cores, measurements by conditions, tables,
+  provenance and export. `aipe-magnetics-db refresh` re-runs everything and regenerates reports.
+- The 1,137 MAS material and 2,294 shape records of the first import keep their identifiers and property values.
+- Moved to Design: `LossEvaluator`, `estimate_material_loss`, MagNet-Hub inference (`run_model`).
+
 ## Unreleased — branch `feat/dab-10kw-workflow` (package version stays 0.2.0 until the release step records new evidence)
 
 ### Added
