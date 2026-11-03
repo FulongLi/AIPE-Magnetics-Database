@@ -1,0 +1,63 @@
+{
+  "schema_version": "0.2.0",
+  "id": "dataset.hefmag",
+  "kind": "dataset",
+  "name": "EMPIR 19ENG06 HEFMAG amorphous and nanocrystalline data",
+  "synthetic": false,
+  "license": "CC-BY-4.0",
+  "properties": {
+    "source_id": "zenodo_8292861_hefmag",
+    "title": "(EMPIR 19ENG06 HEFMAG) Data sets of measurements of magnetic loss and complex permeability on amorphous and nanocrystalline samples up to the MHz range",
+    "url": "https://zenodo.org/records/8292861",
+    "version": "1.0.0",
+    "license": "CC-BY-4.0",
+    "redistribution_permitted": true,
+    "record_count": 8,
+    "publisher": "Zenodo",
+    "citation": "C. S. Ragusa, S. Dobak, C. Beatrice, F. Fiorillo, '(EMPIR 19ENG06 HEFMAG) Data sets of measurements of magnetic loss and complex permeability on amorphous and nanocrystalline samples up to the MHz range', Zenodo, v1.0.0, 2023, doi:10.5281/zenodo.8292861 (CC BY 4.0)",
+    "description": "Independent laboratory measurements; temperature and DC bias are not stated.",
+    "checksums": {
+      "EMPIR 19ENG06 HEFMAG dataset Co67 & Fmet.zip": "95c457de0ad4e28a1055772678cfcbbd5791d03efa7c18f73e80966a3004758a"
+    },
+    "materials": [
+      "Co67_HT_13.65um",
+      "Co67_HT_d25um",
+      "FMET_HT_d12.90um",
+      "FMET_HT_d20.3um"
+    ]
+  },
+  "evidence_refs": [
+    "evidence.hefmag-source"
+  ],
+  "evidence": [
+    {
+      "id": "evidence.hefmag-source",
+      "kind": "source",
+      "reference": "Zenodo 10.5281/zenodo.8292861",
+      "description": "CC-BY-4.0 HEFMAG dataset v1.0.0.",
+      "created_at": "2023-08-28T00:00:00Z",
+      "review_status": "unreviewed",
+      "license": "CC-BY-4.0",
+      "locator": "record",
+      "url": "https://zenodo.org/records/8292861",
+      "version": "1.0.0",
+      "sha256": "95c457de0ad4e28a1055772678cfcbbd5791d03efa7c18f73e80966a3004758a"
+    }
+  ],
+  "provenance": {
+    "activity": "normalize_hefmag",
+    "tool": {
+      "id": "aipe.magnetics.database.ingest.hefmag",
+      "version": "0.3.0",
+      "name": "AIPE Magnetics Database importer"
+    },
+    "dataset_version": "10.5281/zenodo.8292861",
+    "normalization": "Tab-separated columns mapped as documented in the record readme; header and stray label lines skipped; rows with empty cells excluded; mT -> T for the peak-induction condition; loss kept as J/m^3 per cycle."
+  },
+  "quality": {
+    "status": "normalized",
+    "flags": [
+      "third_party_unreviewed"
+    ]
+  }
+}

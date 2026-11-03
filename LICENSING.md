@@ -1,29 +1,21 @@
 # Licensing and data rights
 
-## This repository
+**Code**: the owner has not declared a licence (`NOASSERTION` in `pyproject.toml`, `aipe.yaml` and the plugin
+manifests); rights in the code are reserved by its contributors until a licence is chosen.
 
-The repository has **no licence declaration** by its owner. The v0.2 package therefore keeps
-`license = NOASSERTION` in `pyproject.toml`, `aipe.yaml` and both plugin manifests. No blanket
-licence is assigned to historical material, to the v0.2 code or to imported datasets. Selecting a
-licence is an owner decision; until then, rights in the code are reserved by its contributors.
+**Data** keep the licence of their source; every record carries it in `license` and in each evidence item. Nothing
+is relicensed.
 
-## Third-party components
-
-| Component | Licence | How it is used |
+| Data | Licence | Notes |
 | --- | --- | --- |
-| AIPE-Core schemas v0.1.0 (pinned copy in `src/aipe_magnetics/integrations/aipe_core/schemas/`) and the contract checks of Core's `scripts/validate.py` re-implemented in `integrations/aipe_core/state.py` | MIT | offline compatibility validation; NOTICE file and the `state.py` header carry the copyright, commit and attribution |
-| AIPE-Registry manifest schema (pinned copy in `src/aipe_magnetics/integrations/aipe_registry/schema/`) | MIT | offline manifest validation; NOTICE file carries the copyright and commit |
-| numpy, scipy, h5py | BSD-3-Clause | runtime |
-| pydantic, jsonschema, referencing, PyYAML, mcp | MIT | runtime / optional |
-| torch (optional) | BSD-3-Clause | optional data-driven backend |
-| Princeton MagNet (`PrincetonUniversity/magnet`) | MIT | read on demand; *derived* Steinmetz fits are bundled with provenance (see `docs/sources.md`) |
-| Paderborn `mag-net-hub` | MIT | optional model backend through the `magnethub` package; no weights vendored |
-| Paderborn `materialdatabase` | GPL-3.0 | **no code copied, no data bundled**; adapter reads a user checkout; records produced from it carry `license: GPL-3.0` |
-| MagNet Challenge 2 (`minjiechen/magnetchallenge-2`) | none published | reference and user-supplied import only |
+| `data/normalized/mas`, `data/raw/mas` (OpenMagnetics MAS, commit `c33ccfec`) | Apache-2.0 | upstream licence in `data/raw/mas/LICENSE.upstream.md`; most values originate from manufacturer datasheets, whose terms the MAS licence does not cover |
+| `data/normalized/princeton-magnet` (PrincetonUniversity/magnet `8a6892e9`) | MIT | cite the three MagNet IEEE TPEL papers (dataset record) |
+| `data/normalized/paderborn-lea`, `data/raw/paderborn-lea` (upb-lea/materialdatabase `04fff8e9`) | GPL-3.0-only | separate copyleft subtree with LICENSE and NOTICE (modification statement, source offer) |
+| `data/normalized/hefmag`, `data/raw/hefmag` (Zenodo 8292861) | CC-BY-4.0 | attribution: Ragusa, Dobak, Beatrice, Fiorillo (EMPIR 19ENG06 HEFMAG) |
+| `data/normalized/zenodo-smc-ferrite-triangular`, `data/raw/...` (Zenodo 21626116) | CC-BY-4.0 | attribution: Dobak, Onderko, Fuzer, Kollar |
+| curated catalogue in `src/aipe_magnetics_database/data/catalog` | NOASSERTION | individual datasheet values transcribed with locators; documents referenced, not copied |
+| PSMA core-loss studies, ASU MHz aggregate, MagNet Challenge 1/2, manufacturer tools | not redistributed | reference entries and user-supplied-file adapters only ([docs/source-catalogue.md](docs/source-catalogue.md)) |
 
-| MAS (Magnetic Agnostic Structure / OpenMagnetics) | Apache-2.0 | Normalised third-party magnetic-material and core-shape catalogue with source attribution; upstream Apache licence is retained at `data/raw/mas/LICENSE.upstream.md`; original manufacturer documentation is linked, not copied. Pinned source/version and limitations in `data/raw/mas/SOURCES.json` and `docs/mas-catalogue.md`. |
-| TDK / EPCOS datasheets | manufacturer copyright | individual typical values transcribed with page/table locators as evidence; documents are referenced, never copied |
-
-Each source evidence record declares its known licence or `NOASSERTION`. Public availability is
-not redistribution permission. Preserve manufacturer notices and measurement partner terms;
-reference restricted source documents instead of copying them.
+Third-party code dependencies (numpy BSD-3-Clause; pydantic, jsonschema, referencing, mcp MIT; h5py BSD-3-Clause) keep
+their licences. Public availability is not redistribution permission; rights holders may request removal of values
+through an issue.

@@ -1,0 +1,57 @@
+{
+  "source_id": "zenodo_21626116_smc_ferrite_triangular",
+  "title": "SMC and Mn-Zn ferrite loss under symmetric / asymmetric triangular polarization",
+  "upstream": "https://zenodo.org/records/21626116",
+  "version": "doi:10.5281/zenodo.21626116",
+  "license": "CC-BY-4.0",
+  "redistribution": "permitted (CC-BY-4.0, attribution required)",
+  "raw_policy": "original files committed under files/ (redistribution permitted)",
+  "files": [
+    {
+      "path": "SMC_sin.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/SMC_sin.txt/content",
+      "sha256": "06edbedd4d8777cef53c3ee506c88e704bb94f5d2d04944ceeac0dbe9c806b32"
+    },
+    {
+      "path": "Ferrite_sin.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/Ferrite_sin.txt/content",
+      "sha256": "018b0267ac4ab1ba56a68c6e508a863b8864ae5103cd511b7d2bdc2c91c97f52"
+    },
+    {
+      "path": "SMC_tri_1kHz.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/SMC_tri_1kHz.txt/content",
+      "sha256": "7e71c73658311487d2aa441fc8354deac61aaaed41ba30213957eaf18f9ebd71"
+    },
+    {
+      "path": "SMC_tri_10kHz.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/SMC_tri_10kHz.txt/content",
+      "sha256": "eb445188b30badc17257d8fa2d95610845286f0c2f85b15aca7f7d8096658a2c"
+    },
+    {
+      "path": "SMC_tri_100kHz.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/SMC_tri_100kHz.txt/content",
+      "sha256": "f4ee79a2e3e65c3ac5b4c92a9ff96bcd9ee95b69781a6cf856a75f3fb2f9b447"
+    },
+    {
+      "path": "Ferrite_tri_1kHz.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/Ferrite_tri_1kHz.txt/content",
+      "sha256": "32ce229d715433f7bb222404790781b0feaf96aa59e68b26c6568e0f176a0027"
+    },
+    {
+      "path": "Ferrite_tri_10kHz.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/Ferrite_tri_10kHz.txt/content",
+      "sha256": "08bc89e4739a7637937eff407e91ffae853fe7d06c8e6c22db96e31477471d0c"
+    },
+    {
+      "path": "Ferrite_tri_100kHz.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/Ferrite_tri_100kHz.txt/content",
+      "sha256": "7f273218aacbbd1da417e82addc6b8de88e206b95200e37c9431550001eb2af1"
+    },
+    {
+      "path": "readme.txt",
+      "url": "https://zenodo.org/api/records/21626116/files/readme.txt/content",
+      "sha256": "40a8251dfd8b76ab64b6050b7a9053089edff3f0cb13fce4e72223fabdddac27"
+    }
+  ],
+  "importer": "aipe_magnetics_database.ingest.sources.zenodo"
+}

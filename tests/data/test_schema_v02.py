@@ -8,14 +8,14 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
 
-from aipe_magnetics.common.errors import DataNotFoundError, InvalidInputError
-from aipe_magnetics.common.jsonio import dump, load
-from aipe_magnetics.data import schema as schema_module
-from aipe_magnetics.data.catalog import Catalog
-from aipe_magnetics.data.fixtures import v01_fixture_paths, v01_fixture_records
-from aipe_magnetics.data.migrate import migrate_record
-from aipe_magnetics.data.records import PROPERTY_MODELS, MagneticRecord
-from aipe_magnetics.data.schema import (
+from aipe_magnetics_database.common.errors import DataNotFoundError, InvalidInputError
+from aipe_magnetics_database.common.jsonio import dump, load
+from aipe_magnetics_database.data import schema as schema_module
+from aipe_magnetics_database.data.catalog import Catalog
+from aipe_magnetics_database.data.fixtures import v01_fixture_paths, v01_fixture_records
+from aipe_magnetics_database.data.migrate import migrate_record
+from aipe_magnetics_database.data.records import PROPERTY_MODELS, MagneticRecord
+from aipe_magnetics_database.data.schema import (
     SCHEMA_ID_V02,
     SCHEMA_TITLE_V02,
     check_exported,
@@ -163,7 +163,7 @@ def test_legacy_schema_packaged_copy_is_byte_identical(repo_root: Path):
     legacy = repo_root / "schemas" / "magnetic-record.schema.json"
     packaged = package_schema_dir("0.1.0") / "magnetic-record.schema.json"
     assert packaged.read_bytes() == legacy.read_bytes(), (
-        "src/aipe_magnetics/schemas/v0.1/magnetic-record.schema.json must be an exact byte copy of schemas/magnetic-record.schema.json")
+        "src/aipe_magnetics_database/schemas/v0.1/magnetic-record.schema.json must be an exact byte copy of schemas/magnetic-record.schema.json")
     assert load_schema("0.1.0")["$id"].endswith("/v0.1.0/schemas/magnetic-record.schema.json")
 
 

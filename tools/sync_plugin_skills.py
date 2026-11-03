@@ -3,7 +3,7 @@
 
 Both the Claude Code plugin and the Codex plugin share one engineering engine and one set of skill
 documents. The canonical sources live in ``skills/<name>/SKILL.md``; this script mirrors them into
-``plugins/claude/aipe-magnetics/skills`` and ``plugins/codex/aipe-magnetics/skills``.
+``plugins/claude/aipe-magnetics-database/skills`` and ``plugins/codex/aipe-magnetics-database/skills``.
 
 Usage::
 
@@ -20,8 +20,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "skills"
-TARGETS = [ROOT / "plugins" / "claude" / "aipe-magnetics" / "skills",
-           ROOT / "plugins" / "codex" / "aipe-magnetics" / "skills"]
+TARGETS = [ROOT / "plugins" / "claude" / "aipe-magnetics-database" / "skills",
+           ROOT / "plugins" / "codex" / "aipe-magnetics-database" / "skills"]
 
 
 def skill_files() -> list[Path]:

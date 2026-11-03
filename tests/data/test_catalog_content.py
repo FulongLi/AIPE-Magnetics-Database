@@ -6,14 +6,13 @@ import math
 from pathlib import Path
 
 import pytest
-from scipy.integrate import quad
 
-from aipe_magnetics.common.jsonio import load
-from aipe_magnetics.data.catalog import Catalog
-from aipe_magnetics.data.records import MaterialProperties
+from aipe_magnetics_database.common.jsonio import load
+from aipe_magnetics_database.data.catalog import Catalog
+from aipe_magnetics_database.data.records import MaterialProperties
 
 ROOT = Path(__file__).resolve().parents[2]
-FITS = ROOT / "src" / "aipe_magnetics" / "data" / "derived" / "princeton-magnet-steinmetz-fits.json"
+FITS = ROOT / "src" / "aipe_magnetics_database" / "data" / "derived" / "princeton-magnet-steinmetz-fits.json"
 
 # material_steinmetz_param from PrincetonUniversity/magnet src/magnet/constants.py @ 8a6892e (documented there as (k_i, alpha, beta))
 PRINCETON_CONSTANTS = {"N87": (0.79822, 1.3453, 2.5752), "3C90": (0.23732, 1.3932, 2.5481)}
@@ -67,7 +66,8 @@ def test_derived_fits_reproduce_princeton_published_constants_for_n87_and_3c90()
         assert fit["alpha"] == pytest.approx(alpha_pub, rel=2e-4)
         assert fit["beta"] == pytest.approx(beta_pub, rel=2e-4)
         a, b = fit["alpha"], fit["beta"]
-        integral = quad(lambda th: abs(math.cos(th)) ** a, 0, 2 * math.pi, points=[math.pi / 2, math.pi, 3 * math.pi / 2])[0]
+        # closed form of the integral of |cos(theta)|^alpha over one period (no scipy in the data-only package)
+        integral = 2 * math.sqrt(math.pi) * math.gamma((a + 1) / 2) / math.gamma(a / 2 + 1)
         k_i = fit["k_W_per_m3"] / ((2 * math.pi) ** (a - 1) * integral * 2 ** (b - a))
         assert k_i == pytest.approx(k_i_pub, rel=5e-3)
         assert document["source"]["files"][material]["sha256"]
@@ -77,7 +77,7 @@ def test_cores_have_effective_parameters_from_datasheets():
     cat = Catalog.default()
     cores = {c.id: c for c in cat.cores()}
     assert {"core.tdk-e65-32-27", "core.tdk-e70-33-32", "core.tdk-etd59-31-22", "core.tdk-pm87-70", "core.tdk-uu93-152-30"} <= set(cores)
-    from aipe_magnetics.data.records import CoreGeometryProperties
+    from aipe_magnetics_database.data.records import CoreGeometryProperties
     e65 = CoreGeometryProperties.model_validate(cores["core.tdk-e65-32-27"].properties)
     assert e65.effective_area.value == pytest.approx(535e-6) and e65.effective_length.value == pytest.approx(0.147)
     assert e65.effective_volume.value == pytest.approx(78650e-9) and e65.mass.value == pytest.approx(0.394)
@@ -98,7 +98,7 @@ COIL_FORMERS = {
 
 @pytest.mark.parametrize("core_id", sorted(COIL_FORMERS))
 def test_coil_former_rows_are_transcribed_from_one_variant(core_id):
-    from aipe_magnetics.data.records import CoreGeometryProperties
+    from aipe_magnetics_database.data.records import CoreGeometryProperties
     an_mm2, ln_mm, ar_uohm, code = COIL_FORMERS[core_id]
     record = Catalog.default().get(core_id)
     props = CoreGeometryProperties.model_validate(record.properties)
@@ -115,7 +115,7 @@ def test_coil_former_rows_are_transcribed_from_one_variant(core_id):
 
 
 def test_uu93_window_height_is_the_drawn_single_u_value_with_the_derived_total_marked():
-    from aipe_magnetics.data.records import CoreGeometryProperties
+    from aipe_magnetics_database.data.records import CoreGeometryProperties
     record = Catalog.default().get("core.tdk-uu93-152-30")
     props = CoreGeometryProperties.model_validate(record.properties)
     dims = props.dimensions.values

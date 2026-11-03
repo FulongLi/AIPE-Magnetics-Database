@@ -2,7 +2,7 @@
 
 | Path | Content | Policy |
 | --- | --- | --- |
-| `magnetic-record.schema.json` | AIPE magnetic record **v0.1** (schema 0.1.0, JSON Schema 2020-12) | frozen, kept byte-for-byte; still validated by `scripts/validate.py` and by `aipe_magnetics.data.schema.validate_record` (version dispatch) |
+| `magnetic-record.schema.json` | AIPE magnetic record **v0.1** (schema 0.1.0, JSON Schema 2020-12) | frozen, kept byte-for-byte; still validated by `scripts/validate.py` and by `aipe_magnetics_database.data.schema.validate_record` (version dispatch) |
 | `v0.2/` | AIPE Magnetic Data Standard **v0.2** (schema 0.2.0): `magnetic-record.schema.json`, `quantity.schema.json`, `properties/<kind>.schema.json` | **mirror** of the canonical packaged copies in `src/aipe_magnetics/schemas/v0.2/`; must stay byte-identical (tests and the verification check `data.schema-mirror-in-sync` assert it) |
 
 ## v0.2 in one paragraph
@@ -32,7 +32,7 @@ there are no remote `$ref`s.
 * Optional fields are emitted as `anyOf: [<type>, {type: null}]`; the standard says *omit* missing
   values, and the JSON importer rejects explicit `null`s.
 * **Not** expressed in the JSON Schema: per-field SI units (`leakage_inductance` in `H` ...), the
-  evidence rules and the sign rules. `aipe_magnetics.data.schema.validate_record` therefore runs
+  evidence rules and the sign rules. `aipe_magnetics_database.data.schema.validate_record` therefore runs
   three layers on a v0.2 record and prefixes its messages accordingly: `[schema]` (JSON Schema),
   `[semantic]` (pydantic normative model: SI units, evidence rules, RFC 3339 timestamps and the
   v0.1-parity sign rules of `records.py`) and `[physical]` (every number anywhere in the record
@@ -52,8 +52,8 @@ there are no remote `$ref`s.
 ## Refreshing the mirror
 
 ```sh
-python -m aipe_magnetics.data.schema --export schemas/v0.2 --export-package   # regenerate both copies
-python -m aipe_magnetics.data.schema --check schemas/v0.2                      # exit 1 when the mirror is stale
+python -m aipe_magnetics_database.data.schema --export schemas/v0.2 --export-package   # regenerate both copies
+python -m aipe_magnetics_database.data.schema --check schemas/v0.2                      # exit 1 when the mirror is stale
 ```
 
 Never edit the generated files by hand; change the pydantic models and re-export. Files are written
@@ -62,9 +62,9 @@ with sorted keys, two-space indent, UTF-8 and LF line endings, so the export is 
 ## Validation and migration
 
 ```sh
-python -m aipe_magnetics.data.schema --validate examples/synthetic-transformer.json   # v0.1 or v0.2, by schema_version
-python -m aipe_magnetics.data.schema --validate a.json b.json [--no-bundled-catalogue]  # the files form ONE set
-python -m aipe_magnetics.data.migrate examples/synthetic-transformer.json out/synthetic-transformer-v02.json
+python -m aipe_magnetics_database.data.schema --validate examples/synthetic-transformer.json   # v0.1 or v0.2, by schema_version
+python -m aipe_magnetics_database.data.schema --validate a.json b.json [--no-bundled-catalogue]  # the files form ONE set
+python -m aipe_magnetics_database.data.migrate examples/synthetic-transformer.json out/synthetic-transformer-v02.json
 python scripts/validate.py examples/synthetic-transformer.json                        # legacy v0.1 command, unchanged
 ```
 

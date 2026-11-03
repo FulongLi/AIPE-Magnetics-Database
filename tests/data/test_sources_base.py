@@ -16,9 +16,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from aipe_magnetics.common.errors import DataIntegrityError, InvalidInputError, LicenseRestrictionError, UnitError
-from aipe_magnetics.common.jsonio import sha256_file
-from aipe_magnetics.data.sources import (
+from aipe_magnetics_database.common.errors import DataIntegrityError, InvalidInputError, LicenseRestrictionError, UnitError
+from aipe_magnetics_database.common.jsonio import sha256_file
+from aipe_magnetics_database.data.sources import (
     CACHE_ENV_VAR,
     DEFAULT_CACHE_DIRNAME,
     ADAPTERS,
@@ -32,7 +32,7 @@ from aipe_magnetics.data.sources import (
     descriptors,
     get_adapter,
 )
-from aipe_magnetics.data.sources.base import (
+from aipe_magnetics_database.data.sources.base import (
     TABLE_LAYOUT_VERSION,
     checksum_problems,
     dataset_token,
@@ -44,8 +44,8 @@ from aipe_magnetics.data.sources.base import (
     source_uri,
     write_records,
 )
-from aipe_magnetics.data.sources.cache import MANIFEST_VERSION, SafeRedirectHandler, _safe_filename, check_fetch_url, urllib_transport
-from aipe_magnetics.data.sources.princeton_magnet import PrincetonMagnetAdapter
+from aipe_magnetics_database.data.sources.cache import MANIFEST_VERSION, SafeRedirectHandler, _safe_filename, check_fetch_url, urllib_transport
+from aipe_magnetics_database.data.sources.princeton_magnet import PrincetonMagnetAdapter
 
 PAYLOAD = b"synthetic payload for the cache tests\n" * 100
 DIGEST = hashlib.sha256(PAYLOAD).hexdigest()

@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.2.0",
+  "source_id": "zenodo_8292861_hefmag",
+  "version": "doi:10.5281/zenodo.8292861 v1.0.0",
+  "license": "CC-BY-4.0",
+  "shards": {
+    "materials": [
+      "materials/materials-001.jsonl"
+    ],
+    "measurements": [
+      "measurements/measurements-001.jsonl"
+    ]
+  },
+  "datasets": [
+    "datasets/hefmag.json"
+  ],
+  "tables": [],
+  "tables_local": [],
+  "record_counts": {
+    "dataset": 1,
+    "magnetic_material": 4,
+    "measurement": 8
+  },
+  "table_rows": {
+    "complex_permeability": 3204,
+    "energy_loss_and_permeability": 1087
+  },
+  "review_state": "third_party_unreviewed"
+}

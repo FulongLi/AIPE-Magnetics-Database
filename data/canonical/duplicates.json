@@ -1,0 +1,259 @@
+[
+  {
+    "records": [
+      "measurement.mas-acme-d37-0298-complex-permeability",
+      "measurement.mas-acme-k151-0323-complex-permeability"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "63de2089a7f45d4c8571037ebb4a1cb951092d0aba3515d073e23e9ee6365a02",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-acme-d37-0298-initial-permeability",
+      "measurement.mas-acme-k151-0323-initial-permeability"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "c0e6ce956c7a7b43d7c292622c90147e1be7a1b9f19b51b11bdbfce4154a530c",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-acme-d37-0298-loss-factor-default-1",
+      "measurement.mas-acme-k151-0323-loss-factor-default-1"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "6bc8a2e0952623632e715f5f1396fb3c76fe6a35c568fcf8a5e2d4195ee0dabe",
+    "counted_as_independent": true
+  },
+  {
+    "record": "measurement.mas-ferroxcube-3c90-0032-core-loss-advanced-magnet",
+    "duplicate_of": "measurement.princeton-magnet-3c90-core-loss",
+    "rule": "same underlying experiment and quantity",
+    "underlying_source": "princeton-magnet:3c90",
+    "rows_compared": 13337,
+    "rows_matched": 13337,
+    "match_fraction": 1.0
+  },
+  {
+    "record": "measurement.mas-ferroxcube-3c94-0036-core-loss-advanced-magnet",
+    "duplicate_of": "measurement.princeton-magnet-3c94-core-loss",
+    "rule": "same underlying experiment and quantity",
+    "underlying_source": "princeton-magnet:3c94",
+    "rows_compared": 12261,
+    "rows_matched": 12261,
+    "match_fraction": 1.0
+  },
+  {
+    "record": "measurement.mas-ferroxcube-3f4-0044-core-loss-advanced-magnet",
+    "duplicate_of": "measurement.princeton-magnet-3f4-core-loss",
+    "rule": "same underlying experiment and quantity",
+    "underlying_source": "princeton-magnet:3f4",
+    "rows_compared": 1990,
+    "rows_matched": 1990,
+    "match_fraction": 1.0
+  },
+  {
+    "records": [
+      "measurement.mas-magnetec-nanoperm-1000-0292-mass-loss-advanced-manufacturer",
+      "measurement.mas-magnetec-nanoperm-2000-0291-mass-loss-advanced-manufacturer",
+      "measurement.mas-magnetec-nanoperm-30000-0288-mass-loss-advanced-manufacturer",
+      "measurement.mas-magnetec-nanoperm-4000-0290-mass-loss-advanced-manufacturer",
+      "measurement.mas-magnetec-nanoperm-8000-0289-mass-loss-advanced-manufacturer",
+      "measurement.mas-magnetec-nanoperm-80000-0287-mass-loss-advanced-manufacturer",
+      "measurement.mas-magnetec-nanoperm-90000-0286-mass-loss-advanced-manufacturer"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "efbc71cd0a64ab51ca1591da3502a339b6dd87bcfc0e5a945f49ed42252b5c1d",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-micrometals-gx-125-0176-bh-cycle",
+      "measurement.mas-micrometals-hf-125-0182-bh-cycle"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "1695316334b08418cf6c15e6c352c69f617484e27a6d9483d4b895bf02054c64",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-micrometals-gx-60-0175-bh-cycle",
+      "measurement.mas-micrometals-hf-60-0180-bh-cycle"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "34194bedb755a894e15a045162961d746140c3301a3480b10b75c2e80e9641e2",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-shinn-der-electronic-shinn-der-n4s-0865-loss-factor-default-0",
+      "measurement.mas-tecstar-technology-m4s-0860-loss-factor-default-0"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "b7f6dd887f78048f4449c8d1417b032b1f0ed82bbbe06dbe4e4f31a7212f218f",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-tdg-td5b-0637-loss-factor-default-0",
+      "measurement.mas-tdk-n45-0010-loss-factor-default-0"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "5f045449116923521e3183d0311e99c3e4202196aea775339c82f4c4dc42d5e7",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-tdk-c350-0001-bh-cycle",
+      "measurement.mas-tdk-c351-0002-bh-cycle"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "e01e4c99acf65e1184cc2e5bca24b090b1310400125871fb376f3f5ce71ea8c7",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-tdk-c350-0001-initial-permeability",
+      "measurement.mas-tdk-c351-0002-initial-permeability"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "741ccbc364dbaaa8c864c66bbdfda3aa864274210e5304101ab09a35bbd0605b",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-tdk-tdk-l6-0907-loss-factor-default-0",
+      "measurement.mas-tdk-tdk-l8f-0900-loss-factor-default-0"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "cf4ccd8ed71153c588f19d92fbd1675806ac5ec0c7efb806993ccc81805393eb",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-tecstar-technology-m13d-0862-loss-factor-default-0",
+      "measurement.mas-tecstar-technology-m15d-0863-loss-factor-default-0"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "a13453a7226dcd1a56a4816b48e017bbff0cfde0261a92dd685c3b1d32dcf46c",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-tridelta-manifer-197-1133-loss-factor-default-0",
+      "measurement.mas-tridelta-manifer-199-1134-loss-factor-default-0"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "92233e7b422f5a5e6710dc9b9e0dbf299eb36089d42a3d8764e32799e5286ebb",
+    "counted_as_independent": true
+  },
+  {
+    "records": [
+      "measurement.mas-wu-rth-elektronik-3w800-91101009-1058-complex-permeability",
+      "measurement.mas-wu-rth-elektronik-3w800-91101015-1064-complex-permeability"
+    ],
+    "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged",
+    "rows_sha256": "c52d3e347185d8f591aa998a435bd63e8d880aea130dea058844217bbf2b02f5",
+    "counted_as_independent": true
+  },
+  {
+    "record": "measurement.paderborn-lea-3c90-complex-permeability-magnet",
+    "derived_from": [
+      "measurement.princeton-magnet-3c90-core-loss"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:3c90",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-3c92-complex-permeability-magnet",
+    "derived_from": [
+      "princeton-magnet:3c92"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:3c92",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-3c94-complex-permeability-magnet",
+    "derived_from": [
+      "measurement.princeton-magnet-3c94-core-loss"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:3c94",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-3c95-complex-permeability-magnet",
+    "derived_from": [
+      "princeton-magnet:3c95"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:3c95",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-3e6-complex-permeability-magnet",
+    "derived_from": [
+      "measurement.princeton-magnet-3e6-core-loss"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:3e6",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-3f4-complex-permeability-magnet",
+    "derived_from": [
+      "measurement.princeton-magnet-3f4-core-loss"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:3f4",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-n27-complex-permeability-magnet",
+    "derived_from": [
+      "measurement.princeton-magnet-n27-core-loss"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:n27",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-n30-complex-permeability-magnet",
+    "derived_from": [
+      "measurement.princeton-magnet-n30-core-loss"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:n30",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-n49-complex-permeability-magnet",
+    "derived_from": [
+      "measurement.princeton-magnet-n49-core-loss"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:n49",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-n87-complex-permeability-magnet",
+    "derived_from": [
+      "measurement.princeton-magnet-n87-core-loss"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:n87",
+    "counted_as_independent": false
+  },
+  {
+    "record": "measurement.paderborn-lea-t37-complex-permeability-magnet",
+    "derived_from": [
+      "princeton-magnet:t37"
+    ],
+    "rule": "derived quantity of the same underlying experiment",
+    "underlying_source": "princeton-magnet:t37",
+    "counted_as_independent": false
+  }
+]

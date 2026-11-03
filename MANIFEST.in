@@ -1,0 +1,6 @@
+graft data/normalized
+graft data/canonical
+graft data/reports
+include data/sources.json
+prune data/normalized/*/tables-local
+global-exclude *.tmp

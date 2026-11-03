@@ -1,0 +1,379 @@
+{
+  "source_id": "zenodo_8292861_hefmag",
+  "version": "doi:10.5281/zenodo.8292861 v1.0.0",
+  "license": "CC-BY-4.0",
+  "redistribution": "permitted (CC-BY-4.0, attribution required)",
+  "importer_version": "0.3.0",
+  "inputs": [
+    {
+      "path": "EMPIR 19ENG06 HEFMAG dataset Co67 & Fmet.zip",
+      "url": "https://zenodo.org/records/8292861/files/EMPIR%2019ENG06%20HEFMAG%20dataset%20Co67%20%26%20Fmet.zip?download=1",
+      "sha256": "95c457de0ad4e28a1055772678cfcbbd5791d03efa7c18f73e80966a3004758a"
+    }
+  ],
+  "counts": {
+    "magnetic_material": 4,
+    "measurement": 8,
+    "records.dataset": 1,
+    "records.magnetic_material": 4,
+    "records.measurement": 8
+  },
+  "table_rows": {
+    "complex_permeability": 3204,
+    "energy_loss_and_permeability": 1087
+  },
+  "flags": {},
+  "exclusions": [
+    {
+      "what": "Co67_HT_13.65um/Jp_100mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_13.65um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_13.65um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_13.65um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_13.65um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_d25um/Jp_100mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_d25um/Jp_10mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_d25um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_d25um/Jp_20mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_d25um/Jp_2mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_d25um/Jp_50mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "Co67_HT_d25um/Jp_5mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_100mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_100mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_100mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_100mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_10mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_20mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_2mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_300mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_400mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_500mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_50mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d12.90um/Jp_5mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_05mT.txt",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_100mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_10mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_1mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_200mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_20mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_2mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_50mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    },
+    {
+      "what": "FMET_HT_d20.3um/Jp_5mT.TXT",
+      "reason": "row with empty value cells",
+      "count": 1
+    }
+  ],
+  "notes": []
+}

@@ -1,0 +1,332 @@
+{
+  "source_id": "paderborn_lea_materialdatabase",
+  "title": "Paderborn University LEA materialdatabase",
+  "upstream": "https://github.com/upb-lea/materialdatabase",
+  "version": "04fff8e98ae3ddb72809223c42e8c939ed1073bb",
+  "license": "GPL-3.0-only",
+  "redistribution": "permitted under GPL-3.0-only (copyleft subtree with LICENSE, NOTICE and source offer)",
+  "raw_policy": "original files committed under files/ (redistribution permitted)",
+  "files": [
+    {
+      "path": "materialdatabase/data/complex_permeability/LEA_MTB/3F46.csv",
+      "sha256": "25223c2cb1bb156cb45663aa887180152d6140988ea1c9f980dc9fad9286665e"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/LEA_MTB/N49.csv",
+      "sha256": "b1d772f09b31e1af0819e7bb8ed56455c6f93fdca989cd7577930e87d82a62d8"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/LEA_MTB/N87.csv",
+      "sha256": "5423cf18f3449a1a03746c881752635120dea6cfde22a7b9575ae3a09907c555"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/LEA_MTB/N95.csv",
+      "sha256": "766766f2192ba12ba7e3b03154c66e8ce2c253793d9423bd4f6525bd5a941e30"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/3C90.csv",
+      "sha256": "bbbb32abdd5346922c01de4f28378362439ee1418fe54b9b845af43748985a4e"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/3C92.csv",
+      "sha256": "d9d614a50e2d8091a5b8ad2a018ddcab50849c363b124827be590217bf84f483"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/3C94.csv",
+      "sha256": "80b4ae7b0f78f7c6604c3b4fab9844bfc79c9df6dcc1028989f3f8c97e387cf7"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/3C95.csv",
+      "sha256": "b57e04096bb8086c8ea28db927af8c1b4288cceb6b08667010c9e9b0c66e376f"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/3E6.csv",
+      "sha256": "94115b00ba08ccd5a5420b14e5c08b4718324b58c3f77a6eacac11c0a308fb35"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/3F4.csv",
+      "sha256": "e2b998247b3d9ed151de38ca5693128c5dc892e9bcff6f1a42006381b4e12319"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/N27.csv",
+      "sha256": "fc2c7bff60a00300b626c90ff671f0afa7e1edbf999a64573fe57cc5db9c7de0"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/N30.csv",
+      "sha256": "0df81f14731012ce8d3caacfe03452307fe43ae1b260a8e5332e28c8540189b2"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/N49.csv",
+      "sha256": "45ecef3cd54a4a68959911e07c17b14a113407d327769cb41a4e9b3987f625ce"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/N87.csv",
+      "sha256": "eb160e423cf82498ad11847c101a91f3aa5d2682b715251845f0b6ddb1988092"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/MagNet/T37.csv",
+      "sha256": "4e266419cc8b60655ea777398cff0e3f3dbb0cb47a35fe4f7e305b3382bd551e"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/TDK_MDT/N49.csv",
+      "sha256": "f20b643843b5f1737e3c87e613cb48aba724d9cc43c0f5acf9820574411c8756"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/TDK_MDT/N87.csv",
+      "sha256": "b9672be9c0ad3478e6d1dc7459d8759188358ab3e8d571732a9061ae7890f987"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/TDK_MDT/N95.csv",
+      "sha256": "4544e5bf04796b43dcf7cd8e92f2d7f669efd2f70f3c793cda0212a498c49623"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/TDK_MDT/PC200.csv",
+      "sha256": "8355422a0208a1bd63419c1e1490496fe293513c3775bbe3ab432b62be44a3aa"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/datasheet/N49.csv",
+      "sha256": "8c0d585f808a0c01f3a0047b391a206fd820f83e4177b294b6b46fbaba4be9dc"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/datasheet/N87.csv",
+      "sha256": "f4e91e4da28249998e06ff209bccf512e4acf2ca0b155e0e53b936f2a6290f47"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/datasheet/N95.csv",
+      "sha256": "6d3bc7d68f3e7210c4366f651b4aad21d067e163f2c432238c99075c56d9a63b"
+    },
+    {
+      "path": "materialdatabase/data/complex_permeability/datasheet/PC200.csv",
+      "sha256": "8355422a0208a1bd63419c1e1490496fe293513c3775bbe3ab432b62be44a3aa"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/3C90.csv",
+      "sha256": "92994c2dc2494ce6ba367fc1ffc62afa739063918bd3a21cfbe431e58e874f6f"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/3C92.csv",
+      "sha256": "09bbd6a257daf84422ded20e5ec2efaf35f963a2e6f6a13599dd3a5aff30b436"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/3C94.csv",
+      "sha256": "ee291819237f417072cd3222368179506a69a14e63525a3b7da8b7c99e378f91"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/3C95.csv",
+      "sha256": "ea8f5eb8c84296dcf9082be58cc080f0218452354dd6e6bf26f83be74552da04"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/3F4.csv",
+      "sha256": "409e0aff041525565f8399ea4a83789314b10a378e11174b9dab55ba43f35d7d"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/3F46.csv",
+      "sha256": "3e3dc7290eb53a2e80a068bcbaac352f0bd683f324e87b45b15d95a3768ab260"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/DMR96A.csv",
+      "sha256": "5582315102107fd65f7c314cbf7f5d3d7fcac8cf6f262d0771b5fd796368c945"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/N27.csv",
+      "sha256": "d327bcf36a486c964b76f3fccf6c7d6bcdeedb37905c53090140757d41c06822"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/N30.csv",
+      "sha256": "b18db8de317d4d0afff173da639c033f6d0cce50af6adad2b00f027a5a8b9662"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/N49.csv",
+      "sha256": "684aa3ee734634f60b0666342adb6846dde8b6d71f533716b9a8be4f8d741ad5"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/N87.csv",
+      "sha256": "e04d059ea9eb9d9855c2a280372b5b5045bb5f9063c1ff702fa5dd49f9c51458"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/N95.csv",
+      "sha256": "6675cf0f176d1ba1c9f9ae941e89552d723da79c967f8c03eddf633a53817a69"
+    },
+    {
+      "path": "materialdatabase/data/complex_permittivity/LEA_MTB/PC200.csv",
+      "sha256": "bf0f2901cf4733416f2240f85187047a6810677900e2041b620130c143705fba"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/b_over_h_at_f_T.csv",
+      "sha256": "e5af95ee2b81aaaa3d08f80cad827b16139a6e6ff8a078fe5e4f19dd9c834345"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/general_information.csv",
+      "sha256": "23f8c6babb426752db934a4f76048372db76c22eee01d2338db00235c655b43c"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/mu_amplitude_over_b_at_T.csv",
+      "sha256": "ae85f61b21f00eba86b0078504f1527f472e59219ce8daa711088e817fe9e226"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/p_v_over_T_at_f_b.csv",
+      "sha256": "5ce353eaf24736909a9e8ede0d1b2dfc99e0041b2241f16e85cfe57c6a406518"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/p_v_over_b_at_f_T.csv",
+      "sha256": "dee3a0af5879c292156aa8e161557ba8bc3e440c197be74b62f44e2d4b2b7c61"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/p_v_over_f_at_b_T.csv",
+      "sha256": "2bf06121f8fc921dbe493f2948e5040ef30e8d298f7d53823e0ac70e27744e19"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/small_signal_mu_imag_over_f_at_T.csv",
+      "sha256": "c944c161e9a0eecda853860635eff09ff6e308026f18125b9c559bbee259a119"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/small_signal_mu_initial_over_T.csv",
+      "sha256": "3070ccdc9a0a1b853608f5362f0ce44ddf76fa283d5379d6f6a73b074cbe489f"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3C95/small_signal_mu_real_over_f_at_T.csv",
+      "sha256": "c4b71f30bb03ddafe66bb2743b563abca1b0ab7ad5ce97ddc640217aa1f92c7a"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/3F46/general_information.csv",
+      "sha256": "54e1c17c20421e18862e533e00a20e9ddce2bb0c2be37cba398b7c7f9e2be4bb"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N27/b_over_h_at_f_T.csv",
+      "sha256": "aa7538486f9940a6e00f6f84923833fc9efb493b5d7f5152108e5284ce64f57f"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N27/general_information.csv",
+      "sha256": "99b8c0f7772f7f1fb047feeefec05fd6585e63d7c782e8d8d9a676a2d4137eac"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N30/b_over_h_at_f_T.csv",
+      "sha256": "66e4a08c12da8a4b8ec3dcf9b99a4a25d7300c38d2c821c3567edfe429abb843"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N30/general_information.csv",
+      "sha256": "0b676c4b2bdf3cf06e4fca6b49a1c9836e9a408567d4cab0d7c0a9f93121feec"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/b_over_h_at_f_T.csv",
+      "sha256": "72d3cafd4dc8a727dc66e40bde8d7d2dd09bda686dd7ad195d477b1114201618"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/general_information.csv",
+      "sha256": "dfbaf5a092ac2f9cc876b1ea2a1fe15ffc425e05831bdcca742683c69d04dd0d"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/mu_amplitude_over_b_at_T.csv",
+      "sha256": "40554827d9915294fb15cd89fbe105c873ce4ddfd5d3bacbdf7901e9bbb9d685"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/p_v_over_T_at_f_b.csv",
+      "sha256": "ffc31582eef60f2dc24f2dc10ee9e84c3b735a8e88d1ea3e977decb923287383"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/p_v_over_b_at_f_T.csv",
+      "sha256": "f60018ec1ead334633de6b48ff845c326b3c5ec50a81918c3560a8fe144a720c"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/p_v_over_f_at_b_T.csv",
+      "sha256": "14f1418dfb1c7b7c7be09a4c6e9c822f30f2592ca93d7e18538b78407454ae88"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/small_signal_mu_imag_over_f_at_T.csv",
+      "sha256": "fef5729af55bd965a5d2a1ea24745e4646a6700ccce77fb31dc8ae139c060608"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/small_signal_mu_initial_over_T.csv",
+      "sha256": "7e3338b79f9e02a5f15e1f0bbd86bbc54c72a78164fdaf2671a32bfb55e62fca"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N49/small_signal_mu_real_over_f_at_T.csv",
+      "sha256": "ac4569435b094ca3ab48f3f04ec72fd24d759496d29d82c09345df15250d2e73"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/b_over_h_at_f_T.csv",
+      "sha256": "28181018123250e03969637fafdab18de855dc6355fe5de311c24cd129d7771a"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/general_information.csv",
+      "sha256": "9dc2d21486baf40921cd7b4d87f74a4ffee4736db2b86186bb1979bdb7258683"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/mu_amplitude_over_b_at_T.csv",
+      "sha256": "ad11d4e9be9796fa92ce7cced0507dae97a4b36761f5435491ce088f5aac87c7"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/p_v_over_T_at_f_b.csv",
+      "sha256": "516a0a1839d310c07f66e67aba7a75a52447031e4992dac45184bb76bae07322"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/p_v_over_b_at_f_T.csv",
+      "sha256": "30d4bd686b0a3c1b09e71c1087d7e9769d37f63c10532c7a854240c1f3e722b5"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/p_v_over_f_at_b_T.csv",
+      "sha256": "fca394c0262df729be6b569db4ac816ea746349a8f3037687563a1522cf64bbd"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/small_signal_mu_imag_over_f_at_T.csv",
+      "sha256": "81f13b5ca92d88dba8fcd82c22b97c7975182504f8413227bfdf5afb94ad1e70"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/small_signal_mu_initial_over_T.csv",
+      "sha256": "ff39e855e5fe73217b0cf6abea230a36220b761a41ce5c47e656de0ab54a38be"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N87/small_signal_mu_real_over_f_at_T.csv",
+      "sha256": "e4139e50f85f8919e3b06a245f9effe7c626c45f2cc2b6d6140337765974c11f"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/b_over_h_at_f_T.csv",
+      "sha256": "795d8c4e7fdabd7f58338d53818d4866b3bbd71b93b0d9154f8be8cccb93b38c"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/general_information.csv",
+      "sha256": "681cd5c9a3e28c06868e113eff2729c0a274558cdac786d3f274201b58185632"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/mu_amplitude_over_b_at_T.csv",
+      "sha256": "0a34e6ca165b0b4325dc63a93284bf2246358f1de60a7cf577d1377e397745ba"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/p_v_over_T_at_f_b.csv",
+      "sha256": "8090187f66590486394b948141fc41ebf24e768c30bbbca2d3b20db3d385bb36"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/p_v_over_b_at_f_T.csv",
+      "sha256": "ec48af83c178acfda3c320936698a1251f2d9b3dec700498a5258fcd529afad3"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/p_v_over_f_at_b_T.csv",
+      "sha256": "2a64111e8b6f13dca4c1c57f3b29df422c8c29392394515d62fc197bd9b39c44"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/small_signal_mu_imag_over_f_at_T.csv",
+      "sha256": "0bcf4640bb9633fb34ae07b8667b1aa4ea707ef6dcdd3020f217057176031677"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/small_signal_mu_initial_over_T.csv",
+      "sha256": "d47259f69aff7c5dd25e51c86025931698dee2fa1c695bb2628977b62d26f665"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/N95/small_signal_mu_real_over_f_at_T.csv",
+      "sha256": "36344dea180fed841ec0f8c1abf6955530ccd2b7d20c052554ab8ada3189eee4"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/T37/b_over_h_at_f_T.csv",
+      "sha256": "4de6fd7670c19cfc2756c420c3d44a6adcbbd4662b3d545b6c2525ff4fa5149c"
+    },
+    {
+      "path": "materialdatabase/data/datasheet_curves/T37/general_information.csv",
+      "sha256": "e77144f226b26dffae0621683a07543a068576acbc099d9ef1144e2725e8a2a2"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    }
+  ],
+  "importer": "aipe_magnetics_database.ingest.sources.paderborn"
+}

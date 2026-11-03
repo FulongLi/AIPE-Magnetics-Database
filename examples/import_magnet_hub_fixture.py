@@ -22,12 +22,12 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
-from aipe_magnetics.common.errors import AIPEMagneticsError
-from aipe_magnetics.common.jsonio import load
-from aipe_magnetics.data.hdf5 import WaveformStore
-from aipe_magnetics.data.records import MagneticRecord
-from aipe_magnetics.data.schema import validate_catalogue, validate_record
-from aipe_magnetics.data.sources import LocalCache, MagnetHubAdapter
+from aipe_magnetics_database.common.errors import AIPEMagneticsError
+from aipe_magnetics_database.common.jsonio import load
+from aipe_magnetics_database.data.hdf5 import WaveformStore
+from aipe_magnetics_database.data.records import MagneticRecord
+from aipe_magnetics_database.data.schema import validate_catalogue, validate_record
+from aipe_magnetics_database.data.sources import LocalCache, MagnetHubAdapter
 
 
 def run(checkout: Path, out: Path, *, materials: Sequence[str] | None = None, quiet: bool = False, allow_unpinned: bool = False) -> dict:

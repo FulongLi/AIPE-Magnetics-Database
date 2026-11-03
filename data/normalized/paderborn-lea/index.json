@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.2.0",
+  "source_id": "paderborn_lea_materialdatabase",
+  "version": "04fff8e98ae3ddb72809223c42e8c939ed1073bb",
+  "license": "GPL-3.0-only",
+  "shards": {
+    "materials": [
+      "materials/materials-001.jsonl"
+    ],
+    "measurements": [
+      "measurements/measurements-001.jsonl"
+    ]
+  },
+  "datasets": [
+    "datasets/paderborn-lea-materialdatabase.json"
+  ],
+  "tables": [
+    "tables/paderborn-lea-3c90-complex-permeability-magnet.jsonl",
+    "tables/paderborn-lea-3c94-complex-permeability-magnet.jsonl",
+    "tables/paderborn-lea-3f4-complex-permeability-magnet.jsonl",
+    "tables/paderborn-lea-3f46-complex-permeability-lea-mtb.jsonl",
+    "tables/paderborn-lea-dmr96a-complex-permittivity-lea-mtb.jsonl",
+    "tables/paderborn-lea-n27-complex-permeability-magnet.jsonl",
+    "tables/paderborn-lea-n49-complex-permeability-lea-mtb.jsonl",
+    "tables/paderborn-lea-n49-complex-permeability-magnet.jsonl",
+    "tables/paderborn-lea-n87-complex-permeability-magnet.jsonl",
+    "tables/paderborn-lea-n95-complex-permeability-lea-mtb.jsonl"
+  ],
+  "tables_local": [],
+  "record_counts": {
+    "dataset": 1,
+    "magnetic_material": 15,
+    "measurement": 66
+  },
+  "table_rows": {
+    "amplitude_permeability": 568,
+    "bh_curve": 2128,
+    "complex_permeability": 36926,
+    "complex_permittivity": 17644,
+    "core_loss": 2128,
+    "initial_permeability": 350
+  },
+  "review_state": "third_party_unreviewed"
+}

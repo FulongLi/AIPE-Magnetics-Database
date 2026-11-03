@@ -8,7 +8,7 @@ What it does (nothing is downloaded, nothing is measured, no loss value is claim
    three peak values (50 / 100 / 200 mT): 18 sequences x ``--samples`` points, deliberately in
    **mT** and **kHz** so that the importer has to normalise units.
 2. Saves them the way a user would hand them over (``waveforms-synthetic-source.npz``).
-3. Imports that file with :func:`aipe_magnetics.data.importers.import_waveform_sequences`, which
+3. Imports that file with :func:`aipe_magnetics_database.data.importers.import_waveform_sequences`, which
    writes the AIPE HDF5 waveform file (layout ``aipe.magnetics.waveforms/0.2``: SI units, original
    units retained as attributes, NaN = missing, per-array SHA-256, gzip chunks) and builds the
    ``waveform_dataset`` record with the file checksum in ``artifacts``.
@@ -39,12 +39,12 @@ from typing import Any, Sequence
 
 import numpy as np
 
-from aipe_magnetics import TOOL_ID, TOOL_NAME, __version__
-from aipe_magnetics.common.jsonio import dump, load, sha256_file
-from aipe_magnetics.data.hdf5 import WaveformMeta, WaveformStore
-from aipe_magnetics.data.importers import import_waveform_sequences
-from aipe_magnetics.data.records import SCHEMA_VERSION, MagneticRecord
-from aipe_magnetics.data.schema import validate_catalogue, validate_record
+from aipe_magnetics_database import TOOL_ID, TOOL_NAME, __version__
+from aipe_magnetics_database.common.jsonio import dump, load, sha256_file
+from aipe_magnetics_database.data.hdf5 import WaveformMeta, WaveformStore
+from aipe_magnetics_database.data.importers import import_waveform_sequences
+from aipe_magnetics_database.data.records import SCHEMA_VERSION, MagneticRecord
+from aipe_magnetics_database.data.schema import validate_catalogue, validate_record
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_OUT = HERE / "synthetic"

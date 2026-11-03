@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from aipe_magnetics.common.errors import (
+from aipe_magnetics_database.common.errors import (
     DataIntegrityError,
     DataNotFoundError,
     InvalidInputError,
@@ -21,11 +21,11 @@ from aipe_magnetics.common.errors import (
     UnitError,
     UnsupportedOperationError,
 )
-from aipe_magnetics.common.jsonio import load, sha256_file
-from aipe_magnetics.data.hdf5 import WaveformStore
-from aipe_magnetics.data.records import MagneticRecord
-from aipe_magnetics.data.schema import validate_catalogue, validate_record
-from aipe_magnetics.data.sources import (
+from aipe_magnetics_database.common.jsonio import load, sha256_file
+from aipe_magnetics_database.data.hdf5 import WaveformStore
+from aipe_magnetics_database.data.records import MagneticRecord
+from aipe_magnetics_database.data.schema import validate_catalogue, validate_record
+from aipe_magnetics_database.data.sources import (
     DownloadNotAllowedError,
     LocalCache,
     MagnetChallenge2Adapter,
@@ -35,12 +35,12 @@ from aipe_magnetics.data.sources import (
     TableStore,
     read_magnet_database,
 )
-from aipe_magnetics.data.sources import magnet_challenge2 as mc2_module
-from aipe_magnetics.data.sources import paderborn_magnethub as hub_module
-from aipe_magnetics.data.sources import paderborn_materialdatabase as mdb_module
-from aipe_magnetics.data.sources import princeton_magnet as pm_module
-from aipe_magnetics.data.sources.base import SOURCES_EXTENSION, UNPINNED_FLAG
-from aipe_magnetics.data.sources.princeton_magnet import EXCITATIONS, PACKAGED_DATABASES, RAW_URL_TEMPLATE, classify_excitation, known_file_checksums
+from aipe_magnetics_database.data.sources import magnet_challenge2 as mc2_module
+from aipe_magnetics_database.data.sources import paderborn_magnethub as hub_module
+from aipe_magnetics_database.data.sources import paderborn_materialdatabase as mdb_module
+from aipe_magnetics_database.data.sources import princeton_magnet as pm_module
+from aipe_magnetics_database.data.sources.base import SOURCES_EXTENSION, UNPINNED_FLAG
+from aipe_magnetics_database.data.sources.princeton_magnet import EXCITATIONS, PACKAGED_DATABASES, RAW_URL_TEMPLATE, classify_excitation, known_file_checksums
 
 pytestmark = pytest.mark.usefixtures("require_h5py")
 
@@ -122,7 +122,7 @@ def test_classify_excitation_rules():
 
 
 def test_princeton_known_checksums_agree_with_the_bundled_derived_fits():
-    derived = REPO_ROOT / "src" / "aipe_magnetics" / "data" / "derived" / "princeton-magnet-steinmetz-fits.json"
+    derived = REPO_ROOT / "src" / "aipe_magnetics_database" / "data" / "derived" / "princeton-magnet-steinmetz-fits.json"
     assert derived.is_file()
     files = load(derived)["source"]["files"]
     assert known_file_checksums() == {info["file"]: info["sha256"] for info in files.values()}
@@ -729,18 +729,12 @@ def test_magnethub_discover_extract_and_import_fixture(tmp_path: Path):
         adapter.import_test_fixture(root, tmp_path / "out", allow_unpinned=True)
 
 
-def test_magnethub_discovery_without_checkout_and_run_model_contract(tmp_path: Path):
+def test_magnethub_discovery_without_checkout_and_no_inference_in_database(tmp_path: Path):
     adapter = MagnetHubAdapter(LocalCache(tmp_path / "cache"))
     items = adapter.discover()
     remote = [i for i in items if i.kind == "remote"]
     assert {i.item_id for i in remote} >= {"tests/test_files/unit_test_data_ploss_at_450kWpm3.csv"} or hub_module.installed_package_location() is not None
-    with pytest.raises(InvalidInputError):
-        adapter.run_model("N87", "nobody", np.zeros(1024), (100e3, "Hz"), (25, "degC"))
-    with pytest.raises(InvalidInputError):
-        adapter.run_model("N87", "paderborn", np.zeros(1024), 100e3, 25.0)  # bare numbers: no unit inference
-    if importlib.util.find_spec("magnethub") is None:
-        with pytest.raises(UnsupportedOperationError, match="magnethub"):
-            adapter.run_model("N87", "paderborn", np.zeros(1024), (100e3, "Hz"), (25, "degC"))
+    assert not hasattr(adapter, "run_model")  # model inference belongs to AIPE-Magnetics-Design
     assert adapter.descriptor.notes and "16 MHz" in " ".join(adapter.descriptor.notes)
     assert len(hub_module.LOSS_MATERIALS) == 15 and len(hub_module.SEQUENCE_MATERIALS) == 15 and set(hub_module.TEAMS) == {"paderborn", "sydney"}
 

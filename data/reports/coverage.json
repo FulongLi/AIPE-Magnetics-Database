@@ -1,0 +1,334 @@
+{
+  "schema_version": "0.2.0",
+  "sources": [
+    {
+      "id": "aipe_curated",
+      "title": "AIPE curated datasheet catalogue (bundled with the package)",
+      "priority": "A",
+      "status": "integrated",
+      "version": "0.2.0 catalogue",
+      "license": "NOASSERTION",
+      "redistribution": "values transcribed from manufacturer datasheets with locators"
+    },
+    {
+      "id": "openmagnetics_mas",
+      "title": "OpenMagnetics / PSMA MAS",
+      "priority": "A",
+      "status": "integrated",
+      "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
+      "license": "Apache-2.0",
+      "redistribution": "permitted (Apache-2.0); most values originate from manufacturer datasheets whose own terms are not covered by the MAS licence",
+      "record_counts": {
+        "core_geometry": 21237,
+        "dataset": 4,
+        "magnetic_material": 1137,
+        "measurement": 1627,
+        "model_metadata": 664
+      },
+      "table_rows": {
+        "amplitude_permeability": 3752,
+        "bh_curve": 1515191,
+        "complex_permeability": 63369,
+        "complex_permittivity": 80,
+        "core_loss": 48107,
+        "initial_permeability": 12193,
+        "loss_factor": 18601,
+        "mass_core_loss": 1363
+      },
+      "tables_local_only": 81,
+      "exclusions": 175
+    },
+    {
+      "id": "princeton_magnet",
+      "title": "Princeton MagNet (packaged scalar databases)",
+      "priority": "A",
+      "status": "integrated",
+      "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
+      "license": "MIT",
+      "redistribution": "permitted (MIT; citation of the TPEL papers requested)",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 10,
+        "measurement": 10
+      },
+      "table_rows": {
+        "core_loss": 575009
+      },
+      "tables_local_only": 0,
+      "exclusions": 0
+    },
+    {
+      "id": "princeton_magnet_waveforms",
+      "title": "Princeton MagNet website B-H waveform downloads (<material>_cycle.zip / _measurements.zip)",
+      "priority": "A",
+      "status": "reference",
+      "version": "unpinned",
+      "license": "MIT (website terms of access)",
+      "redistribution": "permitted, but there is no stable URL or checksum (Streamlit per-session downloads)",
+      "reason": "No pinnable download: the existing user-supplied adapter (PrincetonMagnetAdapter.import_website_zip) converts a manually downloaded zip into v0.2 waveform records with SHA-256; nothing is committed."
+    },
+    {
+      "id": "magnet_challenge_1",
+      "title": "MagNet Challenge 2023 (MC1) data",
+      "priority": "A",
+      "status": "reference",
+      "version": "repository 740fe6bb (MIT); data on Dropbox",
+      "license": "NOASSERTION (data)",
+      "redistribution": "unknown",
+      "reason": "The 10-material training link is deleted; validation (256 MB) and testing (1.2 GB, materials A-E) Dropbox bundles carry no licence and are not pinned. The 10 training materials are the MagNet website data (see princeton_magnet_waveforms)."
+    },
+    {
+      "id": "magnet_challenge_2",
+      "title": "MagNet Challenge 2 / MagNetX database",
+      "priority": "A",
+      "status": "reference",
+      "version": "ab4913ca63ebda1f8eab429c64d3e93f96204713",
+      "license": "NOASSERTION",
+      "redistribution": "not permitted without permission (no LICENSE file; contact pelsmagnet@gmail.com)",
+      "reason": "No licence; the MagNetX database is a 24.8 GB unlicensed Dropbox archive. The existing read-only adapter (MagnetChallenge2Adapter) imports user-supplied files locally; nothing is downloaded or committed."
+    },
+    {
+      "id": "paderborn_lea_materialdatabase",
+      "title": "Paderborn University LEA materialdatabase",
+      "priority": "A",
+      "status": "integrated",
+      "version": "04fff8e98ae3ddb72809223c42e8c939ed1073bb",
+      "license": "GPL-3.0-only",
+      "redistribution": "permitted under GPL-3.0 as a separate copyleft subtree (LICENSE, NOTICE, source offer)",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 15,
+        "measurement": 66
+      },
+      "table_rows": {
+        "amplitude_permeability": 568,
+        "bh_curve": 2128,
+        "complex_permeability": 36926,
+        "complex_permittivity": 17644,
+        "core_loss": 2128,
+        "initial_permeability": 350
+      },
+      "tables_local_only": 0,
+      "exclusions": 51
+    },
+    {
+      "id": "paderborn_magnethub",
+      "title": "Paderborn MagNet-Hub",
+      "priority": "A",
+      "status": "reference",
+      "version": "1ed635d7bfac3c2aa024471af363beadc05f8932",
+      "license": "MIT",
+      "redistribution": "permitted",
+      "reason": "Model zoo (trained MagNet Challenge models) plus two small test fixtures, not a measurement dataset; the fixture adapter stays available, model inference belongs to AIPE-Magnetics-Design."
+    },
+    {
+      "id": "psma_core_loss_studies",
+      "title": "PSMA / Dartmouth Core Loss Studies (Pilot, Phase II, Phase III)",
+      "priority": "A",
+      "status": "reference",
+      "version": "unversioned web files (68 files, ~0.89 GB)",
+      "license": "proprietary (PSMA copyright statement)",
+      "redistribution": "not permitted: reproduction requires written PSMA consent (https://www.psma.com/legal/copyright-statement)",
+      "reason": "Redistribution prohibited. A user-supplied-file adapter (aipe_magnetics_database.ingest.external.psma_coreloss_db) reads a locally downloaded Phase II coreloss.db into records that stay on the user's machine. Note: 'dPhi' is documented as peak flux [T] but its values are peak flux in Wb (peak B = dPhi / Ae); 'Ecyc' is energy per cycle of the whole core in J."
+    },
+    {
+      "id": "zenodo_8292861_hefmag",
+      "title": "EMPIR 19ENG06 HEFMAG amorphous / nanocrystalline loss and complex permeability",
+      "priority": "B",
+      "status": "integrated",
+      "version": "doi:10.5281/zenodo.8292861 v1.0.0",
+      "license": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 4,
+        "measurement": 8
+      },
+      "table_rows": {
+        "complex_permeability": 3204,
+        "energy_loss_and_permeability": 1087
+      },
+      "tables_local_only": 0,
+      "exclusions": 70
+    },
+    {
+      "id": "zenodo_21626116_smc_ferrite_triangular",
+      "title": "SMC and Mn-Zn ferrite loss under symmetric / asymmetric triangular polarization",
+      "priority": "B",
+      "status": "integrated",
+      "version": "doi:10.5281/zenodo.21626116",
+      "license": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 2,
+        "measurement": 4
+      },
+      "table_rows": {
+        "energy_loss": 54
+      },
+      "tables_local_only": 0,
+      "exclusions": 0
+    },
+    {
+      "id": "asu_mhz_core_loss_aggregate",
+      "title": "ASU MAPEL MHz core-loss aggregate dataset",
+      "priority": "B",
+      "status": "reference",
+      "version": "8cf2378d72f0e3aa9cc96ee791ba267ee044faee",
+      "license": "NOASSERTION (no LICENSE file)",
+      "redistribution": "unknown - not redistributed (ask the maintainers)",
+      "reason": "No licence. A user-supplied-file adapter (aipe_magnetics_database.ingest.external.asu_mhz_csv) normalises a local copy of MHzCoreLoss.csv (952 rows) and keeps the 13 original study labels as underlying_source so aggregated rows are never counted as independent of the original publications."
+    },
+    {
+      "id": "amped_pitt_netl",
+      "title": "AMPED / University of Pittsburgh / DOE-NETL high-frequency magnetics data",
+      "priority": "B",
+      "status": "unavailable",
+      "version": "-",
+      "license": "-",
+      "redistribution": "-",
+      "reason": "No public tabular dataset with a verifiable licence was found (NETL EDX, OSTI, Zenodo searched); only two datasheet PDFs with unverified terms."
+    },
+    {
+      "id": "manufacturer_tdk",
+      "title": "TDK / EPCOS public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "not permitted (terms of use s4.1)",
+      "reason": "Magnetic Design Tool and datasheets may not be redistributed; 74 TDK materials reach the database through MAS."
+    },
+    {
+      "id": "manufacturer_ferroxcube",
+      "title": "Ferroxcube public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "not permitted (personal, non-commercial use only)",
+      "reason": "Steinmetz coefficient spreadsheet and SFDT data are for personal use; 26 materials via MAS."
+    },
+    {
+      "id": "manufacturer_magnetics",
+      "title": "Magnetics Inc. public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "unclear - treated as not redistributable",
+      "reason": "Curve-fit tools are behind a contact form without licence; 88 materials via MAS."
+    },
+    {
+      "id": "manufacturer_micrometals",
+      "title": "Micrometals public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "unclear - treated as not redistributable",
+      "reason": "Curve-fit coefficient workbook carries no licence; 93 materials via MAS."
+    },
+    {
+      "id": "manufacturer_fair_rite",
+      "title": "Fair-Rite public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "unclear - treated as not redistributable",
+      "reason": "Per-material complex-permeability CSV files carry no notice; 22 materials via MAS. Good candidate for a permission request."
+    },
+    {
+      "id": "manufacturer_vac",
+      "title": "VAC (Vacuumschmelze) public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "not permitted (imprint)",
+      "reason": "PDF datasheets only; 2 materials via MAS."
+    },
+    {
+      "id": "manufacturer_metglas",
+      "title": "Metglas / Proterial public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "not permitted (written permission required)",
+      "reason": "PDF datasheets only."
+    },
+    {
+      "id": "manufacturer_tdg",
+      "title": "TDG public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "unclear - treated as not redistributable",
+      "reason": "PDF sheets only; 118 materials via MAS."
+    },
+    {
+      "id": "manufacturer_dmegc",
+      "title": "DMEGC public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "unclear - treated as not redistributable",
+      "reason": "PDF sheets only (note: dmegc.com is not the manufacturer); 47 materials via MAS."
+    },
+    {
+      "id": "manufacturer_samwha",
+      "title": "Samwha public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "unclear - treated as not redistributable",
+      "reason": "PDF catalogues only; 4 materials via MAS."
+    },
+    {
+      "id": "manufacturer_coilcraft",
+      "title": "Coilcraft public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "unclear (terms page not readable)",
+      "reason": "S-parameter / SPICE models of components, not material data."
+    },
+    {
+      "id": "manufacturer_wurth",
+      "title": "Wurth Elektronik public engineering data",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "proprietary",
+      "redistribution": "not permitted (non-sublicensable model licence; data mining banned)",
+      "reason": "REDEXPERT / simulation libraries may not be redistributed; 12 materials via MAS."
+    }
+  ],
+  "totals_source_records": {
+    "core_geometry": 21237,
+    "dataset": 8,
+    "magnetic_material": 1168,
+    "measurement": 1715,
+    "model_metadata": 664
+  },
+  "table_rows_source": 2301754,
+  "canonical": {
+    "source_material_records": 1178,
+    "canonical_materials": 1142,
+    "canonical_materials_with_multiple_sources": 17,
+    "measurement_records": 1715,
+    "independent_measurement_records": 1701,
+    "duplicate_measurement_records": 3,
+    "derived_view_records": 11,
+    "table_rows_total": 2301754,
+    "table_rows_independent": 2245794,
+    "experimental_rows_independent": 604680
+  }
+}

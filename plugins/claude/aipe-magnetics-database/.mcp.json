@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aipe-magnetics-database": {
+      "command": "python",
+      "args": ["-m", "aipe_magnetics_database.mcp.server"]
+    }
+  }
+}

@@ -6,3 +6,6 @@
 *.npz binary
 *.pt binary
 *.pdf binary
+
+# data files are pinned by SHA-256: never convert line endings
+data/** -text

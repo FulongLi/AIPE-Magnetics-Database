@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from aipe_magnetics.common.jsonio import load
+from aipe_magnetics_database.common.jsonio import load
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CREATED_AT = "2026-10-19T00:00:00Z"
@@ -61,7 +61,7 @@ def evidence_source() -> dict:
 
 @pytest.fixture
 def require_h5py() -> None:
-    from aipe_magnetics.data.hdf5 import h5py_available
+    from aipe_magnetics_database.data.hdf5 import h5py_available
 
     if not h5py_available():
         pytest.fail("h5py is required for the data-layer tests: install the 'hdf5' extra (pip install -e .[dev])")

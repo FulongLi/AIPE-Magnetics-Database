@@ -1,5 +1,6 @@
 # Raw evidence
 
-No real data is currently bundled. Preserve acquired original bytes unchanged,
-with source URI, access/licence terms and SHA-256 inventory. Do not place generated
-or fitted values here. Record references without redistributing restricted data.
+Per source `SOURCES.json` pins every original input (URL, version, SHA-256, licence, raw policy). Original files are
+committed under `files/` only when redistribution is permitted and they are small (Paderborn LEA GPL-3.0, Zenodo
+CC-BY-4.0); MAS and Princeton inputs are retrieved on demand by `aipe-magnetics-db refresh --allow-download`.
+Never modify these files: importers verify them by SHA-256.

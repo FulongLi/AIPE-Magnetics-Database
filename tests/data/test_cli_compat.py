@@ -1,8 +1,8 @@
 """The ``aipe-magnetics`` CLI consumes the data layer: these integration tests keep the two from drifting apart.
 
-They drive the real CLI entry point (``aipe_magnetics.cli.main.main``) for the schema and import
+They drive the real CLI entry point (``aipe_magnetics_database.cli.main.main``) for the schema and import
 subcommands, exercise the compatibility shims the data layer keeps for command-line consumers, and
-make sure every ``python -m aipe_magnetics.data...`` entry point runs exactly once without a
+make sure every ``python -m aipe_magnetics_database.data...`` entry point runs exactly once without a
 ``RuntimeWarning`` (the package exports are lazy).
 """
 
@@ -15,11 +15,11 @@ from pathlib import Path
 
 import pytest
 
-from aipe_magnetics.cli.main import main
-from aipe_magnetics.common.jsonio import dump, load
-from aipe_magnetics.data.fixtures import v01_fixture_paths
-from aipe_magnetics.data.importers.json_record import import_record
-from aipe_magnetics.data.schema import check_exported, check_exported_schemas, export_schemas, validate_record
+from aipe_magnetics_database.cli.main import main
+from aipe_magnetics_database.common.jsonio import dump, load
+from aipe_magnetics_database.data.fixtures import v01_fixture_paths
+from aipe_magnetics_database.data.importers.json_record import import_record
+from aipe_magnetics_database.data.schema import check_exported, check_exported_schemas, export_schemas, validate_record
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -79,10 +79,10 @@ def test_compat_shims_kept_for_command_line_consumers(tmp_path: Path, v01_exampl
 
 
 @pytest.mark.parametrize("argv", [
-    ["aipe_magnetics.data.schema", "--check", str(REPO_ROOT / "schemas" / "v0.2")],
-    ["aipe_magnetics.data.schema", "--validate", *[str(p) for p in v01_fixture_paths()]],
-    ["aipe_magnetics.data.migrate", "--help"],
-    ["aipe_magnetics.data.importers.json_record", "--help"],
+    ["aipe_magnetics_database.data.schema", "--check", str(REPO_ROOT / "schemas" / "v0.2")],
+    ["aipe_magnetics_database.data.schema", "--validate", *[str(p) for p in v01_fixture_paths()]],
+    ["aipe_magnetics_database.data.migrate", "--help"],
+    ["aipe_magnetics_database.data.importers.json_record", "--help"],
 ])
 def test_module_entry_points_run_once_without_runtime_warning(argv):
     env = dict(os.environ, PYTHONPATH=os.pathsep.join([str(REPO_ROOT / "src"), os.environ.get("PYTHONPATH", "")]).rstrip(os.pathsep))

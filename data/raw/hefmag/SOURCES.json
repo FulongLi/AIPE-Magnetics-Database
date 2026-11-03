@@ -1,0 +1,17 @@
+{
+  "source_id": "zenodo_8292861_hefmag",
+  "title": "EMPIR 19ENG06 HEFMAG amorphous / nanocrystalline loss and complex permeability",
+  "upstream": "https://zenodo.org/records/8292861",
+  "version": "doi:10.5281/zenodo.8292861 v1.0.0",
+  "license": "CC-BY-4.0",
+  "redistribution": "permitted (CC-BY-4.0, attribution required)",
+  "raw_policy": "original files committed under files/ (redistribution permitted)",
+  "files": [
+    {
+      "path": "EMPIR 19ENG06 HEFMAG dataset Co67 & Fmet.zip",
+      "url": "https://zenodo.org/records/8292861/files/EMPIR%2019ENG06%20HEFMAG%20dataset%20Co67%20%26%20Fmet.zip?download=1",
+      "sha256": "95c457de0ad4e28a1055772678cfcbbd5791d03efa7c18f73e80966a3004758a"
+    }
+  ],
+  "importer": "aipe_magnetics_database.ingest.sources.zenodo"
+}

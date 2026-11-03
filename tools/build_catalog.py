@@ -5,8 +5,8 @@ Every number below is transcribed from a cited source (datasheet PDF, repository
 commit, peer-reviewed table) or derived by a documented script. The only hand-derived value is marked
 as such inside its record (the UU 93/152/30 window height, 2 x the drawn 48 mm single-U window height,
 stored under ``extensions['aipe.datasheet']['derived']``); nothing is estimated.
-Records are written one per file under ``src/aipe_magnetics/data/catalog/<kind>/<id>.json`` and
-validated against the v0.2 record standard (``aipe_magnetics.data.records``) before writing.
+Records are written one per file under ``src/aipe_magnetics_database/data/catalog/<kind>/<id>.json`` and
+validated against the v0.2 record standard (``aipe_magnetics_database.data.records``) before writing.
 
 Re-run after changing data::
 
@@ -24,13 +24,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from aipe_magnetics import __version__  # noqa: E402
-from aipe_magnetics.common.jsonio import dump, load  # noqa: E402
-from aipe_magnetics.common.quantity import Quantity  # noqa: E402
-from aipe_magnetics.data.records import MagneticRecord, validate_catalogue  # noqa: E402
+from aipe_magnetics_database import __version__  # noqa: E402
+from aipe_magnetics_database.common.jsonio import dump, load  # noqa: E402
+from aipe_magnetics_database.common.quantity import Quantity  # noqa: E402
+from aipe_magnetics_database.data.records import MagneticRecord, validate_catalogue  # noqa: E402
 
-CATALOG_DIR = ROOT / "src" / "aipe_magnetics" / "data" / "catalog"
-FITS_FILE = ROOT / "src" / "aipe_magnetics" / "data" / "derived" / "princeton-magnet-steinmetz-fits.json"
+CATALOG_DIR = ROOT / "src" / "aipe_magnetics_database" / "data" / "catalog"
+FITS_FILE = ROOT / "src" / "aipe_magnetics_database" / "data" / "derived" / "princeton-magnet-steinmetz-fits.json"
 CREATED = "2026-10-19T00:00:00Z"  # authoring date of these transcriptions (not a measurement date)
 
 
@@ -66,7 +66,7 @@ EV_AIPE_FIT = evidence(
     "Classical Steinmetz parameter sets fitted by ordinary least squares in log space on sinusoidal, zero-DC-bias rows of the "
     "Princeton MagNet scalar databases, per measured temperature, 50-500 kHz, 10-300 mT. Fit metrics are stored with each set. "
     "These are AIPE-derived values, not manufacturer data.", license="NOASSERTION",
-    locator="src/aipe_magnetics/data/derived/princeton-magnet-steinmetz-fits.json")
+    locator="src/aipe_magnetics_database/data/derived/princeton-magnet-steinmetz-fits.json")
 
 TDK_N87_URL = "https://www.tdk-electronics.tdk.com/download/528882/71e02c7b9384de1331b3f625ce4b2123/pdf-n87.pdf"
 EV_TDK_N87 = evidence(
@@ -323,7 +323,7 @@ def material_records(fits: dict[str, Any]) -> list[dict[str, Any]]:
             "evidence_refs": [e["id"] for e in ev], "evidence": ev,
             "provenance": {"created_at": CREATED, "activity": "transcribed from cited sources and derived fits by tools/build_catalog.py",
                            "tool": {"id": "aipe.magnetics", "version": __version__}, "inputs": [e["id"] for e in ev],
-                           "normalization": "all quantities converted to SI by aipe_magnetics.common.units with original units retained"},
+                           "normalization": "all quantities converted to SI by aipe_magnetics_database.common.units with original units retained"},
             "quality": {"status": "normalized", "flags": [] if grade == "N87" or grade in FERROXCUBE_DATASHEETS else ["datasheet_parameters_missing"],
                         "notes": ["review_status unreviewed: awaiting owner review of the transcriptions"]},
             # 'power' only where a transcribed application statement says so (N87 datasheet 'Preferred application: Power

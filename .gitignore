@@ -9,7 +9,11 @@ htmlcov/
 build/
 dist/
 data/derived/*.json
-reports/
+/reports/
 .aipe-cache/
 .mypy_cache/
 .ruff_cache/
+
+# large regenerated table sidecars (aipe-magnetics-db refresh)
+data/normalized/*/tables-local/
+.aipe-cache/
