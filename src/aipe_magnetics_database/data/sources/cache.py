@@ -292,7 +292,7 @@ class LocalCache:
         env.setdefault("GIT_ASKPASS", "")
         try:
             completed = subprocess.run([git, *args], cwd=None if cwd is None else str(cwd), capture_output=True, text=True,
-                                       timeout=timeout, env=env, check=False)
+                                       encoding="utf-8", errors="replace", timeout=timeout, env=env, check=False)
         except FileNotFoundError:
             raise UnsupportedOperationError("git is required for pinned checkouts but was not found on PATH",
                                             details={"git": git}) from None

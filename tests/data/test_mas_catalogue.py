@@ -56,7 +56,7 @@ def test_core_parts_carry_no_effective_parameters():
 
 
 def _git_show(path: str) -> str | None:
-    proc = subprocess.run(["git", "show", f"{FIRST_IMPORT_COMMIT}:{path}"], capture_output=True, text=True, cwd=ROOT)
+    proc = subprocess.run(["git", "show", f"{FIRST_IMPORT_COMMIT}:{path}"], capture_output=True, text=True, encoding="utf-8", cwd=ROOT)
     return proc.stdout if proc.returncode == 0 else None
 
 
