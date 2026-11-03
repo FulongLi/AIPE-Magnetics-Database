@@ -6,7 +6,6 @@ import math
 from pathlib import Path
 
 import pytest
-from scipy.integrate import quad
 
 from aipe_magnetics_database.common.jsonio import load
 from aipe_magnetics_database.data.catalog import Catalog
@@ -67,7 +66,8 @@ def test_derived_fits_reproduce_princeton_published_constants_for_n87_and_3c90()
         assert fit["alpha"] == pytest.approx(alpha_pub, rel=2e-4)
         assert fit["beta"] == pytest.approx(beta_pub, rel=2e-4)
         a, b = fit["alpha"], fit["beta"]
-        integral = quad(lambda th: abs(math.cos(th)) ** a, 0, 2 * math.pi, points=[math.pi / 2, math.pi, 3 * math.pi / 2])[0]
+        # closed form of the integral of |cos(theta)|^alpha over one period (no scipy in the data-only package)
+        integral = 2 * math.sqrt(math.pi) * math.gamma((a + 1) / 2) / math.gamma(a / 2 + 1)
         k_i = fit["k_W_per_m3"] / ((2 * math.pi) ** (a - 1) * integral * 2 ** (b - a))
         assert k_i == pytest.approx(k_i_pub, rel=5e-3)
         assert document["source"]["files"][material]["sha256"]
