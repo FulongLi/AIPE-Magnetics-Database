@@ -33,10 +33,7 @@ from aipe_magnetics_database.data.sources.paderborn_materialdatabase import Pade
 from aipe_magnetics_database.data.sources.princeton_magnet import PrincetonMagnetAdapter
 from aipe_magnetics_database.data.sources.princeton_magnet_db import (
     MagnetDatabase,
-    SteinmetzFit,
     find_database_files,
-    fit_steinmetz,
-    fit_steinmetz_by_temperature,
     read_magnet_database,
 )
 
@@ -67,7 +64,7 @@ def get_adapter(source_id: str, **kwargs: object) -> SourceAdapter:
 __all__ = [
     "ADAPTERS", "CACHE_ENV_VAR", "DEFAULT_CACHE_DIRNAME", "LICENSE_ACTIONS", "SOURCES_EXTENSION", "TABLE_LAYOUT_VERSION", "UNPINNED_FLAG",
     "DownloadNotAllowedError", "ExtractedData", "LocalCache", "MagnetChallenge2Adapter", "MagnetDatabase", "MagnetHubAdapter",
-    "PaderbornMaterialDatabaseAdapter", "PinStatus", "PrincetonMagnetAdapter", "SourceAdapter", "SourceDescriptor", "SourceItem", "SteinmetzFit",
-    "TableData", "TableDescription", "TableMeta", "TableStore", "descriptors", "find_database_files", "fit_steinmetz",
-    "fit_steinmetz_by_temperature", "get_adapter", "read_magnet_database",
+    "PaderbornMaterialDatabaseAdapter", "PinStatus", "PrincetonMagnetAdapter", "SourceAdapter", "SourceDescriptor", "SourceItem",
+    "TableData", "TableDescription", "TableMeta", "TableStore", "descriptors", "find_database_files",
+    "get_adapter", "read_magnet_database",
 ]

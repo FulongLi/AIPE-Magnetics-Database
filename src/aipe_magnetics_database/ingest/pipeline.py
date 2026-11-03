@@ -160,7 +160,7 @@ def source_catalogue_markdown(report: dict[str, Any]) -> str:
         lines.append(f"| {s['title']} (`{s['id']}`) | {s['priority']} | {s['status']} | {version} | {s['license']} | {records} | {rows} | {note} |")
     c = report["canonical"]
     lines += ["", "## Totals", "",
-              f"- Source records: " + ", ".join(f"{k} {v:,}" for k, v in report["totals_source_records"].items()),
+              "- Source records: " + ", ".join(f"{k} {v:,}" for k, v in report["totals_source_records"].items()),
               f"- Table rows (all source records): {report['table_rows_source']:,}",
               f"- Canonical materials: {c['canonical_materials']:,} (from {c['source_material_records']:,} source material records; "
               f"{c['canonical_materials_with_multiple_sources']:,} combine several sources)",
