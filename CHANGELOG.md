@@ -1,6 +1,16 @@
 # Changelog
 
 
+## Unreleased
+
+- **AIPE Magnetics Data Explorer**: read-only GitHub Pages site (`site/`, built by `tools/build_site.py`, deployed by
+  `.github/workflows/pages.yml`) with material search and detail pages, measurement browsing with interactive plots
+  and row filters, the core catalogue, and source / licence / data-class information. It reads the committed store
+  through `MagneticDatabase`; tables over 5,000 rows are published as labelled samples with a link to the full data.
+  No change to records, schema, importers or the Python API, CLI and MCP server.
+- README shortened to an introduction for people (web explorer) and agents (plugins, MCP, Python/CLI); install
+  commands for the Claude Code and Codex plugins verified against the current CLIs.
+
 ## 0.3.0
 
 Repository separation and open-data integration. The engineering half of 0.2.0 (models, design, simulation,
