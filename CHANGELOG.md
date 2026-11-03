@@ -8,6 +8,11 @@
   and row filters, the core catalogue, and source / licence / data-class information. It reads the committed store
   through `MagneticDatabase`; tables over 5,000 rows are published as labelled samples with a link to the full data.
   No change to records, schema, importers or the Python API, CLI and MCP server.
+- Explorer restyled to the aipel.co.uk visual language: AIPE logo and favicon, Bricolage Grotesque and Inter type
+  (Google Fonts, as on aipel.co.uk), pill navigation and buttons, aipel.co.uk-style hero search, stat strip, cards,
+  status badges and footer, and an AIPE-toned chart palette checked for colour-vision-deficiency separation. Light
+  only, like aipel.co.uk. Headers, labels and badges that carry symbols, units or grades keep their original case.
+  Long file paths now wrap, so material pages no longer scroll sideways on phones.
 - README shortened to an introduction for people (web explorer) and agents (plugins, MCP, Python/CLI); install
   commands for the Claude Code and Codex plugins verified against the current CLIs.
 
