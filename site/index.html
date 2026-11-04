@@ -6,21 +6,27 @@
   <title>AIPE Magnetics Data Explorer</title>
   <meta name="description" content="Read-only explorer for the AIPE Magnetics Database: soft-magnetic materials, core geometries and measured data with provenance and licences.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="assets/app.css">
 </head>
 <body>
   <a class="skip" href="#app">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="#/" aria-label="AIPE Magnetics Data Explorer, overview">
-      <span class="brand-mark" aria-hidden="true">AIPE</span>
-      <span class="brand-text">Magnetics Data Explorer</span>
-    </a>
-    <nav class="site-nav" aria-label="Sections">
-      <a href="#/" data-nav="overview">Overview</a>
-      <a href="#/materials" data-nav="materials">Materials</a>
-      <a href="#/measurements" data-nav="measurements">Measurements</a>
-      <a href="#/cores" data-nav="cores">Core catalogue</a>
-    </nav>
+    <div class="header-inner">
+      <a class="brand" href="#/" aria-label="AIPE Magnetics Data Explorer, overview">
+        <img class="brand-logo" src="assets/aipe-logo.svg" alt="AIPE" width="84" height="30">
+        <span class="brand-text">Magnetics Data Explorer</span>
+      </a>
+      <nav class="site-nav" aria-label="Sections">
+        <a href="#/" data-nav="overview">Overview</a>
+        <a href="#/materials" data-nav="materials">Materials</a>
+        <a href="#/measurements" data-nav="measurements">Measurements</a>
+        <a href="#/cores" data-nav="cores">Core catalogue</a>
+      </nav>
+      <a class="btn-pill header-cta" href="https://aipel.co.uk/hub/data/">AIPE Hub</a>
+    </div>
   </header>
   <main id="app" tabindex="-1">
     <noscript><p class="notice">This explorer needs JavaScript. The data are also available as JSON/JSONL in the
@@ -28,11 +34,36 @@
     <p class="loading">Loading…</p>
   </main>
   <footer class="site-footer">
-    <p>Read-only view of the <a href="https://github.com/FulongLi/AIPE-Magnetics-Database">AIPE Magnetics Database</a>.
-      Third-party values are unreviewed; each record keeps its source licence. <span id="build-info"></span></p>
-    <p>Programmatic access: Python API, CLI and MCP server — see the
-      <a href="https://github.com/FulongLi/AIPE-Magnetics-Database#readme">README</a>.
-      Loss models and design: <a href="https://github.com/FulongLi/AIPE-Magnetics-Design">AIPE-Magnetics-Design</a>.</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/aipe-logo.svg" alt="AIPE" width="70" height="25">
+        <p>Read-only view of the AIPE Magnetics Database. Third-party values are unreviewed; each record keeps its source
+          licence.</p>
+        <p class="small" id="build-info"></p>
+      </div>
+      <div class="footer-col">
+        <h2>Explorer</h2>
+        <a href="#/materials">Materials</a>
+        <a href="#/measurements">Measurements</a>
+        <a href="#/cores">Core catalogue</a>
+        <a href="#sources">Data sources</a>
+      </div>
+      <div class="footer-col">
+        <h2>Database</h2>
+        <a href="https://github.com/FulongLi/AIPE-Magnetics-Database">GitHub repository</a>
+        <a href="https://github.com/FulongLi/AIPE-Magnetics-Database#readme">Python, CLI and MCP</a>
+        <a href="https://github.com/FulongLi/AIPE-Magnetics-Database/blob/main/LICENSING.md">Licensing</a>
+        <a href="https://github.com/FulongLi/AIPE-Magnetics-Design">AIPE-Magnetics-Design</a>
+      </div>
+      <div class="footer-col">
+        <h2>AIPE</h2>
+        <a href="https://aipel.co.uk/">aipel.co.uk</a>
+        <a href="https://aipel.co.uk/hub/data/">Data &amp; Models</a>
+        <a href="https://aipel.co.uk/database/magnetics/">Magnetic Database</a>
+        <a href="https://aipel.co.uk/academy/">Academy</a>
+      </div>
+    </div>
+    <p class="footer-legal">AIPE Labs, Spirit Connect Ltd.</p>
   </footer>
   <script src="assets/plot.js"></script>
   <script src="assets/app.js"></script>

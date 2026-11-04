@@ -132,7 +132,7 @@
         s.pts.forEach(function (p) { visiblePts.push({ px: sx(p[0]), py: sy(p[1]), p: p, s: s.s }); });
       });
       var hl = el("circle", { r: 6, fill: "none", stroke: "currentColor", "stroke-width": 2, visibility: "hidden" }, svg);
-      hl.style.color = "var(--ink)";
+      hl.style.color = "var(--fg)";
       note.textContent = (spec.note ? spec.note + " " : "") + (dropped ? dropped + " non-positive values are hidden on logarithmic axes." : "");
 
       function move(ev) {

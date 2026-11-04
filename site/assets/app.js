@@ -170,12 +170,15 @@
         var integrated = sources.filter(function (x) { return x.status === "integrated"; });
         var other = sources.filter(function (x) { return x.status !== "integrated"; });
         app.innerHTML =
-          '<h1>AIPE Magnetics Data Explorer</h1>' +
+          '<section class="hero"><p class="eyebrow">AIPE Hub · Magnetics data</p>' +
+          '<h1 class="display">Magnetics Data Explorer</h1>' +
           '<p class="lead">A read-only view of the AIPE Magnetics Database: soft-magnetic material properties, core geometries and ' +
           'measured core loss, permeability, permittivity and B-H data for power electronics. Every value keeps its source, ' +
           'licence and data class. Records are standardised in AIPE Magnetic Data Schema v' + esc(s.schema_version) + ' in SI units.</p>' +
-          '<form class="search-row" id="qs" role="search"><input type="search" name="q" placeholder="Search materials, e.g. N87, 3C90, Kool Mu" aria-label="Search materials">' +
-          '<button type="submit">Search materials</button></form>' +
+          '<form class="search-pill" id="qs" role="search"><input type="search" name="q" placeholder="Search materials, e.g. N87, 3C90, MPP" aria-label="Search materials">' +
+          '<button type="submit">Search</button></form>' +
+          '<p class="try"><span>Try:</span>' + ["N87", "3C90", "3F4", "MPP", "Nanoperm", "Vitroperm"].map(function (q) {
+            return '<a class="chip" href="#/materials?q=' + encodeURIComponent(q) + '">' + esc(q) + "</a>"; }).join("") + "</p></section>" +
           '<div class="stats">' +
           stat("#/materials", int(c.canonical_materials), "Materials", int(c.source_material_records) + " source records consolidated; " + int(c.canonical_materials_with_multiple_sources) + " combine several sources") +
           stat("#/cores", int(c.core_shapes + c.core_parts), "Core geometries", int(c.core_shapes) + " standard shapes, " + int(c.core_parts) + " manufacturer parts") +
@@ -223,7 +226,7 @@
     });
   }
   function stat(href, n, label, sub) {
-    return '<a class="stat" href="' + href + '"><div class="num">' + esc(n) + '</div><div class="label">' + esc(label) + '</div><div class="sub">' + esc(sub) + "</div></a>";
+    return '<a class="stat" href="' + href + '"><div class="label">' + esc(label) + '</div><div class="num">' + esc(n) + '</div><div class="sub">' + esc(sub) + "</div></a>";
   }
 
   // -- materials list ----------------------------------------------------------------------------------------

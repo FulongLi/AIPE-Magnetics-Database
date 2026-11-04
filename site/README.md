@@ -1,9 +1,16 @@
 # AIPE Magnetics Data Explorer (GitHub Pages)
 
 Static, read-only frontend for <https://fulongli.github.io/AIPE-Magnetics-Database/>. Plain HTML, CSS and JavaScript:
-no framework, no build step, no third-party requests. `assets/plot.js` is a small SVG plotter; `assets/app.js` holds
+no framework, no build step, no third-party scripts. `assets/plot.js` is a small SVG plotter; `assets/app.js` holds
 the four sections (overview, materials, measurements, core catalogue) with hash routing, so the site works under the
 `/AIPE-Magnetics-Database/` sub-path.
+
+The look follows [aipel.co.uk](https://aipel.co.uk/): its colour tokens, the AIPE logo and favicon
+(`assets/aipe-logo.svg`, `assets/favicon.svg`, copied from aipel.co.uk), and Bricolage Grotesque / Inter loaded from
+Google Fonts as on aipel.co.uk (system fonts are the fallback). The chart colours (`--series-1` to `--series-8` in
+`assets/app.css`) are an AIPE-toned categorical palette checked for colour-vision-deficiency separation; keep their
+order when editing. Table headers, filter labels and general badges are never upper-cased, because they carry symbols,
+units and grades (μi, mT, kHz, 3C90).
 
 The data are generated, never edited by hand. `tools/build_site.py` reads the committed store through
 `aipe_magnetics_database.store.MagneticDatabase` (the same store as the API, CLI and MCP server) and writes `_site/`:
