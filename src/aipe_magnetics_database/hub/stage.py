@@ -157,8 +157,9 @@ def _normalized(root: Path, source: dict[str, Any], stage: Stage, *, require_loc
     rels = ["index.json", *[f for g in index["shards"].values() for f in g], *index["datasets"], *index.get("tables", [])]
     rels += [n for n in LICENSE_NAMES if (base / n).is_file()]
     expected = _table_checksums(base, index)
+    expected.update(_waveform_checksums(base, index))
     missing_local: list[str] = []
-    for rel in index.get("tables_local", []):
+    for rel in [*index.get("tables_local", []), *index.get("waveforms_local", [])]:
         if (base / rel).is_file():
             rels.append(rel)
         else:
@@ -178,6 +179,16 @@ def _dataset_citation(root: Path, source: dict[str, Any], index: dict[str, Any])
         if props.get("citation"):
             return props["citation"]
     return None
+
+
+def _waveform_checksums(base: Path, index: dict[str, Any]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for rel in index["shards"].get("waveforms", []):
+        for line in (base / rel).read_text(encoding="utf-8").splitlines():
+            for art in json.loads(line).get("artifacts", []):
+                if art.get("role") == "waveform_data" and art["uri"].startswith("../"):
+                    out[art["uri"][3:]] = art["sha256"]
+    return out
 
 
 def _table_checksums(base: Path, index: dict[str, Any]) -> dict[str, str]:

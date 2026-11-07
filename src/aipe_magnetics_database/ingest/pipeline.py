@@ -26,7 +26,7 @@ ImporterFn = Callable[..., ImportSummary]
 
 
 def importers() -> dict[str, tuple[ImporterFn, str]]:
-    from aipe_magnetics_database.ingest.sources import mas, openlab, paderborn, princeton, zenodo
+    from aipe_magnetics_database.ingest.sources import magnet_scope, mas, openlab, paderborn, princeton, zenodo
     return {
         "openmagnetics_mas": (mas.run, "mas"),
         "princeton_magnet": (princeton.run, "princeton-magnet"),
@@ -34,6 +34,7 @@ def importers() -> dict[str, tuple[ImporterFn, str]]:
         "zenodo_8292861_hefmag": (zenodo.run_hefmag, "hefmag"),
         "zenodo_21626116_smc_ferrite_triangular": (zenodo.run_triangular, "zenodo-smc-ferrite-triangular"),
         **openlab.IMPORTERS,
+        magnet_scope.SOURCE_ID: (magnet_scope.run, magnet_scope.DIRECTORY),
     }
 
 

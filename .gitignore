@@ -16,6 +16,7 @@ data/derived/*.json
 
 # large regenerated table sidecars (aipe-magnetics-db refresh)
 data/normalized/*/tables-local/
+data/normalized/*/waveforms-local/
 .aipe-cache/
 
 # GitHub Pages build output (tools/build_site.py)

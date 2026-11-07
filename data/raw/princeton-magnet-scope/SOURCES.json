@@ -1,0 +1,66 @@
+{
+  "source_id": "princeton_magnet_scope",
+  "title": "Princeton MagNet raw oscilloscope captures (N87 R34, data processing example)",
+  "upstream": "https://github.com/PrincetonUniversity/magnet",
+  "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
+  "license": "MIT",
+  "redistribution": "permitted (MIT; cite the MagNet TPEL papers)",
+  "raw_policy": "retrieved on demand at the pinned version and verified by SHA-256; not committed",
+  "files": [
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/25/0_1_1_Data_Curr.csv",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/25/0_1_1_Data_Curr.csv",
+      "sha256": "c613cceeb39f458d56ef9643fdad1416bc859e7f15d7f31289be58f21b7c4ba2",
+      "size": 15203426
+    },
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/25/0_1_1_Data_Time.csv",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/25/0_1_1_Data_Time.csv",
+      "sha256": "61af372393c0c935fbe42f2befa7c6de37d852fa123d3c9edfcaf2a3e2cd5219",
+      "size": 11909691
+    },
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/25/0_1_1_Data_Volt.csv",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/25/0_1_1_Data_Volt.csv",
+      "sha256": "c938b72923c656dd0b11128d8f9181251e85a7ad83eabece40e4b9791ef4ad13",
+      "size": 5913012
+    },
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/25/0_1_1_Parameters.csv",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/25/0_1_1_Parameters.csv",
+      "sha256": "824422ac58c2cb141380dc2db3e1ffb78a3b24522fef3abe52fb46c460bb5596",
+      "size": 3468
+    },
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/70/1_2_6_Data_Curr.csv",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/70/1_2_6_Data_Curr.csv",
+      "sha256": "32c2c2c6b496180c42c960644c9abbf7257134ca6f3351769212f17801b974e8",
+      "size": 12001402
+    },
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/70/1_2_6_Data_Time.csv",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/70/1_2_6_Data_Time.csv",
+      "sha256": "eb1a013caced6dad5a008ac5c3eab02327a7974653e2f4a991a312330a133872",
+      "size": 11919692
+    },
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/70/1_2_6_Data_Volt.csv",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/70/1_2_6_Data_Volt.csv",
+      "sha256": "1c2338dc25f0df06dc2a892128e26bf74da5278ac2cf974b8fbf60e906eb8147",
+      "size": 5748830
+    },
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/70/1_2_6_Parameters.csv",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/70/1_2_6_Parameters.csv",
+      "sha256": "2a46daf04bb0713a40078ab4d878da5b963576da1677760dd19e8a241b20e954",
+      "size": 3279
+    },
+    {
+      "path": "scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/Test_Info.xlsx",
+      "url": "https://raw.githubusercontent.com/PrincetonUniversity/magnet/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/scripts/data_processing_files_and_example/N87/R34.0X20.5X12.5/Dataset1/Test_Info.xlsx",
+      "sha256": "209e434c89b2a58d00d9013089ae8c24a0ca89bd92b9d41abaf5627a3515ded6",
+      "size": 10440
+    }
+  ],
+  "importer": "aipe_magnetics_database.ingest.sources.magnet_scope"
+}

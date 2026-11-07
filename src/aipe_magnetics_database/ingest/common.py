@@ -352,6 +352,8 @@ def finish_source(writer: SourceWriter, summary: ImportSummary, shard_files: dic
              "shards": {k: v for k, v in shard_files.items() if v}, "datasets": dataset_files,
              "tables": sorted(p.relative_to(writer.root).as_posix() for p in (writer.root / "tables").glob("*.jsonl")),
              "tables_local": sorted(p.relative_to(writer.root).as_posix() for p in (writer.root / "tables-local").glob("*.jsonl")),
+             **({"waveforms_local": sorted(p.relative_to(writer.root).as_posix() for p in (writer.root / "waveforms-local").glob("*.h5"))}
+                if (writer.root / "waveforms-local").is_dir() else {}),
              "record_counts": dict(sorted(counts.items())), "table_rows": dict(sorted(summary.table_rows.items())),
              "review_state": "third_party_unreviewed"}
     writer.json("index.json", index)

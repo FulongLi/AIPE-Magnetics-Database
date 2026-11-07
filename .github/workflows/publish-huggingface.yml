@@ -87,9 +87,14 @@ jobs:
           else
             aipe-magnetics-db hub restore-tables --allow-download
           fi
-      - name: Regenerate large table sidecars whose pinned inputs are downloadable (SHA-256 verified)
-        if: env.SOURCES == '' || contains(env.SOURCES, 'zenodo_7368936_cwh_n87')
-        run: aipe-magnetics-db refresh --source zenodo_7368936_cwh_n87 --allow-download && test -z "$(git status --porcelain -- data/normalized data/raw)"
+      - name: Regenerate large sidecars (tables-local, waveforms-local) whose pinned inputs are downloadable (SHA-256 verified)
+        run: |
+          set -e
+          for s in zenodo_7368936_cwh_n87 princeton_magnet_scope; do
+            if [ -z "$SOURCES" ] || echo "$SOURCES" | grep -qw "$s"; then aipe-magnetics-db refresh --source "$s" --allow-download; fi
+          done
+          git status --porcelain -- data/normalized data/raw
+          test -z "$(git status --porcelain -- data/normalized data/raw)"
       - name: Validate every record
         run: aipe-magnetics-db validate
       - name: Build the release tree

@@ -140,10 +140,17 @@ SOURCES: list[dict[str, Any]] = [
     {"id": "femm_material_library", "title": "FEMM material library (B-H curves of steels and magnets)", "priority": "C", "status": "reference",
      "url": "https://www.femm.info/", "version": "-", "license": "AFPL v8", "redistribution": "not permitted for commercial distribution",
      "reason": "Aladdin Free Public Licence restricts redistribution; curves of unclear origin."},
-    {"id": "princeton_magnet_tutorial_and_scope_data", "title": "Princeton MagNet repository tutorial datasets and raw N87 scope CSVs", "priority": "A",
-     "status": "reference", "url": "https://github.com/PrincetonUniversity/magnet", "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a", "license": "MIT",
-     "redistribution": "permitted (MIT)", "reason": "tutorial/Dataset/*.json (11 MB) and ~63 MB of raw N87 oscilloscope CSVs exist in the pinned "
-                                                   "repository but are not yet imported; candidate waveform source for the next cycle."},
+    {"id": "princeton_magnet_scope", "retrieved_at": "2026-11-08", "title": "Princeton MagNet raw oscilloscope captures (N87 R34, data processing example)",
+     "priority": "A", "status": "integrated", "directory": "princeton-magnet-scope", "url": "https://github.com/PrincetonUniversity/magnet",
+     "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a", "license": "MIT", "redistribution": "permitted (MIT; cite the MagNet TPEL papers)",
+     "importer": "aipe_magnetics_database.ingest.sources.magnet_scope",
+     "notes": "200 unprocessed v(t) / i(t) captures (10,000 samples at 8 ns) at 25 degC (sinusoidal) and 70 degC (triangular, Hdc 15 A/m) "
+              "with commanded set points, as HDF5 (aipe.magnetics.waveforms/0.2) in waveforms-local/ - on Hugging Face, not in Git."},
+    {"id": "princeton_magnet_tutorial_datasets", "title": "Princeton MagNet tutorial datasets (tutorial/Dataset/Dataset_sine.json, Dataset_tri.json)",
+     "priority": "B", "status": "reference", "url": "https://github.com/PrincetonUniversity/magnet/tree/8a6892e91ac622e42f8b9182a6dfe9094ceea97a/tutorial",
+     "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a", "license": "MIT", "redistribution": "permitted (MIT)",
+     "reason": "Dataset_sine.json (3,495 single-cycle B/H sequences) names no material; Dataset_tri.json (9,754 N87 R22 rows) states no units "
+               "for Flux_Density / Power_Loss. Not imported rather than guessed; both are processed MagNet data also covered by princeton_magnet."},
     {"id": "amped_pitt_netl", "title": "AMPED / University of Pittsburgh / DOE-NETL high-frequency magnetics data", "priority": "B",
      "status": "unavailable", "url": "https://edx.netl.doe.gov/", "version": "-", "license": "-", "redistribution": "-",
      "reason": "No public tabular dataset with a verifiable licence was found (NETL EDX, OSTI, Zenodo searched); only two datasheet PDFs "

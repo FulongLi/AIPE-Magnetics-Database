@@ -132,3 +132,51 @@ def test_new_materials_consolidate_with_mas():
     assert members == {"openmagnetics_mas", "nabih_magneto"}
     n87 = {m["source_id"] for m in canon["material.canonical-tdk-n87"]["extensions"]["aipe.canonical"]["members"]}
     assert {"guillod_n87_dielectric", "zenodo_7368936_cwh_n87", "princeton_magnet"} <= n87
+
+
+def test_magnet_scope_importer_on_synthetic_captures(tmp_path: Path, monkeypatch):
+    pytest.importorskip("h5py")
+    openpyxl = pytest.importorskip("openpyxl")
+    import hashlib
+
+    import numpy as np
+
+    from aipe_magnetics_database.data.hdf5 import WaveformStore
+    from aipe_magnetics_database.ingest.sources import magnet_scope as ms
+
+    n = 300
+    t = ",".join("0" if k == 0 else f"{k * 8e-9:.2E}" for k in range(n))
+    raw = tmp_path / "raw" / ms.BASE
+    files = {}
+    for run in ms.RUNS:
+        volt = "\r\n".join(",".join(f"{np.sin(k / 7 + r):.3f}" for k in range(n)) for r in range(3)) + "\r\n"
+        curr = "\r\n".join(",".join(f"{0.01 * np.cos(k / 7 + r):.5f}" for k in range(n)) for r in range(3)) + "\r\n" + ("," * (n - 1) + "\r\n") * 4
+        files[f"{run}_Data_Volt.csv"] = volt.encode()
+        files[f"{run}_Data_Curr.csv"] = curr.encode()
+        files[f"{run}_Data_Time.csv"] = (("\r\n".join([t] * 3)) + "\r\n" + ("," * (n - 1) + "\r\n") * 2).encode()
+        files[f"{run}_Parameters.csv"] = b"0,nan,nan,50118.72336,0.1\r\n15,0,0.6,79432.82347,0.05\r\n0,nan,nan,1e5,0.2\r\n"
+    wb = openpyxl.Workbook()
+    for row in (["Parameter", "Value", "Comments"], ["Material", "N87"], ["Shape", "R34.0X20.5X12.5"], ["N1", 5], ["N2", 5],
+                ["Le (m)", 0.08206], ["Ae (m2)", 8.26e-05], ["Ve (m3)", 6.778e-06], ["Acquisition info", "synthetic"]):
+        wb.active.append(row)
+    buf = tmp_path / "ti.xlsx"
+    wb.save(buf)
+    files["Test_Info.xlsx"] = buf.read_bytes()
+    for name, data in files.items():
+        (raw / name).parent.mkdir(parents=True, exist_ok=True)
+        (raw / name).write_bytes(data)
+    monkeypatch.setattr(ms, "_FILES", {k: (hashlib.sha256(v).hexdigest(), len(v)) for k, v in files.items()})
+    summary = ms.run(tmp_path / "out", local_dir=tmp_path / "raw")
+    assert summary.counts["waveform_dataset"] == 2 and sum(e["count"] for e in summary.exclusions) == 2 * (4 + 2)
+    h5 = sorted((tmp_path / "out" / ms.DIRECTORY / "waveforms-local").glob("*.h5"))
+    data = WaveformStore().read(h5[0])
+    expected = np.array([[float(x) for x in line.split(",")] for line in files["25/0_1_1_Data_Volt.csv"].decode().split("\r\n") if line])
+    assert np.array_equal(data.arrays["voltage"], expected) and data.attrs["timebase"] == "uniform_absolute"
+    assert list(data.conditions["temperature"]) == [298.15] * 3 and np.isnan(data.conditions["dc_bias_field"]).sum() == 0
+    # a time column that is not the 8 ns grid is rejected, not reinterpreted
+    bad = dict(files)
+    bad["25/0_1_1_Data_Time.csv"] = files["25/0_1_1_Data_Time.csv"].replace(b"8.00E-09", b"9.00E-09", 1)
+    (raw / "25/0_1_1_Data_Time.csv").write_bytes(bad["25/0_1_1_Data_Time.csv"])
+    monkeypatch.setattr(ms, "_FILES", {k: (hashlib.sha256(v).hexdigest(), len(v)) for k, v in bad.items()})
+    with pytest.raises(DataIntegrityError, match="uniform"):
+        ms.run(tmp_path / "out2", local_dir=tmp_path / "raw")

@@ -29,7 +29,8 @@ do not edit by hand. Counts are records written to `data/normalized/` (source re
 | Loss of GO / NO steel cores vs frequency at 1 T (Zenodo 16281115) (`zenodo_16281115_shifted_go_steel`) | C | reference | - | CC-BY-4.0 | - | - | Electrical steel, DC-505 Hz; deferred, low relevance. |
 | Punched M270-35A strips, specific loss at 50 Hz (RODBUK) (`rodbuk_m270_35_punched`) | C | reference | - | CC0-1.0 | - | - | Motor-steel data; deferred, low relevance. |
 | FEMM material library (B-H curves of steels and magnets) (`femm_material_library`) | C | reference | - | AFPL v8 | - | - | Aladdin Free Public Licence restricts redistribution; curves of unclear origin. |
-| Princeton MagNet repository tutorial datasets and raw N87 scope CSVs (`princeton_magnet_tutorial_and_scope_data`) | A | reference | 8a6892e91ac6 | MIT | - | - | tutorial/Dataset/*.json (11 MB) and ~63 MB of raw N87 oscilloscope CSVs exist in the pinned repository but are not yet imported; candidate waveform source for the next cycle. |
+| Princeton MagNet raw oscilloscope captures (N87 R34, data processing example) (`princeton_magnet_scope`) | A | integrated | 8a6892e91ac6 | MIT | dataset 1, magnetic_material 1, waveform_dataset 2 | 2,000,200 | permitted (MIT; cite the MagNet TPEL papers) |
+| Princeton MagNet tutorial datasets (tutorial/Dataset/Dataset_sine.json, Dataset_tri.json) (`princeton_magnet_tutorial_datasets`) | B | reference | 8a6892e91ac6 | MIT | - | - | Dataset_sine.json (3,495 single-cycle B/H sequences) names no material; Dataset_tri.json (9,754 N87 R22 rows) states no units for Flux_Density / Power_Loss. Not imported rather than guessed; both are processed MagNet data also covered by princeton_magnet. |
 | AMPED / University of Pittsburgh / DOE-NETL high-frequency magnetics data (`amped_pitt_netl`) | B | unavailable | - | - | - | - | No public tabular dataset with a verifiable licence was found (NETL EDX, OSTI, Zenodo searched); only two datasheet PDFs with unverified terms. |
 | TDK / EPCOS public engineering data (`manufacturer_tdk`) | C | reference | - | proprietary | - | - | Magnetic Design Tool and datasheets may not be redistributed; 74 TDK materials reach the database through MAS. |
 | Ferroxcube public engineering data (`manufacturer_ferroxcube`) | C | reference | - | proprietary | - | - | Steinmetz coefficient spreadsheet and SFDT data are for personal use; 26 materials via MAS. |
@@ -46,8 +47,8 @@ do not edit by hand. Counts are records written to `data/normalized/` (source re
 
 ## Totals
 
-- Source records: core_geometry 21,237, dataset 12, magnetic_material 1,200, measurement 1,764, model_metadata 664
-- Table rows (all source records): 2,348,037
-- Canonical materials: 1,164 (from 1,210 source material records; 24 combine several sources)
+- Source records: core_geometry 21,237, dataset 13, magnetic_material 1,201, measurement 1,764, model_metadata 664, waveform_dataset 2
+- Table rows (all source records): 4,348,237
+- Canonical materials: 1,164 (from 1,211 source material records; 24 combine several sources)
 - Measurement tables: 1,764 source records, 1,749 independent, 4 duplicates, 11 derived views
 - Table rows in independent records: 2,262,336, of which experimental measurements: 621,066
