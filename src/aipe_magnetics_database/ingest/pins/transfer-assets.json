@@ -1,0 +1,15 @@
+{
+  "note": "Pinned transfer assets for table sidecars whose upstream input is no longer retrievable; see aipe_magnetics_database.hub.transfer.",
+  "assets": [
+    {
+      "id": "mas-tables-local-c33ccfec",
+      "source_id": "openmagnetics_mas",
+      "license": "Apache-2.0",
+      "url": "https://github.com/FulongLi/AIPE-Magnetics-Database/releases/download/transfer-mas-tables-local-c33ccfec/mas-tables-local-c33ccfec.tar.gz",
+      "sha256": "d21b18cae143fe147743cc265c2d4a5567330b56dfed0228bb6c4cab5b5f2b96",
+      "size": 16454167,
+      "extract_to": "data/normalized/mas",
+      "reason": "81 B-H cycle tables (1,515,191 rows) generated on 2026-11-02 from MAS data/advanced_core_materials.ndjson at c33ccfec (sha256 0157ea8b...), whose Git LFS object GitHub no longer serves; every file is verified against the rows_sha256 of its committed measurement record."
+    }
+  ]
+}

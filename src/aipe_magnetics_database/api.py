@@ -19,8 +19,8 @@ from typing import Any, Iterable
 from aipe_magnetics_database.store import MagneticDatabase, open_database
 
 
-def _db(root: str | Path | None = None) -> MagneticDatabase:
-    return open_database(str(root) if root else None)
+def _db(root: str | Path | None = None, allow_download: bool | None = None) -> MagneticDatabase:
+    return open_database(str(root) if root else None, allow_download)
 
 
 def summary(*, root: str | Path | None = None) -> dict[str, Any]:
@@ -91,9 +91,13 @@ def find_measurements(*, material: str | None = None, quantity: str | None = Non
 
 
 def get_table(record_id: str, *, frequency: Any = None, temperature: Any = None, flux_density: Any = None, dc_bias: Any = None,
-              waveform: str | None = None, limit: int | None = None, root: str | Path | None = None) -> dict[str, Any]:
-    """The rows of a measurement table (original measured values in SI units), optionally filtered row by row."""
-    return _db(root).table(record_id, frequency=frequency, temperature=temperature, flux_density=flux_density, dc_bias=dc_bias,
+              waveform: str | None = None, limit: int | None = None, root: str | Path | None = None,
+              allow_download: bool | None = None) -> dict[str, Any]:
+    """The rows of a measurement table (original measured values in SI units), optionally filtered row by row.
+
+    Tables too large for the package are read from the published Hugging Face release (exact commit, SHA-256
+    verified, cached); that download happens only with ``allow_download=True`` or ``AIPE_MAGNETICS_ALLOW_DOWNLOAD=1``."""
+    return _db(root, allow_download).table(record_id, frequency=frequency, temperature=temperature, flux_density=flux_density, dc_bias=dc_bias,
                            waveform=waveform, limit=limit).to_json()
 
 
@@ -106,10 +110,20 @@ def provenance(record_id: str, *, root: str | Path | None = None) -> dict[str, A
     return _db(root).provenance(record_id)
 
 
-def export(record_ids: Iterable[str], path: str | Path, *, include_rows: bool = True, root: str | Path | None = None) -> dict[str, Any]:
+def export(record_ids: Iterable[str], path: str | Path, *, include_rows: bool = True, root: str | Path | None = None,
+           allow_download: bool | None = None) -> dict[str, Any]:
     """Write records as v0.2 JSONL (tables with their rows inlined)."""
-    return _db(root).export(record_ids, path, include_rows=include_rows)
+    return _db(root, allow_download).export(record_ids, path, include_rows=include_rows)
 
 
-__all__ = ["export", "find_measurements", "get_core", "get_material", "get_record", "get_table", "list_cores", "list_materials", "list_sources",
+def hub_release(*, root: str | Path | None = None) -> dict[str, Any]:
+    """The published Hugging Face release this data store points to (repository, exact commit, file count, URL)."""
+    hub = _db(root).hub
+    if hub is None:
+        return {"published": False, "repo_id": "FulongLi/AIPE-Magnetics-Dataset",
+                "note": "no release recorded in data/huggingface.json yet; all bundled data are available offline"}
+    return {"published": True} | hub.status()
+
+
+__all__ = ["export", "find_measurements", "get_core", "get_material", "get_record", "get_table", "hub_release", "list_cores", "list_materials", "list_sources",
            "material_properties", "provenance", "summary"]

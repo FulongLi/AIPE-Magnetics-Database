@@ -6,6 +6,11 @@ Status values
     ``reference``     metadata/reference entry only; redistribution is not permitted or not established - a
                       user-supplied-file adapter or a pointer is provided instead
     ``unavailable``   no verified public dataset / dead link
+
+Optional fields: ``retrieved_at`` (date the pinned inputs were retrieved), ``citation``, ``raw_unavailable``
+(``{upstream path: reason}`` for pinned originals that can no longer be retrieved; the Hugging Face stage records
+them instead of failing), ``hf_publish`` / ``hf_exclusion_reason`` (keep an integrated source out of the public
+dataset).
 """
 
 from __future__ import annotations
@@ -18,14 +23,18 @@ SOURCES: list[dict[str, Any]] = [
      "directory": None, "url": "https://github.com/FulongLi/AIPE-Magnetics-Database/tree/main/src/aipe_magnetics_database/data/catalog",
      "version": "0.2.0 catalogue", "license": "NOASSERTION", "redistribution": "values transcribed from manufacturer datasheets with locators",
      "notes": "11 materials (incl. 1 synthetic), 6 cores, 4 families, 4 manufacturers; Steinmetz sets fitted to MagNet are 'measurement_fit'."},
-    {"id": "openmagnetics_mas", "title": "OpenMagnetics / PSMA MAS", "priority": "A", "status": "integrated", "directory": "mas",
+    {"id": "openmagnetics_mas", "retrieved_at": "2026-11-02", "title": "OpenMagnetics / PSMA MAS", "priority": "A", "status": "integrated", "directory": "mas",
      "url": "https://github.com/Power-Supply-Manufacturers-Association/MAS", "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
      "license": "Apache-2.0", "redistribution": "permitted (Apache-2.0); most values originate from manufacturer datasheets whose own terms "
                                                  "are not covered by the MAS licence",
      "importer": "aipe_magnetics_database.ingest.sources.mas",
+     "raw_unavailable": {"data/advanced_core_materials.ndjson": "Git LFS object sha256 0157ea8b... is no longer served by GitHub for the pinned "
+                                                              "commit (LFS batch API: 'Object does not exist on the server', checked "
+                                                              "2026-11-07); its normalised records and the 81 B-H tables derived from it "
+                                                              "are preserved, the original file cannot be re-archived"},
      "notes": "core_materials, core_shapes, cores and the Git-LFS advanced_core_materials file; bobbins, wires and insulation materials "
               "are out of scope (winding components). MagNet-origin loss points are flagged duplicates of Princeton MagNet."},
-    {"id": "princeton_magnet", "title": "Princeton MagNet (packaged scalar databases)", "priority": "A", "status": "integrated",
+    {"id": "princeton_magnet", "retrieved_at": "2026-11-02", "title": "Princeton MagNet (packaged scalar databases)", "priority": "A", "status": "integrated",
      "directory": "princeton-magnet", "url": "https://github.com/PrincetonUniversity/magnet", "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
      "license": "MIT", "redistribution": "permitted (MIT; citation of the TPEL papers requested)",
      "importer": "aipe_magnetics_database.ingest.sources.princeton",
@@ -47,7 +56,7 @@ SOURCES: list[dict[str, Any]] = [
      "reason": "No licence; the MagNetX database is a 24.8 GB unlicensed Dropbox archive. The existing read-only adapter "
                "(MagnetChallenge2Adapter) imports user-supplied files locally; nothing is downloaded or committed.",
      "adapter": "aipe_magnetics_database.data.sources.magnet_challenge2.MagnetChallenge2Adapter"},
-    {"id": "paderborn_lea_materialdatabase", "title": "Paderborn University LEA materialdatabase", "priority": "A", "status": "integrated",
+    {"id": "paderborn_lea_materialdatabase", "retrieved_at": "2026-11-02", "title": "Paderborn University LEA materialdatabase", "priority": "A", "status": "integrated",
      "directory": "paderborn-lea", "url": "https://github.com/upb-lea/materialdatabase", "version": "04fff8e98ae3ddb72809223c42e8c939ed1073bb",
      "license": "GPL-3.0-only", "redistribution": "permitted under GPL-3.0 as a separate copyleft subtree (LICENSE, NOTICE, source offer)",
      "importer": "aipe_magnetics_database.ingest.sources.paderborn",
@@ -67,11 +76,11 @@ SOURCES: list[dict[str, Any]] = [
                "flux [T] but its values are peak flux in Wb (peak B = dPhi / Ae); 'Ecyc' is energy per cycle of the whole core in J.",
      "adapter": "aipe_magnetics_database.ingest.external.psma_coreloss_db"},
     # ---- Priority B ---------------------------------------------------------------------------------------------
-    {"id": "zenodo_8292861_hefmag", "title": "EMPIR 19ENG06 HEFMAG amorphous / nanocrystalline loss and complex permeability", "priority": "B",
+    {"id": "zenodo_8292861_hefmag", "retrieved_at": "2026-11-02", "title": "EMPIR 19ENG06 HEFMAG amorphous / nanocrystalline loss and complex permeability", "priority": "B",
      "status": "integrated", "directory": "hefmag", "url": "https://zenodo.org/records/8292861", "version": "doi:10.5281/zenodo.8292861 v1.0.0",
      "license": "CC-BY-4.0", "redistribution": "permitted with attribution", "importer": "aipe_magnetics_database.ingest.sources.zenodo",
      "notes": "Temperature and DC bias not stated; loss published as J/m^3 per cycle."},
-    {"id": "zenodo_21626116_smc_ferrite_triangular", "title": "SMC and Mn-Zn ferrite loss under symmetric / asymmetric triangular polarization",
+    {"id": "zenodo_21626116_smc_ferrite_triangular", "retrieved_at": "2026-11-02", "title": "SMC and Mn-Zn ferrite loss under symmetric / asymmetric triangular polarization",
      "priority": "B", "status": "integrated", "directory": "zenodo-smc-ferrite-triangular", "url": "https://zenodo.org/records/21626116",
      "version": "doi:10.5281/zenodo.21626116", "license": "CC-BY-4.0", "redistribution": "permitted with attribution",
      "importer": "aipe_magnetics_database.ingest.sources.zenodo", "notes": "100 mT peak; temperature not stated."},
