@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.2.0",
+  "source_id": "zenodo_7368936_cwh_n87",
+  "version": "doi:10.5281/zenodo.7368936",
+  "license": "CC-BY-4.0",
+  "shards": {
+    "materials": [
+      "materials/materials-001.jsonl"
+    ],
+    "measurements": [
+      "measurements/measurements-001.jsonl"
+    ]
+  },
+  "datasets": [
+    "datasets/zenodo-7368936.json"
+  ],
+  "tables": [
+    "tables/zenodo-7368936-n87-ambient-core-loss.jsonl"
+  ],
+  "tables_local": [
+    "tables-local/zenodo-7368936-n87-variable-temperature-core-loss.jsonl"
+  ],
+  "record_counts": {
+    "dataset": 1,
+    "magnetic_material": 1,
+    "measurement": 2
+  },
+  "table_rows": {
+    "core_loss": 42082
+  },
+  "review_state": "third_party_unreviewed"
+}

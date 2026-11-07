@@ -16,7 +16,20 @@ do not edit by hand. Counts are records written to `data/normalized/` (source re
 | PSMA / Dartmouth Core Loss Studies (Pilot, Phase II, Phase III) (`psma_core_loss_studies`) | A | reference | unversioned web files (68 files, ~0.89 GB) | proprietary (PSMA copyright statement) | - | - | Redistribution prohibited. A user-supplied-file adapter (aipe_magnetics_database.ingest.external.psma_coreloss_db) reads a locally downloaded Phase II coreloss.db into records that stay on the user's machine. Note: 'dPhi' is documented as peak flux [T] but its values are peak flux in Wb (peak B = dPhi / Ae); 'Ecyc' is energy per cycle of the whole core in J. |
 | EMPIR 19ENG06 HEFMAG amorphous / nanocrystalline loss and complex permeability (`zenodo_8292861_hefmag`) | B | integrated | doi:10.5281/zenodo.8292861 v1.0.0 | CC-BY-4.0 | dataset 1, magnetic_material 4, measurement 8 | 4,291 | permitted with attribution |
 | SMC and Mn-Zn ferrite loss under symmetric / asymmetric triangular polarization (`zenodo_21626116_smc_ferrite_triangular`) | B | integrated | doi:10.5281/zenodo.21626116 | CC-BY-4.0 | dataset 1, magnetic_material 2, measurement 4 | 54 | permitted with attribution |
+| Nabih core characterisation database (Virginia Tech CPES): MHz ferrite loss, permeability, permittivity (`nabih_magneto`) | B | integrated | 0a3a0f1e1035 | MIT | dataset 1, magnetic_material 8, measurement 22 | 2,810 | permitted (MIT; cite per CITATION.cff) |
+| Guillod et al. (Dartmouth, APEC 2024): large-signal dielectric properties of TDK N87 (`guillod_n87_dielectric`) | B | integrated | dd06889876ca | MIT | dataset 1, magnetic_material 1, measurement 3 | 864 | permitted (MIT) |
+| Composite waveform hypothesis reproducibility dataset (MagNet N87, piecewise-linear excitation) (`zenodo_7368936_cwh_n87`) | B | integrated | doi:10.5281/zenodo.7368936 | CC-BY-4.0 | dataset 1, magnetic_material 1, measurement 2 | 42,082 | permitted with attribution |
+| INRIM examples of first magnetization curves of ferromagnetic samples (`zenodo_10725890_inrim`) | C | integrated | doi:10.5281/zenodo.10725890 v1.0.0 | CC-BY-4.0 | dataset 1, magnetic_material 22, measurement 22 | 527 | permitted with attribution |
 | ASU MAPEL MHz core-loss aggregate dataset (`asu_mhz_core_loss_aggregate`) | B | reference | 8cf2378d72f0 | NOASSERTION (no LICENSE file) | - | - | No licence. A user-supplied-file adapter (aipe_magnetics_database.ingest.external.asu_mhz_csv) normalises a local copy of MHzCoreLoss.csv (952 rows) and keeps the 13 original study labels as underlying_source so aggregated rows are never counted as independent of the original publications. |
+| DTU MHz core loss with DC bias (PC50, PC200), IEEE DataPort 7khj-bd03 (`ieee_dataport_dtu_mhz_dc_bias`) | B | reference | - | CC-BY-4.0 | - | - | Download requires an IEEE account / subscription (~244 MB); access restrictions are not bypassed. Ask the author for an open copy. |
+| PFC powder-core B/H waveforms with DC bias (GitHub kingress33) (`kingress33_pfc_coreloss`) | B | reference | - | NOASSERTION | - | - | No licence file; ~2.5 GB of CSV. Ask the owner to add a licence. |
+| Pure iron powder cores: permeability and loss vs frequency (Zenodo 12583064) (`zenodo_12583064_iron_powder_cores`) | B | reference | - | CC-BY-4.0 | - | - | 48 MB zip not inspected in this cycle (download budget); candidate for the next cycle. |
+| INRIM interlaboratory alternating / rotational loss of NO FeSi 3.5 % (Zenodo 14893851) (`zenodo_14893851_inrim_interlab_nofesi`) | C | reference | - | CC-BY-4.0 | - | - | Electrical-steel loss at 5-200 Hz (mJ/kg); permitted, deferred as low relevance to power-electronics magnetics. |
+| HEFMAG example 50 Hz H-J loops of NO / GO FeSi (Zenodo 5910893) (`zenodo_5910893_hefmag_loops`) | C | reference | - | CC-BY-4.0 | - | - | Small example set (2 x 3 loops); deferred, low relevance. |
+| Loss of GO / NO steel cores vs frequency at 1 T (Zenodo 16281115) (`zenodo_16281115_shifted_go_steel`) | C | reference | - | CC-BY-4.0 | - | - | Electrical steel, DC-505 Hz; deferred, low relevance. |
+| Punched M270-35A strips, specific loss at 50 Hz (RODBUK) (`rodbuk_m270_35_punched`) | C | reference | - | CC0-1.0 | - | - | Motor-steel data; deferred, low relevance. |
+| FEMM material library (B-H curves of steels and magnets) (`femm_material_library`) | C | reference | - | AFPL v8 | - | - | Aladdin Free Public Licence restricts redistribution; curves of unclear origin. |
+| Princeton MagNet repository tutorial datasets and raw N87 scope CSVs (`princeton_magnet_tutorial_and_scope_data`) | A | reference | 8a6892e91ac6 | MIT | - | - | tutorial/Dataset/*.json (11 MB) and ~63 MB of raw N87 oscilloscope CSVs exist in the pinned repository but are not yet imported; candidate waveform source for the next cycle. |
 | AMPED / University of Pittsburgh / DOE-NETL high-frequency magnetics data (`amped_pitt_netl`) | B | unavailable | - | - | - | - | No public tabular dataset with a verifiable licence was found (NETL EDX, OSTI, Zenodo searched); only two datasheet PDFs with unverified terms. |
 | TDK / EPCOS public engineering data (`manufacturer_tdk`) | C | reference | - | proprietary | - | - | Magnetic Design Tool and datasheets may not be redistributed; 74 TDK materials reach the database through MAS. |
 | Ferroxcube public engineering data (`manufacturer_ferroxcube`) | C | reference | - | proprietary | - | - | Steinmetz coefficient spreadsheet and SFDT data are for personal use; 26 materials via MAS. |
@@ -33,8 +46,8 @@ do not edit by hand. Counts are records written to `data/normalized/` (source re
 
 ## Totals
 
-- Source records: core_geometry 21,237, dataset 8, magnetic_material 1,168, measurement 1,715, model_metadata 664
-- Table rows (all source records): 2,301,754
-- Canonical materials: 1,142 (from 1,178 source material records; 17 combine several sources)
-- Measurement tables: 1,715 source records, 1,701 independent, 3 duplicates, 11 derived views
-- Table rows in independent records: 2,245,794, of which experimental measurements: 604,680
+- Source records: core_geometry 21,237, dataset 12, magnetic_material 1,200, measurement 1,764, model_metadata 664
+- Table rows (all source records): 2,348,037
+- Canonical materials: 1,164 (from 1,210 source material records; 24 combine several sources)
+- Measurement tables: 1,764 source records, 1,749 independent, 4 duplicates, 11 derived views
+- Table rows in independent records: 2,262,336, of which experimental measurements: 621,066

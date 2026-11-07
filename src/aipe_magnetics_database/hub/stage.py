@@ -118,6 +118,8 @@ def _raw_inputs(root: Path, source: dict[str, Any], stage: Stage, cache: Any, al
     unavailable = source.get("raw_unavailable") or {}
     for item in manifest["files"]:
         committed = raw_dir / "files" / item["path"]
+        if item["path"].startswith("derived/") and (raw_dir / item["path"]).is_file():
+            continue  # declared intermediate, staged with derived/ below
         if item["path"] in unavailable and not committed.is_file() and cache.lookup(item["url"]) is None:
             staged.append({"path": None, "original_filename": Path(item["path"]).name, "upstream_path": item["path"], "url": item.get("url"),
                            "format": file_format(item["path"]), "sha256": item["sha256"], "size": item.get("size"), "available": False,
@@ -134,6 +136,11 @@ def _raw_inputs(root: Path, source: dict[str, Any], stage: Stage, cache: Any, al
         entry = stage.add(raw_path(sid, f"files/{item['path']}"), Path(src), sha256=item["sha256"])
         staged.append({"path": raw_path(sid, f"files/{item['path']}"), "original_filename": Path(item["path"]).name,
                        "upstream_path": item["path"], "url": item.get("url"), "format": file_format(item["path"]), **entry})
+    derived = raw_dir / "derived"  # declared intermediates (e.g. a TSV export of an MS Access file), never originals
+    if derived.is_dir():
+        for path in sorted(derived.rglob("*")):
+            if path.is_file():
+                stage.add(raw_path(sid, path.relative_to(raw_dir).as_posix()), path)
     for name in ["SOURCES.json", *LICENSE_NAMES]:
         for candidate in (raw_dir / name, raw_dir / "files" / name):
             if candidate.is_file():

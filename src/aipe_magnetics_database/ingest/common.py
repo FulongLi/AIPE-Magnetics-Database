@@ -43,7 +43,7 @@ COLUMN_UNITS: dict[str, str] = {
     "dc_bias_field": "A/m", "loss_density": "W/m^3", "mass_loss_density": "W/kg", "energy_density_per_cycle": "J/m^3",
     "mu_real": "1", "mu_imag": "1", "eps_real": "1", "eps_imag": "1", "relative_permeability": "1",
     "amplitude_permeability": "1", "loss_factor": "1", "duty": "1", "duty_p": "1", "duty_n": "1", "loss_tangent": "1",
-    "uncertainty_relative": "1",
+    "uncertainty_relative": "1", "conductivity": "S/m", "electric_field_peak": "V/m", "polarization": "T", "flux_density_peak_to_peak": "T",
 }
 
 

@@ -1,0 +1,5312 @@
+{
+  "source_id": "nabih_magneto",
+  "version": "0a3a0f1e10356b294ae6782eaa46f4d478e5bff9",
+  "license": "MIT",
+  "redistribution": "permitted (MIT; cite per CITATION.cff)",
+  "importer_version": "0.3.0",
+  "inputs": [
+    {
+      "path": "Core loss database_v2.accdb",
+      "url": "https://raw.githubusercontent.com/asalahnabih/magneto/0a3a0f1e10356b294ae6782eaa46f4d478e5bff9/Core%20loss%20database_v2.accdb",
+      "sha256": "cc2938a9b3a9c79fd72ecd8de3d49aa5a06b625a21ff28be455756b27f2b01c2"
+    },
+    {
+      "path": "derived/Bm_vs_Pv_table.tsv",
+      "sha256": "f9f8e653fcbea1d352f546ee82713ba94e94207a054cc53b4cb31db48a70ec1a",
+      "derived_with": "Jackcess 4.0.5 (com.healthmarketscience.jackcess, Apache-2.0) with commons-lang3 3.14.0 and commons-logging 1.3.0 from Maven Central; tools/accdb_export/Dump.java"
+    },
+    {
+      "path": "derived/Characteristics_database.tsv",
+      "sha256": "0d294106c636f57ac5dec23b5acd952d2b4a3fe00f45af5e320ac4394b6cd533",
+      "derived_with": "Jackcess 4.0.5 (com.healthmarketscience.jackcess, Apache-2.0) with commons-lang3 3.14.0 and commons-logging 1.3.0 from Maven Central; tools/accdb_export/Dump.java"
+    },
+    {
+      "path": "derived/Core_loss_database.tsv",
+      "sha256": "d9d5192c98d5350b23d7e96800d600df943149236539e0a95c5c7816c8ae60b4",
+      "derived_with": "Jackcess 4.0.5 (com.healthmarketscience.jackcess, Apache-2.0) with commons-lang3 3.14.0 and commons-logging 1.3.0 from Maven Central; tools/accdb_export/Dump.java"
+    },
+    {
+      "path": "derived/Paste_Errors.tsv",
+      "sha256": "4abd68dcf9febe3c711e55b1d74f5787d86fe45aa45fe07a9d257e4a14776a05",
+      "derived_with": "Jackcess 4.0.5 (com.healthmarketscience.jackcess, Apache-2.0) with commons-lang3 3.14.0 and commons-logging 1.3.0 from Maven Central; tools/accdb_export/Dump.java"
+    },
+    {
+      "path": "derived/permeability.tsv",
+      "sha256": "22e722b59291d02aa6946497a4afdb325561d90144dcbd31acb417aeaa012472",
+      "derived_with": "Jackcess 4.0.5 (com.healthmarketscience.jackcess, Apache-2.0) with commons-lang3 3.14.0 and commons-logging 1.3.0 from Maven Central; tools/accdb_export/Dump.java"
+    },
+    {
+      "path": "derived/permittivity.tsv",
+      "sha256": "9d563686edf7004513e0a65dac36cf5524a4de06fbe9b1099db84c49c104ac1e",
+      "derived_with": "Jackcess 4.0.5 (com.healthmarketscience.jackcess, Apache-2.0) with commons-lang3 3.14.0 and commons-logging 1.3.0 from Maven Central; tools/accdb_export/Dump.java"
+    }
+  ],
+  "counts": {
+    "magnetic_material": 8,
+    "measurement": 22,
+    "records.dataset": 1,
+    "records.magnetic_material": 8,
+    "records.measurement": 22
+  },
+  "table_rows": {
+    "complex_permeability": 1187,
+    "complex_permittivity": 1235,
+    "core_loss": 388
+  },
+  "flags": {},
+  "exclusions": [
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "Bm vs Pv table",
+      "reason": "point without a test ID (cannot be attributed to a material or frequency)",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permeability",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    },
+    {
+      "what": "permittivity",
+      "reason": "row without a characteristics ID (CID): cannot be attributed to a material",
+      "count": 1
+    }
+  ],
+  "notes": [
+    "The Access table 'Paste Errors' (201 rows, an import-error log of MS Access) is not data and is not imported."
+  ]
+}

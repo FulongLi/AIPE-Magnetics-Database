@@ -37,7 +37,8 @@ COLUMN_RANGES: dict[str, tuple[float, float]] = {
     "field": (-1e7, 1e7), "dc_bias_field": (-1e6, 1e6), "loss_density": (0.0, 1e10), "mass_loss_density": (0.0, 1e7),
     "energy_density_per_cycle": (0.0, 1e6), "duty": (0.0, 1.0), "duty_p": (0.0, 1.0), "duty_n": (0.0, 1.0),
     "mu_imag": (0.0, 1e7), "mu_real": (-1e6, 1e7), "relative_permeability": (0.0, 1e7), "amplitude_permeability": (0.0, 1e7),
-    "loss_factor": (0.0, 1.0), "eps_real": (-1e9, 1e10), "eps_imag": (-1e9, 1e10),
+    "loss_factor": (0.0, 1.0), "eps_real": (-1e9, 1e10), "eps_imag": (-1e9, 1e10), "conductivity": (0.0, 1e8),
+    "electric_field_peak": (0.0, 1e9), "polarization": (-3.0, 3.0), "flux_density_peak_to_peak": (0.0, 6.0),
 }
 #: strictly-positive columns: a zero is flagged too
 STRICTLY_POSITIVE = {"frequency", "loss_density", "mass_loss_density", "energy_density_per_cycle"}

@@ -1,0 +1,17 @@
+{
+  "source_id": "zenodo_10725890_inrim",
+  "title": "INRIM examples of first magnetization curves of ferromagnetic samples",
+  "upstream": "https://zenodo.org/records/10725890",
+  "version": "doi:10.5281/zenodo.10725890 v1.0.0",
+  "license": "CC-BY-4.0",
+  "redistribution": "permitted (CC-BY-4.0, attribution required)",
+  "raw_policy": "original files committed under files/ (redistribution permitted)",
+  "files": [
+    {
+      "path": "HBJ data_file_res_Zenodo.dat",
+      "url": "https://zenodo.org/api/records/10725890/files/HBJ%20data_file_res_Zenodo.dat/content",
+      "sha256": "1fe4d6b98d5309940a8c2db5a94aa3ac3b1a31c69f8c6ddcc4d9f1505791607a"
+    }
+  ],
+  "importer": "aipe_magnetics_database.ingest.sources.openlab"
+}

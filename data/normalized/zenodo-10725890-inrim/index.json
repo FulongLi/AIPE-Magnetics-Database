@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.2.0",
+  "source_id": "zenodo_10725890_inrim",
+  "version": "doi:10.5281/zenodo.10725890 v1.0.0",
+  "license": "CC-BY-4.0",
+  "shards": {
+    "materials": [
+      "materials/materials-001.jsonl"
+    ],
+    "measurements": [
+      "measurements/measurements-001.jsonl"
+    ]
+  },
+  "datasets": [
+    "datasets/zenodo-10725890.json"
+  ],
+  "tables": [],
+  "tables_local": [],
+  "record_counts": {
+    "dataset": 1,
+    "magnetic_material": 22,
+    "measurement": 22
+  },
+  "table_rows": {
+    "bh_curve": 527
+  },
+  "review_state": "third_party_unreviewed"
+}

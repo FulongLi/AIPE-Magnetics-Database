@@ -1,0 +1,39 @@
+{
+  "source_id": "guillod_n87_dielectric",
+  "version": "dd06889876ca7d360ae3c4cf6da6c507ba5fef2c",
+  "license": "MIT",
+  "redistribution": "permitted (MIT)",
+  "importer_version": "0.3.0",
+  "inputs": [
+    {
+      "path": "dataset/N87_eps_large/data.mat",
+      "url": "https://raw.githubusercontent.com/otvam/large_signal_ferrite_apec24/dd06889876ca7d360ae3c4cf6da6c507ba5fef2c/dataset/N87_eps_large/data.mat",
+      "sha256": "ef18d977124ef6d6eb182c44509e39fcee1639de3e49813d039fa3f4d0a6e3fc"
+    },
+    {
+      "path": "dataset/N87_eps_small/data.mat",
+      "url": "https://raw.githubusercontent.com/otvam/large_signal_ferrite_apec24/dd06889876ca7d360ae3c4cf6da6c507ba5fef2c/dataset/N87_eps_small/data.mat",
+      "sha256": "cb5dd86a816a0ca3336804ac1e7350242846360c99da7a541d1d9bd9c6731fc4"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/data.mat",
+      "url": "https://raw.githubusercontent.com/otvam/large_signal_ferrite_apec24/dd06889876ca7d360ae3c4cf6da6c507ba5fef2c/dataset/N87_eps_temperature/data.mat",
+      "sha256": "3bdf594d1e1c772d68dc5d40f034b790cf8ad0bdba1f5cdb67375d3627e44235"
+    }
+  ],
+  "counts": {
+    "magnetic_material": 1,
+    "measurement": 3,
+    "records.dataset": 1,
+    "records.magnetic_material": 1,
+    "records.measurement": 3
+  },
+  "table_rows": {
+    "dielectric_properties": 864
+  },
+  "flags": {},
+  "exclusions": [],
+  "notes": [
+    "N87_mu_small (TDK datasheet curve) and N87_mu_large (computed from MagNet data) are not imported: neither is a measurement of this source."
+  ]
+}

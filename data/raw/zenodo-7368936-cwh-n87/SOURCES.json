@@ -1,0 +1,62 @@
+{
+  "source_id": "zenodo_7368936_cwh_n87",
+  "title": "Composite waveform hypothesis reproducibility dataset (MagNet N87, piecewise-linear excitation)",
+  "upstream": "https://zenodo.org/records/7368936",
+  "version": "doi:10.5281/zenodo.7368936",
+  "license": "CC-BY-4.0",
+  "redistribution": "permitted (CC-BY-4.0, attribution required)",
+  "raw_policy": "retrieved on demand at the pinned version and verified by SHA-256; not committed",
+  "files": [
+    {
+      "path": "N87_ambient_temperature.csv",
+      "url": "https://zenodo.org/api/records/7368936/files/N87_ambient_temperature.csv/content",
+      "sha256": "fcc76d7f9c5cf3ca3a33d147e6a5f6a29d55df4f5f43665b06219db0535f0eb7"
+    },
+    {
+      "path": "N87_variable_temperature.csv",
+      "url": "https://zenodo.org/api/records/7368936/files/N87_variable_temperature.csv/content",
+      "sha256": "83609c3341b5e02d258e238a6114a3b24c69c9de42f5bcd80c0b4ffb49ea9455"
+    },
+    {
+      "path": "dataset_metadata.csv",
+      "url": "https://zenodo.org/api/records/7368936/files/dataset_metadata.csv/content",
+      "sha256": "6844cbf62228260de93f62efc98bc2d036d0a2f8c8a0f5bcce84b48c024614cf"
+    },
+    {
+      "path": "readme.txt",
+      "url": "https://zenodo.org/api/records/7368936/files/readme.txt/content",
+      "sha256": "38516c005e4e7d8193f900c2859d8a4330d754d4a6d9e6cc3f522239f59c0b6b"
+    },
+    {
+      "path": "N87_ambient_temperature.mat",
+      "url": "https://zenodo.org/api/records/7368936/files/N87_ambient_temperature.mat/content",
+      "sha256": "d74d390bbe6f728b13dfe2898319ae80be9fc409c1eecc1206fde6b80cb8a263"
+    },
+    {
+      "path": "N87_variable_temperature.mat",
+      "url": "https://zenodo.org/api/records/7368936/files/N87_variable_temperature.mat/content",
+      "sha256": "a5cd58ef9bce4c251559aa82a125946cb7c69be40fd8259e668e0b2d2a3b094d"
+    },
+    {
+      "path": "N87_ambient_temperature.h5",
+      "url": "https://zenodo.org/api/records/7368936/files/N87_ambient_temperature.h5/content",
+      "sha256": "edcc57d3cd76cd9fd09c5449b254491e07d657d5e531ef78598b1a3b83a7d296"
+    },
+    {
+      "path": "N87_variable_temperature.h5",
+      "url": "https://zenodo.org/api/records/7368936/files/N87_variable_temperature.h5/content",
+      "sha256": "5c22e9c880934be977c93d8d3ec5989b178b6b092fb6cba91958f232c0c1c871"
+    },
+    {
+      "path": "test_python.py",
+      "url": "https://zenodo.org/api/records/7368936/files/test_python.py/content",
+      "sha256": "8b84877935b30844f18418597f0c03c07b74bb010fab6f5468050b6e0596d729"
+    },
+    {
+      "path": "test_matlab.m",
+      "url": "https://zenodo.org/api/records/7368936/files/test_matlab.m/content",
+      "sha256": "1ee1c87f35fdf1edf207243dcff51354a88ebd0d5f226aade003c6d38c712a68"
+    }
+  ],
+  "importer": "aipe_magnetics_database.ingest.sources.openlab"
+}

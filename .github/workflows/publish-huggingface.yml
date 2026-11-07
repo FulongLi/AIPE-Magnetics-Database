@@ -72,6 +72,9 @@ jobs:
       - name: Restore large table sidecars that are not kept in Git (verified against committed rows_sha256)
         if: env.SOURCES == '' || contains(env.SOURCES, 'openmagnetics_mas')
         run: aipe-magnetics-db hub restore-tables --allow-download
+      - name: Regenerate large table sidecars whose pinned inputs are downloadable (SHA-256 verified)
+        if: env.SOURCES == '' || contains(env.SOURCES, 'zenodo_7368936_cwh_n87')
+        run: aipe-magnetics-db refresh --source zenodo_7368936_cwh_n87 --allow-download && test -z "$(git status --porcelain -- data/normalized data/raw)"
       - name: Validate every record
         run: aipe-magnetics-db validate
       - name: Build the release tree

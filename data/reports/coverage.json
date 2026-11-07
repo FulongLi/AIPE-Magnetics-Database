@@ -171,6 +171,84 @@
       "exclusions": 0
     },
     {
+      "id": "nabih_magneto",
+      "title": "Nabih core characterisation database (Virginia Tech CPES): MHz ferrite loss, permeability, permittivity",
+      "priority": "B",
+      "status": "integrated",
+      "version": "0a3a0f1e10356b294ae6782eaa46f4d478e5bff9",
+      "license": "MIT",
+      "redistribution": "permitted (MIT; cite per CITATION.cff)",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 8,
+        "measurement": 22
+      },
+      "table_rows": {
+        "complex_permeability": 1187,
+        "complex_permittivity": 1235,
+        "core_loss": 388
+      },
+      "tables_local_only": 0,
+      "exclusions": 1050
+    },
+    {
+      "id": "guillod_n87_dielectric",
+      "title": "Guillod et al. (Dartmouth, APEC 2024): large-signal dielectric properties of TDK N87",
+      "priority": "B",
+      "status": "integrated",
+      "version": "dd06889876ca7d360ae3c4cf6da6c507ba5fef2c",
+      "license": "MIT",
+      "redistribution": "permitted (MIT)",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 1,
+        "measurement": 3
+      },
+      "table_rows": {
+        "dielectric_properties": 864
+      },
+      "tables_local_only": 0,
+      "exclusions": 0
+    },
+    {
+      "id": "zenodo_7368936_cwh_n87",
+      "title": "Composite waveform hypothesis reproducibility dataset (MagNet N87, piecewise-linear excitation)",
+      "priority": "B",
+      "status": "integrated",
+      "version": "doi:10.5281/zenodo.7368936",
+      "license": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 1,
+        "measurement": 2
+      },
+      "table_rows": {
+        "core_loss": 42082
+      },
+      "tables_local_only": 1,
+      "exclusions": 0
+    },
+    {
+      "id": "zenodo_10725890_inrim",
+      "title": "INRIM examples of first magnetization curves of ferromagnetic samples",
+      "priority": "C",
+      "status": "integrated",
+      "version": "doi:10.5281/zenodo.10725890 v1.0.0",
+      "license": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 22,
+        "measurement": 22
+      },
+      "table_rows": {
+        "bh_curve": 527
+      },
+      "tables_local_only": 0,
+      "exclusions": 0
+    },
+    {
       "id": "asu_mhz_core_loss_aggregate",
       "title": "ASU MAPEL MHz core-loss aggregate dataset",
       "priority": "B",
@@ -179,6 +257,96 @@
       "license": "NOASSERTION (no LICENSE file)",
       "redistribution": "unknown - not redistributed (ask the maintainers)",
       "reason": "No licence. A user-supplied-file adapter (aipe_magnetics_database.ingest.external.asu_mhz_csv) normalises a local copy of MHzCoreLoss.csv (952 rows) and keeps the 13 original study labels as underlying_source so aggregated rows are never counted as independent of the original publications."
+    },
+    {
+      "id": "ieee_dataport_dtu_mhz_dc_bias",
+      "title": "DTU MHz core loss with DC bias (PC50, PC200), IEEE DataPort 7khj-bd03",
+      "priority": "B",
+      "status": "reference",
+      "version": "-",
+      "license": "CC-BY-4.0",
+      "redistribution": "licence permits it, but the files are behind an IEEE DataPort subscription",
+      "reason": "Download requires an IEEE account / subscription (~244 MB); access restrictions are not bypassed. Ask the author for an open copy."
+    },
+    {
+      "id": "kingress33_pfc_coreloss",
+      "title": "PFC powder-core B/H waveforms with DC bias (GitHub kingress33)",
+      "priority": "B",
+      "status": "reference",
+      "version": "-",
+      "license": "NOASSERTION",
+      "redistribution": "not permitted (no licence)",
+      "reason": "No licence file; ~2.5 GB of CSV. Ask the owner to add a licence."
+    },
+    {
+      "id": "zenodo_12583064_iron_powder_cores",
+      "title": "Pure iron powder cores: permeability and loss vs frequency (Zenodo 12583064)",
+      "priority": "B",
+      "status": "reference",
+      "version": "-",
+      "license": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "reason": "48 MB zip not inspected in this cycle (download budget); candidate for the next cycle."
+    },
+    {
+      "id": "zenodo_14893851_inrim_interlab_nofesi",
+      "title": "INRIM interlaboratory alternating / rotational loss of NO FeSi 3.5 % (Zenodo 14893851)",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "reason": "Electrical-steel loss at 5-200 Hz (mJ/kg); permitted, deferred as low relevance to power-electronics magnetics."
+    },
+    {
+      "id": "zenodo_5910893_hefmag_loops",
+      "title": "HEFMAG example 50 Hz H-J loops of NO / GO FeSi (Zenodo 5910893)",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "reason": "Small example set (2 x 3 loops); deferred, low relevance."
+    },
+    {
+      "id": "zenodo_16281115_shifted_go_steel",
+      "title": "Loss of GO / NO steel cores vs frequency at 1 T (Zenodo 16281115)",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "reason": "Electrical steel, DC-505 Hz; deferred, low relevance."
+    },
+    {
+      "id": "rodbuk_m270_35_punched",
+      "title": "Punched M270-35A strips, specific loss at 50 Hz (RODBUK)",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "CC0-1.0",
+      "redistribution": "permitted",
+      "reason": "Motor-steel data; deferred, low relevance."
+    },
+    {
+      "id": "femm_material_library",
+      "title": "FEMM material library (B-H curves of steels and magnets)",
+      "priority": "C",
+      "status": "reference",
+      "version": "-",
+      "license": "AFPL v8",
+      "redistribution": "not permitted for commercial distribution",
+      "reason": "Aladdin Free Public Licence restricts redistribution; curves of unclear origin."
+    },
+    {
+      "id": "princeton_magnet_tutorial_and_scope_data",
+      "title": "Princeton MagNet repository tutorial datasets and raw N87 scope CSVs",
+      "priority": "A",
+      "status": "reference",
+      "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
+      "license": "MIT",
+      "redistribution": "permitted (MIT)",
+      "reason": "tutorial/Dataset/*.json (11 MB) and ~63 MB of raw N87 oscilloscope CSVs exist in the pinned repository but are not yet imported; candidate waveform source for the next cycle."
     },
     {
       "id": "amped_pitt_netl",
@@ -313,22 +481,22 @@
   ],
   "totals_source_records": {
     "core_geometry": 21237,
-    "dataset": 8,
-    "magnetic_material": 1168,
-    "measurement": 1715,
+    "dataset": 12,
+    "magnetic_material": 1200,
+    "measurement": 1764,
     "model_metadata": 664
   },
-  "table_rows_source": 2301754,
+  "table_rows_source": 2348037,
   "canonical": {
-    "source_material_records": 1178,
-    "canonical_materials": 1142,
-    "canonical_materials_with_multiple_sources": 17,
-    "measurement_records": 1715,
-    "independent_measurement_records": 1701,
-    "duplicate_measurement_records": 3,
+    "source_material_records": 1210,
+    "canonical_materials": 1164,
+    "canonical_materials_with_multiple_sources": 24,
+    "measurement_records": 1764,
+    "independent_measurement_records": 1749,
+    "duplicate_measurement_records": 4,
     "derived_view_records": 11,
-    "table_rows_total": 2301754,
-    "table_rows_independent": 2245794,
-    "experimental_rows_independent": 604680
+    "table_rows_total": 2348037,
+    "table_rows_independent": 2262336,
+    "experimental_rows_independent": 621066
   }
 }
