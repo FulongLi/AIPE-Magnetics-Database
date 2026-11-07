@@ -19,7 +19,9 @@ def report():
 
 def test_committed_data_has_no_errors(report):
     assert report["summary"]["errors"] == 0, [c for c in report["checks"] if c["status"] == "fail"]
-    assert report["summary"]["rows_checked"] > 2_000_000
+    # every committed table is read; large tables-local/ sidecars are absent from a fresh checkout and counted separately
+    local = next(c for c in report["checks"] if c["id"] == "local_only_tables")
+    assert report["summary"]["rows_checked"] > 800_000 and local["status"] in ("pass", "flag") and local["severity"] == "info"
     assert "Schema validity is not proof of experimental accuracy" in report["disclaimer"]
 
 
