@@ -42,12 +42,17 @@ source prefix on the Hub exactly as in `data/normalized/<directory>/`.
    stored in GitHub and none is printed. `hub publish` then
    * re-verifies the stage, lists the Hub files and skips identical ones (repeated runs upload nothing),
    * aborts if any `raw/` path exists on the Hub with different bytes (raw is immutable) and never deletes anything,
-   * opens a Hub pull request (or resumes the open one of the same release; interrupted uploads resume because
-     `upload_folder` skips committed files and Xet deduplicates uploaded chunks),
-   * verifies the SHA-256 (LFS/Xet) or Git blob id and size of every file at the PR revision, and
-   * with `merge: true` opens and merges the pull request, then verifies `main` again.
+   * uploads with `upload_folder` (resumable: committed files are skipped, Xet deduplicates uploaded chunks),
+   * verifies the SHA-256 (LFS/Xet) or Git blob id and size of every file at the resulting revision.
 
-Inputs: `mode` (`pr` or `main`), `merge`, `sources` (subset), `dry_run` (authenticate and plan only).
+   Modes: `branch` (default) publishes the release to a Hub branch (`staging`) for review without touching `main`;
+   `main` then publishes the same release to `main` (a repeat upload transfers almost nothing). `pr` opens a Hub pull
+   request and works only with a user token: **Trusted Publisher tokens may write branches but are refused when
+   opening pull requests** (403 on `preupload?create_pr=1`, 401 on the discussions endpoint; observed 2026-11-07).
+
+Inputs: `mode` (`branch`, `main` or `pr`), `branch` (default `staging`), `merge` (pr mode), `sources` (subset), `dry_run`
+(authenticate and plan only). A push to the branch `hf-publish/test` publishes only Zenodo 21626116 to the Hub branch
+`ci-test` - the test publication; the first one succeeded at commit `3c9057f6` (20 files verified).
 
 The Trusted Publisher on the dataset (Settings -> Trusted Publishers -> GitHub Actions) must match
 `repository = FulongLi/AIPE-Magnetics-Database`, `workflow = publish-huggingface.yml` and, if a branch is set, the
@@ -87,7 +92,7 @@ db.get_table("measurement.mas-dmegc-dmr95-0400-bh-cycle", allow_download=True)
 | --- | --- |
 | `hub stage --out DIR [--source ID] [--allow-download]` | build the release tree |
 | `hub verify-stage DIR` | re-hash a stage against its checksums |
-| `hub publish DIR [--mode pr|main] [--merge] [--dry-run]` | publish (needs Hub write access; normally run by the workflow) |
+| `hub publish DIR [--mode branch|main|pr] [--branch NAME] [--merge] [--dry-run]` | publish (needs Hub write access; normally run by the workflow) |
 | `hub sync [--revision REV]` | record a verified release in `data/huggingface.json` |
 | `hub restore-tables [--allow-download]` | restore `tables-local/` sidecars from pinned transfer assets |
 | `quality` | run the quality checks; writes `data/reports/quality-report.json` and `docs/quality-summary.md` |

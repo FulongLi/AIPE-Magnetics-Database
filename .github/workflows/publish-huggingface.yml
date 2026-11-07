@@ -18,10 +18,14 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "pr = open (or resume) a Hub pull request; main = commit directly to main; branch = Hub branch ci-test"
+        description: "branch = review release on a Hub branch; main = publish to main; pr = Hub pull request (needs a user token, not the Trusted Publisher)"
         type: choice
-        options: [pr, main, branch]
-        default: pr
+        options: [branch, main, pr]
+        default: branch
+      branch:
+        description: "Hub branch for mode=branch"
+        type: string
+        default: staging
       merge:
         description: "merge the Hub pull request after every file has been verified"
         type: boolean
@@ -49,6 +53,7 @@ env:
   MERGE: ${{ github.event_name == 'push' && 'false' || inputs.merge }}
   SOURCES: ${{ github.event_name == 'push' && 'zenodo_21626116_smc_ferrite_triangular' || inputs.sources }}
   DRY_RUN: ${{ github.event_name == 'push' && 'false' || inputs.dry_run }}
+  HUB_BRANCH: ${{ github.event_name == 'push' && 'ci-test' || inputs.branch }}
   AIPE_MAGNETICS_CACHE: ${{ github.workspace }}/.aipe-cache
 
 jobs:
@@ -148,7 +153,7 @@ jobs:
       - name: Publish and verify
         run: |
           args="--mode $MODE --receipt receipt.json"
-          if [ "$MODE" = "branch" ]; then args="$args --branch ci-test"; fi
+          if [ "$MODE" = "branch" ]; then args="$args --branch $HUB_BRANCH"; fi
           if [ "$MERGE" = "true" ]; then args="$args --merge"; fi
           if [ "$DRY_RUN" = "true" ]; then args="$args --dry-run"; fi
           set +e

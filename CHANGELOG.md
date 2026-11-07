@@ -5,8 +5,9 @@
 
 - **Hugging Face storage layer** (`aipe_magnetics_database.hub`, [docs/huggingface.md](docs/huggingface.md)): `hub stage` builds
   `raw/`, `normalized/v0.2/`, `manifests/` (sources, dataset-index, checksums, quality-report) and the dataset card;
-  `hub publish` uploads through a Hub pull request (resumable, idempotent), refuses to replace raw files, never deletes and
-  verifies every SHA-256 before reporting success; `hub sync` records the exact published commit in `data/huggingface.json`;
+  `hub publish` uploads to a review branch, `main` or a Hub pull request (resumable, idempotent), refuses to replace raw
+  files, never deletes and verifies every SHA-256 before reporting success (Trusted Publisher tokens can write branches
+  but cannot open Hub pull requests; test publication verified on the Hub branch `ci-test`, commit `3c9057f6`); `hub sync` records the exact published commit in `data/huggingface.json`;
   tables only on Hugging Face are read at that commit on opt-in (`AIPE_MAGNETICS_ALLOW_DOWNLOAD=1`, `allow_download=True`),
   cached and verified. `.github/workflows/publish-huggingface.yml` publishes through a Trusted Publisher (GitHub OIDC,
   `id-token: write` only in the publish job, no stored token), on manual dispatch.
