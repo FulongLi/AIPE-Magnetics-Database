@@ -12,8 +12,9 @@ Rules enforced before anything is sent:
 * a file under ``raw/`` that exists on the Hub with *different* bytes aborts the publication (raw is immutable);
 * nothing is ever deleted on the Hub; remote files absent from the stage are reported as ``retained``.
 
-``mode="pr"`` (default) opens a Hub pull request (or resumes the open one of the same release) and uploads into
-``refs/pr/N``; ``merge=True`` merges it only after verification succeeded. ``mode="main"`` commits directly.
+``mode="pr"`` (default) uploads into a new Hub pull request opened by the commit endpoint (``create_pr``), or resumes
+the open pull request of the same release; ``merge=True`` merges it only after verification succeeded (if the token
+may not merge, the verified pull request is left open and the receipt says so). ``mode="main"`` commits directly.
 Verification compares SHA-256 (LFS / Xet files) or the Git blob id (small files) and the size of every staged
 file at the resulting revision.
 """
@@ -25,6 +26,7 @@ import os
 import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Callable
 
 from aipe_magnetics_database.common.errors import DataIntegrityError
@@ -139,10 +141,15 @@ def _delta(stage_dir: Path, paths: list[str]) -> Path:
     return delta
 
 
-def _open_release_pr(api: Any, repo_id: str, title: str) -> Any | None:
-    for disc in api.get_repo_discussions(repo_id, repo_type=REPO_TYPE, discussion_type="pull_request"):
-        if disc.title == title and disc.status in ("open", "draft"):
-            return disc
+def _open_release_pr(api: Any, repo_id: str, title: str, log: Callable[[str], None] = print) -> Any | None:
+    """The open Hub pull request of this release (to resume into), or ``None``; listing failures are not fatal."""
+    hf = _hf()
+    try:
+        for disc in api.get_repo_discussions(repo_id, repo_type=REPO_TYPE, discussion_type="pull_request"):
+            if disc.title == title and disc.status in ("open", "draft"):
+                return disc
+    except hf.errors.HfHubHTTPError as error:
+        log(f"could not list Hub pull requests ({type(error).__name__}); a new pull request will be opened")
     return None
 
 
@@ -186,19 +193,26 @@ def publish(stage_dir: str | Path, *, repo_id: str = DEFAULT_REPO_ID, mode: str 
     if plan.upload:
         delta = _delta(stage_dir, plan.upload)
         if mode == "pr":
-            pr = _open_release_pr(api, repo_id, title)
-            if pr is None:
-                pr = api.create_pull_request(repo_id, title=title, description=description, repo_type=REPO_TYPE)
-                log(f"opened Hub pull request #{pr.num}")
-            else:
+            pr = _open_release_pr(api, repo_id, title, log)
+            if pr is not None:
                 log(f"resuming Hub pull request #{pr.num}")
-            revision = pr.git_reference
-        log(f"uploading to {revision or 'main'} ...")
-        api.upload_folder(repo_id=repo_id, repo_type=REPO_TYPE, folder_path=delta, revision=revision,
-                          commit_message=f"{title}: {len(plan.upload)} file(s)", commit_description=description)
+                revision = pr.git_reference
+        if mode == "pr" and pr is None:
+            # The pull request is opened by the commit endpoint (create_pr), which accepts the repo-scoped Trusted
+            # Publisher token; the discussions endpoint used by create_pull_request rejects it (401).
+            log("uploading into a new Hub pull request ...")
+            info = api.upload_folder(repo_id=repo_id, repo_type=REPO_TYPE, folder_path=delta, create_pr=True, commit_message=title,
+                                     commit_description=description)
+            pr = SimpleNamespace(num=info.pr_num, git_reference=info.pr_revision, status="open")
+            revision = info.pr_revision
+            log(f"opened Hub pull request #{pr.num}")
+        else:
+            log(f"uploading to {revision or 'main'} ...")
+            api.upload_folder(repo_id=repo_id, repo_type=REPO_TYPE, folder_path=delta, revision=revision, commit_message=title,
+                              commit_description=description)
         shutil.rmtree(delta, ignore_errors=True)
     elif mode == "pr":
-        pr = _open_release_pr(api, repo_id, title)
+        pr = _open_release_pr(api, repo_id, title, log)
         revision = pr.git_reference if pr is not None else None
     verify_at = revision or "main"
     problems = verify_remote(stage_dir, remote_files(api, repo_id, verify_at))
@@ -213,9 +227,16 @@ def publish(stage_dir: str | Path, *, repo_id: str = DEFAULT_REPO_ID, mode: str 
                                    "ref": pr.git_reference}
     log(f"verified {len(load_checksums(stage_dir))} file(s) at {verify_at} ({info.sha})")
     if merge and pr is not None:
-        if getattr(pr, "status", "open") == "draft":  # programmatic pull requests start as drafts
-            api.change_discussion_status(repo_id, pr.num, "open", repo_type=REPO_TYPE, comment="Every file verified; ready to merge.")
-        api.merge_pull_request(repo_id, pr.num, repo_type=REPO_TYPE, comment="Merged after SHA-256 verification of every file.")
+        try:
+            if getattr(pr, "status", "open") == "draft":  # pull requests from create_pull_request start as drafts
+                api.change_discussion_status(repo_id, pr.num, "open", repo_type=REPO_TYPE, comment="Every file verified; ready to merge.")
+            api.merge_pull_request(repo_id, pr.num, repo_type=REPO_TYPE, comment="Merged after SHA-256 verification of every file.")
+        except hf.errors.HfHubHTTPError as error:
+            receipt.update({"merged": False, "merge_error": f"{type(error).__name__}: HTTP {getattr(error.response, 'status_code', '?')}",
+                            "merge_hint": "merge the verified pull request on the Hub, or re-run with mode=main"})
+            receipt["files"] = load_checksums(stage_dir)
+            log(f"could not merge #{pr.num} with this token ({receipt['merge_error']}); the pull request is verified and left open")
+            return _write_receipt(receipt, receipt_path)
         problems = verify_remote(stage_dir, remote_files(api, repo_id, "main"))
         if problems:
             raise DataIntegrityError(f"verification on main after merging #{pr.num} failed: {problems[:5]}")

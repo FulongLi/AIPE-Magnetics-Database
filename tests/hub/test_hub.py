@@ -133,13 +133,20 @@ class FakeHub:
 
     # write
     def create_pull_request(self, repo_id, title, description=None, repo_type=None):
+        raise AssertionError("the discussions endpoint rejects Trusted Publisher tokens; PRs must come from create_pr commits")
         num = len(self.prs) + 1
         pr = SimpleNamespace(num=num, title=title, status="draft", git_reference=f"refs/pr/{num}")
         self.prs.append(pr)
         self.refs[pr.git_reference] = dict(self.refs["main"])
         return pr
 
-    def upload_folder(self, repo_id, repo_type, folder_path, revision=None, commit_message=None, commit_description=None):
+    def upload_folder(self, repo_id, repo_type, folder_path, revision=None, commit_message=None, commit_description=None, create_pr=False):
+        if create_pr:  # the commit endpoint opens the pull request (title = commit message)
+            num = len(self.prs) + 1
+            pr = SimpleNamespace(num=num, title=commit_message, status="open", git_reference=f"refs/pr/{num}")
+            self.prs.append(pr)
+            self.refs[pr.git_reference] = dict(self.refs["main"])
+            revision = pr.git_reference
         target = self.refs[revision or "main"]
         n = 0
         for p in Path(folder_path).rglob("*"):
@@ -147,6 +154,8 @@ class FakeHub:
                 target[p.relative_to(folder_path).as_posix()] = p.read_bytes()
                 n += 1
         self.uploads.append((revision or "main", n))
+        if create_pr:
+            return SimpleNamespace(pr_num=pr.num, pr_revision=pr.git_reference, pr_url=f"https://hub/pr/{pr.num}")
 
     def change_discussion_status(self, repo_id, num, new_status, repo_type=None, comment=None):
         self.prs[num - 1].status = new_status
@@ -353,3 +362,35 @@ def test_transfer_pin_is_well_formed():
     for asset in pins():
         assert len(asset["sha256"]) == 64 and asset["url"].startswith("https://github.com/FulongLi/AIPE-Magnetics-Database/releases/")
         assert (ROOT / asset["extract_to"] / "index.json").is_file()
+
+
+def test_publish_leaves_verified_pr_open_when_merge_is_refused(stage_dir: Path, hub: FakeHub, monkeypatch):
+    import huggingface_hub
+
+    class Refused(huggingface_hub.errors.HfHubHTTPError):
+        def __init__(self):
+            Exception.__init__(self, "401")
+            self.response = SimpleNamespace(status_code=401)
+
+    def refuse(*a, **k):
+        raise Refused()
+
+    monkeypatch.setattr(hub, "merge_pull_request", refuse)
+    receipt = publish(stage_dir, mode="pr", merge=True, log=lambda _m: None)
+    assert receipt["verified"] and receipt["merged"] is False and "HTTP 401" in receipt["merge_error"] and receipt["revision"] == "refs/pr/1"
+    assert not any(k.startswith("raw/") for k in hub.refs["main"])  # nothing reached main
+
+
+def test_publish_tolerates_unlistable_discussions(stage_dir: Path, hub: FakeHub, monkeypatch):
+    import huggingface_hub
+
+    class Refused(huggingface_hub.errors.HfHubHTTPError):
+        def __init__(self):
+            Exception.__init__(self, "401")
+            self.response = SimpleNamespace(status_code=401)
+
+    def refuse(*a, **k):
+        raise Refused()
+
+    monkeypatch.setattr(hub, "get_repo_discussions", refuse)
+    assert publish(stage_dir, mode="pr", log=lambda _m: None)["verified"]

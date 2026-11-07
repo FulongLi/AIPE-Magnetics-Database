@@ -155,7 +155,7 @@ jobs:
           status=$?
           set -e
           cat publish.err >&2
-          if [ $status -ne 0 ] && grep -qE "invalid_grant|OIDC|401|403" publish.err; then
+          if [ $status -ne 0 ] && grep -qE "invalid_grant|OIDCError" publish.err; then
             {
               echo "## Trusted Publisher exchange failed"
               echo ""
