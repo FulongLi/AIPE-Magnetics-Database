@@ -69,8 +69,11 @@ def test_republished_experiment_identical_rows_and_cross_material_copies(tmp_pat
 def test_committed_catalogue_detects_magnet_republications():
     duplicates = json.loads((ROOT / "data" / "canonical" / "duplicates.json").read_text(encoding="utf-8"))
     magnet = {d["record"]: d for d in duplicates if d.get("rule") == "same underlying experiment and quantity"}
-    assert set(magnet) == {f"measurement.mas-ferroxcube-{g}-core-loss-advanced-magnet" for g in ("3c90-0032", "3c94-0036", "3f4-0044")}
-    assert all(d["match_fraction"] == 1.0 for d in magnet.values())  # every MAS 'origin = MagNet' row is in the Princeton tables
+    mas = {f"measurement.mas-ferroxcube-{g}-core-loss-advanced-magnet" for g in ("3c90-0032", "3c94-0036", "3f4-0044")}
+    cwh = "measurement.zenodo-7368936-n87-variable-temperature-core-loss"  # same MagNet campaign, processed separately
+    assert set(magnet) == mas | {cwh}
+    assert all(magnet[r]["match_fraction"] == 1.0 for r in mas)  # every MAS 'origin = MagNet' row is in the Princeton tables
+    assert magnet[cwh]["duplicate_of"] == "measurement.princeton-magnet-n87-core-loss" and magnet[cwh]["rows_compared"] == 29741
     derived = [d for d in duplicates if d.get("rule", "").startswith("derived quantity")]
     assert len(derived) == 11 and all(not d["counted_as_independent"] for d in derived)
 

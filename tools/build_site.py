@@ -33,6 +33,8 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from aipe_magnetics_database import __version__  # noqa: E402
 from aipe_magnetics_database.common.errors import DataNotFoundError  # noqa: E402
+from aipe_magnetics_database.hub import layout  # noqa: E402
+from aipe_magnetics_database.hub.stage import publishable  # noqa: E402
 from aipe_magnetics_database.ingest.canonical import record_manufacturer  # noqa: E402
 from aipe_magnetics_database.ingest.pipeline import curated_records  # noqa: E402
 from aipe_magnetics_database.store import MagneticDatabase  # noqa: E402
@@ -195,6 +197,18 @@ class SiteBuilder:
                 item["directory"] = self.blob(f"data/normalized/{idx['_directory']}")
                 item["licence_files"] = [self.blob(f"data/normalized/{idx['_directory']}/{n}") for n in ("LICENSE", "NOTICE.md") if (d / n).is_file()]
                 item["rows_published"] = self.redistributable[sid]
+            ok, reason = publishable(s)
+            hub = self.db.hub
+            if hub is not None and sid in hub.release.get("sources", {}):
+                prefixes = hub.release["sources"][sid]
+                item["huggingface"] = {"published": True, "commit": hub.commit,
+                                       "raw": f"https://huggingface.co/datasets/{hub.repo_id}/tree/{hub.commit}/{prefixes['raw_prefix'].rstrip('/')}",
+                                       "normalized": f"https://huggingface.co/datasets/{hub.repo_id}/tree/{hub.commit}/"
+                                                     f"{prefixes['normalized_prefix'].rstrip('/')}",
+                                       "raw_files": prefixes.get("raw_files"), "raw_bytes": prefixes.get("raw_bytes")}
+            else:
+                item["huggingface"] = {"published": False, "eligible": ok,
+                                       "reason": "eligible; not yet in a published release" if ok else reason}
             out.append(item)
         self.sources = out
         self.bytes += _write(self.data / "sources.json", out)
@@ -282,6 +296,10 @@ class SiteBuilder:
             local_only = bool(rows_file) and rows_file.startswith("tables-local/")
             if rows_file and not local_only:
                 links["rows_file"] = self.raw(f"data/normalized/{self.source_dir[sid]}/{rows_file}")
+            hub = self.db.hub
+            hub_path = layout.normalized_path(sid, rows_file) if rows_file and hub is not None else None
+            if hub_path and hub.has(hub_path):
+                links["huggingface"] = f"https://huggingface.co/datasets/{hub.repo_id}/blob/{hub.commit}/{hub_path}"
             unavailable = None
             rows: list[list[Any]] = []
             sampling = {"sampled": False, "total_rows": table["row_count"], "published_rows": 0}
@@ -289,6 +307,9 @@ class SiteBuilder:
                           f"Regenerate them locally with 'aipe-magnetics-db refresh --source {sid} --allow-download'.")
             if not self.redistributable.get(sid):
                 unavailable = "The source dataset does not grant redistribution; rows are not published on this site."
+            elif local_only and links.get("huggingface"):
+                unavailable = ("Large table: its rows are not kept in Git and not copied onto this site. The complete table is in the "
+                               "Hugging Face release (link below); read it with get_table(..., allow_download=True).")
             elif local_only:  # git-ignored sidecars: published builds must not depend on what happens to exist locally
                 unavailable = regenerate
             else:
@@ -356,6 +377,9 @@ class SiteBuilder:
                        "sources_integrated": sum(1 for s in self.sources if s.get("status") == "integrated"),
                        "tables_published_full": self.stats["tables_full"], "tables_published_sample": self.stats["tables_sample"],
                        "tables_not_published": self.stats["tables_none"]},
+            "huggingface": (self.db.hub.status() if self.db.hub is not None else
+                            {"published": False, "repo_id": layout.DEFAULT_REPO_ID,
+                             "url": f"https://huggingface.co/datasets/{layout.DEFAULT_REPO_ID}"}),
             "quantities": dict(Counter(e["quantity"] for e in primary).most_common()),
             "data_classes": dict(Counter(e["data_class"] for e in primary).most_common()),
             "material_classes": dict(Counter(m["class"] or "unspecified" for m in self.material_index).most_common()),

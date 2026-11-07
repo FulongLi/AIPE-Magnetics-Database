@@ -1,0 +1,76 @@
+ID	Material	Frequency (MHz)	Excitation	Duty cycle	DC Bias (A-turn)	Temp (deg C)	OD (mm)	ID (mm)	H (mm)	Author	Entry date	Notes
+1	ML91S	1.0	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+6	ML91S	1.1	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+8	ML91S	1.6	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+9	ML91S	2.0	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+10	ML91S	2.6	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+11	ML91S	3.0	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+12	ML91S	0.2	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+13	ML91S	0.3	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+14	ML91S	0.4	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+15	ML91S	0.5	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+16	ML91S	0.6	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+17	ML91S	0.7	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+18	ML91S	0.8	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+19	ML91S	0.9	Sinusoidal		0.0	25.0	14.0	7.0	5.0	Ahmed Nabih	2023-04-15T00:00	
+20	ML95S	0.2	Sinusoidal		0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+21	ML95S	0.3	Sinusoidal		0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+22	ML95S	0.4	Sinusoidal		0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+23	ML95S	0.6	Sinusoidal	0.0	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+54	ML95S	0.8	Sinusoidal	0.0	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+55	ML95S	1.0	Sinusoidal	0.0	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+57	ML95S	0.5	Sinusoidal	0.0	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+58	ML27D	0.1	Sinusoidal	0.0	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+77	ML27D	0.3	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+79	ML27D	0.6	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+80	ML27D	0.8	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+82	ML27D	0.5	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+83	P63	0.6	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+85	P63	0.8	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+86	P63	1.0	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+87	P63	1.6	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+88	P63	2.0	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+89	P63	2.6	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+91	P63	3.4	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+92	P63	3.5	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+93	P53	0.2	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+94	P53	0.4	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+95	P53	0.6	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+96	P53	0.8	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+97	P53	1.0	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+98	P53	0.5	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+103	ML27D	0.2	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+104	ML27D	0.4	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+105	P63	3.0	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-16T00:00	
+110	3F36	0.2	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-18T00:00	
+117	DMR51W	0.2	Sinusoidal	0.5	0.0	25.0	12.5	7.5	7.0	Ahmed Nabih	2023-04-18T00:00	
+118	DMR51W	0.4	Sinusoidal	0.5	0.0	25.0	12.5	7.5	7.0	Ahmed Nabih	2023-04-18T00:00	
+119	DMR51W	0.5	Sinusoidal	0.5	0.0	25.0	12.5	7.5	7.0	Ahmed Nabih	2023-04-18T00:00	
+120	DMR51W	0.6	Sinusoidal	0.5	0.0	25.0	12.5	7.5	7.0	Ahmed Nabih	2023-04-18T00:00	
+121	DMR51W	0.8	Sinusoidal	0.5	0.0	25.0	12.5	7.5	7.0	Ahmed Nabih	2023-04-18T00:00	
+122	DMR51W	1.0	Sinusoidal	0.5	0.0	25.0	12.5	7.5	7.0	Ahmed Nabih	2023-04-18T00:00	
+123	DMR51W	1.6	Sinusoidal	0.5	0.0	25.0	12.5	7.5	7.0	Ahmed Nabih	2023-04-18T00:00	
+125	DMR51W	2.0	Sinusoidal	0.5	0.0	25.0	12.5	7.5	7.0	Ahmed Nabih	2023-04-18T00:00	
+126	3F36	0.4	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-18T00:00	
+127	3F36	0.6	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-18T00:00	
+128	3F36	0.8	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-18T00:00	
+129	3F36	1.0	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-18T00:00	
+130	3F36	0.5	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-04-18T00:00	
+132	DMR96A	0.1	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-06-13T00:00	
+133	DMR96A	0.2	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-06-13T00:00	
+134	DMR96A	0.25	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-06-13T00:00	
+135	DMR96A	0.3	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-06-13T00:00	
+136	DMR96A	0.4	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-06-13T00:00	
+137	DMR96A	0.5	Sinusoidal	0.5	0.0	25.0	14.0	8.0	5.0	Ahmed Nabih	2023-06-13T00:00	
+138	ML91S	0.4	Sinusoidal	0.5	0.0	25.0	26.0	12.0	7.0	Ahmed Nabih	2023-06-13T00:00	
+139	ML91S	0.6	Sinusoidal	0.5	0.0	25.0	26.0	12.0	7.0	Ahmed Nabih	2023-06-13T00:00	
+140	ML91S	1.0	Sinusoidal	0.5	0.0	25.0	26.0	12.0	7.0	Ahmed Nabih	2023-06-13T00:00	
+141	ML91S	1.6	Sinusoidal	0.5	0.0	25.0	26.0	12.0	7.0	Ahmed Nabih	2023-06-13T00:00	
+142	ML91S	2.0	Sinusoidal	0.5	0.0	25.0	26.0	12.0	7.0	Ahmed Nabih	2023-06-13T00:00	
+143	ML91S	2.4	Sinusoidal	0.5	0.0	25.0	26.0	12.0	7.0	Ahmed Nabih	2023-06-13T00:00	
+144	ML91S	0.4	Sinusoidal	0.5	0.0	25.0	52.0	28.0	16.8	Ahmed Nabih	2023-06-13T00:00	
+145	ML91S	0.6	Sinusoidal	0.5	0.0	25.0	52.0	28.0	16.8	Ahmed Nabih	2023-06-13T00:00	
+146	ML91S	0.8	Sinusoidal	0.5	0.0	25.0	52.0	28.0	16.8	Ahmed Nabih	2023-06-13T00:00	
+147	ML91S	1.0	Sinusoidal	0.5	0.0	25.0	52.0	28.0	16.8	Ahmed Nabih	2023-06-13T00:00	
+148	ML91S	1.2	Sinusoidal	0.5	0.0	25.0	52.0	28.0	16.8	Ahmed Nabih	2023-06-13T00:00	
+149	ML91S	1.4	Sinusoidal	0.5	0.0	25.0	52.0	28.0	16.8	Ahmed Nabih	2023-06-13T00:00	

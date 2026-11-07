@@ -162,6 +162,18 @@
   window.addEventListener("hashchange", render);
 
   // -- overview ----------------------------------------------------------------------------------------------
+  function hubNotice(h) {
+    if (!h) return "";
+    if (h.published) return '<p class="small">Original files and complete tables: <a href="' + esc(h.url) + '" rel="noopener">Hugging Face dataset ' +
+      esc(h.repo_id) + '</a> at commit <code>' + esc(String(h.commit).slice(0, 12)) + "</code> (" + int(h.files) + " files, SHA-256 listed in manifests/checksums.json).</p>";
+    return '<p class="small muted">The <a href="' + esc(h.url) + '" rel="noopener">Hugging Face dataset</a> has no published release recorded yet; ' +
+      "the data shown here come from the repository.</p>";
+  }
+  function hubCell(h) {
+    if (!h) return NA;
+    if (h.published) return '<a href="' + esc(h.raw) + '" rel="noopener">raw</a> · <a href="' + esc(h.normalized) + '" rel="noopener">normalised</a>';
+    return '<span class="muted">' + esc(h.eligible ? "pending first release" : "not published") + "</span>";
+  }
   function overview() {
     setTitle("");
     return Promise.all([load("data/summary.json"), load("data/sources.json")]).then(function (d) {
@@ -194,17 +206,19 @@
           '<p class="small muted">Of ' + int(c.measurement_records) + " tables, " + int(c.tables_published_full) + " are published here in full, " +
           int(c.tables_published_sample) + " as labelled previews of up to " + int(s.preview_rows) + " rows (full table linked), and " +
           int(c.tables_not_published) + " large regenerated tables are listed without rows.</p>" +
-          '<h2 id="sources">Data sources</h2><div class="table-wrap"><table><thead><tr><th>Source</th><th>Licence</th><th>Version</th>' +
-          '<th class="num">Records</th><th class="num">Table rows</th><th>Notes</th></tr></thead><tbody>' +
+          '<h2 id="sources">Data sources</h2>' + hubNotice(s.huggingface) +
+          '<div class="table-wrap"><table><thead><tr><th>Source</th><th>Licence</th><th>Version</th>' +
+          '<th class="num">Records</th><th class="num">Table rows</th><th>Full dataset</th><th>Notes</th></tr></thead><tbody>' +
           integrated.map(function (x) {
             var recs = x.records ? Object.keys(x.records).reduce(function (n, k) { return n + x.records[k]; }, 0) : null;
             return "<tr><td>" + (x.url ? '<a href="' + esc(x.url) + '" rel="noopener">' + esc(x.title) + "</a>" : esc(x.title)) +
               "</td><td>" + esc(x.license) + (x.licence_files && x.licence_files.length ? "<br>" + x.licence_files.map(function (u) {
                 return '<a class="small" href="' + esc(u) + '">' + esc(u.split("/").pop()) + "</a>"; }).join(" · ") : "") +
               '</td><td class="mono small">' + esc(String(x.version || "").slice(0, 12)) + '</td><td class="num">' + (recs === null ? NA : int(recs)) +
-              '</td><td class="num">' + (x.table_rows === undefined ? NA : int(x.table_rows)) + '</td><td class="small">' + esc(x.notes || x.redistribution || "") + "</td></tr>";
+              '</td><td class="num">' + (x.table_rows === undefined ? NA : int(x.table_rows)) + '</td><td class="small">' + hubCell(x.huggingface) +
+              '</td><td class="small">' + esc(x.notes || x.redistribution || "") + "</td></tr>";
           }).join("") + "</tbody></table></div>" +
-          "<details><summary>" + other.length + " further sources investigated (reference only, not redistributed)</summary>" +
+          "<details><summary>" + other.length + " further sources investigated: reference entries only, no data available here or on Hugging Face</summary>" +
           '<div class="table-wrap"><table><thead><tr><th>Source</th><th>Status</th><th>Licence</th><th>Reason</th></tr></thead><tbody>' +
           other.map(function (x) {
             return "<tr><td>" + (x.url ? '<a href="' + esc(x.url) + '" rel="noopener">' + esc(x.title) + "</a>" : esc(x.title)) + "</td><td>" + esc(x.status) +
@@ -551,7 +565,9 @@
           (e.status === "derived_view" ? '<div class="notice">Derived view of ' + (e.derived_from || []).map(function (x) {
             return x.indexOf("measurement.") === 0 ? '<a href="#/measurement/' + encodeURIComponent(x) + '">' + esc(x) + "</a>" : esc(x); }).join(", ") +
             "; not an independent measurement.</div>" : "");
-        var avail = d.unavailable ? '<div class="notice"><strong>Rows not published on this site.</strong> ' + esc(d.unavailable) + " The record metadata and provenance are shown below.</div>" :
+        var avail = d.unavailable ? '<div class="notice"><strong>Rows not published on this site.</strong> ' + esc(d.unavailable) +
+            (d.links.huggingface ? ' <a href="' + esc(d.links.huggingface) + '" rel="noopener">Complete table on Hugging Face</a>.' : "") +
+            " The record metadata and provenance are shown below.</div>" :
           smp.sampled ? '<div class="notice"><strong>Sampled preview: ' + int(smp.published_rows) + " of " + int(smp.total_rows) + " rows.</strong> " + esc(smp.method) + ". " +
             "Charts and downloads on this page use the sample, not the complete dataset. " +
             (d.links.rows_file ? 'Full table: <a href="' + esc(d.links.rows_file) + '">JSONL (' + int(smp.total_rows) + " rows)</a>, or " : "") +
@@ -593,6 +609,7 @@
     var links = [];
     if (d.links.record) links.push('<a href="' + esc(d.links.record) + '">record file on GitHub</a>');
     if (d.links.rows_file) links.push('<a href="' + esc(d.links.rows_file) + '">full rows (JSONL)</a>');
+    if (d.links.huggingface) links.push('<a href="' + esc(d.links.huggingface) + '" rel="noopener">full rows on Hugging Face (pinned commit)</a>');
     kv.push(["Original files", links.join(" · ") || NA]);
     return '<div class="table-wrap"><table class="kv"><tbody>' + kv.map(function (r) { return "<tr><th>" + esc(r[0]) + "</th><td>" + r[1] + "</td></tr>"; }).join("") + "</tbody></table></div>";
   }

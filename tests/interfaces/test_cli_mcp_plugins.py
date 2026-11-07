@@ -58,8 +58,14 @@ def test_plugin_skills_in_sync():
 def test_database_has_no_design_or_simulation_dependencies():
     """The Database must run without the Design package and without scipy / plotting / CAD / ML libraries."""
     banned = re.compile(r"^\s*(from|import)\s+(aipe_magnetics_design|scipy|matplotlib|torch|gmsh|cadquery)\b", re.M)
+    # the MATLAB v4/v5 file reader of the importers loads scipy.io lazily (optional 'importers' extra); nothing on the
+    # query path imports it, which the clean-install CI job checks with scipy absent
+    importer_only = {ROOT / "src" / "aipe_magnetics_database" / "ingest" / "readers.py": re.compile(r"^\s*from scipy\.io import loadmat$", re.M)}
     for path in (ROOT / "src" / "aipe_magnetics_database").rglob("*.py"):
-        assert not banned.search(path.read_text(encoding="utf-8")), path
+        text = path.read_text(encoding="utf-8")
+        if path in importer_only:
+            text = importer_only[path].sub("", text)
+        assert not banned.search(text), path
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     deps = pyproject.split("dependencies = [", 1)[1].split("]", 1)[0]
     assert not re.search(r"scipy|matplotlib|torch|aipe-magnetics-design", deps)

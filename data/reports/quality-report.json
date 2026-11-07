@@ -1,0 +1,598 @@
+{
+  "report": "aipe.magnetics.quality/1.0",
+  "summary": {
+    "errors": 0,
+    "warnings": 883,
+    "info": 1155,
+    "checks_failed": [],
+    "checks_flagged": [
+      "physical_range",
+      "duplicate_rows",
+      "duplicate_tables",
+      "operating_conditions"
+    ],
+    "records_checked": 2964,
+    "rows_checked": 2348037
+  },
+  "record_counts": {
+    "guillod_n87_dielectric": {
+      "dataset": 1,
+      "magnetic_material": 1,
+      "measurement": 3
+    },
+    "zenodo_8292861_hefmag": {
+      "dataset": 1,
+      "magnetic_material": 4,
+      "measurement": 8
+    },
+    "openmagnetics_mas": {
+      "core_geometry": 21237,
+      "dataset": 4,
+      "magnetic_material": 1137,
+      "measurement": 1627,
+      "model_metadata": 664
+    },
+    "nabih_magneto": {
+      "dataset": 1,
+      "magnetic_material": 8,
+      "measurement": 22
+    },
+    "paderborn_lea_materialdatabase": {
+      "dataset": 1,
+      "magnetic_material": 15,
+      "measurement": 66
+    },
+    "princeton_magnet": {
+      "dataset": 1,
+      "magnetic_material": 10,
+      "measurement": 10
+    },
+    "zenodo_10725890_inrim": {
+      "dataset": 1,
+      "magnetic_material": 22,
+      "measurement": 22
+    },
+    "zenodo_7368936_cwh_n87": {
+      "dataset": 1,
+      "magnetic_material": 1,
+      "measurement": 2
+    },
+    "zenodo_21626116_smc_ferrite_triangular": {
+      "dataset": 1,
+      "magnetic_material": 2,
+      "measurement": 4
+    }
+  },
+  "checks": [
+    {
+      "id": "schema",
+      "severity": "error",
+      "description": "schema v0.2 validation and reference resolution",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    },
+    {
+      "id": "units",
+      "severity": "error",
+      "description": "table columns in their canonical SI unit; numeric columns carry a unit",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    },
+    {
+      "id": "non_finite",
+      "severity": "error",
+      "description": "NaN or infinite numbers in table rows or properties",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    },
+    {
+      "id": "physical_range",
+      "severity": "warning",
+      "description": "values outside broad physical plausibility bounds (flagged, kept verbatim)",
+      "count": 622,
+      "status": "flag",
+      "examples": [
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -506.9231280089,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -508.1078799341,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -508.9999616567,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -509.4917316849,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -509.6929787945,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -509.5931412323,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -509.1932267128,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -508.5662123883,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -507.6156424447,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "column": "flux_density",
+          "value": -506.4910375516,
+          "bounds": [
+            -3.0,
+            3.0
+          ]
+        }
+      ],
+      "records_affected": 47,
+      "top_records": [
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "count": 202
+        },
+        {
+          "record": "measurement.nabih-dmr96a-complex-permeability",
+          "count": 89
+        },
+        {
+          "record": "measurement.nabih-p63-complex-permeability",
+          "count": 78
+        },
+        {
+          "record": "measurement.nabih-dmr51w-complex-permeability",
+          "count": 46
+        },
+        {
+          "record": "measurement.mas-acme-d28-0331-complex-permeability",
+          "count": 36
+        },
+        {
+          "record": "measurement.mas-acme-d30-0295-complex-permeability",
+          "count": 23
+        },
+        {
+          "record": "measurement.mas-acme-d1c-0311-complex-permeability",
+          "count": 22
+        },
+        {
+          "record": "measurement.mas-acme-acme-d27-0332-complex-permeability",
+          "count": 22
+        },
+        {
+          "record": "measurement.nabih-3f36-complex-permeability",
+          "count": 19
+        },
+        {
+          "record": "measurement.mas-acme-a151-0297-loss-factor-default-1",
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "duplicate_rows",
+      "severity": "info",
+      "description": "identical rows repeated inside one table (may be genuine repeated measurements)",
+      "count": 1126,
+      "status": "flag",
+      "examples": [
+        {
+          "record": "measurement.mas-ferroxcube-3c90-0032-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c91-0033-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c92-0034-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c92a-0035-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c94-0036-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c95-0037-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c95a-0038-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c95f-0039-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c96-0040-bh-cycle",
+          "repeated_rows": 2
+        },
+        {
+          "record": "measurement.mas-ferroxcube-3c97-0041-bh-cycle",
+          "repeated_rows": 2
+        }
+      ],
+      "records_affected": 44,
+      "top_records": [
+        {
+          "record": "measurement.mas-dmegc-dmr90-0257-bh-cycle",
+          "count": 139
+        },
+        {
+          "record": "measurement.mas-dmegc-dn200l-0270-bh-cycle",
+          "count": 125
+        },
+        {
+          "record": "measurement.mas-dmegc-dn100h-0284-bh-cycle",
+          "count": 111
+        },
+        {
+          "record": "measurement.mas-dmegc-dn85h-0268-bh-cycle",
+          "count": 103
+        },
+        {
+          "record": "measurement.mas-dmegc-dmr70-0260-bh-cycle",
+          "count": 69
+        },
+        {
+          "record": "measurement.mas-dmegc-dmr52-0264-bh-cycle",
+          "count": 65
+        },
+        {
+          "record": "measurement.mas-dmegc-dn30b-0265-bh-cycle",
+          "count": 59
+        },
+        {
+          "record": "measurement.mas-dmegc-r5k-0404-bh-cycle",
+          "count": 53
+        },
+        {
+          "record": "measurement.mas-dmegc-r10k-0406-bh-cycle",
+          "count": 51
+        },
+        {
+          "record": "measurement.mas-dmegc-dmr24-0252-bh-cycle",
+          "count": 50
+        }
+      ]
+    },
+    {
+      "id": "duplicate_tables",
+      "severity": "info",
+      "description": "identical or overlapping tables across records (canonical duplicate detection)",
+      "count": 29,
+      "status": "flag",
+      "examples": [
+        {
+          "records": [
+            "measurement.mas-acme-d37-0298-complex-permeability",
+            "measurement.mas-acme-k151-0323-complex-permeability"
+          ],
+          "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged"
+        },
+        {
+          "records": [
+            "measurement.mas-acme-d37-0298-initial-permeability",
+            "measurement.mas-acme-k151-0323-initial-permeability"
+          ],
+          "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged"
+        },
+        {
+          "records": [
+            "measurement.mas-acme-d37-0298-loss-factor-default-1",
+            "measurement.mas-acme-k151-0323-loss-factor-default-1"
+          ],
+          "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged"
+        },
+        {
+          "records": null,
+          "rule": "same underlying experiment and quantity"
+        },
+        {
+          "records": null,
+          "rule": "same underlying experiment and quantity"
+        },
+        {
+          "records": null,
+          "rule": "same underlying experiment and quantity"
+        },
+        {
+          "records": [
+            "measurement.mas-magnetec-nanoperm-1000-0292-mass-loss-advanced-manufacturer",
+            "measurement.mas-magnetec-nanoperm-2000-0291-mass-loss-advanced-manufacturer",
+            "measurement.mas-magnetec-nanoperm-30000-0288-mass-loss-advanced-manufacturer",
+            "measurement.mas-magnetec-nanoperm-4000-0290-mass-loss-advanced-manufacturer",
+            "measurement.mas-magnetec-nanoperm-8000-0289-mass-loss-advanced-manufacturer",
+            "measurement.mas-magnetec-nanoperm-80000-0287-mass-loss-advanced-manufacturer",
+            "measurement.mas-magnetec-nanoperm-90000-0286-mass-loss-advanced-manufacturer"
+          ],
+          "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged"
+        },
+        {
+          "records": [
+            "measurement.mas-micrometals-gx-125-0176-bh-cycle",
+            "measurement.mas-micrometals-hf-125-0182-bh-cycle"
+          ],
+          "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged"
+        },
+        {
+          "records": [
+            "measurement.mas-micrometals-gx-60-0175-bh-cycle",
+            "measurement.mas-micrometals-hf-60-0180-bh-cycle"
+          ],
+          "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged"
+        },
+        {
+          "records": [
+            "measurement.mas-shinn-der-electronic-shinn-der-n4s-0865-loss-factor-default-0",
+            "measurement.mas-tecstar-technology-m4s-0860-loss-factor-default-0"
+          ],
+          "rule": "identical table rows (sha256) in different materials - suspected upstream copy, kept as primary and flagged"
+        }
+      ]
+    },
+    {
+      "id": "table_files",
+      "severity": "error",
+      "description": "table sidecars missing, with a different SHA-256 or row count",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    },
+    {
+      "id": "local_only_tables",
+      "severity": "info",
+      "description": "large table sidecars not kept in Git (published to Hugging Face only)",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    },
+    {
+      "id": "raw_checksums",
+      "severity": "error",
+      "description": "original files whose SHA-256 differs from the pinned value",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    },
+    {
+      "id": "material_identity",
+      "severity": "warning",
+      "description": "one manufacturer + grade mapped to several canonical materials or classes",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    },
+    {
+      "id": "operating_conditions",
+      "severity": "warning",
+      "description": "loss / permeability tables lacking frequency, temperature or flux-density information",
+      "count": 261,
+      "status": "flag",
+      "examples": [
+        {
+          "record": "measurement.hefmag-co67-ht-13p65um-fluxmetric",
+          "quantity": "energy_loss_and_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": [
+            "temperature_not_stated"
+          ]
+        },
+        {
+          "record": "measurement.hefmag-co67-ht-13p65um-vna",
+          "quantity": "complex_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": [
+            "temperature_not_stated"
+          ]
+        },
+        {
+          "record": "measurement.hefmag-co67-ht-d25um-fluxmetric",
+          "quantity": "energy_loss_and_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": [
+            "temperature_not_stated"
+          ]
+        },
+        {
+          "record": "measurement.hefmag-co67-ht-d25um-vna",
+          "quantity": "complex_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": [
+            "temperature_not_stated"
+          ]
+        },
+        {
+          "record": "measurement.hefmag-fmet-ht-d12p90um-fluxmetric",
+          "quantity": "energy_loss_and_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": [
+            "temperature_not_stated"
+          ]
+        },
+        {
+          "record": "measurement.hefmag-fmet-ht-d12p90um-vna",
+          "quantity": "complex_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": [
+            "temperature_not_stated"
+          ]
+        },
+        {
+          "record": "measurement.hefmag-fmet-ht-d20p3um-fluxmetric",
+          "quantity": "energy_loss_and_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": [
+            "temperature_not_stated"
+          ]
+        },
+        {
+          "record": "measurement.hefmag-fmet-ht-d20p3um-vna",
+          "quantity": "complex_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": [
+            "temperature_not_stated"
+          ]
+        },
+        {
+          "record": "measurement.mas-tdk-c350-0001-complex-permeability",
+          "quantity": "complex_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": []
+        },
+        {
+          "record": "measurement.mas-tdk-c351-0002-complex-permeability",
+          "quantity": "complex_permeability",
+          "missing": [
+            "temperature"
+          ],
+          "declared_by_flags": []
+        }
+      ],
+      "records_affected": 261,
+      "top_records": [
+        {
+          "record": "measurement.hefmag-co67-ht-13p65um-fluxmetric",
+          "count": 1
+        },
+        {
+          "record": "measurement.hefmag-co67-ht-13p65um-vna",
+          "count": 1
+        },
+        {
+          "record": "measurement.hefmag-co67-ht-d25um-fluxmetric",
+          "count": 1
+        },
+        {
+          "record": "measurement.hefmag-co67-ht-d25um-vna",
+          "count": 1
+        },
+        {
+          "record": "measurement.hefmag-fmet-ht-d12p90um-fluxmetric",
+          "count": 1
+        },
+        {
+          "record": "measurement.hefmag-fmet-ht-d12p90um-vna",
+          "count": 1
+        },
+        {
+          "record": "measurement.hefmag-fmet-ht-d20p3um-fluxmetric",
+          "count": 1
+        },
+        {
+          "record": "measurement.hefmag-fmet-ht-d20p3um-vna",
+          "count": 1
+        },
+        {
+          "record": "measurement.mas-tdk-c350-0001-complex-permeability",
+          "count": 1
+        },
+        {
+          "record": "measurement.mas-tdk-c351-0002-complex-permeability",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "record_counts",
+      "severity": "warning",
+      "description": "record counts that dropped, or more than doubled, since the previous report",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    },
+    {
+      "id": "hub_consistency",
+      "severity": "info",
+      "description": "normalised files that differ from the published Hugging Face release",
+      "count": 0,
+      "status": "pass",
+      "examples": []
+    }
+  ],
+  "disclaimer": "Automated consistency and plausibility checks only. Flags identify values to review; no observation was changed. Schema validity is not proof of experimental accuracy."
+}

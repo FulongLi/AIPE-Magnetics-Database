@@ -2,16 +2,16 @@
   "schema_version": "0.2.0",
   "builder_version": "0.3.0",
   "counts": {
-    "source_material_records": 1178,
-    "canonical_materials": 1142,
-    "canonical_materials_with_multiple_sources": 17,
-    "measurement_records": 1715,
-    "independent_measurement_records": 1701,
-    "duplicate_measurement_records": 3,
+    "source_material_records": 1210,
+    "canonical_materials": 1164,
+    "canonical_materials_with_multiple_sources": 24,
+    "measurement_records": 1764,
+    "independent_measurement_records": 1749,
+    "duplicate_measurement_records": 4,
     "derived_view_records": 11,
-    "table_rows_total": 2301754,
-    "table_rows_independent": 2245794,
-    "experimental_rows_independent": 604680
+    "table_rows_total": 2348037,
+    "table_rows_independent": 2262336,
+    "experimental_rows_independent": 621066
   },
   "files": [
     "materials.jsonl",

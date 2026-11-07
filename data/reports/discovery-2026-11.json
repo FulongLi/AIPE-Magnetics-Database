@@ -1,0 +1,936 @@
+{
+  "investigated": "2026-11-07",
+  "method": "Zenodo, Figshare, Mendeley Data, Dryad, OSF, DataCite, IEEE DataPort, Hugging Face Hub, Kaggle and GitHub API searches plus checks of every registered upstream; licences read from record metadata or LICENSE files; files over 30 MB not downloaded",
+  "candidates": [
+    {
+      "id": "registry_check_princeton_magnet",
+      "title": "Princeton MagNet repo HEAD check",
+      "publisher": "Princeton University",
+      "url": "https://github.com/PrincetonUniversity/magnet",
+      "version": "main HEAD 8a6892e91ac622e42f8b9182a6dfe9094ceea97a (2026-05-12) == registered commit",
+      "licence": "MIT",
+      "redistribution": "permitted",
+      "access": "open direct download",
+      "formats": [
+        "h5",
+        "csv",
+        "json",
+        "xlsx"
+      ],
+      "materials": [
+        "3C90",
+        "3C94",
+        "3E6",
+        "3F4",
+        "77",
+        "78",
+        "N27",
+        "N30",
+        "N49",
+        "N87"
+      ],
+      "data_class": "experimental",
+      "relevance": "high",
+      "decision": "no change",
+      "reason": "No new commit on main since 8a6892e9; still the same 10 *_database.h5 files. Other branches: develop 31da7325 (behind main merge), hrl-ranking c25a5dec, vb/nocache, vb/uv, gh-pages. Latest release tag 0.1.1 (2024-02-02)."
+    },
+    {
+      "id": "registry_check_paderborn_materialdatabase",
+      "title": "upb-lea/materialdatabase HEAD check",
+      "publisher": "Paderborn University LEA",
+      "url": "https://github.com/upb-lea/materialdatabase",
+      "version": "main HEAD 04fff8e98ae3 (2026-08-27) == registered commit (pushed_at 2026-10-08 is a branch push)",
+      "licence": "GPL-3.0",
+      "redistribution": "permitted (copyleft)",
+      "access": "open direct download",
+      "data_class": "experimental + datasheet",
+      "relevance": "high",
+      "decision": "no change",
+      "reason": "No new commits on main after 04fff8e9."
+    },
+    {
+      "id": "registry_check_psma_mas",
+      "title": "PSMA / OpenMagnetics MAS HEAD check",
+      "publisher": "Power Supply Manufacturers Association / OpenMagnetics",
+      "url": "https://github.com/Power-Supply-Manufacturers-Association/MAS",
+      "version": "main HEAD f0941d911bc4 (2026-11-07, VERSION 2.8.0); registered c33ccfec is 15 commits behind",
+      "licence": "Apache-2.0",
+      "redistribution": "permitted",
+      "access": "open direct download",
+      "formats": [
+        "ndjson",
+        "json"
+      ],
+      "data_class": "datasheet (digitised) + derived fits",
+      "relevance": "high",
+      "decision": "re-pin recommended (not done this cycle; see gaps)",
+      "reason": "MATERIAL CHANGE: data/core_materials.ndjson changed (302 lines) by 15 commits 2026-11-02..07: Magnetics loss refits from maker curves, Kool Mu Ultra two-range Steinmetz, 75-Series Curie 500 C, ACME P-grade and Huoh Yow KL refits, ribbon thickness for 21 tape-wound materials, TDK/Proterial ML refits, TDG and Cosmo loss points and refits, PC95/PC91/DMR95B/PL-13/MB19D/20D/28D own loss curves, JFE MB1/MB1H/MB3/MB4/MBT1 curves, provenance flag digitizedFromGraph (ABT #2270); schema adds optional effectiveParameters.fillFactor (MAS-RFC 0020) and signed datasheet reactance (RFC 0019). Bump pinned commit to f0941d911bc4 and re-run importer; use the new digitizedFromGraph provenance flag to classify rows."
+    },
+    {
+      "id": "registry_check_paderborn_magnethub",
+      "title": "upb-lea/mag-net-hub HEAD check",
+      "publisher": "Paderborn University LEA",
+      "url": "https://github.com/upb-lea/mag-net-hub",
+      "version": "main HEAD 694d169867a3 (2026-11-06); registered 1ed635d7 is 6 commits behind",
+      "licence": "MIT",
+      "redistribution": "permitted",
+      "access": "open direct download",
+      "formats": [
+        "json",
+        "eqx"
+      ],
+      "data_class": "derived (model coefficients)",
+      "relevance": "low",
+      "decision": "reference (re-pin optional)",
+      "reason": "Change is models only: new kirchgaessner2026 sequence models (classical equivalent circuit + MLP16) with coefficient JSONs for 15 materials (3C90,3C92,3C94,3C95,3E6,3F4,77,78,FEC007,FEC014,N27,N30,N49,N87,T37), siegen_paderborn files renamed, one new test fixture tests/test_files/kirchgaessner2026_reference.json. No new measurement data."
+    },
+    {
+      "id": "registry_check_asu_mhz",
+      "title": "asu-mapel/MHzCoreLossAggregateDataset HEAD check",
+      "publisher": "Arizona State University MAPEL",
+      "url": "https://github.com/asu-mapel/MHzCoreLossAggregateDataset",
+      "version": "main HEAD 8cf2378d72f0 (2026-09-29) == registered",
+      "licence": "NOASSERTION",
+      "redistribution": "not permitted (no licence)",
+      "access": "open direct download",
+      "data_class": "aggregated experimental",
+      "relevance": "high",
+      "decision": "no change",
+      "reason": "No new commit and still no licence."
+    },
+    {
+      "id": "registry_check_magnet_challenge_1",
+      "title": "minjiechen/magnetchallenge (now magnetchallenge-1) HEAD check",
+      "publisher": "Princeton University",
+      "url": "https://github.com/minjiechen/magnetchallenge-1",
+      "version": "main HEAD 740fe6bbdb1c (2025-04-05) == registered",
+      "licence": "MIT (repository); data NOASSERTION",
+      "redistribution": "repo code permitted; Dropbox data unclear",
+      "access": "open (data on Dropbox)",
+      "data_class": "experimental",
+      "relevance": "high",
+      "decision": "registry URL updated",
+      "reason": "No new commit. Repository was renamed to minjiechen/magnetchallenge-1; update the registry URL."
+    },
+    {
+      "id": "registry_check_magnet_challenge_2",
+      "title": "minjiechen/magnetchallenge-2 HEAD check",
+      "publisher": "Princeton University",
+      "url": "https://github.com/minjiechen/magnetchallenge-2",
+      "version": "main HEAD ab4913ca63eb (2026-08-03) == registered",
+      "licence": "NOASSERTION",
+      "redistribution": "not permitted (no licence)",
+      "access": "open (links)",
+      "data_class": "experimental",
+      "relevance": "high",
+      "decision": "no change",
+      "reason": "No new commit and still no licence."
+    },
+    {
+      "id": "zenodo_7368936_cwh_n87",
+      "title": "Calculation of Ferrite Core Losses with Arbitrary Waveforms using the Composite Waveform Hypothesis: Reproducibility Dataset",
+      "publisher": "Zenodo (Guillod, Lee, Li, Wang, Chen, Sullivan; Dartmouth / Princeton)",
+      "url": "https://zenodo.org/records/7368936",
+      "doi": "10.5281/zenodo.7368936",
+      "version": "record 7368936 (2022-11-29), concept 10.5281/zenodo.7368935",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "csv",
+        "mat (v7.3)",
+        "h5 (pandas)"
+      ],
+      "materials": [
+        "TDK N87"
+      ],
+      "measurement_types": [
+        "volumetric core loss for piecewise-linear (triangular/trapezoidal) waveforms"
+      ],
+      "data_class": "experimental (MagNet measurements, re-packaged)",
+      "relevance": "high",
+      "total_size_bytes": 21807906,
+      "decision": "integrated (zenodo_7368936_cwh_n87)",
+      "reason": "Explicit CC-BY-4.0 with a clean scalar table (42,082 rows) and an is_paper flag. Note it is a subset/re-pack of MagNet N87 measurements: mark underlying_source=MagNet and deduplicate against princeton_magnet N87 rows before counting as independent."
+    },
+    {
+      "id": "guillod_large_signal_ferrite_apec24",
+      "title": "Large-Signal Properties in MnZn Ferrites: Code and Data (N87 permittivity/conductivity and large-signal permeability)",
+      "publisher": "GitHub otvam (Thomas Guillod, Dartmouth) / Zenodo 15102301",
+      "url": "https://github.com/otvam/large_signal_ferrite_apec24",
+      "doi": "10.5281/zenodo.15102301 (v2, concept 10.5281/zenodo.10059532)",
+      "version": "GitHub main dd06889876ca7d360ae3c4cf6da6c507ba5fef2c; Zenodo v2 zip md5:9fedd293bca9e28bd2877789989bd4f3 (3,978,793 B)",
+      "licence": "MIT",
+      "redistribution": "permitted (keep MIT notice)",
+      "access": "open direct download",
+      "formats": [
+        "csv",
+        "mat",
+        "txt"
+      ],
+      "materials": [
+        "TDK N87"
+      ],
+      "measurement_types": [
+        "small-signal permittivity and conductivity vs f",
+        "large-signal permittivity/conductivity vs f and E-field",
+        "permittivity/conductivity vs temperature",
+        "large-signal complex permeability vs f and B (MagNet-derived)",
+        "small-signal complex permeability (TDK datasheet)"
+      ],
+      "data_class": "experimental (eps*), derived from MagNet (mu_large), datasheet (mu_small)",
+      "relevance": "high",
+      "total_size_bytes": 1620482,
+      "decision": "integrated (guillod_n87_dielectric; permittivity/conductivity only)",
+      "reason": "Rare open dielectric (permittivity/conductivity) data for MnZn ferrite under large signal and temperature, MIT. mu_large is derived from MagNet and mu_small is copied from the TDK datasheet, so classify those as derived/datasheet and do not import mu_small (manufacturer data)."
+    },
+    {
+      "id": "nabih_magneto_core_loss_db",
+      "title": "Core characterization data set: loss, permeability and permittivity (Nabih 'magneto' MS Access database)",
+      "publisher": "GitHub asalahnabih (Ahmed Nabih, Virginia Tech CPES)",
+      "url": "https://github.com/asalahnabih/magneto",
+      "version": "main 0a3a0f1e10356b294ae6782eaa46f4d478e5bff9 (2025-01-22); data uploaded in b19f9aa6 (2025-01-13)",
+      "licence": "MIT",
+      "redistribution": "permitted (MIT; CITATION.cff asks to cite; related paper IEEE Xplore arnumber 10149511)",
+      "access": "open direct download",
+      "formats": [
+        "accdb (MS Access ACE)",
+        "pptx (docs)",
+        "cff"
+      ],
+      "materials": [
+        "Proterial ML91S",
+        "Proterial ML95S",
+        "Proterial ML27D",
+        "TDK? P53 / P63 (labels only)",
+        "Ferroxcube 3F36",
+        "DMEGC DMR51W",
+        "DMEGC DMR96A"
+      ],
+      "measurement_types": [
+        "sinusoidal core loss Pv vs Bm per frequency",
+        "complex permeability vs f",
+        "complex permittivity vs f"
+      ],
+      "data_class": "experimental (mostly own measurements; ML91S characteristics 'measured by Proterial'; DMR96A permeability 'from datasheet')",
+      "relevance": "high",
+      "total_size_bytes": 2558354,
+      "decision": "integrated (nabih_magneto)",
+      "reason": "This is the 'Nabih Magneto' source: MIT-licensed, MHz-range sinusoidal loss for 8 high-frequency MnZn ferrites plus complex mu/eps. Small (75 loss tests, 429 Bm-Pv points). Requires an Access reader (Jackcess/mdbtools; python access-parser 0.0.x fails on this ACE file). Exclude the DMR96A datasheet permeability and flag ML91S characteristics as third-party (Proterial) measurements. Orphan rows with empty CID (402 permeability, 607 permittivity) and the 'Paste Errors' table must be dropped."
+    },
+    {
+      "id": "zenodo_14893851_inrim_interlab_nofesi_rotational",
+      "title": "Data sets of interlaboratory comparison of alternating and rotational loss measurements in non-oriented Fe-Si sheets",
+      "publisher": "Zenodo (INRIM, Univ. Lyon 1 Ampere, PoliTO, Univ. Paris-Saclay SATIE)",
+      "url": "https://zenodo.org/records/14893851",
+      "doi": "10.5281/zenodo.14893851",
+      "version": "record 14893851 (2025-02-19), concept 10.5281/zenodo.14893850",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "zip of TXT + XLSX",
+        "pdf"
+      ],
+      "materials": [
+        "non-oriented Fe-3.5wt%Si, 0.30 mm, rho 56.9e-8 Ohm m, density 7600 kg/m3, Js 1.98 T"
+      ],
+      "measurement_types": [
+        "alternating energy loss per cycle (RSST, average RD/TD)",
+        "rotational energy loss per cycle (RSST)",
+        "Epstein vs local H/B-coil reference loss"
+      ],
+      "data_class": "experimental (metrology interlaboratory comparison)",
+      "relevance": "low (50-200 Hz electrical steel)",
+      "total_size_bytes": 341676,
+      "decision": "reference (deferred: electrical steel)",
+      "reason": "Clean CC-BY metrology data with stated uncertainty context; useful for steel/low-frequency coverage, not for power-electronics ferrites."
+    },
+    {
+      "id": "zenodo_16281115_shifted_go_steel_cores",
+      "title": "Data Sets of Magnetic Loss Measurements on Non-Oriented and Grain-Oriented Shifted Steel Cores",
+      "publisher": "Zenodo (Dobak, Fuzer, Petryshynets, Kollar, Kovac; UPJS Kosice / IMR SAS)",
+      "url": "https://zenodo.org/records/16281115",
+      "doi": "10.5281/zenodo.16281115",
+      "version": "record 16281115 (2024-11-10; PDF dated 21 July 2025), concept 10.5281/zenodo.16281114",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "txt",
+        "pdf"
+      ],
+      "materials": [
+        "0.35 mm grain-oriented Si steel cores with layers shifted by theta = 0..90 deg",
+        "0.35 mm non-oriented Si steel core"
+      ],
+      "measurement_types": [
+        "energy loss per cycle vs frequency (fluxmetric; DC point-by-point + AC sinusoidal)"
+      ],
+      "data_class": "experimental",
+      "relevance": "low (low-frequency steel)",
+      "total_size_bytes": 165766,
+      "decision": "reference (deferred: electrical steel)",
+      "reason": "CC-BY, tiny, clean; same authors' series as the registered zenodo_21626116, so the same importer pattern applies. Low power-electronics relevance."
+    },
+    {
+      "id": "zenodo_5910893_hefmag_loops_no_go",
+      "title": "EMPIR 19ENG06 HEFMAG hysteresis loops NO and GO dataset example",
+      "publisher": "Zenodo (M. Pasquale, INRIM)",
+      "url": "https://zenodo.org/records/5910893",
+      "doi": "10.5281/zenodo.5910893",
+      "version": "record 5910893 v1 (2022-01-27)",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "zip of dat + pdf"
+      ],
+      "materials": [
+        "NO FeSi sheet 0.2 mm",
+        "GO FeSi sheet (PDF says 0.3 mm in figure, 0.2 mm in caption)"
+      ],
+      "measurement_types": [
+        "50 Hz hysteresis loops H-J (Epstein, IEC 60404-2, 700 turns)"
+      ],
+      "data_class": "experimental",
+      "relevance": "low",
+      "total_size_bytes": 318871,
+      "decision": "reference",
+      "reason": "CC-BY but explicitly an 'example' subset of a few loops at 50 Hz for electrical steel; marginal value for PE magnetics."
+    },
+    {
+      "id": "zenodo_10725890_inrim_first_magnetization",
+      "title": "Examples of first magnetization curves of ferromagnetic samples",
+      "publisher": "Zenodo (M. Pasquale, INRIM)",
+      "url": "https://zenodo.org/records/10725890",
+      "doi": "10.5281/zenodo.10725890",
+      "version": "record 10725890 (2024-02-29)",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "dat (text)"
+      ],
+      "materials": [
+        "Fe-Si 3.5% NO",
+        "C10",
+        "M470-50 FeSi 2%",
+        "FeSi 3.2% NO",
+        "M330",
+        "M270",
+        "F430A",
+        "AISI 415",
+        "AISI 422",
+        "GO FeSi 0.2",
+        "M5 GO",
+        "M4T27",
+        "M3 M3T20 GO",
+        "M5T30 GO",
+        "M3 M3T23B",
+        "M2H GO",
+        "M0H23 GO",
+        "430 F",
+        "430FR",
+        "CAST IRON",
+        "FeSiAl",
+        "SMC"
+      ],
+      "measurement_types": [
+        "DC first magnetization (normal) curves B(H) or J(H)"
+      ],
+      "data_class": "experimental (INRIM)",
+      "relevance": "medium (B-H curves for FEM incl. FeSiAl and SMC)",
+      "total_size_bytes": 16705,
+      "decision": "integrated (zenodo_10725890_inrim)",
+      "reason": "CC-BY, 24 materials incl. FeSiAl and SMC; good open B-H curve source for FEM with clear provenance."
+    },
+    {
+      "id": "rodbuk_tatpjh_punched_m270_35_steinmetz",
+      "title": "Changes in the Steinmetz Coefficients of Punched Soft-Magnetic Sheets (M270-35A, 50 Hz)",
+      "publisher": "RODBUK - Lodz University of Technology Dataverse (Gmyrek, Szulakowski, Vaschetto, Cavagnino)",
+      "url": "https://rdb.p.lodz.pl/citation?persistentId=doi:10.34658/RDB.TATPJH",
+      "doi": "10.34658/RDB.TATPJH",
+      "version": "Dataverse version 2.0",
+      "licence": "CC0-1.0",
+      "redistribution": "permitted (public domain dedication)",
+      "access": "open direct download",
+      "formats": [
+        "tab (Dataverse ingest of xlsx)",
+        "xlsx (original)",
+        "jpg"
+      ],
+      "materials": [
+        "M270-35A non-oriented electrical steel (punched strips of different widths)"
+      ],
+      "measurement_types": [
+        "specific loss Ps vs peak polarization Jm at 50 Hz"
+      ],
+      "data_class": "experimental",
+      "relevance": "low",
+      "total_size_bytes": 888012,
+      "decision": "reference",
+      "reason": "CC0 but 50 Hz motor steel cut-edge study; sibling record 10.34658/RDB.ZBXAGP (CC0) has no files."
+    },
+    {
+      "id": "zenodo_17053338_mre_powder_hysteresis",
+      "title": "Magnetic hysteresis dataset of magnetic powders (magnetorheological elastomers)",
+      "publisher": "Zenodo (O. Sodomka, Univ. West Bohemia)",
+      "url": "https://zenodo.org/records/17053338",
+      "doi": "10.5281/zenodo.17053338",
+      "version": "record 17053338 (2025-09-04)",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "xlsx"
+      ],
+      "materials": [
+        "MRE with 50 wt% carbonyl iron SQ",
+        "carbonyl iron HS",
+        "Fe85Si15",
+        "NdFeB MQP-15-7",
+        "Sr ferrite SF-D360",
+        "Fe3O4",
+        "Fe2O3"
+      ],
+      "measurement_types": [
+        "quasi-static J(H)/B(H) hysteresis"
+      ],
+      "data_class": "experimental",
+      "relevance": "low",
+      "total_size_bytes": 721317,
+      "decision": "ignore",
+      "reason": "Elastomer composites, not power-electronics core materials."
+    },
+    {
+      "id": "zenodo_21416816_metglas_amcc1000_waveforms",
+      "title": "Metglas AMCC-1000 dynamic-transformer experiment: Siglent waveforms and MATLAB analysis",
+      "publisher": "Zenodo (Kortela, Ruoho, Gasik; Aalto)",
+      "url": "https://zenodo.org/records/21416816",
+      "doi": "10.5281/zenodo.21416816",
+      "version": "v1.0.0 (2026-07-17)",
+      "licence": "CC-BY-4.0 (data), MIT (code)",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "zip: Siglent .DAT binary, png, .m, md"
+      ],
+      "materials": [
+        "Metglas AMCC-1000 amorphous C-core"
+      ],
+      "measurement_types": [
+        "oscilloscope voltage waveforms of a resonant LC transformer circuit (~37.8 kHz)"
+      ],
+      "data_class": "experimental (circuit level)",
+      "relevance": "low",
+      "total_size_bytes": 326922,
+      "decision": "ignore",
+      "reason": "Not a material characterisation; single circuit waveform in binary scope format."
+    },
+    {
+      "id": "maganalyst_sample_curves",
+      "title": "MagAnalyst sample anhysteretic/B-H curves",
+      "publisher": "GitHub jsilveyra/mag-analyst (Gonzalez, Silveyra, Conde Garrido)",
+      "url": "https://github.com/jsilveyra/mag-analyst/tree/55aad5f7fbbab03baecd638fc096ccaa1ec6a5e6/data/sampleData",
+      "version": "55aad5f7fbbab03baecd638fc096ccaa1ec6a5e6",
+      "licence": "MIT (license.txt; GitHub API reports NOASSERTION because of the custom text)",
+      "redistribution": "permitted (MIT) but data provenance not stated",
+      "access": "open direct download",
+      "formats": [
+        "csv (semicolon or comma)",
+        "txt (fit results)"
+      ],
+      "materials": [
+        "Finemet (transverse annealed)",
+        "GO Si steel under 67 MPa",
+        "JNEX-900 6.5% Si steel",
+        "MnZn ferrite (unspecified)"
+      ],
+      "measurement_types": [
+        "anhysteretic / magnetization curves"
+      ],
+      "data_class": "unclear (likely digitised from literature)",
+      "relevance": "low",
+      "decision": "ignore",
+      "reason": "Example inputs for a fitting toolbox; source and conditions not documented."
+    },
+    {
+      "id": "figshare_28182503_fesicr_powder_cores",
+      "title": "Optimization Strategies for FeSiCr-Based Soft Magnetic Powder Cores (interfacial solid-phase reaction) - data",
+      "publisher": "Figshare (Kaixuan Li)",
+      "url": "https://figshare.com/articles/dataset/28182503",
+      "doi": "10.6084/m9.figshare.28182503.v1",
+      "version": "v1 (2025-01-13)",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "zip: xlsx, tiff"
+      ],
+      "materials": [
+        "lab-made FeSiCr powder cores with insulating coatings (sample IDs not labelled)"
+      ],
+      "measurement_types": [
+        "core loss Pcv vs f at 10/20/30 mT",
+        "permeability vs f",
+        "VSM",
+        "XRD/XPS/FTIR/SEM"
+      ],
+      "data_class": "experimental (research prototypes)",
+      "relevance": "low",
+      "total_size_bytes": 7305516,
+      "decision": "ignore",
+      "reason": "Unlabelled sample columns and no units in Pcv.xlsx/Permeability.xlsx; research prototypes, not commercial materials."
+    },
+    {
+      "id": "figshare_31444576_amorphous_smc",
+      "title": "Interfacial spin-order engineering mitigates the permeability-loss trade-off in amorphous soft magnetic composites - source data",
+      "publisher": "Figshare (Ke, Ding, Wang, Chen)",
+      "url": "https://figshare.com/articles/dataset/31444576",
+      "doi": "10.6084/m9.figshare.31444576.v1",
+      "version": "v1 (2026-10-05)",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "xlsx"
+      ],
+      "materials": [
+        "FeSiBCCr amorphous SMC with TiO2/CeO2/Fe3O4 coatings (lab samples)"
+      ],
+      "measurement_types": [
+        "figure source data: core loss vs f (Fig 3e) and vs B (Fig 3f), permeability vs f (Fig 3c), DC bias permeability (Fig 3d), hysteresis (Fig 3b)"
+      ],
+      "data_class": "experimental (research prototypes)",
+      "relevance": "low",
+      "total_size_bytes": 63232,
+      "decision": "ignore",
+      "reason": "Paper figure source data for lab composites; conditions (B for Fig 3e, f for Fig 3f) only in the paper."
+    },
+    {
+      "id": "ieee_dataport_7khj_bd03_dc_bias_core_loss",
+      "title": "Magnetic Core Loss with Superimposed DC Bias",
+      "publisher": "IEEE DataPort (B. N. Sanusi, DTU)",
+      "url": "https://ieee-dataport.org/documents/magnetic-core-loss-superimposed-dc-bias",
+      "doi": "10.21227/7khj-bd03",
+      "version": "created 2022-07-20, no version",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted by licence, but files only reachable behind IEEE DataPort subscription",
+      "access": "login + IEEE DataPort subscription ('Standard Dataset')",
+      "formats": [
+        "zip (csv, mat, m)",
+        "txt"
+      ],
+      "materials": [
+        "TDK PC50 (mu_i 1500)",
+        "TDK PC200 (mu_i 800)"
+      ],
+      "measurement_types": [
+        "core loss with superimposed DC bias, raw waveforms + processed"
+      ],
+      "data_class": "experimental",
+      "relevance": "high",
+      "decision": "reference",
+      "reason": "High value (MHz + DC bias) and CC-BY, but subscription-gated and 244 MB; ask the author for an open copy (e.g. DTU Data) or let users supply it via an adapter."
+    },
+    {
+      "id": "ieee_dataport_other_core_loss_entries",
+      "title": "Other IEEE DataPort core-loss entries (85fz-ys67 Tacca Steinmetz; qgyg-q357 processed MagNet; tee6-4s06 multi-state-space; mw7j-v404 core loss prediction; 18kr-b698 IPMSM iron losses)",
+      "publisher": "IEEE DataPort",
+      "url": "https://ieee-dataport.org/keywords/core-loss",
+      "doi": "10.21227/85fz-ys67; 10.21227/qgyg-q357; 10.21227/tee6-4s06; 10.21227/mw7j-v404; 10.21227/18kr-b698",
+      "licence": "CC-BY-4.0 (all, per DataCite rightsList)",
+      "redistribution": "licence permits; access gated",
+      "access": "login + subscription (85fz-ys67 page: 'Files have not been uploaded for this dataset'; only a PDF and slides)",
+      "data_class": "derived (MagNet re-processing / ML) or simulation (IPMSM FEA)",
+      "relevance": "low",
+      "decision": "ignore",
+      "reason": "Either MagNet derivatives, FEA results, or no data files."
+    },
+    {
+      "id": "zenodo_12583064_pure_iron_powder_cores",
+      "title": "Data for Enhanced soft magnetic properties with high frequency stability of pure iron powder cores via high-pressure compaction",
+      "publisher": "Zenodo (Z. Bircakova, IMR SAS)",
+      "url": "https://zenodo.org/records/12583064",
+      "doi": "10.5281/zenodo.12583064",
+      "version": "2024-06-28",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "zip"
+      ],
+      "materials": [
+        "lab pure-iron powder cores"
+      ],
+      "measurement_types": [
+        "permeability/loss vs frequency (paper data)"
+      ],
+      "data_class": "experimental (research prototypes)",
+      "relevance": "low",
+      "total_size_bytes": 48048608,
+      "decision": "reference",
+      "reason": "48 MB zip (over the 30 MB inspection limit); research samples, not catalogue materials."
+    },
+    {
+      "id": "zenodo_11074551_fe_sio2_composites",
+      "title": "Data for: Effects of Particle Surface Modification on Magnetic Behavior of Soft Magnetic Fe@SiO2 Composites and Fe Compacts",
+      "publisher": "Zenodo (Maciaszek, Kollar, Bircakova)",
+      "url": "https://zenodo.org/records/11074551",
+      "doi": "10.5281/zenodo.11074551",
+      "version": "2024-04-26",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "zip"
+      ],
+      "materials": [
+        "Fe@SiO2 SMC, Fe compacts"
+      ],
+      "measurement_types": [
+        "energy loss, permeability (e.g. 0.5 T, 100 Hz)"
+      ],
+      "data_class": "experimental (research prototypes)",
+      "relevance": "low",
+      "total_size_bytes": 510412663,
+      "decision": "ignore",
+      "reason": "510 MB, research composites."
+    },
+    {
+      "id": "zenodo_18502162_physics_ai_hf_loss_domains",
+      "title": "Dataset: Automated discovery of the microscopic origin of high-frequency magnetic energy loss via physics-informed AI",
+      "publisher": "Zenodo (Nishioka, Kotsugi, Tanaka)",
+      "url": "https://zenodo.org/records/18502162",
+      "doi": "10.5281/zenodo.18502162",
+      "version": "2026-02-06",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "zip"
+      ],
+      "materials": [
+        "simulated magnetic domain images"
+      ],
+      "measurement_types": [
+        "micromagnetic simulation images at 100 kHz/1 MHz/10 MHz"
+      ],
+      "data_class": "simulation",
+      "relevance": "low",
+      "total_size_bytes": 78482496,
+      "decision": "ignore",
+      "reason": "Simulation images, not material data."
+    },
+    {
+      "id": "zenodo_hefmag_reports_pdf",
+      "title": "EMPIR 19ENG06 HEFMAG reports with tabulated results (8304081 Epstein at operational temperature; 10039686 Co-Fe/Si-Fe Epstein at temperature; 8304982 ring samples 10 kHz-1 MHz; 8288793/8288798/10031737/10032756 Epstein and SST comparisons; 8298627 2-D comparison; 8304172/8304731 good-practice guides; 8299052 'Loss in Ribbons' software + mu_vitroperm_500.mat)",
+      "publisher": "Zenodo (NPL, INRIM, PTB, CMI, Univ. Nottingham, ...)",
+      "url": "https://zenodo.org/search?q=HEFMAG",
+      "doi": "10.5281/zenodo.8304081; 10.5281/zenodo.10039686; 10.5281/zenodo.8304982; 10.5281/zenodo.8299052 (others as listed)",
+      "version": "2022-2023",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "formats": [
+        "pdf",
+        "m",
+        "mat"
+      ],
+      "materials": [
+        "NO FeSi",
+        "Fe laminations",
+        "FeCo",
+        "amorphous/nanocrystalline ring samples (8304982)"
+      ],
+      "measurement_types": [
+        "total power loss vs temperature/frequency (Epstein, SST, rings)"
+      ],
+      "data_class": "experimental (tables inside PDFs)",
+      "relevance": "low-medium",
+      "decision": "reference",
+      "reason": "Licence fine, but numbers are only in PDF reports (no machine-readable tables); 8304982 (rings 10 kHz-1 MHz) is the only PE-relevant one and its data set is already integrated as zenodo_8292861."
+    },
+    {
+      "id": "zenodo_15102301_and_23863775_code_records",
+      "title": "Code records using MagNet (23863775 few-shot core-loss LightGBM, MIT; otvam/magnet_webinar_eqn_models N87 .mat, MIT)",
+      "publisher": "Zenodo / GitHub",
+      "url": "https://zenodo.org/records/23863775",
+      "doi": "10.5281/zenodo.23863775",
+      "version": "2026-11-01",
+      "licence": "MIT",
+      "redistribution": "permitted (code/results only)",
+      "access": "open direct download",
+      "data_class": "derived",
+      "relevance": "low",
+      "decision": "ignore",
+      "reason": "Model code and result tables only; no new measurements."
+    },
+    {
+      "id": "lodz_rodbuk_zbxagp",
+      "title": "The Effect of Sample's Dimension and Cutting Technology on Magnetization and Specific Iron Losses of FeSi Laminations",
+      "publisher": "RODBUK Lodz",
+      "url": "https://rdb.p.lodz.pl/citation?persistentId=doi:10.34658/RDB.ZBXAGP",
+      "doi": "10.34658/RDB.ZBXAGP",
+      "version": "1.0",
+      "licence": "CC0-1.0",
+      "redistribution": "permitted",
+      "access": "open (but 0 files in the record)",
+      "data_class": "n/a",
+      "relevance": "low",
+      "decision": "ignore",
+      "reason": "Record has no data files."
+    },
+    {
+      "id": "mendeley_hgzgpcvjxk_nog_steel_mechanical",
+      "title": "Experimental Data on Non-Oriented Electrical Steel Sheets Magnetic Characteristics under Mechanical Loading",
+      "publisher": "Mendeley Data (UFSC GRUCAD)",
+      "url": "https://data.mendeley.com/datasets/hgzgpcvjxk/1",
+      "doi": "10.17632/hgzgpcvjxk.1",
+      "version": "1",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download (Mendeley)",
+      "materials": [
+        "NO Fe-Si sheets (3 samples)"
+      ],
+      "measurement_types": [
+        "SST B-H loops / loss under 5-20 MPa tensile/compressive stress"
+      ],
+      "data_class": "experimental",
+      "relevance": "low",
+      "decision": "reference",
+      "reason": "Motor steel under stress; file list not inspected."
+    },
+    {
+      "id": "mendeley_other_steel_smc",
+      "title": "Other Mendeley Data records (8xmc8mbhjh AM Fe-6.5Si cores - metadata only, data on request; knt342b4fx / fb6jp8t374 compressive stress on GO steel; 67kh7m97zt stress-relief annealing cut edge; 34bjrk4xxj Fe/MgO SMC LOM images; 8zpk3r74b9 irradiation of nanocrystalline alloy)",
+      "publisher": "Mendeley Data",
+      "url": "https://data.mendeley.com/",
+      "doi": "10.17632/8xmc8mbhjh.1; 10.17632/knt342b4fx.1; 10.17632/fb6jp8t374.2; 10.17632/67kh7m97zt.1; 10.17632/34bjrk4xxj.2; 10.17632/8zpk3r74b9.1",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open (8xmc8mbhjh: 'Additional supporting data may be made available upon reasonable request')",
+      "data_class": "experimental",
+      "relevance": "low",
+      "decision": "ignore",
+      "reason": "Electrical steel/SMC research data or images; not PE core characterisation."
+    },
+    {
+      "id": "figshare_25975198_smc_processing_dataset",
+      "title": "The first experimentally obtained dataset on processing parameters and properties of soft magnetic composites v.2",
+      "publisher": "Figshare (Milyutin, Bures, Faberova, Bircakova; IMR SAS)",
+      "url": "https://figshare.com/articles/dataset/25975198/2",
+      "doi": "10.6084/m9.figshare.25975198.v2",
+      "version": "v2 (2025)",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open direct download",
+      "materials": [
+        "lab SMCs"
+      ],
+      "measurement_types": [
+        "processing parameters vs density/resistivity/magnetic properties"
+      ],
+      "data_class": "experimental (process-property table)",
+      "relevance": "low",
+      "total_size_bytes": 21563,
+      "decision": "ignore",
+      "reason": "Process/property ML table for lab composites."
+    },
+    {
+      "id": "asep_0650992_nizn_ferrite_ceramics",
+      "title": "High-frequency and microwave magnetic properties of Ni0.5Zn0.5Fe2O4 spinel ferrite ceramics - data",
+      "publisher": "ASEP (Czech Academy of Sciences)",
+      "url": "https://doi.org/10.57680/asep.0650992",
+      "doi": "10.57680/asep.0650992",
+      "version": "2026",
+      "licence": "CC-BY-4.0",
+      "redistribution": "permitted with attribution",
+      "access": "open (repository page)",
+      "materials": [
+        "lab Ni0.5Zn0.5Fe2O4 ceramics"
+      ],
+      "measurement_types": [
+        "complex permeability HF/microwave"
+      ],
+      "data_class": "experimental (research ceramics)",
+      "relevance": "low-medium",
+      "total_size_bytes": 2200000,
+      "decision": "reference",
+      "reason": "NiZn permeability spectra could be useful, but research ceramics, size given as '2.2 MB'; not inspected."
+    },
+    {
+      "id": "zenodo_18373560_drs_ferrite_tsnuk",
+      "title": "Experimental_DRS_ferrite_Characterisation_WP2_TSNUK (APPROACH project radio-absorbing ferrite composites)",
+      "publisher": "Zenodo (I. Fesych, Taras Shevchenko National Univ. Kyiv)",
+      "url": "https://zenodo.org/records/18373560",
+      "doi": "10.5281/zenodo.18373560",
+      "version": "2026-01-26",
+      "licence": "NOASSERTION",
+      "redistribution": "not permitted (no licence)",
+      "access": "open direct download",
+      "formats": [
+        "csv",
+        "docx"
+      ],
+      "materials": [
+        "polymer/ferrite RAM composites"
+      ],
+      "measurement_types": [
+        "dielectric/magnetic relaxation spectra (microwave absorbers)"
+      ],
+      "data_class": "experimental",
+      "relevance": "low",
+      "total_size_bytes": 5163645,
+      "decision": "ignore",
+      "reason": "No licence; microwave absorber composites."
+    },
+    {
+      "id": "kingress33_pfc_coreloss",
+      "title": "PFC-CoreLoss (CH467160 powder-core B/H waveforms with DC bias, FNN/MMINN models)",
+      "publisher": "GitHub kingress33",
+      "url": "https://github.com/kingress33/PFC-CoreLoss",
+      "version": "f1b03c9d6c97693077cacf6118fe2cd241f6639c (2025-12-26)",
+      "licence": "NOASSERTION",
+      "redistribution": "not permitted (no licence)",
+      "access": "open direct download",
+      "formats": [
+        "csv"
+      ],
+      "materials": [
+        "CH467160 powder core (Chang Sung part number; material per datasheet)"
+      ],
+      "measurement_types": [
+        "B(t)/H(t) waveforms, Hdc, duty, frequency, temperature, volumetric loss; PFC operating points"
+      ],
+      "data_class": "experimental",
+      "relevance": "medium-high (DC-bias powder-core loss)",
+      "total_size_bytes": 2492694982,
+      "decision": "reference",
+      "reason": "Useful DC-biased powder-core data but no licence and ~2.5 GB repo; ask the owner to add a licence."
+    },
+    {
+      "id": "other_github_no_licence",
+      "title": "Other GitHub magnetics repos without a licence: clauscyril/ferrite_loss (Princeton-derived CSV + UNIPG N30/T38 .mat), cyrille-gt/magnet-core-loss, edeleu/Core-Loss-Framework, Ireanuoluwa/ML-Core-Prediction, HEFMAG/Metrology-... (placeholder files + mu_vitroperm_500.mat), upb-lea/hardcore-magnet-challenge",
+      "publisher": "GitHub",
+      "url": "https://github.com/clauscyril/ferrite_loss",
+      "licence": "NOASSERTION",
+      "redistribution": "not permitted (no licence)",
+      "access": "open direct download",
+      "data_class": "mostly derived from MagNet; small own measurements in ferrite_loss/measurements_data/UNIPG",
+      "relevance": "low",
+      "decision": "ignore",
+      "reason": "No licence and mostly MagNet derivatives."
+    },
+    {
+      "id": "other_github_licensed_derived",
+      "title": "Licensed GitHub repos with derived/datasheet data: JunWang-Bristol/MagLearn (MIT, Document/LICENSE.txt; GitHub API shows none) 3C90 predictions; Aaron-H-Wang/LSSI (MIT) CoreLossData_FR78/79/95.mat (source not stated, likely MagNet Challenge 2); dword1511/powdercore-q (Apache-2.0) manufacturer loss coefficients for Arnold/Chang Sung/Magnetics/Micrometals in .py; nasa-jpl/TetherCAD (Apache-2.0) databases/FairRite_material_DB.csv (946 B, datasheet); prasilo/simulink-pwm-inductor (BSD-2) hyst/hydata_nippon_35h300.txt; Zubax/jafit (GPL-3.0) data/B(H).Altair_Flux.Example.csv; romanszewczyk/G-C_model_FINEMET_core (MIT) Icurr.txt",
+      "publisher": "GitHub",
+      "url": "https://github.com/dword1511/powdercore-q",
+      "licence": "MIT / Apache-2.0 / BSD-2-Clause / GPL-3.0 (per repo)",
+      "redistribution": "code licence permits, but the data are manufacturer datasheet values or MagNet/MC2 derivatives whose own terms govern",
+      "access": "open direct download",
+      "data_class": "datasheet / derived",
+      "relevance": "low",
+      "decision": "ignore",
+      "reason": "No independent measurements; would duplicate manufacturer or MagNet data with weaker provenance."
+    },
+    {
+      "id": "femm_matlib",
+      "title": "FEMM 4.2 material library (matlib.dat)",
+      "publisher": "David Meeker / femm.info (mirror github.com/cenit/FEMM)",
+      "url": "https://github.com/cenit/FEMM/blob/7d9e8ed90772ddb939a3256f976e231bcb5cca97/bin/matlib.dat",
+      "version": "cenit/FEMM 7d9e8ed90772ddb939a3256f976e231bcb5cca97",
+      "licence": "AFPL-8 (Aladdin Free Public License v8)",
+      "redistribution": "restricted (AFPL forbids commercial distribution; not an open-data licence)",
+      "access": "open direct download",
+      "formats": [
+        "FEMM text block format"
+      ],
+      "materials": [
+        "permanent magnets (Alnico, NdFeB, SmCo, ferrite)",
+        "steels: US Steel 2-S, pure iron, 1006/1010/1018/1020/1117, 416/430/455 stainless, Carpenter silicon core iron, M-15, M-19 and more"
+      ],
+      "measurement_types": [
+        "B-H curves, conductivity, lamination data"
+      ],
+      "data_class": "datasheet/literature compilation",
+      "relevance": "low",
+      "decision": "reference",
+      "reason": "AFPL is not compatible with unrestricted redistribution; mostly steels and magnets."
+    },
+    {
+      "id": "pyleecan_material_library",
+      "title": "pyleecan material library (electrical steel B-H and loss data)",
+      "publisher": "EOMYS / pyleecan",
+      "url": "https://github.com/Eomys/pyleecan/tree/master/pyleecan/Data/Material",
+      "version": "master (pushed 2026-08-20)",
+      "licence": "Apache-2.0",
+      "redistribution": "permitted by repo licence; underlying values appear to be manufacturer datasheet data",
+      "access": "open direct download",
+      "formats": [
+        "json",
+        "xlsx"
+      ],
+      "materials": [
+        "M19",
+        "M19_29Ga",
+        "M235-35A",
+        "M270-35A",
+        "M400-50A",
+        "M530-65A",
+        "M800-50A",
+        "HF-10X",
+        "NdFeB grades"
+      ],
+      "measurement_types": [
+        "B-H curves, iron-loss tables"
+      ],
+      "data_class": "datasheet",
+      "relevance": "low",
+      "decision": "ignore",
+      "reason": "Motor steels from datasheets; outside PE scope."
+    },
+    {
+      "id": "huggingface_hub_search",
+      "title": "Hugging Face Hub dataset search (magnet, core loss, magnetic, ferrite, hysteresis, magnetics, B-H, permeability, steinmetz, mag-net)",
+      "publisher": "Hugging Face",
+      "url": "https://huggingface.co/datasets?search=magnetic",
+      "licence": "n/a",
+      "redistribution": "n/a",
+      "access": "open",
+      "data_class": "n/a",
+      "relevance": "none",
+      "decision": "ignore",
+      "reason": "No soft-magnetic characterisation datasets. Only hit in the domain is FulongLi/AIPE-Magnetics-Dataset (this project's own export, cc-by-4.0). seidenberger/magnetdb (cc-by-4.0) is a video-match CSV; antitheft159/magNet is a notebook; the rest are unrelated (MRI, robotics, geomagnetism)."
+    },
+    {
+      "id": "kaggle_search",
+      "title": "Kaggle dataset search (core loss, magnetic core, ferrite, hysteresis, magnet challenge, steinmetz, electrical steel, inductor)",
+      "publisher": "Kaggle",
+      "url": "https://www.kaggle.com/datasets",
+      "licence": "n/a",
+      "redistribution": "n/a",
+      "access": "login needed to download",
+      "data_class": "n/a",
+      "relevance": "none",
+      "decision": "ignore",
+      "reason": "No magnetics characterisation datasets found (only magnetic-tile defect images, geomagnetism, a motor dataset)."
+    },
+    {
+      "id": "other_repositories_dead_ends",
+      "title": "Dryad, OSF, DataCite-indexed repositories (4TU, RADAR, KITopen, mediaTUM, RWTH, DTU Data, NTNU, ETH, NPL, PTB, Cardiff, ScienceDB)",
+      "publisher": "various",
+      "url": "https://api.datacite.org/dois",
+      "licence": "n/a",
+      "redistribution": "n/a",
+      "access": "n/a",
+      "data_class": "n/a",
+      "relevance": "none/low",
+      "decision": "ignore",
+      "reason": "DataCite searches (39 queries incl. German terms) returned no relevant data from 4TU/RADAR/KITopen/mediaTUM/RWTH/DTU/NTNU/ETH/NPL/PTB. Dryad: only nanoferrite chemistry. OSF: only 563xk (ferrite sheets eddy currents, WPT) - not characterisation. Cardiff 10.17035/d.2017.0043126286 (local properties of NO steel near punched edge, xlsx <100 MB, rightsList empty -> NOASSERTION). ScienceDB: 10.57760/sciencedb.43429 FeNi50@SiO2 (2.39 GB, rights empty -> NOASSERTION), sciencedb.015j0 DC-bias coating (restricted access), sciencedb.35383 FeSiB laser powder bed (cc-by-nd-4.0, no derivatives). ResearchGate 10.13140/rg.2.2.19698.73922 'Property Data of Soft Magnetic Materials (motor design)' - unpublished, NOASSERTION."
+    }
+  ]
+}

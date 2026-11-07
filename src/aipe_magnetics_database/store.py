@@ -94,10 +94,42 @@ class Table:
 class MagneticDatabase:
     """Lazy, read-only view of the data store."""
 
-    def __init__(self, root: str | Path | None = None):
+    def __init__(self, root: str | Path | None = None, *, allow_download: bool | None = None):
         self.root = data_root(root)
         self.normalized = self.root / "normalized"
         self.canonical_dir = self.root / "canonical"
+        self.allow_download = allow_download  # None: AIPE_MAGNETICS_ALLOW_DOWNLOAD decides (default: offline)
+
+    @functools.cached_property
+    def hub(self) -> Any:
+        """The published Hugging Face release of this data store (``None`` before the first publication)."""
+        from aipe_magnetics_database.hub.remote import HubRelease
+        return HubRelease.from_data_root(self.root)
+
+    def _sidecar(self, source_id: str, record_id: str, table: dict[str, Any]) -> Path:
+        """Local path of a table sidecar: the data store's copy, else the published Hugging Face release (cached)."""
+        path = self.normalized / self.source_indexes[source_id]["_directory"] / table["rows_file"]
+        if path.is_file():
+            return path
+        hub = self.hub
+        remote = hub.table_path(source_id, table["rows_file"]) if hub is not None else None
+        details = {"rows_sha256": table.get("rows_sha256"), "row_count": table["row_count"]}
+        if remote is None or not hub.has(remote):
+            raise DataNotFoundError(f"{record_id}: table sidecar {table['rows_file']} is not in this data store (large regenerated table) "
+                                    f"and not in a published Hugging Face release; run 'aipe-magnetics-db refresh --source {source_id} "
+                                    "--allow-download' in a checkout", details=details)
+        from aipe_magnetics_database.data.sources.cache import DownloadNotAllowedError
+        from aipe_magnetics_database.hub.remote import downloads_allowed
+        try:
+            local = hub.fetch(remote, allow_download=downloads_allowed(self.allow_download))
+        except DownloadNotAllowedError:
+            raise DataNotFoundError(f"{record_id}: table sidecar {table['rows_file']} is published at {hub.url(remote)} but is not cached; "
+                                    "set AIPE_MAGNETICS_ALLOW_DOWNLOAD=1 (or pass --allow-download / allow_download=True) to download it "
+                                    "once (SHA-256 verified)", details=details | {"url": hub.url(remote)}) from None
+        if table.get("rows_sha256") and hub.files[remote]["sha256"] != table["rows_sha256"]:
+            from aipe_magnetics_database.common.errors import DataIntegrityError
+            raise DataIntegrityError(f"{record_id}: published sidecar digest differs from the record's rows_sha256", details=details)
+        return local
 
     # -- raw loading ---------------------------------------------------------------------------------------
     @functools.cached_property
@@ -152,7 +184,9 @@ class MagneticDatabase:
         canonical = json.loads((self.canonical_dir / "index.json").read_text(encoding="utf-8"))
         per_source = {sid: {"records": idx["record_counts"], "table_rows": idx["table_rows"], "version": idx["version"], "license": idx["license"]}
                       for sid, idx in self.source_indexes.items()}
-        return {"data_root": str(self.root), "schema_version": "0.2.0", "canonical": canonical["counts"], "sources": per_source}
+        hub = self.hub
+        return {"data_root": str(self.root), "schema_version": "0.2.0", "canonical": canonical["counts"], "sources": per_source,
+                "huggingface": hub.status() if hub is not None else {"published": False}}
 
     # -- materials -----------------------------------------------------------------------------------------
     def materials(self, *, query: str | None = None, manufacturer: str | None = None, material_class: str | None = None,
@@ -292,11 +326,7 @@ class MagneticDatabase:
         if "rows" in table:
             yield from table["rows"]
             return
-        path = self.normalized / self.source_indexes[source_id]["_directory"] / table["rows_file"]
-        if not path.is_file():
-            raise DataNotFoundError(f"{record_id}: table sidecar {table['rows_file']} is not in this data store (large regenerated table); "
-                                    f"run 'aipe-magnetics-db refresh --source {source_id} --allow-download' in a checkout",
-                                    details={"rows_sha256": table.get("rows_sha256"), "row_count": table["row_count"]})
+        path = self._sidecar(source_id, record_id, table)
         with open(path, encoding="utf-8") as handle:
             for line in handle:
                 yield json.loads(line)
@@ -370,8 +400,8 @@ class MagneticDatabase:
 
 
 @functools.lru_cache(maxsize=4)
-def open_database(root: str | None = None) -> MagneticDatabase:
-    return MagneticDatabase(root)
+def open_database(root: str | None = None, allow_download: bool | None = None) -> MagneticDatabase:
+    return MagneticDatabase(root, allow_download=allow_download)
 
 
 __all__ = ["DATA_ENV_VAR", "MagneticDatabase", "Table", "data_root", "interval", "open_database", "quantity"]

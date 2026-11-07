@@ -26,14 +26,26 @@ ImporterFn = Callable[..., ImportSummary]
 
 
 def importers() -> dict[str, tuple[ImporterFn, str]]:
-    from aipe_magnetics_database.ingest.sources import mas, paderborn, princeton, zenodo
+    from aipe_magnetics_database.ingest.sources import mas, openlab, paderborn, princeton, zenodo
     return {
         "openmagnetics_mas": (mas.run, "mas"),
         "princeton_magnet": (princeton.run, "princeton-magnet"),
         "paderborn_lea_materialdatabase": (paderborn.run, "paderborn-lea"),
         "zenodo_8292861_hefmag": (zenodo.run_hefmag, "hefmag"),
         "zenodo_21626116_smc_ferrite_triangular": (zenodo.run_triangular, "zenodo-smc-ferrite-triangular"),
+        **openlab.IMPORTERS,
     }
+
+
+def _archived(committed_raw: Path, inputs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Committed original files the importer does not read (documentation, licence, alternative formats): kept and pinned too."""
+    from aipe_magnetics_database.ingest.common import sha256_path
+    if not committed_raw.is_dir():
+        return []
+    read = {i["path"] for i in inputs} | {Path(i["path"]).name for i in inputs}
+    return [{"path": p.relative_to(committed_raw).as_posix(), "sha256": sha256_path(p), "role": "archived (not read by the importer)"}
+            for p in sorted(committed_raw.rglob("*")) if p.is_file() and p.relative_to(committed_raw).as_posix() not in read
+            and p.name not in read]
 
 
 def repository_root(start: Path | None = None) -> Path:
@@ -124,7 +136,7 @@ def refresh(sources: list[str] | None = None, *, root: Path | None = None, local
                     "license": summary.license, "redistribution": summary.redistribution,
                     "raw_policy": ("original files committed under files/ (redistribution permitted)" if committed_raw.is_dir()
                                    else "retrieved on demand at the pinned version and verified by SHA-256; not committed"),
-                    "files": summary.inputs, "importer": source.get("importer")}
+                    "files": summary.inputs + _archived(committed_raw, summary.inputs), "importer": source.get("importer")}
         write_if_changed(root / "data" / "raw" / directory / "SOURCES.json", dumps_pretty(manifest).encode("utf-8"))
         summaries[source_id] = summary.to_json()
         write_if_changed(reports / f"import-{source_id}.json", dumps_pretty(summaries[source_id]).encode("utf-8"))

@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.2.0",
+  "source_id": "nabih_magneto",
+  "version": "0a3a0f1e10356b294ae6782eaa46f4d478e5bff9",
+  "license": "MIT",
+  "shards": {
+    "materials": [
+      "materials/materials-001.jsonl"
+    ],
+    "measurements": [
+      "measurements/measurements-001.jsonl"
+    ]
+  },
+  "datasets": [
+    "datasets/nabih-magneto.json"
+  ],
+  "tables": [],
+  "tables_local": [],
+  "record_counts": {
+    "dataset": 1,
+    "magnetic_material": 8,
+    "measurement": 22
+  },
+  "table_rows": {
+    "complex_permeability": 1187,
+    "complex_permittivity": 1235,
+    "core_loss": 388
+  },
+  "review_state": "third_party_unreviewed"
+}

@@ -1,4 +1,4 @@
-"""Build hook: bundle the committed data store (data/normalized, data/canonical, data/sources.json, data/reports) into the
+"""Build hook: bundle the committed data store (data/normalized, data/canonical, data/sources.json, data/reports, data/huggingface.json) into the
 wheel as ``aipe_magnetics_database/_bundled`` so that an installed package works without a checkout. Regenerated
 local-only table sidecars (``tables-local/``) are never bundled."""
 
@@ -9,7 +9,7 @@ from setuptools import setup
 from setuptools.command.build_py import build_py
 
 ROOT = Path(__file__).resolve().parent
-BUNDLED = ("normalized", "canonical", "reports", "sources.json")
+BUNDLED = ("normalized", "canonical", "reports", "sources.json", "huggingface.json")
 
 
 class BuildWithData(build_py):

@@ -3,6 +3,30 @@
 
 ## Unreleased
 
+- **Hugging Face storage layer** (`aipe_magnetics_database.hub`, [docs/huggingface.md](docs/huggingface.md)): `hub stage` builds
+  `raw/`, `normalized/v0.2/`, `manifests/` (sources, dataset-index, checksums, quality-report) and the dataset card;
+  `hub publish` uploads to a review branch, `main` or a Hub pull request (resumable, idempotent), refuses to replace raw
+  files, never deletes and verifies every SHA-256 before reporting success (Trusted Publisher tokens can write branches
+  but cannot open Hub pull requests; test publication verified on the Hub branch `ci-test`, commit `3c9057f6`); `hub sync` records the exact published commit in `data/huggingface.json`;
+  tables only on Hugging Face are read at that commit on opt-in (`AIPE_MAGNETICS_ALLOW_DOWNLOAD=1`, `allow_download=True`),
+  cached and verified. `.github/workflows/publish-huggingface.yml` publishes through a Trusted Publisher (GitHub OIDC,
+  `id-token: write` only in the publish job, no stored token), on manual dispatch.
+- **Quality checks** (`aipe-magnetics-db quality`, `ingest/quality.py`): schema, units, non-finite values, physical ranges,
+  duplicates, sidecar and raw checksums, material identities, operating conditions, record-count drift and GitHub/HF
+  consistency; `data/reports/quality-report.json` and [docs/quality-summary.md](docs/quality-summary.md). Flags only.
+  Found: half of the MAS Ferroxcube 3C94 B-H cycle is stored as about -508 T (apparently mT); kept and flagged.
+- **Readers** (`ingest/readers.py`): magic-byte detection; CSV/TSV/text, XLSX/XLS, MAT v4/v5/v7.3, HDF5, Parquet,
+  JSON/JSONL and ZIP (in memory); optional `importers` extra.
+- **New sources**: Nabih MHz ferrite loss / permeability / permittivity database (MIT; MS Access via a reproducible
+  Jackcess export), Guillod N87 permittivity and conductivity (MIT; MATLAB files at full precision), Zenodo 7368936 MagNet
+  N87 piecewise-linear loss with exact waveforms (CC-BY-4.0; the R34 set linked as a duplicate of Princeton MagNet), INRIM
+  first magnetisation curves (CC-BY-4.0; units not stated, flagged). 41 candidates investigated
+  ([docs/discovery-2026-11.md](docs/discovery-2026-11.md)); 10 further sources added to the registry as references.
+- **Upstream loss**: GitHub no longer serves the MAS Git LFS object `advanced_core_materials.ndjson` (pinned and HEAD). Its
+  normalised records stay; the 81 derived B-H tables are restored from a pinned transfer asset for publication, and CI's
+  full refresh skips MAS.
+- Data Explorer: per-source Hugging Face status and links to the pinned release.
+
 - **AIPE Magnetics Data Explorer**: read-only GitHub Pages site (`site/`, built by `tools/build_site.py`, deployed by
   `.github/workflows/pages.yml`) with material search and detail pages, measurement browsing with interactive plots
   and row filters, the core catalogue, and source / licence / data-class information. It reads the committed store

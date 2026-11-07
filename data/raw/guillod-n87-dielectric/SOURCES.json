@@ -1,0 +1,122 @@
+{
+  "source_id": "guillod_n87_dielectric",
+  "title": "Guillod et al. (Dartmouth, APEC 2024): large-signal dielectric properties of TDK N87",
+  "upstream": "https://github.com/otvam/large_signal_ferrite_apec24",
+  "version": "dd06889876ca7d360ae3c4cf6da6c507ba5fef2c",
+  "license": "MIT",
+  "redistribution": "permitted (MIT)",
+  "raw_policy": "original files committed under files/ (redistribution permitted)",
+  "files": [
+    {
+      "path": "dataset/N87_eps_large/data.mat",
+      "url": "https://raw.githubusercontent.com/otvam/large_signal_ferrite_apec24/dd06889876ca7d360ae3c4cf6da6c507ba5fef2c/dataset/N87_eps_large/data.mat",
+      "sha256": "ef18d977124ef6d6eb182c44509e39fcee1639de3e49813d039fa3f4d0a6e3fc"
+    },
+    {
+      "path": "dataset/N87_eps_small/data.mat",
+      "url": "https://raw.githubusercontent.com/otvam/large_signal_ferrite_apec24/dd06889876ca7d360ae3c4cf6da6c507ba5fef2c/dataset/N87_eps_small/data.mat",
+      "sha256": "cb5dd86a816a0ca3336804ac1e7350242846360c99da7a541d1d9bd9c6731fc4"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/data.mat",
+      "url": "https://raw.githubusercontent.com/otvam/large_signal_ferrite_apec24/dd06889876ca7d360ae3c4cf6da6c507ba5fef2c/dataset/N87_eps_temperature/data.mat",
+      "sha256": "3bdf594d1e1c772d68dc5d40f034b790cf8ad0bdba1f5cdb67375d3627e44235"
+    },
+    {
+      "path": "LICENSE.md",
+      "sha256": "8a1c7592476c5a6a5d281185d090577e6668d5c43f02a148daed2eb845570b45",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1fbfb9d0dd274e115eef2614640a495bff91e64b825ea396ea0e3accdd6159fb",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_large/README.txt",
+      "sha256": "9ffc2ef005bbec607377d9baf8d911e6026e448285a98cb17138416a798fc264",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_large/var_E_mat.csv",
+      "sha256": "340d95f42cf6bc7ce4e81deaac98935234647eb0285b48f67ea46a208c5baf75",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_large/var_eps_mat.csv",
+      "sha256": "02da423e94792c66e49ab34cdc090da1ee6483ba599adebd56a8a20d4e598cc4",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_large/var_f_vec.csv",
+      "sha256": "14b98ec4b950c7db6cb8457929525ab86b7e4e5d3eea4fbb41bed1892f9c5911",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_large/var_sigma_mat.csv",
+      "sha256": "4d4b22918e4327deff8318b4d1fe4f75826889c22177917420cfda744efffc61",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_small/README.txt",
+      "sha256": "1f025919c83ec83cbbf81868c1b07add99a9d23f378c2c0fb0cb713a45d4b7ce",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_small/var_eps_vec.csv",
+      "sha256": "b44e97548c5272f4ea58f55f550d7ba8fa09bbb038abc45c56ed28fb61e85908",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_small/var_f_vec.csv",
+      "sha256": "f02e9bb685dfd1f5c2f482cfdbf8bfaa618d71a4e4f652ca543090cafc6b0192",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_small/var_sigma_vec.csv",
+      "sha256": "4b5c368350461c439c74ecb4f3a0a69830b74d14e92d5fda2958ab0b9ea169b7",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/README.txt",
+      "sha256": "f9c38cf0d6f17c2467905c6ef1e7ab8b3ad2db607d1f652aa181602fc36bcd0f",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/var_eps_25_vec.csv",
+      "sha256": "a4cadcd371af8cadfdb129ba3adff277569510f0b7714af6efb09b8eb243c4c8",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/var_eps_55_vec.csv",
+      "sha256": "8513c0003a7b680e09630d5c18aedbcc0e4a508f72fb2b69cdd76c748985c5ae",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/var_eps_85_vec.csv",
+      "sha256": "9301149f821e30c88fd53f6d9024481840ddecac179f5d70d6acc4057d3b045f",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/var_f_vec.csv",
+      "sha256": "f02e9bb685dfd1f5c2f482cfdbf8bfaa618d71a4e4f652ca543090cafc6b0192",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/var_sigma_25_vec.csv",
+      "sha256": "5144444644f6965c0f2eb137a45e94eea9ad13610093ef597e24b9736b9c18af",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/var_sigma_55_vec.csv",
+      "sha256": "91b3a1406e88f530b43246b268381a3fab78aae73c559b35517d480fd6c9bb4e",
+      "role": "archived (not read by the importer)"
+    },
+    {
+      "path": "dataset/N87_eps_temperature/var_sigma_85_vec.csv",
+      "sha256": "74559c0ac6dd170d9534390fda0bde11e83a4d08e9a6c6e3dbaf33306bb45d94",
+      "role": "archived (not read by the importer)"
+    }
+  ],
+  "importer": "aipe_magnetics_database.ingest.sources.openlab"
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": "0.2.0",
+  "id": "dataset.zenodo-10725890",
+  "kind": "dataset",
+  "name": "INRIM first magnetisation curves",
+  "synthetic": false,
+  "license": "CC-BY-4.0",
+  "properties": {
+    "source_id": "zenodo_10725890_inrim",
+    "title": "Examples of first magnetization curves of ferromagnetic samples",
+    "url": "https://zenodo.org/records/10725890",
+    "version": "1.0.0",
+    "license": "CC-BY-4.0",
+    "redistribution_permitted": true,
+    "record_count": 22,
+    "publisher": "Zenodo (M. Pasquale, INRIM)",
+    "citation": "M. Pasquale, 'Examples of first magnetization curves of ferromagnetic samples', Zenodo, v1.0.0, 2024, doi:10.5281/zenodo.10725890 (CC BY 4.0)",
+    "description": "DC first magnetisation curves (H, B, J) of steels, irons, FeSiAl and an SMC; units not stated in the file.",
+    "checksums": {
+      "HBJ data_file_res_Zenodo.dat": "1fe4d6b98d5309940a8c2db5a94aa3ac3b1a31c69f8c6ddcc4d9f1505791607a"
+    },
+    "materials": [
+      "430 F",
+      "430FR",
+      "AISI 415",
+      "AISI 422",
+      "C10",
+      "CAST IRON",
+      "F430A",
+      "Fe-Si (3.5%wt NO)",
+      "FeSi (3.2%wt) NO",
+      "FeSiAl",
+      "GO FeSi 0.2",
+      "M0H23 GO",
+      "M270",
+      "M2H GO",
+      "M3 M3T20 GO",
+      "M3 M3T23B",
+      "M330",
+      "M470-50 FeSi 2%",
+      "M4T27",
+      "M5 GO",
+      "M5T30 GO",
+      "SMC"
+    ]
+  },
+  "evidence_refs": [
+    "evidence.inrim-source"
+  ],
+  "evidence": [
+    {
+      "id": "evidence.inrim-source",
+      "kind": "source",
+      "reference": "Zenodo 10.5281/zenodo.10725890",
+      "description": "CC-BY-4.0 INRIM data file.",
+      "created_at": "2024-02-29T00:00:00Z",
+      "review_status": "unreviewed",
+      "license": "CC-BY-4.0",
+      "locator": "HBJ data_file_res_Zenodo.dat",
+      "url": "https://zenodo.org/records/10725890",
+      "version": "1.0.0",
+      "sha256": "1fe4d6b98d5309940a8c2db5a94aa3ac3b1a31c69f8c6ddcc4d9f1505791607a"
+    }
+  ],
+  "provenance": {
+    "activity": "normalize_inrim",
+    "tool": {
+      "id": "aipe.magnetics.database.ingest.inrim",
+      "version": "0.3.0",
+      "name": "AIPE Magnetics Database importer"
+    },
+    "dataset_version": "10.5281/zenodo.10725890",
+    "normalization": "Whitespace-separated blocks (label line, column-letter line, numeric rows); columns reordered to a fixed layout, values kept verbatim. The file states no units: H is stored as A/m and B / J as T, consistent with the magnitudes (records flagged units_not_stated)."
+  },
+  "quality": {
+    "status": "normalized",
+    "flags": [
+      "third_party_unreviewed"
+    ]
+  }
+}

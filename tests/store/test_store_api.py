@@ -20,7 +20,8 @@ def test_material_resolution_and_consolidation():
     n87 = api.get_material("N87")
     assert n87["id"] == "material.canonical-tdk-n87" and n87["name"] == "TDK N87"
     members = {m["source_id"] for m in n87["extensions"]["aipe.canonical"]["members"]}
-    assert members == {"aipe_curated", "openmagnetics_mas", "paderborn_lea_materialdatabase", "princeton_magnet"}
+    assert members == {"aipe_curated", "openmagnetics_mas", "paderborn_lea_materialdatabase", "princeton_magnet", "guillod_n87_dielectric",
+                       "zenodo_7368936_cwh_n87"}
     assert api.get_material("material.mas-tdk-n87-0015")["id"] == n87["id"]
     with pytest.raises(DataNotFoundError):
         api.get_material("no such grade 123")

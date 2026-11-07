@@ -6,6 +6,11 @@ Status values
     ``reference``     metadata/reference entry only; redistribution is not permitted or not established - a
                       user-supplied-file adapter or a pointer is provided instead
     ``unavailable``   no verified public dataset / dead link
+
+Optional fields: ``retrieved_at`` (date the pinned inputs were retrieved), ``citation``, ``raw_unavailable``
+(``{upstream path: reason}`` for pinned originals that can no longer be retrieved; the Hugging Face stage records
+them instead of failing), ``hf_publish`` / ``hf_exclusion_reason`` (keep an integrated source out of the public
+dataset).
 """
 
 from __future__ import annotations
@@ -18,14 +23,18 @@ SOURCES: list[dict[str, Any]] = [
      "directory": None, "url": "https://github.com/FulongLi/AIPE-Magnetics-Database/tree/main/src/aipe_magnetics_database/data/catalog",
      "version": "0.2.0 catalogue", "license": "NOASSERTION", "redistribution": "values transcribed from manufacturer datasheets with locators",
      "notes": "11 materials (incl. 1 synthetic), 6 cores, 4 families, 4 manufacturers; Steinmetz sets fitted to MagNet are 'measurement_fit'."},
-    {"id": "openmagnetics_mas", "title": "OpenMagnetics / PSMA MAS", "priority": "A", "status": "integrated", "directory": "mas",
+    {"id": "openmagnetics_mas", "retrieved_at": "2026-11-02", "title": "OpenMagnetics / PSMA MAS", "priority": "A", "status": "integrated", "directory": "mas",
      "url": "https://github.com/Power-Supply-Manufacturers-Association/MAS", "version": "c33ccfec8e00e156d632c9a52b02bc1cfdf714dc",
      "license": "Apache-2.0", "redistribution": "permitted (Apache-2.0); most values originate from manufacturer datasheets whose own terms "
                                                  "are not covered by the MAS licence",
      "importer": "aipe_magnetics_database.ingest.sources.mas",
+     "raw_unavailable": {"data/advanced_core_materials.ndjson": "Git LFS object sha256 0157ea8b... is no longer served by GitHub for the pinned "
+                                                              "commit (LFS batch API: 'Object does not exist on the server', checked "
+                                                              "2026-11-07); its normalised records and the 81 B-H tables derived from it "
+                                                              "are preserved, the original file cannot be re-archived"},
      "notes": "core_materials, core_shapes, cores and the Git-LFS advanced_core_materials file; bobbins, wires and insulation materials "
               "are out of scope (winding components). MagNet-origin loss points are flagged duplicates of Princeton MagNet."},
-    {"id": "princeton_magnet", "title": "Princeton MagNet (packaged scalar databases)", "priority": "A", "status": "integrated",
+    {"id": "princeton_magnet", "retrieved_at": "2026-11-02", "title": "Princeton MagNet (packaged scalar databases)", "priority": "A", "status": "integrated",
      "directory": "princeton-magnet", "url": "https://github.com/PrincetonUniversity/magnet", "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
      "license": "MIT", "redistribution": "permitted (MIT; citation of the TPEL papers requested)",
      "importer": "aipe_magnetics_database.ingest.sources.princeton",
@@ -37,7 +46,7 @@ SOURCES: list[dict[str, Any]] = [
                "downloaded zip into v0.2 waveform records with SHA-256; nothing is committed.",
      "adapter": "aipe_magnetics_database.data.sources.princeton_magnet.PrincetonMagnetAdapter"},
     {"id": "magnet_challenge_1", "title": "MagNet Challenge 2023 (MC1) data", "priority": "A", "status": "reference",
-     "url": "https://github.com/minjiechen/magnetchallenge", "version": "repository 740fe6bb (MIT); data on Dropbox", "license": "NOASSERTION (data)",
+     "url": "https://github.com/minjiechen/magnetchallenge-1", "version": "repository 740fe6bb (MIT); data on Dropbox", "license": "NOASSERTION (data)",
      "redistribution": "unknown", "reason": "The 10-material training link is deleted; validation (256 MB) and testing (1.2 GB, materials A-E) "
                                             "Dropbox bundles carry no licence and are not pinned. The 10 training materials are the MagNet "
                                             "website data (see princeton_magnet_waveforms)."},
@@ -47,7 +56,7 @@ SOURCES: list[dict[str, Any]] = [
      "reason": "No licence; the MagNetX database is a 24.8 GB unlicensed Dropbox archive. The existing read-only adapter "
                "(MagnetChallenge2Adapter) imports user-supplied files locally; nothing is downloaded or committed.",
      "adapter": "aipe_magnetics_database.data.sources.magnet_challenge2.MagnetChallenge2Adapter"},
-    {"id": "paderborn_lea_materialdatabase", "title": "Paderborn University LEA materialdatabase", "priority": "A", "status": "integrated",
+    {"id": "paderborn_lea_materialdatabase", "retrieved_at": "2026-11-02", "title": "Paderborn University LEA materialdatabase", "priority": "A", "status": "integrated",
      "directory": "paderborn-lea", "url": "https://github.com/upb-lea/materialdatabase", "version": "04fff8e98ae3ddb72809223c42e8c939ed1073bb",
      "license": "GPL-3.0-only", "redistribution": "permitted under GPL-3.0 as a separate copyleft subtree (LICENSE, NOTICE, source offer)",
      "importer": "aipe_magnetics_database.ingest.sources.paderborn",
@@ -67,14 +76,38 @@ SOURCES: list[dict[str, Any]] = [
                "flux [T] but its values are peak flux in Wb (peak B = dPhi / Ae); 'Ecyc' is energy per cycle of the whole core in J.",
      "adapter": "aipe_magnetics_database.ingest.external.psma_coreloss_db"},
     # ---- Priority B ---------------------------------------------------------------------------------------------
-    {"id": "zenodo_8292861_hefmag", "title": "EMPIR 19ENG06 HEFMAG amorphous / nanocrystalline loss and complex permeability", "priority": "B",
+    {"id": "zenodo_8292861_hefmag", "retrieved_at": "2026-11-02", "title": "EMPIR 19ENG06 HEFMAG amorphous / nanocrystalline loss and complex permeability", "priority": "B",
      "status": "integrated", "directory": "hefmag", "url": "https://zenodo.org/records/8292861", "version": "doi:10.5281/zenodo.8292861 v1.0.0",
      "license": "CC-BY-4.0", "redistribution": "permitted with attribution", "importer": "aipe_magnetics_database.ingest.sources.zenodo",
      "notes": "Temperature and DC bias not stated; loss published as J/m^3 per cycle."},
-    {"id": "zenodo_21626116_smc_ferrite_triangular", "title": "SMC and Mn-Zn ferrite loss under symmetric / asymmetric triangular polarization",
+    {"id": "zenodo_21626116_smc_ferrite_triangular", "retrieved_at": "2026-11-02", "title": "SMC and Mn-Zn ferrite loss under symmetric / asymmetric triangular polarization",
      "priority": "B", "status": "integrated", "directory": "zenodo-smc-ferrite-triangular", "url": "https://zenodo.org/records/21626116",
      "version": "doi:10.5281/zenodo.21626116", "license": "CC-BY-4.0", "redistribution": "permitted with attribution",
      "importer": "aipe_magnetics_database.ingest.sources.zenodo", "notes": "100 mT peak; temperature not stated."},
+    {"id": "nabih_magneto", "retrieved_at": "2026-11-07", "title": "Nabih core characterisation database (Virginia Tech CPES): MHz ferrite loss, permeability, permittivity",
+     "priority": "B", "status": "integrated", "directory": "nabih-magneto", "url": "https://github.com/asalahnabih/magneto",
+     "version": "0a3a0f1e10356b294ae6782eaa46f4d478e5bff9", "license": "MIT", "redistribution": "permitted (MIT; cite per CITATION.cff)",
+     "importer": "aipe_magnetics_database.ingest.sources.openlab",
+     "notes": "MS Access .accdb committed byte-for-byte; read through a reproducible Jackcess TSV export (derived/EXPORT.json). 8 MHz ferrites, "
+              "sinusoidal P_v(B_m) 0.1-3.5 MHz at 25 degC; the DMR96A permeability is a datasheet curve (classified so). 41 loss points and "
+              "1,009 permeability / permittivity rows without a parent ID are excluded."},
+    {"id": "guillod_n87_dielectric", "retrieved_at": "2026-11-07", "title": "Guillod et al. (Dartmouth, APEC 2024): large-signal dielectric properties of TDK N87",
+     "priority": "B", "status": "integrated", "directory": "guillod-n87-dielectric", "url": "https://github.com/otvam/large_signal_ferrite_apec24",
+     "version": "dd06889876ca7d360ae3c4cf6da6c507ba5fef2c", "license": "MIT", "redistribution": "permitted (MIT)",
+     "importer": "aipe_magnetics_database.ingest.sources.openlab",
+     "notes": "Permittivity and conductivity (small signal, 25/55/85 degC, vs peak electric field) from the MATLAB data.mat files; the "
+              "repository's N87_mu_small (TDK datasheet) and N87_mu_large (computed from MagNet) are not imported or archived."},
+    {"id": "zenodo_7368936_cwh_n87", "retrieved_at": "2026-11-07", "title": "Composite waveform hypothesis reproducibility dataset (MagNet N87, piecewise-linear excitation)",
+     "priority": "B", "status": "integrated", "directory": "zenodo-7368936-cwh-n87", "url": "https://zenodo.org/records/7368936",
+     "version": "doi:10.5281/zenodo.7368936", "license": "CC-BY-4.0", "redistribution": "permitted with attribution",
+     "importer": "aipe_magnetics_database.ingest.sources.openlab",
+     "notes": "42,082 rows with exact five-point waveforms; the R34 variable-temperature set repeats packaged MagNet N87 measurements and is "
+              "linked to princeton_magnet as a duplicate; raw CSV/MAT/HDF5 (22 MB) retrieved on demand and archived on Hugging Face."},
+    {"id": "zenodo_10725890_inrim", "retrieved_at": "2026-11-07", "title": "INRIM examples of first magnetization curves of ferromagnetic samples",
+     "priority": "C", "status": "integrated", "directory": "zenodo-10725890-inrim", "url": "https://zenodo.org/records/10725890",
+     "version": "doi:10.5281/zenodo.10725890 v1.0.0", "license": "CC-BY-4.0", "redistribution": "permitted with attribution",
+     "importer": "aipe_magnetics_database.ingest.sources.openlab",
+     "notes": "24 DC first-magnetisation curves (steels, irons, FeSiAl, SMC); the file states no units - stored as A/m and T, flagged."},
     {"id": "asu_mhz_core_loss_aggregate", "title": "ASU MAPEL MHz core-loss aggregate dataset", "priority": "B", "status": "reference",
      "url": "https://github.com/asu-mapel/MHzCoreLossAggregateDataset", "version": "8cf2378d72f0e3aa9cc96ee791ba267ee044faee",
      "license": "NOASSERTION (no LICENSE file)", "redistribution": "unknown - not redistributed (ask the maintainers)",
@@ -82,6 +115,35 @@ SOURCES: list[dict[str, Any]] = [
                "MHzCoreLoss.csv (952 rows) and keeps the 13 original study labels as underlying_source so aggregated rows are never "
                "counted as independent of the original publications.",
      "adapter": "aipe_magnetics_database.ingest.external.asu_mhz_csv"},
+    {"id": "ieee_dataport_dtu_mhz_dc_bias", "title": "DTU MHz core loss with DC bias (PC50, PC200), IEEE DataPort 7khj-bd03", "priority": "B",
+     "status": "reference", "url": "https://ieee-dataport.org/", "version": "-", "license": "CC-BY-4.0",
+     "redistribution": "licence permits it, but the files are behind an IEEE DataPort subscription",
+     "reason": "Download requires an IEEE account / subscription (~244 MB); access restrictions are not bypassed. Ask the author for an open copy."},
+    {"id": "kingress33_pfc_coreloss", "title": "PFC powder-core B/H waveforms with DC bias (GitHub kingress33)", "priority": "B", "status": "reference",
+     "url": "https://github.com/kingress33", "version": "-", "license": "NOASSERTION", "redistribution": "not permitted (no licence)",
+     "reason": "No licence file; ~2.5 GB of CSV. Ask the owner to add a licence."},
+    {"id": "zenodo_12583064_iron_powder_cores", "title": "Pure iron powder cores: permeability and loss vs frequency (Zenodo 12583064)", "priority": "B",
+     "status": "reference", "url": "https://zenodo.org/records/12583064", "version": "-", "license": "CC-BY-4.0", "redistribution": "permitted with attribution",
+     "reason": "48 MB zip not inspected in this cycle (download budget); candidate for the next cycle."},
+    {"id": "zenodo_14893851_inrim_interlab_nofesi", "title": "INRIM interlaboratory alternating / rotational loss of NO FeSi 3.5 % (Zenodo 14893851)",
+     "priority": "C", "status": "reference", "url": "https://zenodo.org/records/14893851", "version": "-", "license": "CC-BY-4.0",
+     "redistribution": "permitted with attribution", "reason": "Electrical-steel loss at 5-200 Hz (mJ/kg); permitted, deferred as low relevance to power-electronics magnetics."},
+    {"id": "zenodo_5910893_hefmag_loops", "title": "HEFMAG example 50 Hz H-J loops of NO / GO FeSi (Zenodo 5910893)", "priority": "C", "status": "reference",
+     "url": "https://zenodo.org/records/5910893", "version": "-", "license": "CC-BY-4.0", "redistribution": "permitted with attribution",
+     "reason": "Small example set (2 x 3 loops); deferred, low relevance."},
+    {"id": "zenodo_16281115_shifted_go_steel", "title": "Loss of GO / NO steel cores vs frequency at 1 T (Zenodo 16281115)", "priority": "C",
+     "status": "reference", "url": "https://zenodo.org/records/16281115", "version": "-", "license": "CC-BY-4.0", "redistribution": "permitted with attribution",
+     "reason": "Electrical steel, DC-505 Hz; deferred, low relevance."},
+    {"id": "rodbuk_m270_35_punched", "title": "Punched M270-35A strips, specific loss at 50 Hz (RODBUK)", "priority": "C", "status": "reference",
+     "url": "https://rodbuk.pl/", "version": "-", "license": "CC0-1.0", "redistribution": "permitted",
+     "reason": "Motor-steel data; deferred, low relevance."},
+    {"id": "femm_material_library", "title": "FEMM material library (B-H curves of steels and magnets)", "priority": "C", "status": "reference",
+     "url": "https://www.femm.info/", "version": "-", "license": "AFPL v8", "redistribution": "not permitted for commercial distribution",
+     "reason": "Aladdin Free Public Licence restricts redistribution; curves of unclear origin."},
+    {"id": "princeton_magnet_tutorial_and_scope_data", "title": "Princeton MagNet repository tutorial datasets and raw N87 scope CSVs", "priority": "A",
+     "status": "reference", "url": "https://github.com/PrincetonUniversity/magnet", "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a", "license": "MIT",
+     "redistribution": "permitted (MIT)", "reason": "tutorial/Dataset/*.json (11 MB) and ~63 MB of raw N87 oscilloscope CSVs exist in the pinned "
+                                                   "repository but are not yet imported; candidate waveform source for the next cycle."},
     {"id": "amped_pitt_netl", "title": "AMPED / University of Pittsburgh / DOE-NETL high-frequency magnetics data", "priority": "B",
      "status": "unavailable", "url": "https://edx.netl.doe.gov/", "version": "-", "license": "-", "redistribution": "-",
      "reason": "No public tabular dataset with a verifiable licence was found (NETL EDX, OSTI, Zenodo searched); only two datasheet PDFs "

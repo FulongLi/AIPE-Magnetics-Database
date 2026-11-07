@@ -43,11 +43,13 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e ".[dev]"
-      - name: Re-run the Paderborn and Zenodo importers from data/raw and rebuild reports
+      - name: Re-run the importers of committed raw sources (Paderborn, Zenodo, Nabih, Guillod, INRIM) and rebuild reports
         run: |
-          aipe-magnetics-db refresh --source paderborn_lea_materialdatabase --source zenodo_8292861_hefmag --source zenodo_21626116_smc_ferrite_triangular
+          aipe-magnetics-db refresh --source paderborn_lea_materialdatabase --source zenodo_8292861_hefmag --source zenodo_21626116_smc_ferrite_triangular \
+            --source nabih_magneto --source guillod_n87_dielectric --source zenodo_10725890_inrim
           git status --porcelain -- data/normalized data/raw docs/source-catalogue.md
-          test -z "$(git status --porcelain -- data/normalized/paderborn-lea data/normalized/hefmag data/normalized/zenodo-smc-ferrite-triangular data/raw)"
+          test -z "$(git status --porcelain -- data/normalized/paderborn-lea data/normalized/hefmag data/normalized/zenodo-smc-ferrite-triangular \
+            data/normalized/nabih-magneto data/normalized/guillod-n87-dielectric data/normalized/zenodo-10725890-inrim data/raw)"
 
   full-refresh:
     name: full refresh from pinned upstream files (downloads ~190 MB)
@@ -59,7 +61,14 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install -e ".[dev]"
-      - run: aipe-magnetics-db refresh --allow-download --cache .aipe-cache
+      # MAS is excluded: its pinned data/advanced_core_materials.ndjson Git LFS object is no longer served by GitHub
+      # (registry field raw_unavailable); its normalised records stay committed and the derived tables-local/
+      # sidecars are restored from a pinned transfer asset and published to Hugging Face.
+      - run: >-
+          aipe-magnetics-db refresh --allow-download --cache .aipe-cache
+          --source princeton_magnet --source paderborn_lea_materialdatabase
+          --source zenodo_8292861_hefmag --source zenodo_21626116_smc_ferrite_triangular
+          --source nabih_magneto --source guillod_n87_dielectric --source zenodo_7368936_cwh_n87 --source zenodo_10725890_inrim
       - run: git status --porcelain && test -z "$(git status --porcelain -- data docs)"
 
   clean-install:

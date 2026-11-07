@@ -2,5 +2,6 @@ graft data/normalized
 graft data/canonical
 graft data/reports
 include data/sources.json
+include data/huggingface.json
 prune data/normalized/*/tables-local
 global-exclude *.tmp

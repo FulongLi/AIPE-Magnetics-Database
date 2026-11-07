@@ -255,5 +255,14 @@
     "rule": "derived quantity of the same underlying experiment",
     "underlying_source": "princeton-magnet:t37",
     "counted_as_independent": false
+  },
+  {
+    "record": "measurement.zenodo-7368936-n87-variable-temperature-core-loss",
+    "duplicate_of": "measurement.princeton-magnet-n87-core-loss",
+    "rule": "same underlying experiment and quantity",
+    "underlying_source": "princeton-magnet:n87",
+    "rows_compared": 29741,
+    "rows_matched": 283,
+    "match_fraction": 0.0095
   }
 ]

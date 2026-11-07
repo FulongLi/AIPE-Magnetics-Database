@@ -1,0 +1,21 @@
+{
+  "description": "Tab-separated export of every table of 'Core loss database_v2.accdb' (the original, byte-for-byte, is ../files/). This is a derived intermediate, not an original file: Python has no maintained reader for the MS Access ACE format.",
+  "input": "files/Core loss database_v2.accdb",
+  "input_sha256": "cc2938a9b3a9c79fd72ecd8de3d49aa5a06b625a21ff28be455756b27f2b01c2",
+  "tool": "Jackcess 4.0.5 (com.healthmarketscience.jackcess, Apache-2.0) with commons-lang3 3.14.0 and commons-logging 1.3.0 from Maven Central; tools/accdb_export/Dump.java",
+  "tool_sha1": {
+    "jackcess-4.0.5.jar": "78e71fb55d742715b7a2dc8e0a6c2dce218c8e17",
+    "commons-lang3-3.14.0.jar": "1ed471194b02f2c6cb734a0cd6f6f107c673afae",
+    "commons-logging-1.3.0.jar": "f5e064b541f5c5fbc5e4fb49c4e8cd4eabb3afd6"
+  },
+  "format": "first line = column names; one row per line; values as Jackcess Object.toString() (FLOAT columns: shortest decimal of the stored float32); tabs and newlines inside values replaced by spaces",
+  "reproduce": "tools/accdb_export/export.sh",
+  "outputs": {
+    "Bm_vs_Pv_table.tsv": "f9f8e653fcbea1d352f546ee82713ba94e94207a054cc53b4cb31db48a70ec1a",
+    "Characteristics_database.tsv": "0d294106c636f57ac5dec23b5acd952d2b4a3fe00f45af5e320ac4394b6cd533",
+    "Core_loss_database.tsv": "d9d5192c98d5350b23d7e96800d600df943149236539e0a95c5c7816c8ae60b4",
+    "Paste_Errors.tsv": "4abd68dcf9febe3c711e55b1d74f5787d86fe45aa45fe07a9d257e4a14776a05",
+    "permeability.tsv": "22e722b59291d02aa6946497a4afdb325561d90144dcbd31acb417aeaa012472",
+    "permittivity.tsv": "9d563686edf7004513e0a65dac36cf5524a4de06fbe9b1099db84c49c104ac1e"
+  }
+}

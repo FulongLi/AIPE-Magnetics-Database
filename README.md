@@ -2,10 +2,15 @@
 
 A standardised, provenance-tracked database of soft-magnetic data for power electronics: material properties,
 core geometries, and measured core loss, complex permeability, permittivity and B-H data. Records are collected from
-open sources (Princeton MagNet, Paderborn LEA, OpenMagnetics MAS, HEFMAG, Zenodo and a curated datasheet catalogue),
-converted to SI units, and deduplicated across sources. Every value keeps its source, version, licence and data class.
-The current release holds 1,142 materials, 21,237 core shapes and parts, and 1,715 measurement tables with 2.3 million
-rows, of which 604,680 are independent experimental measurements.
+open sources (Princeton MagNet, Paderborn LEA, OpenMagnetics MAS, HEFMAG, the Nabih MHz core-loss database, Dartmouth
+N87 dielectric data, INRIM, Zenodo and a curated datasheet catalogue), converted to SI units, and deduplicated across
+sources. Every value keeps its source, version, licence and data class. The current release holds 1,164 materials,
+21,237 core shapes and parts, and 1,764 measurement tables with 2.35 million rows, of which 621,066 are independent
+experimental measurements.
+
+Original files, the normalised records and large tables are published on Hugging Face as
+[**FulongLi/AIPE-Magnetics-Dataset**](https://huggingface.co/datasets/FulongLi/AIPE-Magnetics-Dataset); this repository
+builds, validates and publishes that dataset and reads it back at a pinned commit ([docs/huggingface.md](docs/huggingface.md)).
 
 This repository serves data only. Loss models, fitting and component design live in
 [AIPE-Magnetics-Design](https://github.com/FulongLi/AIPE-Magnetics-Design).
@@ -96,7 +101,9 @@ provenance notes before relying on any value.
 | --- | --- |
 | Python API, CLI and MCP tools | [docs/api.md](docs/api.md) |
 | Data format and table layout | [docs/data-format.md](docs/data-format.md), [docs/data-standard-v0.2.md](docs/data-standard-v0.2.md) |
-| Sources investigated and integrated | [docs/source-catalogue.md](docs/source-catalogue.md) |
+| Sources investigated and integrated | [docs/source-catalogue.md](docs/source-catalogue.md), [docs/discovery-2026-11.md](docs/discovery-2026-11.md) |
+| Hugging Face dataset, publishing and pinned downloads | [docs/huggingface.md](docs/huggingface.md) |
+| Automated quality checks | [docs/quality-summary.md](docs/quality-summary.md) |
 | Provenance and limitations | [docs/provenance-and-limitations.md](docs/provenance-and-limitations.md) |
 | Licensing and data rights | [LICENSING.md](LICENSING.md) |
 | Re-running the importers | [docs/ingestion.md](docs/ingestion.md) |

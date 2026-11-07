@@ -64,6 +64,8 @@ def build_parser() -> argparse.ArgumentParser:
         p.add_argument("--frequency", "-f"); p.add_argument("--temperature", "-t"); p.add_argument("--flux-density", "-b"); p.add_argument("--dc-bias")
         p.add_argument("--waveform"); p.add_argument("--limit", type=int, default=20); p.add_argument("--json", action="store_true")
         p.add_argument("--csv", type=Path, help="write the selected rows to a CSV file")
+        p.add_argument("--allow-download", action="store_true", default=None,
+                       help="download a table that is only in the published Hugging Face release (cached, SHA-256 verified)")
 
     p = sub.add_parser("provenance", help="evidence, licence, quality and duplicate status of a record"); p.add_argument("record_id")
     p = sub.add_parser("record", help="print one v0.2 record"); p.add_argument("record_id")
@@ -76,6 +78,30 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--local", action="append", default=[], metavar="SOURCE=DIR", help="use verified local copies of the pinned inputs")
     p.add_argument("--allow-download", action="store_true", help="download missing pinned inputs into the cache (SHA-256 verified)")
     p.add_argument("--cache", help="cache directory (default AIPE_MAGNETICS_CACHE or .aipe-cache)")
+
+    p = sub.add_parser("quality", help="automated quality checks; writes data/reports/quality-report.json and docs/quality-summary.md")
+    p.add_argument("--no-schema", action="store_true", help="skip the (slow) schema validation pass")
+    p.add_argument("--no-write", action="store_true", help="print the summary only")
+    p.add_argument("--json", action="store_true")
+
+    h = sub.add_parser("hub", help="Hugging Face dataset: stage, publish, sync, status, fetch").add_subparsers(dest="action", required=True)
+    p = h.add_parser("status", help="the published release recorded in data/huggingface.json"); p.add_argument("--json", action="store_true")
+    p = h.add_parser("stage", help="build the release tree (raw/, normalized/v0.2/, manifests/, README.md) in an empty directory")
+    p.add_argument("--out", type=Path, required=True); p.add_argument("--source", action="append", help="source id (repeatable)")
+    p.add_argument("--allow-download", action="store_true", help="download pinned raw inputs that are not committed (SHA-256 verified)")
+    p.add_argument("--cache", help="cache directory"); p.add_argument("--allow-missing-local-tables", action="store_true",
+                                                                       help="stage even when regenerated tables-local/ sidecars are absent")
+    p = h.add_parser("verify-stage", help="re-hash a staged release against its checksums.json"); p.add_argument("stage", type=Path)
+    p = h.add_parser("publish", help="upload a staged release (Hub pull request by default) and verify every file")
+    p.add_argument("stage", type=Path); p.add_argument("--repo", default=None); p.add_argument("--mode", choices=["pr", "main", "branch"], default="pr")
+    p.add_argument("--branch", help="Hub branch for --mode branch (created from main if missing)")
+    p.add_argument("--merge", action="store_true", help="merge the Hub pull request after successful verification")
+    p.add_argument("--dry-run", action="store_true"); p.add_argument("--receipt", type=Path, help="write the publication receipt JSON here")
+    p = h.add_parser("sync", help="verify a published release and record its exact commit in data/huggingface.json")
+    p.add_argument("--revision", default="main"); p.add_argument("--repo", default=None); p.add_argument("--no-verify", action="store_true")
+    p = h.add_parser("fetch", help="download (once) the published table sidecar of a measurement record"); p.add_argument("record_id")
+    p = h.add_parser("restore-tables", help="restore tables-local/ sidecars from pinned transfer assets (verified per record)")
+    p.add_argument("--allow-download", action="store_true"); p.add_argument("--cache")
 
     s = sub.add_parser("schema", help="record schema tools").add_subparsers(dest="action", required=True)
     p = s.add_parser("validate"); p.add_argument("records", nargs="+", type=Path)
@@ -139,7 +165,8 @@ def _dispatch(args: argparse.Namespace) -> int:  # noqa: C901 - flat command tab
             _print(items, args, ["id", "quantity", "data_class", "row_count", "status"])
             return 0
         table = api.get_table(args.record_id, frequency=args.frequency, temperature=args.temperature, flux_density=args.flux_density,
-                              dc_bias=args.dc_bias, waveform=args.waveform, limit=None if args.csv else args.limit, root=root)
+                              dc_bias=args.dc_bias, waveform=args.waveform, limit=None if args.csv else args.limit, root=root,
+                              allow_download=args.allow_download)
         if args.csv:
             import csv
             with open(args.csv, "w", newline="", encoding="utf-8") as handle:
@@ -173,6 +200,10 @@ def _dispatch(args: argparse.Namespace) -> int:  # noqa: C901 - flat command tab
         report = refresh(args.source, local=local, allow_download=args.allow_download, cache_dir=args.cache)
         print(json.dumps(report["canonical"], indent=2))
         return 0
+    if args.command == "quality":
+        return _quality(args)
+    if args.command == "hub":
+        return _hub(args, root)
     if args.command == "schema":
         from aipe_magnetics_database.data import schema as sc
         if args.action == "validate":
@@ -216,6 +247,59 @@ def _dispatch(args: argparse.Namespace) -> int:  # noqa: C901 - flat command tab
         from aipe_magnetics_database.mcp import server
         return server.main(["--self-test"] if args.action == "self-test" else [])
     raise AssertionError(args.command)  # pragma: no cover
+
+
+def _quality(args: argparse.Namespace) -> int:
+    from aipe_magnetics_database.ingest.common import dumps_pretty, write_if_changed
+    from aipe_magnetics_database.ingest.pipeline import repository_root
+    from aipe_magnetics_database.ingest.quality import run_checks, summary_markdown
+    root = repository_root()
+    report = run_checks(root, validate_schema=not args.no_schema)
+    if not args.no_write:
+        write_if_changed(root / "data" / "reports" / "quality-report.json", dumps_pretty(report).encode("utf-8"))
+        write_if_changed(root / "docs" / "quality-summary.md", summary_markdown(report).encode("utf-8"))
+    print(json.dumps(report if args.json else report["summary"], indent=2))
+    return 2 if report["summary"]["errors"] else 0
+
+
+def _hub(args: argparse.Namespace, root: str | None) -> int:
+    from aipe_magnetics_database.hub.layout import DEFAULT_REPO_ID
+    if args.action == "status":
+        import aipe_magnetics_database.api as api
+        _print(api.hub_release(root=root), args)
+        return 0
+    if args.action == "stage":
+        from aipe_magnetics_database.hub.stage import build_stage
+        index = build_stage(args.out, sources=args.source, allow_download=args.allow_download, cache_dir=args.cache,
+                            require_local_tables=not args.allow_missing_local_tables)
+        print(json.dumps({"stage": str(args.out), "totals": index["totals"], "quality": index["quality_summary"]}, indent=2))
+        return 0
+    if args.action == "verify-stage":
+        from aipe_magnetics_database.hub.stage import verify_stage
+        problems = verify_stage(args.stage)
+        print("\n".join(problems) if problems else f"{args.stage}: every file matches manifests/checksums.json")
+        return 2 if problems else 0
+    if args.action == "publish":
+        from aipe_magnetics_database.hub.publish import publish
+        receipt = publish(args.stage, repo_id=args.repo or DEFAULT_REPO_ID, mode=args.mode, merge=args.merge, dry_run=args.dry_run,
+                          receipt_path=args.receipt, branch=args.branch)
+        print(json.dumps({k: v for k, v in receipt.items() if k != "files"}, indent=2))
+        return 0
+    if args.action == "sync":
+        from aipe_magnetics_database.hub.sync import sync_release
+        release = sync_release(repo_id=args.repo or DEFAULT_REPO_ID, revision=args.revision, verify=not args.no_verify)
+        print(json.dumps({k: v for k, v in release.items() if k != "files"} | {"files": len(release["files"])}, indent=2))
+        return 0
+    if args.action == "restore-tables":
+        from aipe_magnetics_database.hub.transfer import restore
+        print(json.dumps(restore(cache_dir=args.cache, allow_download=args.allow_download), indent=2))
+        return 0
+    if args.action == "fetch":
+        import aipe_magnetics_database.api as api
+        table = api.get_table(args.record_id, limit=1, root=root, allow_download=True)
+        print(json.dumps({"record_id": args.record_id, "total_rows": table["total_rows"], "cached": True}, indent=2))
+        return 0
+    raise AssertionError(args.action)  # pragma: no cover
 
 
 def _validate(root: str | None) -> int:

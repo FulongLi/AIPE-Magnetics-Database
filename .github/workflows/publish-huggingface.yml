@@ -1,0 +1,186 @@
+name: Publish to Hugging Face
+# Publishes the verified, redistributable release (raw/, normalized/v0.2/, manifests/, README.md) to
+# https://huggingface.co/datasets/FulongLi/AIPE-Magnetics-Dataset through a Hugging Face Trusted Publisher:
+# the publish job exchanges a GitHub OIDC id token for a one-hour, repo-scoped HF token. No HF token is stored in
+# GitHub secrets and none is printed. Manual dispatch only - nothing is published on ordinary pushes.
+#
+# Test path: a push to the dedicated branch hf-publish/test publishes only the small Zenodo 21626116 source to the
+# separate Hub branch ci-test (mode branch; the dataset's main is not touched), to verify the Trusted Publisher
+# exchange, write access and verification before a full release. No other branch or event publishes.
+#
+# Trusted Publisher claims this workflow presents (configure the same on the dataset's Settings -> Trusted Publishers):
+#   repository = FulongLi/AIPE-Magnetics-Database
+#   workflow   = publish-huggingface.yml
+#   branch     = the branch it is dispatched on (main for releases)
+on:
+  push:
+    branches: ["hf-publish/test"]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "branch = review release on a Hub branch; main = publish to main; pr = Hub pull request (needs a user token, not the Trusted Publisher)"
+        type: choice
+        options: [branch, main, pr]
+        default: branch
+      branch:
+        description: "Hub branch for mode=branch"
+        type: string
+        default: staging
+      merge:
+        description: "merge the Hub pull request after every file has been verified"
+        type: boolean
+        default: false
+      sources:
+        description: "space-separated source ids to stage (empty = every publishable source)"
+        type: string
+        default: ""
+      dry_run:
+        description: "authenticate and plan only; upload nothing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: huggingface-publish
+  cancel-in-progress: false
+
+env:
+  HF_REPO: FulongLi/AIPE-Magnetics-Dataset
+  # push to hf-publish/test: fixed small test publication; workflow_dispatch: the inputs
+  MODE: ${{ github.event_name == 'push' && 'branch' || inputs.mode }}
+  MERGE: ${{ github.event_name == 'push' && 'false' || inputs.merge }}
+  SOURCES: ${{ github.event_name == 'push' && 'zenodo_21626116_smc_ferrite_triangular' || inputs.sources }}
+  DRY_RUN: ${{ github.event_name == 'push' && 'false' || inputs.dry_run }}
+  HUB_BRANCH: ${{ github.event_name == 'push' && 'ci-test' || inputs.branch }}
+  AIPE_MAGNETICS_CACHE: ${{ github.workspace }}/.aipe-cache
+
+jobs:
+  stage:
+    name: stage and validate the release (no publishing rights)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+      - name: Cache pinned upstream inputs (SHA-256 verified on every use)
+        uses: actions/cache@v4
+        with:
+          path: .aipe-cache
+          key: aipe-raw-${{ hashFiles('data/raw/*/SOURCES.json', 'src/aipe_magnetics_database/ingest/pins/*.json') }}
+          restore-keys: aipe-raw-
+      - name: Restore large table sidecars that are not kept in Git (verified against committed rows_sha256)
+        if: env.SOURCES == '' || contains(env.SOURCES, 'openmagnetics_mas')
+        run: aipe-magnetics-db hub restore-tables --allow-download
+      - name: Regenerate large table sidecars whose pinned inputs are downloadable (SHA-256 verified)
+        if: env.SOURCES == '' || contains(env.SOURCES, 'zenodo_7368936_cwh_n87')
+        run: aipe-magnetics-db refresh --source zenodo_7368936_cwh_n87 --allow-download && test -z "$(git status --porcelain -- data/normalized data/raw)"
+      - name: Validate every record
+        run: aipe-magnetics-db validate
+      - name: Build the release tree
+        run: |
+          args=""
+          for s in $SOURCES; do args="$args --source $s"; done
+          aipe-magnetics-db hub stage --out _release --allow-download $args
+          aipe-magnetics-db hub verify-stage _release
+      - name: Quality gate (errors fail the release; warnings are reported)
+        run: |
+          python - <<'EOF'
+          import json, sys
+          q = json.load(open("_release/manifests/quality-report.json"))["summary"]
+          print(json.dumps(q, indent=2))
+          sys.exit(1 if q["errors"] else 0)
+          EOF
+      - name: Summary
+        run: |
+          python - >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          import json
+          d = json.load(open("_release/manifests/dataset-index.json"))
+          print("## Staged release\n\n| Source | Licence | Raw files | Raw bytes | Normalised files | Normalised bytes |\n|---|---|---|---|---|---|")
+          for s in d["sources"]:
+              print(f"| `{s['id']}` | {s['license']} | {s['raw_files']} | {s['raw_bytes']:,} | {s['normalized_files']} | {s['normalized_bytes']:,} |")
+          t = d["totals"]
+          print(f"\nTotal raw {t['raw_bytes']:,} B, normalised {t['normalized_bytes']:,} B. Quality: {json.dumps(d['quality_summary'])}")
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-tree
+          path: _release/
+          retention-days: 7
+          include-hidden-files: false
+
+  publish:
+    name: publish to Hugging Face (Trusted Publisher)
+    needs: stage
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # required to mint the GitHub OIDC id token exchanged for a short-lived HF token
+    env:
+      HF_OIDC_RESOURCE: datasets/FulongLi/AIPE-Magnetics-Dataset
+      HF_HUB_DISABLE_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[hub]"
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-tree
+          path: _release
+      - name: Show the OIDC claims Hugging Face will match (no secrets)
+        run: |
+          {
+            echo "## Trusted Publisher claims"
+            echo ""
+            echo "| claim | value |"
+            echo "|---|---|"
+            echo "| repository | \`${GITHUB_REPOSITORY}\` |"
+            echo "| ref / branch | \`${GITHUB_REF}\` / \`${GITHUB_REF_NAME}\` |"
+            echo "| workflow_ref | \`${GITHUB_WORKFLOW_REF}\` |"
+            echo "| resource | \`${HF_OIDC_RESOURCE}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Re-verify the downloaded release tree
+        run: aipe-magnetics-db hub verify-stage _release
+      - name: Publish and verify
+        run: |
+          args="--mode $MODE --receipt receipt.json"
+          if [ "$MODE" = "branch" ]; then args="$args --branch $HUB_BRANCH"; fi
+          if [ "$MERGE" = "true" ]; then args="$args --merge"; fi
+          if [ "$DRY_RUN" = "true" ]; then args="$args --dry-run"; fi
+          set +e
+          aipe-magnetics-db hub publish _release $args 2> publish.err
+          status=$?
+          set -e
+          cat publish.err >&2
+          if [ $status -ne 0 ] && grep -qE "invalid_grant|OIDCError" publish.err; then
+            {
+              echo "## Trusted Publisher exchange failed"
+              echo ""
+              echo "Hugging Face rejected the OIDC token for \`${HF_OIDC_RESOURCE}\`. On"
+              echo "https://huggingface.co/datasets/${HF_REPO}/settings -> Trusted Publishers, the GitHub Actions publisher must match:"
+              echo "repository \`${GITHUB_REPOSITORY}\`, workflow \`publish-huggingface.yml\`, branch \`${GITHUB_REF_NAME}\`"
+              echo "The publisher must not be read-only."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit $status
+      - name: Receipt
+        if: always()
+        run: |
+          if [ -f receipt.json ]; then
+            python -c "import json; r=json.load(open('receipt.json')); r.pop('files', None); print('## Receipt\n\n\`\`\`json\n' + json.dumps(r, indent=2) + '\n\`\`\`')" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: publication-receipt
+          path: receipt.json
+          if-no-files-found: ignore

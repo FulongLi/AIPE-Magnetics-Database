@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.2.0",
+  "id": "dataset.guillod-n87-dielectric",
+  "kind": "dataset",
+  "name": "Guillod N87 large-signal dielectric properties",
+  "synthetic": false,
+  "license": "MIT",
+  "properties": {
+    "source_id": "guillod_n87_dielectric",
+    "title": "Large-Signal Properties in MnZn Ferrites: Code and Data (datasets)",
+    "url": "https://github.com/otvam/large_signal_ferrite_apec24",
+    "version": "dd06889876ca7d360ae3c4cf6da6c507ba5fef2c",
+    "license": "MIT",
+    "redistribution_permitted": true,
+    "record_count": 3,
+    "publisher": "Thomas Guillod, Dartmouth College",
+    "citation": "T. Guillod, W. V. R. Roberts, C. R. Sullivan, 'Characterization and Impact of Large-Signal Dielectric Properties in MnZn Ferrites', IEEE APEC 2024, doi:10.1109/APEC48139.2024.10509366; data: github.com/otvam/large_signal_ferrite_apec24 (MIT)",
+    "source_commit": "dd06889876ca7d360ae3c4cf6da6c507ba5fef2c",
+    "description": "Real permittivity and conductivity of TDK N87 (small signal, vs temperature, vs peak electric field); independent laboratory measurements.",
+    "checksums": {
+      "N87_eps_large/data.mat": "ef18d977124ef6d6eb182c44509e39fcee1639de3e49813d039fa3f4d0a6e3fc",
+      "N87_eps_small/data.mat": "cb5dd86a816a0ca3336804ac1e7350242846360c99da7a541d1d9bd9c6731fc4",
+      "N87_eps_temperature/data.mat": "3bdf594d1e1c772d68dc5d40f034b790cf8ad0bdba1f5cdb67375d3627e44235"
+    },
+    "materials": [
+      "TDK N87"
+    ]
+  },
+  "evidence_refs": [
+    "evidence.guillod-source"
+  ],
+  "evidence": [
+    {
+      "id": "evidence.guillod-source",
+      "kind": "source",
+      "reference": "otvam/large_signal_ferrite_apec24",
+      "description": "MIT-licensed dataset of the APEC 2024 paper.",
+      "created_at": "2025-11-05T14:17:19Z",
+      "review_status": "unreviewed",
+      "license": "MIT",
+      "locator": "LICENSE.md",
+      "url": "https://github.com/otvam/large_signal_ferrite_apec24/tree/dd06889876ca7d360ae3c4cf6da6c507ba5fef2c",
+      "version": "dd06889876ca7d360ae3c4cf6da6c507ba5fef2c"
+    }
+  ],
+  "provenance": {
+    "activity": "normalize_guillod",
+    "tool": {
+      "id": "aipe.magnetics.database.ingest.guillod",
+      "version": "0.3.0",
+      "name": "AIPE Magnetics Database importer"
+    },
+    "dataset_version": "dd06889876ca7d360ae3c4cf6da6c507ba5fef2c",
+    "normalization": "MATLAB data.mat variables read with scipy.io (float64, unmodified); degC -> K; electric field and conductivity in the SI units used by the authors' solver (code prints 1e-3*E as V/mm; sigma enters the complex permittivity with epsilon_0)."
+  },
+  "quality": {
+    "status": "normalized",
+    "flags": [
+      "third_party_unreviewed"
+    ]
+  }
+}

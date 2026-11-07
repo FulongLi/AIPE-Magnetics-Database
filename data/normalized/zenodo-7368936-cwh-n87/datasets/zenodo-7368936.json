@@ -1,0 +1,69 @@
+{
+  "schema_version": "0.2.0",
+  "id": "dataset.zenodo-7368936",
+  "kind": "dataset",
+  "name": "Composite waveform hypothesis N87 dataset",
+  "synthetic": false,
+  "license": "CC-BY-4.0",
+  "properties": {
+    "source_id": "zenodo_7368936_cwh_n87",
+    "title": "Calculation of Ferrite Core Losses with Arbitrary Waveforms using the Composite Waveform Hypothesis: Reproducibility Dataset",
+    "url": "https://zenodo.org/records/7368936",
+    "version": "10.5281/zenodo.7368936",
+    "license": "CC-BY-4.0",
+    "redistribution_permitted": true,
+    "record_count": 2,
+    "publisher": "Zenodo",
+    "citation": "T. Guillod, J. S. Lee, H. Li, S. Wang, M. Chen, C. R. Sullivan, 'Calculation of Ferrite Core Losses with Arbitrary Waveforms using the Composite Waveform Hypothesis: Reproducibility Dataset', Zenodo, 2022, doi:10.5281/zenodo.7368936 (CC BY 4.0); measurements from MagNet (Princeton / Dartmouth / Plexim)",
+    "description": "MagNet N87 loss under triangular / trapezoidal excitation (50-500 kHz, 25-90 degC) with the exact piecewise-linear waveforms; the variable-temperature set repeats packaged MagNet measurements.",
+    "checksums": {
+      "N87_ambient_temperature.csv": "fcc76d7f9c5cf3ca3a33d147e6a5f6a29d55df4f5f43665b06219db0535f0eb7",
+      "N87_ambient_temperature.h5": "edcc57d3cd76cd9fd09c5449b254491e07d657d5e531ef78598b1a3b83a7d296",
+      "N87_ambient_temperature.mat": "d74d390bbe6f728b13dfe2898319ae80be9fc409c1eecc1206fde6b80cb8a263",
+      "N87_variable_temperature.csv": "83609c3341b5e02d258e238a6114a3b24c69c9de42f5bcd80c0b4ffb49ea9455",
+      "N87_variable_temperature.h5": "5c22e9c880934be977c93d8d3ec5989b178b6b092fb6cba91958f232c0c1c871",
+      "N87_variable_temperature.mat": "a5cd58ef9bce4c251559aa82a125946cb7c69be40fd8259e668e0b2d2a3b094d",
+      "dataset_metadata.csv": "6844cbf62228260de93f62efc98bc2d036d0a2f8c8a0f5bcce84b48c024614cf",
+      "readme.txt": "38516c005e4e7d8193f900c2859d8a4330d754d4a6d9e6cc3f522239f59c0b6b",
+      "test_matlab.m": "1ee1c87f35fdf1edf207243dcff51354a88ebd0d5f226aade003c6d38c712a68",
+      "test_python.py": "8b84877935b30844f18418597f0c03c07b74bb010fab6f5468050b6e0596d729"
+    },
+    "materials": [
+      "TDK N87"
+    ]
+  },
+  "evidence_refs": [
+    "evidence.cwh-source"
+  ],
+  "evidence": [
+    {
+      "id": "evidence.cwh-source",
+      "kind": "source",
+      "reference": "Zenodo 10.5281/zenodo.7368936",
+      "description": "CC-BY-4.0 reproducibility dataset.",
+      "created_at": "2022-11-29T00:00:00Z",
+      "review_status": "unreviewed",
+      "license": "CC-BY-4.0",
+      "locator": "readme.txt",
+      "url": "https://zenodo.org/records/7368936",
+      "version": "10.5281/zenodo.7368936",
+      "sha256": "38516c005e4e7d8193f900c2859d8a4330d754d4a6d9e6cc3f522239f59c0b6b"
+    }
+  ],
+  "provenance": {
+    "activity": "normalize_cwh",
+    "tool": {
+      "id": "aipe.magnetics.database.ingest.cwh",
+      "version": "0.3.0",
+      "name": "AIPE Magnetics Database importer"
+    },
+    "dataset_version": "10.5281/zenodo.7368936",
+    "normalization": "CSV columns mapped one to one (dataset_metadata.csv); T degC -> K; flux_density_peak = B_pkpk / 2, i.e. (max B - min B) / 2 (the MagNet amplitude definition; B_pkpk equals max - min of B_vec to 1e-15 T); the published B_pkpk and the five-point piecewise-linear waveform (t_vec, B_vec) are kept verbatim."
+  },
+  "quality": {
+    "status": "normalized",
+    "flags": [
+      "third_party_unreviewed"
+    ]
+  }
+}

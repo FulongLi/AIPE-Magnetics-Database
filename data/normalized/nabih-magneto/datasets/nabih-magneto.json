@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.2.0",
+  "id": "dataset.nabih-magneto",
+  "kind": "dataset",
+  "name": "Nabih core characterisation database",
+  "synthetic": false,
+  "license": "MIT",
+  "properties": {
+    "source_id": "nabih_magneto",
+    "title": "Core characterization data set: loss, permeability and permittivity",
+    "url": "https://github.com/asalahnabih/magneto",
+    "version": "0a3a0f1e10356b294ae6782eaa46f4d478e5bff9",
+    "license": "MIT",
+    "redistribution_permitted": true,
+    "record_count": 22,
+    "publisher": "Ahmed Nabih, Virginia Tech (GitHub asalahnabih)",
+    "citation": "A. Nabih, 'Core characterization data set: loss, permeability and permittivity', GitHub asalahnabih/magneto (MIT); measurements described in A. Nabih et al., IEEE Xplore document 10149511",
+    "source_commit": "0a3a0f1e10356b294ae6782eaa46f4d478e5bff9",
+    "description": "MHz ferrite core loss (sinusoidal, 25 degC, no DC bias) and small-signal permeability / permittivity; independent laboratory data except the DMR96A permeability, which the database marks as a datasheet curve.",
+    "checksums": {
+      "Core loss database_v2.accdb": "cc2938a9b3a9c79fd72ecd8de3d49aa5a06b625a21ff28be455756b27f2b01c2"
+    },
+    "materials": [
+      "3F36",
+      "DMR51W",
+      "DMR96A",
+      "ML27D",
+      "ML91S",
+      "ML95S",
+      "P53",
+      "P63"
+    ]
+  },
+  "evidence_refs": [
+    "evidence.nabih-source"
+  ],
+  "evidence": [
+    {
+      "id": "evidence.nabih-source",
+      "kind": "source",
+      "reference": "asalahnabih/magneto",
+      "description": "MIT-licensed core characterisation database.",
+      "created_at": "2025-01-22T17:33:14Z",
+      "review_status": "unreviewed",
+      "license": "MIT",
+      "locator": "LICENSE",
+      "url": "https://github.com/asalahnabih/magneto/tree/0a3a0f1e10356b294ae6782eaa46f4d478e5bff9",
+      "version": "0a3a0f1e10356b294ae6782eaa46f4d478e5bff9",
+      "sha256": "cc2938a9b3a9c79fd72ecd8de3d49aa5a06b625a21ff28be455756b27f2b01c2"
+    }
+  ],
+  "provenance": {
+    "activity": "normalize_nabih",
+    "tool": {
+      "id": "aipe.magnetics.database.ingest.nabih",
+      "version": "0.3.0",
+      "name": "AIPE Magnetics Database importer"
+    },
+    "dataset_version": "0a3a0f1e10356b294ae6782eaa46f4d478e5bff9",
+    "normalization": "Jackcess TSV export of the Access tables (derived/EXPORT.json); MHz -> Hz, mT -> T, kW/m^3 -> W/m^3, degC -> K and mm -> m scaled exactly from the exported decimal text; points are joined to their test by ID and permeability / permittivity rows to the characteristics table by CID; rows without an ID / CID are excluded and counted."
+  },
+  "quality": {
+    "status": "normalized",
+    "flags": [
+      "third_party_unreviewed"
+    ]
+  }
+}
