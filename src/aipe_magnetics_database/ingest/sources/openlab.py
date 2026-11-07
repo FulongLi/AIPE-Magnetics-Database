@@ -158,10 +158,11 @@ def run_nabih(output_root: Path, *, local_dir: str | Path | None = None, allow_d
     measurements = []
     # --- core loss -----------------------------------------------------------------------------------------------
     loss_rows: dict[str, list[list[Any]]] = {}
+    orphans = 0
     for p in points:
         test = by_test.get(p["ID"])
         if test is None:
-            summary.exclude("Bm vs Pv table", "point without a test ID (cannot be attributed to a material or frequency)")
+            orphans += 1
             continue
         if test["Excitation"].strip().lower() != "sinusoidal":
             summary.exclude("Bm vs Pv table", f"excitation {test['Excitation']!r} not mapped")
@@ -170,6 +171,8 @@ def run_nabih(output_root: Path, *, local_dir: str | Path | None = None, allow_d
             dec(test["Frequency (MHz)"], "1e6"), dec(p["Bm (mT)"], "0.001"), dec(p["Pv (kW/m3)"], "1000"), dec(test["Temp (deg C)"], "1", "273.15"),
             0.0 if dec(test["DC Bias (A-turn)"]) == 0 else None, "sinusoidal", int(test["ID"]),
             dec(test["OD (mm)"], "0.001"), dec(test["ID (mm)"], "0.001"), dec(test["H (mm)"], "0.001")])
+    if orphans:
+        summary.exclude("Bm vs Pv table", "point without a test ID (cannot be attributed to a material or frequency)", orphans)
     nonzero_bias = sum(1 for t in tests if dec(t["DC Bias (A-turn)"]) != 0)
     if nonzero_bias:
         summary.notes.append(f"{nonzero_bias} test(s) with non-zero DC bias in ampere-turns: the field is not computed (no path length).")
@@ -200,11 +203,12 @@ def run_nabih(output_root: Path, *, local_dir: str | Path | None = None, allow_d
     for table_name, rows_in, quantity, real, imag in (("permeability", mu, "complex_permeability", "real permeability", "Imaginary permeability"),
                                                       ("permittivity", eps, "complex_permittivity", "real permittivity", "Imaginary permittivity")):
         grouped: dict[str, list[list[float]]] = {}
+        no_cid = sum(1 for r in rows_in if not r["CID"])
+        if no_cid:
+            summary.exclude(table_name, "row without a characteristics ID (CID): cannot be attributed to a material", no_cid)
         for r in rows_in:
-            if not r["CID"]:
-                summary.exclude(table_name, "row without a characteristics ID (CID): cannot be attributed to a material")
-                continue
-            grouped.setdefault(r["CID"], []).append([dec(r["f (MHz)"], "1e6"), dec(r[real]), dec(r[imag])])
+            if r["CID"]:
+                grouped.setdefault(r["CID"], []).append([dec(r["f (MHz)"], "1e6"), dec(r[real]), dec(r[imag])])
         for cid in sorted(grouped, key=int):
             ch = chars[cid]
             grade = ch["Material"]
