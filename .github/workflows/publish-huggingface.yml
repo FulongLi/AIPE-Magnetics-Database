@@ -4,11 +4,17 @@ name: Publish to Hugging Face
 # the publish job exchanges a GitHub OIDC id token for a one-hour, repo-scoped HF token. No HF token is stored in
 # GitHub secrets and none is printed. Manual dispatch only - nothing is published on ordinary pushes.
 #
+# Test path: a push to the dedicated branch hf-publish/test publishes only the small Zenodo 21626116 source into
+# an unmerged Hub pull request (mode pr, merge false), to verify the Trusted Publisher exchange and the upload
+# before a full release. No other branch or event publishes.
+#
 # Trusted Publisher claims this workflow presents (configure the same on the dataset's Settings -> Trusted Publishers):
 #   repository = FulongLi/AIPE-Magnetics-Database
 #   workflow   = publish-huggingface.yml
 #   branch     = the branch it is dispatched on (main for releases)
 on:
+  push:
+    branches: ["hf-publish/test"]
   workflow_dispatch:
     inputs:
       mode:
@@ -38,6 +44,11 @@ concurrency:
 
 env:
   HF_REPO: FulongLi/AIPE-Magnetics-Dataset
+  # push to hf-publish/test: fixed small test publication; workflow_dispatch: the inputs
+  MODE: ${{ github.event_name == 'push' && 'pr' || inputs.mode }}
+  MERGE: ${{ github.event_name == 'push' && 'false' || inputs.merge }}
+  SOURCES: ${{ github.event_name == 'push' && 'zenodo_21626116_smc_ferrite_triangular' || inputs.sources }}
+  DRY_RUN: ${{ github.event_name == 'push' && 'false' || inputs.dry_run }}
   AIPE_MAGNETICS_CACHE: ${{ github.workspace }}/.aipe-cache
 
 jobs:
@@ -59,13 +70,14 @@ jobs:
           key: aipe-raw-${{ hashFiles('data/raw/*/SOURCES.json', 'src/aipe_magnetics_database/ingest/pins/*.json') }}
           restore-keys: aipe-raw-
       - name: Restore large table sidecars that are not kept in Git (verified against committed rows_sha256)
+        if: env.SOURCES == '' || contains(env.SOURCES, 'openmagnetics_mas')
         run: aipe-magnetics-db hub restore-tables --allow-download
       - name: Validate every record
         run: aipe-magnetics-db validate
       - name: Build the release tree
         run: |
           args=""
-          for s in ${{ inputs.sources }}; do args="$args --source $s"; done
+          for s in $SOURCES; do args="$args --source $s"; done
           aipe-magnetics-db hub stage --out _release --allow-download $args
           aipe-magnetics-db hub verify-stage _release
       - name: Quality gate (errors fail the release; warnings are reported)
@@ -132,9 +144,9 @@ jobs:
         run: aipe-magnetics-db hub verify-stage _release
       - name: Publish and verify
         run: |
-          args="--mode ${{ inputs.mode }} --receipt receipt.json"
-          if [ "${{ inputs.merge }}" = "true" ]; then args="$args --merge"; fi
-          if [ "${{ inputs.dry_run }}" = "true" ]; then args="$args --dry-run"; fi
+          args="--mode $MODE --receipt receipt.json"
+          if [ "$MERGE" = "true" ]; then args="$args --merge"; fi
+          if [ "$DRY_RUN" = "true" ]; then args="$args --dry-run"; fi
           set +e
           aipe-magnetics-db hub publish _release $args 2> publish.err
           status=$?
