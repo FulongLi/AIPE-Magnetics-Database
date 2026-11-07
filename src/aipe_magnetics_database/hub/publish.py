@@ -14,7 +14,8 @@ Rules enforced before anything is sent:
 
 ``mode="pr"`` (default) uploads into a new Hub pull request opened by the commit endpoint (``create_pr``), or resumes
 the open pull request of the same release; ``merge=True`` merges it only after verification succeeded (if the token
-may not merge, the verified pull request is left open and the receipt says so). ``mode="main"`` commits directly.
+may not merge, the verified pull request is left open and the receipt says so). ``mode="main"`` commits directly; ``mode="branch"`` commits to a separate Hub branch (created from ``main`` if needed),
+which leaves ``main`` untouched - used by the test publication.
 Verification compares SHA-256 (LFS / Xet files) or the Git blob id (small files) and the size of every staged
 file at the resulting revision.
 """
@@ -154,12 +155,14 @@ def _open_release_pr(api: Any, repo_id: str, title: str, log: Callable[[str], No
 
 
 def publish(stage_dir: str | Path, *, repo_id: str = DEFAULT_REPO_ID, mode: str = "pr", merge: bool = False, dry_run: bool = False,
-            receipt_path: str | Path | None = None, log: Callable[[str], None] = print) -> dict[str, Any]:
+            receipt_path: str | Path | None = None, branch: str | None = None, log: Callable[[str], None] = print) -> dict[str, Any]:
     """Upload the stage (see module docstring); returns the publication receipt."""
     hf = _hf()
     stage_dir = Path(stage_dir)
-    if mode not in ("pr", "main"):
-        raise ValueError("mode must be 'pr' or 'main'")
+    if mode not in ("pr", "main", "branch"):
+        raise ValueError("mode must be 'pr', 'main' or 'branch'")
+    if mode == "branch" and not branch:
+        raise ValueError("mode 'branch' needs a branch name")
     problems = verify_stage(stage_dir)
     if problems:
         raise DataIntegrityError(f"stage {stage_dir} is not intact: {problems[:5]}")
@@ -167,7 +170,9 @@ def publish(stage_dir: str | Path, *, repo_id: str = DEFAULT_REPO_ID, mode: str 
     if os.environ.get("HF_OIDC_RESOURCE") and os.environ["HF_OIDC_RESOURCE"] != f"datasets/{repo_id}":
         raise ValueError(f"HF_OIDC_RESOURCE is {os.environ['HF_OIDC_RESOURCE']!r} but the target is datasets/{repo_id}")
     api.auth_check(repo_id, repo_type=REPO_TYPE)
-    remote = remote_files(api, repo_id)
+    if mode == "branch" and not dry_run:
+        api.create_branch(repo_id, branch=branch, repo_type=REPO_TYPE, exist_ok=True)  # forked from main; main is not touched
+    remote = remote_files(api, repo_id, branch if mode == "branch" else None)
     plan = make_plan(stage_dir, remote)
     release = _release_id(stage_dir)
     index = json.loads((stage_dir / MANIFEST_PREFIX / "dataset-index.json").read_text(encoding="utf-8"))
@@ -188,7 +193,7 @@ def publish(stage_dir: str | Path, *, repo_id: str = DEFAULT_REPO_ID, mode: str 
                    f"Upload {len(plan.upload)} file(s), {plan.upload_bytes:,} bytes; {len(plan.unchanged)} unchanged; nothing deleted.\n"
                    f"Replaced (new version of a non-raw file): {', '.join(plan.replace) or 'none'}.\n"
                    f"Every file is listed with SHA-256 in manifests/checksums.json.")
-    revision = None
+    revision = branch if mode == "branch" else None
     pr = None
     if plan.upload:
         delta = _delta(stage_dir, plan.upload)

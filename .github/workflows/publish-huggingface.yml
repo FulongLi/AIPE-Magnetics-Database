@@ -4,9 +4,9 @@ name: Publish to Hugging Face
 # the publish job exchanges a GitHub OIDC id token for a one-hour, repo-scoped HF token. No HF token is stored in
 # GitHub secrets and none is printed. Manual dispatch only - nothing is published on ordinary pushes.
 #
-# Test path: a push to the dedicated branch hf-publish/test publishes only the small Zenodo 21626116 source into
-# an unmerged Hub pull request (mode pr, merge false), to verify the Trusted Publisher exchange and the upload
-# before a full release. No other branch or event publishes.
+# Test path: a push to the dedicated branch hf-publish/test publishes only the small Zenodo 21626116 source to the
+# separate Hub branch ci-test (mode branch; the dataset's main is not touched), to verify the Trusted Publisher
+# exchange, write access and verification before a full release. No other branch or event publishes.
 #
 # Trusted Publisher claims this workflow presents (configure the same on the dataset's Settings -> Trusted Publishers):
 #   repository = FulongLi/AIPE-Magnetics-Database
@@ -18,9 +18,9 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "pr = open (or resume) a Hub pull request; main = commit directly to main"
+        description: "pr = open (or resume) a Hub pull request; main = commit directly to main; branch = Hub branch ci-test"
         type: choice
-        options: [pr, main]
+        options: [pr, main, branch]
         default: pr
       merge:
         description: "merge the Hub pull request after every file has been verified"
@@ -45,7 +45,7 @@ concurrency:
 env:
   HF_REPO: FulongLi/AIPE-Magnetics-Dataset
   # push to hf-publish/test: fixed small test publication; workflow_dispatch: the inputs
-  MODE: ${{ github.event_name == 'push' && 'pr' || inputs.mode }}
+  MODE: ${{ github.event_name == 'push' && 'branch' || inputs.mode }}
   MERGE: ${{ github.event_name == 'push' && 'false' || inputs.merge }}
   SOURCES: ${{ github.event_name == 'push' && 'zenodo_21626116_smc_ferrite_triangular' || inputs.sources }}
   DRY_RUN: ${{ github.event_name == 'push' && 'false' || inputs.dry_run }}
@@ -148,6 +148,7 @@ jobs:
       - name: Publish and verify
         run: |
           args="--mode $MODE --receipt receipt.json"
+          if [ "$MODE" = "branch" ]; then args="$args --branch ci-test"; fi
           if [ "$MERGE" = "true" ]; then args="$args --merge"; fi
           if [ "$DRY_RUN" = "true" ]; then args="$args --dry-run"; fi
           set +e

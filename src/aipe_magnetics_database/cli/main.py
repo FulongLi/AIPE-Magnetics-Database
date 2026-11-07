@@ -93,7 +93,8 @@ def build_parser() -> argparse.ArgumentParser:
                                                                        help="stage even when regenerated tables-local/ sidecars are absent")
     p = h.add_parser("verify-stage", help="re-hash a staged release against its checksums.json"); p.add_argument("stage", type=Path)
     p = h.add_parser("publish", help="upload a staged release (Hub pull request by default) and verify every file")
-    p.add_argument("stage", type=Path); p.add_argument("--repo", default=None); p.add_argument("--mode", choices=["pr", "main"], default="pr")
+    p.add_argument("stage", type=Path); p.add_argument("--repo", default=None); p.add_argument("--mode", choices=["pr", "main", "branch"], default="pr")
+    p.add_argument("--branch", help="Hub branch for --mode branch (created from main if missing)")
     p.add_argument("--merge", action="store_true", help="merge the Hub pull request after successful verification")
     p.add_argument("--dry-run", action="store_true"); p.add_argument("--receipt", type=Path, help="write the publication receipt JSON here")
     p = h.add_parser("sync", help="verify a published release and record its exact commit in data/huggingface.json")
@@ -281,7 +282,7 @@ def _hub(args: argparse.Namespace, root: str | None) -> int:
     if args.action == "publish":
         from aipe_magnetics_database.hub.publish import publish
         receipt = publish(args.stage, repo_id=args.repo or DEFAULT_REPO_ID, mode=args.mode, merge=args.merge, dry_run=args.dry_run,
-                          receipt_path=args.receipt)
+                          receipt_path=args.receipt, branch=args.branch)
         print(json.dumps({k: v for k, v in receipt.items() if k != "files"}, indent=2))
         return 0
     if args.action == "sync":

@@ -157,6 +157,9 @@ class FakeHub:
         if create_pr:
             return SimpleNamespace(pr_num=pr.num, pr_revision=pr.git_reference, pr_url=f"https://hub/pr/{pr.num}")
 
+    def create_branch(self, repo_id, branch, repo_type=None, exist_ok=False):
+        self.refs.setdefault(branch, dict(self.refs["main"]))
+
     def change_discussion_status(self, repo_id, num, new_status, repo_type=None, comment=None):
         self.prs[num - 1].status = new_status
 
@@ -394,3 +397,10 @@ def test_publish_tolerates_unlistable_discussions(stage_dir: Path, hub: FakeHub,
 
     monkeypatch.setattr(hub, "get_repo_discussions", refuse)
     assert publish(stage_dir, mode="pr", log=lambda _m: None)["verified"]
+
+
+def test_publish_to_separate_branch_leaves_main_untouched(stage_dir: Path, hub: FakeHub):
+    before = dict(hub.refs["main"])
+    receipt = publish(stage_dir, mode="branch", branch="ci-test", log=lambda _m: None)
+    assert receipt["verified"] and receipt["revision"] == "ci-test" and hub.refs["main"] == before
+    assert publish(stage_dir, mode="branch", branch="ci-test", log=lambda _m: None)["plan"]["upload"] == 0
