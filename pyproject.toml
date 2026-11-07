@@ -35,8 +35,14 @@ hdf5 = ["h5py>=3.8"]
 mcp = ["mcp>=2.0,<3"]
 # publishing to the Hugging Face dataset (reading a published release needs no extra dependency)
 hub = ["huggingface_hub>=2.4,<3"]
+# readers for heterogeneous original files used by the importers (never needed to query the data)
+importers = ["h5py>=3.8", "openpyxl>=3.1", "xlrd>=2.0", "scipy>=1.10", "pyarrow>=14"]
 dev = [
   "huggingface_hub>=2.4,<3",
+  "openpyxl>=3.1",
+  "xlrd>=2.0",
+  "scipy>=1.10",
+  "pyarrow>=14",
   "PyYAML>=6.0",
   "h5py>=3.8",
   "mcp>=2.0,<3",
