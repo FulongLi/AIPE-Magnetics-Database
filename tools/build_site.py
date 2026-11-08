@@ -170,6 +170,8 @@ class SiteBuilder:
                     "title", "url", "version", "publisher", "citation", "description", "redistribution_permitted")}}
                 flags.append(d["properties"].get("redistribution_permitted") is True)
             self.redistributable[sid] = bool(flags) and all(flags)
+        # sources whose pinned upstream inputs can no longer be retrieved (registry field raw_unavailable)
+        self.raw_unavailable: dict[str, bool] = {s["id"]: bool(s.get("raw_unavailable")) for s in db.sources}
         # record id -> committed shard file, for links to the original record
         self.shard_of: dict[str, str] = {}
         id_re = re.compile(r'"id"\s*:\s*"([^"]+)"')
@@ -303,8 +305,14 @@ class SiteBuilder:
             unavailable = None
             rows: list[list[Any]] = []
             sampling = {"sampled": False, "total_rows": table["row_count"], "published_rows": 0}
-            regenerate = ("Large regenerated table: its rows are not committed to the repository, so they are not published here. "
-                          f"Regenerate them locally with 'aipe-magnetics-db refresh --source {sid} --allow-download'.")
+            if self.raw_unavailable.get(sid):
+                # the pinned upstream input is gone, so a refresh cannot regenerate the rows: say so instead of suggesting one
+                regenerate = ("Large table: its rows are not kept in Git and are not yet in the Hugging Face release. The upstream "
+                              "file they were generated from is no longer retrievable, so they cannot be regenerated from upstream; "
+                              "they will be added to the Hugging Face release from the last verified copy.")
+            else:
+                regenerate = ("Large regenerated table: its rows are not committed to the repository, so they are not published here. "
+                              f"Regenerate them locally with 'aipe-magnetics-db refresh --source {sid} --allow-download'.")
             if not self.redistributable.get(sid):
                 unavailable = "The source dataset does not grant redistribution; rows are not published on this site."
             elif local_only and links.get("huggingface"):
