@@ -1,0 +1,1248 @@
+{
+  "layout": "aipe.magnetics.hf-layout/1.0",
+  "repo_id": "FulongLi/AIPE-Magnetics-Dataset",
+  "repo_type": "dataset",
+  "revision": "main",
+  "commit": "d8c77ef67476eea39152f8dedfe28b566db617e9",
+  "published_at": "2026-11-07T23:32:11.000Z",
+  "url": "https://huggingface.co/datasets/FulongLi/AIPE-Magnetics-Dataset/tree/d8c77ef67476eea39152f8dedfe28b566db617e9",
+  "builder": {
+    "package": "aipe-magnetics-database",
+    "version": "0.3.0",
+    "commit": "34e3510d4c1f39d74265e8e0ee627d4675ce3abe",
+    "repository": "https://github.com/FulongLi/AIPE-Magnetics-Database"
+  },
+  "sources": {
+    "openmagnetics_mas": {
+      "raw_prefix": "raw/openmagnetics_mas/",
+      "normalized_prefix": "normalized/v0.2/openmagnetics_mas/",
+      "license": "Apache-2.0",
+      "raw_files": 3,
+      "raw_bytes": 19846706,
+      "normalized_files": 62,
+      "normalized_bytes": 60450009
+    },
+    "princeton_magnet": {
+      "raw_prefix": "raw/princeton_magnet/",
+      "normalized_prefix": "normalized/v0.2/princeton_magnet/",
+      "license": "MIT",
+      "raw_files": 10,
+      "raw_bytes": 36903448,
+      "normalized_files": 14,
+      "normalized_bytes": 35306447
+    },
+    "paderborn_lea_materialdatabase": {
+      "raw_prefix": "raw/paderborn_lea_materialdatabase/",
+      "normalized_prefix": "normalized/v0.2/paderborn_lea_materialdatabase/",
+      "license": "GPL-3.0-only",
+      "raw_files": 80,
+      "raw_bytes": 3905810,
+      "normalized_files": 16,
+      "normalized_bytes": 4711163
+    },
+    "zenodo_8292861_hefmag": {
+      "raw_prefix": "raw/zenodo_8292861_hefmag/",
+      "normalized_prefix": "normalized/v0.2/zenodo_8292861_hefmag/",
+      "license": "CC-BY-4.0",
+      "raw_files": 1,
+      "raw_bytes": 120075,
+      "normalized_files": 4,
+      "normalized_bytes": 181214
+    },
+    "zenodo_21626116_smc_ferrite_triangular": {
+      "raw_prefix": "raw/zenodo_21626116_smc_ferrite_triangular/",
+      "normalized_prefix": "normalized/v0.2/zenodo_21626116_smc_ferrite_triangular/",
+      "license": "CC-BY-4.0",
+      "raw_files": 9,
+      "raw_bytes": 1956,
+      "normalized_files": 4,
+      "normalized_bytes": 18526
+    },
+    "nabih_magneto": {
+      "raw_prefix": "raw/nabih_magneto/",
+      "normalized_prefix": "normalized/v0.2/nabih_magneto/",
+      "license": "MIT",
+      "raw_files": 4,
+      "raw_bytes": 1706288,
+      "normalized_files": 4,
+      "normalized_bytes": 192083
+    },
+    "guillod_n87_dielectric": {
+      "raw_prefix": "raw/guillod_n87_dielectric/",
+      "normalized_prefix": "normalized/v0.2/guillod_n87_dielectric/",
+      "license": "MIT",
+      "raw_files": 22,
+      "raw_bytes": 58263,
+      "normalized_files": 4,
+      "normalized_bytes": 64094
+    },
+    "zenodo_7368936_cwh_n87": {
+      "raw_prefix": "raw/zenodo_7368936_cwh_n87/",
+      "normalized_prefix": "normalized/v0.2/zenodo_7368936_cwh_n87/",
+      "license": "CC-BY-4.0",
+      "raw_files": 10,
+      "raw_bytes": 21807906,
+      "normalized_files": 6,
+      "normalized_bytes": 12360309
+    },
+    "zenodo_10725890_inrim": {
+      "raw_prefix": "raw/zenodo_10725890_inrim/",
+      "normalized_prefix": "normalized/v0.2/zenodo_10725890_inrim/",
+      "license": "CC-BY-4.0",
+      "raw_files": 1,
+      "raw_bytes": 16705,
+      "normalized_files": 4,
+      "normalized_bytes": 103270
+    }
+  },
+  "totals": {
+    "record_counts": {
+      "core_geometry": 21237,
+      "dataset": 12,
+      "magnetic_material": 1200,
+      "measurement": 1764,
+      "model_metadata": 664
+    },
+    "table_rows": {
+      "amplitude_permeability": 4320,
+      "bh_curve": 1517846,
+      "complex_permeability": 104686,
+      "complex_permittivity": 18959,
+      "core_loss": 667714,
+      "dielectric_properties": 864,
+      "energy_loss": 54,
+      "energy_loss_and_permeability": 1087,
+      "initial_permeability": 12543,
+      "loss_factor": 18601,
+      "mass_core_loss": 1363
+    },
+    "raw_bytes": 84367157,
+    "normalized_bytes": 113387115
+  },
+  "files": {
+    "LICENSE.md": {
+      "sha256": "7394bb5650e8fa782c062562c3cfa68d95b7d10f74b7a516543eca3736c47876",
+      "size": 1297
+    },
+    "README.md": {
+      "sha256": "8a5b228d462e6a314dca1daa819f41bd1432c5dd25d2b4a9d7b7429cc535fff8",
+      "size": 8010
+    },
+    "manifests/checksums.json": {
+      "sha256": "f98da95c90dd459ce5e9f0466c22932f81f4b585e34efcc424cc90cbc2044e77",
+      "size": 54924
+    },
+    "manifests/dataset-index.json": {
+      "sha256": "879e77c5ea3737e194572f9f023e14a76809a4adc75fc86d3635d10057df382f",
+      "size": 12407
+    },
+    "manifests/quality-report.json": {
+      "sha256": "7bb29b32326a90897fe3a1d9d3d2d07a07bd8eb30751a29d505495a1d2cccb16",
+      "size": 20221
+    },
+    "manifests/sources.json": {
+      "sha256": "01ae1b890b40134c65ce0980e2514e6dba49e117d12d866755221a3eab2a0fce",
+      "size": 97268
+    },
+    "normalized/v0.2/guillod_n87_dielectric/datasets/guillod-n87-dielectric.json": {
+      "sha256": "c7bba360caa55e873c72b6af468e34cd9da019a1736515c3e6ed1cb8cc99495e",
+      "size": 2695
+    },
+    "normalized/v0.2/guillod_n87_dielectric/index.json": {
+      "sha256": "2bba3cd48414d120d6131457e29e35b6cc3667dbdada753dd173f5b73c9f1280",
+      "size": 600
+    },
+    "normalized/v0.2/guillod_n87_dielectric/materials/materials-001.jsonl": {
+      "sha256": "7c4ce91757c95881ed3da5128af8ce31c01c599964c8116fd1228ae214765365",
+      "size": 1439
+    },
+    "normalized/v0.2/guillod_n87_dielectric/measurements/measurements-001.jsonl": {
+      "sha256": "9e95bdc5c7fca49e3f86be2d3eea4b34eb0b891e193389fcdbab954833fa27a2",
+      "size": 59360
+    },
+    "normalized/v0.2/nabih_magneto/datasets/nabih-magneto.json": {
+      "sha256": "85edbbe89639c2b0eb0ab55b37c52c1eb50fdd28957198aaf10008aa2831a85a",
+      "size": 2723
+    },
+    "normalized/v0.2/nabih_magneto/index.json": {
+      "sha256": "8d6a3b71f92d66209705850a5ca3fd43eb54aab3674b27d9b2e5da3c3139e6f0",
+      "size": 639
+    },
+    "normalized/v0.2/nabih_magneto/materials/materials-001.jsonl": {
+      "sha256": "36ea7018177b501d4585279d067309dd4e991a40ecc222a196496510f8f792c4",
+      "size": 14051
+    },
+    "normalized/v0.2/nabih_magneto/measurements/measurements-001.jsonl": {
+      "sha256": "783e1c18e0ebab44e93ac58beb4380f2c0334fe079e8e92c0c0eba9d35abb1a0",
+      "size": 174670
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-001.jsonl": {
+      "sha256": "8f33001795c4254eaff77e7acfa2abf7e345345b0a0eb7fcb26c5792e0c8d175",
+      "size": 1888362
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-002.jsonl": {
+      "sha256": "1116a26904518f4bc4c9e155ed0f14010a72c8b444fb60d387c116b95485bdfe",
+      "size": 1874363
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-003.jsonl": {
+      "sha256": "6c0a344af1d127ae9bdcedc34b5d31e947febc972e268b6bbcd39aa77b2aabfb",
+      "size": 1892301
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-004.jsonl": {
+      "sha256": "18102a62bba8d8b474f5de28bcfa730a37c201f66e046a19beb5cefa268ddbaf",
+      "size": 1840137
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-005.jsonl": {
+      "sha256": "5637be04557a6aa96eb1fcfe853ae3146e8a0aaa867d5ff047924742fd8b6318",
+      "size": 1839245
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-006.jsonl": {
+      "sha256": "eb4b1b95e62fa5a1042a1d5e36e8b168377ed82d1b9c5e37c0277bac78c2a7e1",
+      "size": 1821933
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-007.jsonl": {
+      "sha256": "f61baf8bd360c9b60e3415469aec44bfda4a29f3cd12d699b81bdb057eac01fe",
+      "size": 1825969
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-008.jsonl": {
+      "sha256": "a1175194351d65ba7e1fe60391821fe36a71dc8fcdc00c6b12bf434e941b6795",
+      "size": 1841857
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-009.jsonl": {
+      "sha256": "4776621613b1cbf1c6da37a350abce724efe9368a85b9839c9c3d58cbd11e0db",
+      "size": 1837244
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-010.jsonl": {
+      "sha256": "b84e6270b5c3191d966f28e8990d81ab551b9b582041b8a28a9189d39aa25b2e",
+      "size": 1818381
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-011.jsonl": {
+      "sha256": "f30a2e74e99fcc6ed5c284b6bc28fbdd448a1e36b464f73b8b53f341244c1d44",
+      "size": 1865425
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-012.jsonl": {
+      "sha256": "81bcd9fc3a63f1346966ebb75c6ce939fef1d624a9e7f9378a78b3b1d299e33c",
+      "size": 1880532
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-013.jsonl": {
+      "sha256": "38b28d5a155f623b324cb6b8301ac02ae1b68c20885e289c336615c1d2922dd9",
+      "size": 1794675
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-014.jsonl": {
+      "sha256": "fc286cf38be4fdbeaeb92cc0cf4eb98e15064c13d864a9bee07021a064823157",
+      "size": 1787159
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-015.jsonl": {
+      "sha256": "cb1c8f03bdc02bbbec612ffe17b8f787ac69cb1fa3a5f740e3844300d363bb57",
+      "size": 1772658
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-016.jsonl": {
+      "sha256": "151c64c4861c407b79ffa3b328b79f753b8b758806dc084a11722473edc00bfe",
+      "size": 1775647
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-017.jsonl": {
+      "sha256": "c6ce05d619341ef03333b6500c84a2f64f8ec058dd1831ee2e57d7a59bd5145e",
+      "size": 1754527
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-018.jsonl": {
+      "sha256": "841606181836352f822439412cc0589c66f829385b3561dcc290a66a3c0f6b59",
+      "size": 1773980
+    },
+    "normalized/v0.2/openmagnetics_mas/cores/cores-019.jsonl": {
+      "sha256": "6537da9a93f506b3967fbba9041f26962d0a0f942653d1e50d72d96abe270c1a",
+      "size": 1709318
+    },
+    "normalized/v0.2/openmagnetics_mas/datasets/advanced-core-materials.json": {
+      "sha256": "1a4693c83156ce79a9b6f216e1ab3ba8f346d66ca0f260dc7585d0d45e1e85d7",
+      "size": 2422
+    },
+    "normalized/v0.2/openmagnetics_mas/datasets/core-materials.json": {
+      "sha256": "1b63305dcb5c82144ed1741a9608f24434feee6b203db2213917bdd765d816cb",
+      "size": 2316
+    },
+    "normalized/v0.2/openmagnetics_mas/datasets/core-shapes.json": {
+      "sha256": "61cf2e9b948fd8dbe18d6cd8d8f41952126f7ec942aa814442cce37d9f27f30b",
+      "size": 2298
+    },
+    "normalized/v0.2/openmagnetics_mas/datasets/cores.json": {
+      "sha256": "250b050060e3e85891a7f400ce98bbcb4dbcf5a226523309ca2f2862f1374545",
+      "size": 2212
+    },
+    "normalized/v0.2/openmagnetics_mas/index.json": {
+      "sha256": "6c34d1e1d9377e1e8f6eabecc30a856f58bcaad99f7d82acca16050f1f39e3a5",
+      "size": 7601
+    },
+    "normalized/v0.2/openmagnetics_mas/loss_models/loss-models-001.jsonl": {
+      "sha256": "994c7da6a6046b9bac063086b1373b42bb474808e1d0ba1e070f48b2e94dd3cd",
+      "size": 1087675
+    },
+    "normalized/v0.2/openmagnetics_mas/loss_models/loss-models-002.jsonl": {
+      "sha256": "331af57a0087d1760d8b623cd8839db1eb888128d6bd947e4ba0e51c15496318",
+      "size": 373104
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-001.jsonl": {
+      "sha256": "5caebec6910f9c5e84812c523bdffe1fbed7d2e19aaf8f9fdc8771073ff2acb4",
+      "size": 893108
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-002.jsonl": {
+      "sha256": "5dca6813db5e55780e51267dba0fd1d37d123f14674e41cd96d9f2d282087e27",
+      "size": 847846
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-003.jsonl": {
+      "sha256": "f96b9354ddb471b74af45651b5f5bb6469f069b030f2bad283ee75a40d105e66",
+      "size": 1607965
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-004.jsonl": {
+      "sha256": "e7630be9c7e688b05f3945a7b396b5496a7d2bd2e7546e832adabaa5857a6936",
+      "size": 1112036
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-005.jsonl": {
+      "sha256": "b132db96460f2d54ee2791f70c02c204684bc5d1d5f768f3ac825626e74f3bc7",
+      "size": 478789
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-006.jsonl": {
+      "sha256": "a55a650acf5cd8560921fc3ba2110d1e1de8a069210567def87f37f7e717c772",
+      "size": 364593
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-007.jsonl": {
+      "sha256": "8db3f8a0a2f929081e427c058f8c3073cdf445e92db81c5026ba930e8bdc22ae",
+      "size": 445824
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-008.jsonl": {
+      "sha256": "a86a5d48f4308a6dcc151e54fcc8086d40a8d7ab65609a840ccf8dc8812d368a",
+      "size": 537083
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-009.jsonl": {
+      "sha256": "2ce12867f035a764752110b5f07d4045f08ea2675b01b80c45feb27ec4a7c342",
+      "size": 383530
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-010.jsonl": {
+      "sha256": "362ee0c323cad2d3af76a71e732c16a89a7bf6ae644842d2a013c0d85cde8196",
+      "size": 408254
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-011.jsonl": {
+      "sha256": "d2e6acc0b7eea03e79f956742d785e0305032b98599d216904ce5c75e934f43e",
+      "size": 493089
+    },
+    "normalized/v0.2/openmagnetics_mas/materials/materials-012.jsonl": {
+      "sha256": "9ed3d2d695ee2147202b2878386a47ea094794355b478996205173a6207e70fa",
+      "size": 301431
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-001.jsonl": {
+      "sha256": "196063b800c9f1dde363dbfaa282757de27f4d7a81173f8c847a2f6e31676a61",
+      "size": 633066
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-002.jsonl": {
+      "sha256": "e1454accb487c7b39f7dd3a106029957bfafbf230d61f4c09f3583d46bc88b9b",
+      "size": 811344
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-003.jsonl": {
+      "sha256": "88f27c63484302c1e928b431cae9ee152fd973c25d022018fa9b28c48906261a",
+      "size": 552975
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-004.jsonl": {
+      "sha256": "500eb7af006f768d9f8c136ed8266dd1bccdde7fea130dd8d08310100389d3db",
+      "size": 556465
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-005.jsonl": {
+      "sha256": "4b63dbfe1ba9daee487c5fef38bf308f97a285a3b71f7a4eadea1b243f903099",
+      "size": 1336038
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-006.jsonl": {
+      "sha256": "ca8cc0039193532907941e9c7d3ba332fd3df39cfc01ca6f454138a525775d0f",
+      "size": 776615
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-007.jsonl": {
+      "sha256": "841e872b64bbef91e25763f1cbeec259426ea76b409bcceda5440cce0ad6eeb1",
+      "size": 1177393
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-008.jsonl": {
+      "sha256": "27e1d8a49f5dbdf2bdadb93d5fc1bfacefad4191bb940b9d60e18001963dd20f",
+      "size": 1183205
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-009.jsonl": {
+      "sha256": "764f8115e4d664afa3d5b4ec51e2d9c4bbada2c5a8c7c8ad68eaab894f050f50",
+      "size": 886637
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-010.jsonl": {
+      "sha256": "d430d38ab6a6f147d17ccc993a4cc2180d22f9068bfd398740cf26ba7728d886",
+      "size": 469785
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-011.jsonl": {
+      "sha256": "57c437926c0fdee0e98ebf3b217f50c09965408d487584c39ad247b6cac7146d",
+      "size": 272992
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-012.jsonl": {
+      "sha256": "9a9277c4cf8900c9042bac43a92103b1ab51f8f4230643656b9c3ae571e265a4",
+      "size": 294910
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-013.jsonl": {
+      "sha256": "a85ecbba22e24b722d7b23bf973c5ed3f8b7920566909c519dd057574b2f1c98",
+      "size": 285146
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-014.jsonl": {
+      "sha256": "eb7909670610c914a9cb32b0054cfc73b04293ef1b1ef8f964992399a13fb948",
+      "size": 276328
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-015.jsonl": {
+      "sha256": "d7b8d0572ec11eff21e542c4251811986f8d1e1c47d542ff569dd2c39e4de70c",
+      "size": 286534
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-016.jsonl": {
+      "sha256": "e01864b8161774f641f65c2fe3c28970462cc7de60d66653dc06f168fc4d5fec",
+      "size": 614666
+    },
+    "normalized/v0.2/openmagnetics_mas/measurements/measurements-017.jsonl": {
+      "sha256": "bca0fc23cdeee4029c08b84e2acec270375a2adcae9d10e556470384684132d4",
+      "size": 86530
+    },
+    "normalized/v0.2/openmagnetics_mas/shapes/shapes-001.jsonl": {
+      "sha256": "3f3fd9d2bdc37c14e6987d3d3d8c7ec71f56aec1adf96c54e0eec521049edc02",
+      "size": 987834
+    },
+    "normalized/v0.2/openmagnetics_mas/shapes/shapes-002.jsonl": {
+      "sha256": "548f4fb6969fa0a741f0d24685651360df8bc4020952ec3099b1facd88b2bc69",
+      "size": 909680
+    },
+    "normalized/v0.2/openmagnetics_mas/shapes/shapes-003.jsonl": {
+      "sha256": "90745209457157aa26ed57ab30c35f2a0bb36eeee59e7f906e9b880ef45b89ff",
+      "size": 907582
+    },
+    "normalized/v0.2/openmagnetics_mas/shapes/shapes-004.jsonl": {
+      "sha256": "ba987f0e4ca97fec3007cce665b9e284aca9aa922fec67d8fb5cbad81c666310",
+      "size": 988058
+    },
+    "normalized/v0.2/openmagnetics_mas/shapes/shapes-005.jsonl": {
+      "sha256": "5f8fed34e70f420b2d37ccd484137c05753dce41d1c7776967e635af29b7d718",
+      "size": 551322
+    },
+    "normalized/v0.2/openmagnetics_mas/tables/mas-ferroxcube-3c90-0032-core-loss-advanced-magnet.jsonl": {
+      "sha256": "2c8c21788feeb850c82d2fc1108ab4936af191c0fdece2ea208a7bfa646fd003",
+      "size": 864523
+    },
+    "normalized/v0.2/openmagnetics_mas/tables/mas-ferroxcube-3c94-0036-core-loss-advanced-magnet.jsonl": {
+      "sha256": "cc4714e4fd9eb073c6da30edb7ca57cd28fe5b678c916f2a8cced1bc5efe38bb",
+      "size": 795492
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/LICENSE": {
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "size": 35149
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/NOTICE.md": {
+      "sha256": "ae2b80fc477c6482b5e9f037ec4ccf80637017b51fbb0130f29475b4b63f2642",
+      "size": 1381
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/datasets/paderborn-lea-materialdatabase.json": {
+      "sha256": "7b40d50eb81fa6823fa2699dfd6f0b8cd5853490797273c58044a5058d647494",
+      "size": 13863
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/index.json": {
+      "sha256": "bf8774fc253f74809fb1b5a6c3a965afcb06b5c738483d875151a4f94f69178c",
+      "size": 1448
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/materials/materials-001.jsonl": {
+      "sha256": "e0790372682d328aa7d7719811ade4ec24fc1d01eb8efb91bdea5f1fdb1824cf",
+      "size": 34521
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/measurements/measurements-001.jsonl": {
+      "sha256": "e49f0727910547708a4143f48fe81f0df3d00f7a983a821a609a27b97481ffc2",
+      "size": 1682921
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-3c90-complex-permeability-magnet.jsonl": {
+      "sha256": "66d053f81bd7e8fbff721d379ba80202ba01cfb640e8dacd59affd28ced7d747",
+      "size": 371228
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-3c94-complex-permeability-magnet.jsonl": {
+      "sha256": "dde5d5507a5fe001a0f927a78b9bcbf5ccb770acb75e45b37b845acb167a200e",
+      "size": 458431
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-3f4-complex-permeability-magnet.jsonl": {
+      "sha256": "ffb342d75bb723491f53ea9dadcd3c0c2c7cb157451636baa5c75d90d60c40e5",
+      "size": 196559
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-3f46-complex-permeability-lea-mtb.jsonl": {
+      "sha256": "5817bf860701a3258cdcaebf3d6ae901ccf533a6d6bb6bdfcc624bb902b1e521",
+      "size": 260010
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-dmr96a-complex-permittivity-lea-mtb.jsonl": {
+      "sha256": "01369e86ecc2210f4146b5a57217d25727e687c9e40229a848f21acc17aa1971",
+      "size": 406866
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-n27-complex-permeability-magnet.jsonl": {
+      "sha256": "5f3ac74a117f7074de174e5d70c89a1bcb239b40c465dca4d7e2c03896c0de31",
+      "size": 169864
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-n49-complex-permeability-lea-mtb.jsonl": {
+      "sha256": "e619eb8fd5da6d5f9c617710e6a7b318bee4e4b48048bdf95052563030167797",
+      "size": 195149
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-n49-complex-permeability-magnet.jsonl": {
+      "sha256": "91752cdaefe97f0b7faad9f49c71bb1f2ce1a12cfffc327a7db2949a01f733fb",
+      "size": 191764
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-n87-complex-permeability-magnet.jsonl": {
+      "sha256": "14fd50f01c66fc7f15fab0309de0917e5f5b50bd2cc73391add168106be68ba6",
+      "size": 482755
+    },
+    "normalized/v0.2/paderborn_lea_materialdatabase/tables/paderborn-lea-n95-complex-permeability-lea-mtb.jsonl": {
+      "sha256": "5c212785b4e0a940e7fbc8c1adbfc43480bceac9e4f0b6e3333e177c0baa8d60",
+      "size": 209254
+    },
+    "normalized/v0.2/princeton_magnet/datasets/princeton-magnet.json": {
+      "sha256": "5b14bf914d15a007179ebfc661b537108948adeec2cd389bcac9a09f8366ed27",
+      "size": 3726
+    },
+    "normalized/v0.2/princeton_magnet/index.json": {
+      "sha256": "0970fe625adb878284476eb5e851505ca1453e3260898725f2c47cda6451f1c0",
+      "size": 1093
+    },
+    "normalized/v0.2/princeton_magnet/materials/materials-001.jsonl": {
+      "sha256": "bc3e7c6cce6c47ef0cd16ac7a0c60923684e9c2c46365dbeeb525d644f0d4a06",
+      "size": 15020
+    },
+    "normalized/v0.2/princeton_magnet/measurements/measurements-001.jsonl": {
+      "sha256": "9202443a0fecff04c13638e15a0ec7936ce4fb78bd06688b96d22d5108276741",
+      "size": 68904
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-3c90-core-loss.jsonl": {
+      "sha256": "4cfbc9ec256021b8fb7e14a5c214998e800117b3d09ff547fa8c510aa96c3be1",
+      "size": 6615650
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-3c94-core-loss.jsonl": {
+      "sha256": "e15f7499785ff442028a09e7b66bd627c256ba181dcab877591ebf5853864845",
+      "size": 6968829
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-3e6-core-loss.jsonl": {
+      "sha256": "2bcdc7820ff2391df8ca6aabaff17a6e3a965104e4391ee962a9a2bc63214bd8",
+      "size": 428332
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-3f4-core-loss.jsonl": {
+      "sha256": "4ae599674de82b4c594094f63d50199def148012b3a8597058a02bdef30d6ab3",
+      "size": 3114245
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-77-core-loss.jsonl": {
+      "sha256": "52bb02d06d8d926017ed25cf1662602082ad01beec7a382aa346afcabb9b47a8",
+      "size": 1837348
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-78-core-loss.jsonl": {
+      "sha256": "7396ddfd1995082bbed149b2c758c732ea802cc5f28f08fb0962849bd39aea90",
+      "size": 1468644
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-n27-core-loss.jsonl": {
+      "sha256": "63eb5bf278f4f5e320c9ba9b1acbd6975a65a2415ad0f84dd3474b82c82e53de",
+      "size": 2639121
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-n30-core-loss.jsonl": {
+      "sha256": "500969beb97cc9758ed409c699df447acf63106f4ca8455e961254c80b5fb4c7",
+      "size": 869622
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-n49-core-loss.jsonl": {
+      "sha256": "fe692f49359b79d0992481c7a848526df49839db245eece8048671b123dc612c",
+      "size": 2541461
+    },
+    "normalized/v0.2/princeton_magnet/tables/princeton-magnet-n87-core-loss.jsonl": {
+      "sha256": "e8057e48f04cf6dfa3784609b29bdbf75a605d5960e6e62f85bb0000159d5753",
+      "size": 8734452
+    },
+    "normalized/v0.2/zenodo_10725890_inrim/datasets/zenodo-10725890.json": {
+      "sha256": "f17e660db942f29378a8eb52517ed21b7504958f44de563dadc3d77179784753",
+      "size": 2590
+    },
+    "normalized/v0.2/zenodo_10725890_inrim/index.json": {
+      "sha256": "cfe813ab594d74fde89dd15827a7187fe1f5f5a3589a6c59324befc549696c5e",
+      "size": 581
+    },
+    "normalized/v0.2/zenodo_10725890_inrim/materials/materials-001.jsonl": {
+      "sha256": "a4a1100b30d2776d6b43618204566dfbb48e7cd25a9c22ea5aaa7089eba698b9",
+      "size": 34773
+    },
+    "normalized/v0.2/zenodo_10725890_inrim/measurements/measurements-001.jsonl": {
+      "sha256": "93a1562b93de21c8872a5eb0421537e14cbad847259aa30646a9ae61b3e8f2dd",
+      "size": 65326
+    },
+    "normalized/v0.2/zenodo_21626116_smc_ferrite_triangular/datasets/zenodo-21626116.json": {
+      "sha256": "5708370f0ae1c087565dca17f04dc05a2f658794da2b3729e62e847ce918f54d",
+      "size": 3218
+    },
+    "normalized/v0.2/zenodo_21626116_smc_ferrite_triangular/index.json": {
+      "sha256": "42880e8a2abf2bd88035b7566e8afdc16706c82b2b4b58f05c25f1b438ab9dd5",
+      "size": 591
+    },
+    "normalized/v0.2/zenodo_21626116_smc_ferrite_triangular/materials/materials-001.jsonl": {
+      "sha256": "cec2518236692440878ad85f716daba24d0765690193834c0f99ff11fc6d0841",
+      "size": 2934
+    },
+    "normalized/v0.2/zenodo_21626116_smc_ferrite_triangular/measurements/measurements-001.jsonl": {
+      "sha256": "4bf8d4af4ad9e8076bc92bd76b2852c790c9647b745c1ff851f48fed0677c6e1",
+      "size": 11783
+    },
+    "normalized/v0.2/zenodo_7368936_cwh_n87/datasets/zenodo-7368936.json": {
+      "sha256": "213568563ab741999d3329b9a126c0c2cf425ed5188642b8ea986fa3bcb6f6e5",
+      "size": 3459
+    },
+    "normalized/v0.2/zenodo_7368936_cwh_n87/index.json": {
+      "sha256": "2cd8cf1ea51dd4e0e740904ab164c0987e4c5940772f98d4c670b2701ca6a8e9",
+      "size": 711
+    },
+    "normalized/v0.2/zenodo_7368936_cwh_n87/materials/materials-001.jsonl": {
+      "sha256": "56668bad9b7a2c1dea605c47110eeea9a76f9f8e1f5cbdfaf3143ee2829d63e7",
+      "size": 1462
+    },
+    "normalized/v0.2/zenodo_7368936_cwh_n87/measurements/measurements-001.jsonl": {
+      "sha256": "3ec66e978f22d7ee73caa285e8cd422dca970e468c2a5866c1f5f2b6087025e3",
+      "size": 9622
+    },
+    "normalized/v0.2/zenodo_7368936_cwh_n87/tables-local/zenodo-7368936-n87-variable-temperature-core-loss.jsonl": {
+      "sha256": "e648cb9e4fc3291485edf3a3f0a08956d71ca63ea1d504878c4a2190cfb32ade",
+      "size": 8727051
+    },
+    "normalized/v0.2/zenodo_7368936_cwh_n87/tables/zenodo-7368936-n87-ambient-core-loss.jsonl": {
+      "sha256": "76439a13244c0e3719fff870d003e7777138f1af48d768608d07b87d53d86b31",
+      "size": 3618004
+    },
+    "normalized/v0.2/zenodo_8292861_hefmag/datasets/hefmag.json": {
+      "sha256": "6a6c84fc69619d435619e96069b03ff410521b4f09ea5af63baea623e5d06250",
+      "size": 2416
+    },
+    "normalized/v0.2/zenodo_8292861_hefmag/index.json": {
+      "sha256": "6b589e307931928b6ffb4790d51dfbce3959cc2c24e0ddf98567f95633655486",
+      "size": 624
+    },
+    "normalized/v0.2/zenodo_8292861_hefmag/materials/materials-001.jsonl": {
+      "sha256": "b4f3463f86f7a6080c3054487affa41d8e69eebd7e3afe55496fba9fe60aa7af",
+      "size": 7390
+    },
+    "normalized/v0.2/zenodo_8292861_hefmag/measurements/measurements-001.jsonl": {
+      "sha256": "f2f8a1510dfad512ace2892f57c2be5cf5e28855643481332bacc01fd308e148",
+      "size": 170784
+    },
+    "raw/guillod_n87_dielectric/SOURCES.json": {
+      "sha256": "d7f404b3923565c1c0f6948814f3f464ed59ab3ec449462d63dda0be8666997a",
+      "size": 5280
+    },
+    "raw/guillod_n87_dielectric/files/LICENSE.md": {
+      "sha256": "8a1c7592476c5a6a5d281185d090577e6668d5c43f02a148daed2eb845570b45",
+      "size": 1091
+    },
+    "raw/guillod_n87_dielectric/files/README.md": {
+      "sha256": "1fbfb9d0dd274e115eef2614640a495bff91e64b825ea396ea0e3accdd6159fb",
+      "size": 2390
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_large/README.txt": {
+      "sha256": "9ffc2ef005bbec607377d9baf8d911e6026e448285a98cb17138416a798fc264",
+      "size": 652
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_large/data.mat": {
+      "sha256": "ef18d977124ef6d6eb182c44509e39fcee1639de3e49813d039fa3f4d0a6e3fc",
+      "size": 1889
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_large/var_E_mat.csv": {
+      "sha256": "340d95f42cf6bc7ce4e81deaac98935234647eb0285b48f67ea46a208c5baf75",
+      "size": 1009
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_large/var_eps_mat.csv": {
+      "sha256": "02da423e94792c66e49ab34cdc090da1ee6483ba599adebd56a8a20d4e598cc4",
+      "size": 1018
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_large/var_f_vec.csv": {
+      "sha256": "14b98ec4b950c7db6cb8457929525ab86b7e4e5d3eea4fbb41bed1892f9c5911",
+      "size": 70
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_large/var_sigma_mat.csv": {
+      "sha256": "4d4b22918e4327deff8318b4d1fe4f75826889c22177917420cfda744efffc61",
+      "size": 1079
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_small/README.txt": {
+      "sha256": "1f025919c83ec83cbbf81868c1b07add99a9d23f378c2c0fb0cb713a45d4b7ce",
+      "size": 637
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_small/data.mat": {
+      "sha256": "cb5dd86a816a0ca3336804ac1e7350242846360c99da7a541d1d9bd9c6731fc4",
+      "size": 4671
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_small/var_eps_vec.csv": {
+      "sha256": "b44e97548c5272f4ea58f55f550d7ba8fa09bbb038abc45c56ed28fb61e85908",
+      "size": 3399
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_small/var_f_vec.csv": {
+      "sha256": "f02e9bb685dfd1f5c2f482cfdbf8bfaa618d71a4e4f652ca543090cafc6b0192",
+      "size": 1873
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_small/var_sigma_vec.csv": {
+      "sha256": "4b5c368350461c439c74ecb4f3a0a69830b74d14e92d5fda2958ab0b9ea169b7",
+      "size": 3595
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/README.txt": {
+      "sha256": "f9c38cf0d6f17c2467905c6ef1e7ab8b3ad2db607d1f652aa181602fc36bcd0f",
+      "size": 951
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/data.mat": {
+      "sha256": "3bdf594d1e1c772d68dc5d40f034b790cf8ad0bdba1f5cdb67375d3627e44235",
+      "size": 11131
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/var_eps_25_vec.csv": {
+      "sha256": "a4cadcd371af8cadfdb129ba3adff277569510f0b7714af6efb09b8eb243c4c8",
+      "size": 3389
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/var_eps_55_vec.csv": {
+      "sha256": "8513c0003a7b680e09630d5c18aedbcc0e4a508f72fb2b69cdd76c748985c5ae",
+      "size": 3394
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/var_eps_85_vec.csv": {
+      "sha256": "9301149f821e30c88fd53f6d9024481840ddecac179f5d70d6acc4057d3b045f",
+      "size": 3396
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/var_f_vec.csv": {
+      "sha256": "f02e9bb685dfd1f5c2f482cfdbf8bfaa618d71a4e4f652ca543090cafc6b0192",
+      "size": 1873
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/var_sigma_25_vec.csv": {
+      "sha256": "5144444644f6965c0f2eb137a45e94eea9ad13610093ef597e24b9736b9c18af",
+      "size": 3599
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/var_sigma_55_vec.csv": {
+      "sha256": "91b3a1406e88f530b43246b268381a3fab78aae73c559b35517d480fd6c9bb4e",
+      "size": 3583
+    },
+    "raw/guillod_n87_dielectric/files/dataset/N87_eps_temperature/var_sigma_85_vec.csv": {
+      "sha256": "74559c0ac6dd170d9534390fda0bde11e83a4d08e9a6c6e3dbaf33306bb45d94",
+      "size": 3574
+    },
+    "raw/nabih_magneto/SOURCES.json": {
+      "sha256": "0d41cd3648ed1eafba1880240d5cf5cdc85d759b6aeb8181090844e866fe4540",
+      "size": 3302
+    },
+    "raw/nabih_magneto/derived/Bm_vs_Pv_table.tsv": {
+      "sha256": "f9f8e653fcbea1d352f546ee82713ba94e94207a054cc53b4cb31db48a70ec1a",
+      "size": 8089
+    },
+    "raw/nabih_magneto/derived/Characteristics_database.tsv": {
+      "sha256": "0d294106c636f57ac5dec23b5acd952d2b4a3fe00f45af5e320ac4394b6cd533",
+      "size": 2576
+    },
+    "raw/nabih_magneto/derived/Core_loss_database.tsv": {
+      "sha256": "d9d5192c98d5350b23d7e96800d600df943149236539e0a95c5c7816c8ae60b4",
+      "size": 6104
+    },
+    "raw/nabih_magneto/derived/EXPORT.json": {
+      "sha256": "9bffd0c424baeea99a875b7cc6d1ffbf5a04c3c969065929735978de4c678c91",
+      "size": 1650
+    },
+    "raw/nabih_magneto/derived/Paste_Errors.tsv": {
+      "sha256": "4abd68dcf9febe3c711e55b1d74f5787d86fe45aa45fe07a9d257e4a14776a05",
+      "size": 10172
+    },
+    "raw/nabih_magneto/derived/permeability.tsv": {
+      "sha256": "22e722b59291d02aa6946497a4afdb325561d90144dcbd31acb417aeaa012472",
+      "size": 52818
+    },
+    "raw/nabih_magneto/derived/permittivity.tsv": {
+      "sha256": "9d563686edf7004513e0a65dac36cf5524a4de06fbe9b1099db84c49c104ac1e",
+      "size": 59646
+    },
+    "raw/nabih_magneto/files/CITATION.cff": {
+      "sha256": "ec449aebaa0584b025ba13d96213586d0738bc194d2d9fb2f0d84f5e29109340",
+      "size": 833
+    },
+    "raw/nabih_magneto/files/Core loss database_v2.accdb": {
+      "sha256": "cc2938a9b3a9c79fd72ecd8de3d49aa5a06b625a21ff28be455756b27f2b01c2",
+      "size": 1703936
+    },
+    "raw/nabih_magneto/files/LICENSE": {
+      "sha256": "1fdeae9d722a4039f65db31382b0686444999d5074df8c4e6dd2c1512d7bbce0",
+      "size": 1068
+    },
+    "raw/nabih_magneto/files/README.md": {
+      "sha256": "5df79ab5448131a04d94ab38a877f720cd6d2292de9ecb7d58ac4ac00aebd2ce",
+      "size": 451
+    },
+    "raw/openmagnetics_mas/LICENSE.upstream.md": {
+      "sha256": "de6ac902edb2dab814accb70e146c84964e0d6dd5660c45caac2f55936d6c0b7",
+      "size": 10688
+    },
+    "raw/openmagnetics_mas/SOURCES.json": {
+      "sha256": "ee3c1290577fd39512c1abc93e5d44d547079af9ea4fbf6514e51cf0f8b20099",
+      "size": 1820
+    },
+    "raw/openmagnetics_mas/files/data/core_materials.ndjson": {
+      "sha256": "10a6b3f3e72f5d963d05a4f9d11ed3595d25c14634a739e8ade263f3edff44b2",
+      "size": 11010297
+    },
+    "raw/openmagnetics_mas/files/data/core_shapes.ndjson": {
+      "sha256": "84eeed999eb06c69c09c0fb38e8f693dac79c284e32cf372b5a6c08a80bc50f2",
+      "size": 639486
+    },
+    "raw/openmagnetics_mas/files/data/cores.ndjson": {
+      "sha256": "6fb6142385c5541477bbf99bab4d2c6ade4a87bbb9470002bdcdad72ff1cd81e",
+      "size": 8196923
+    },
+    "raw/paderborn_lea_materialdatabase/SOURCES.json": {
+      "sha256": "343656804a6c414cae19721b194d401342e9cb9fb37faa367cf5b96de1ee9913",
+      "size": 14726
+    },
+    "raw/paderborn_lea_materialdatabase/files/LICENSE": {
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "size": 35149
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/LEA_MTB/3F46.csv": {
+      "sha256": "25223c2cb1bb156cb45663aa887180152d6140988ea1c9f980dc9fad9286665e",
+      "size": 227626
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/LEA_MTB/N49.csv": {
+      "sha256": "b1d772f09b31e1af0819e7bb8ed56455c6f93fdca989cd7577930e87d82a62d8",
+      "size": 165967
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/LEA_MTB/N87.csv": {
+      "sha256": "5423cf18f3449a1a03746c881752635120dea6cfde22a7b9575ae3a09907c555",
+      "size": 9706
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/LEA_MTB/N95.csv": {
+      "sha256": "766766f2192ba12ba7e3b03154c66e8ce2c253793d9423bd4f6525bd5a941e30",
+      "size": 185130
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/3C90.csv": {
+      "sha256": "bbbb32abdd5346922c01de4f28378362439ee1418fe54b9b845af43748985a4e",
+      "size": 321891
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/3C92.csv": {
+      "sha256": "d9d614a50e2d8091a5b8ad2a018ddcab50849c363b124827be590217bf84f483",
+      "size": 105145
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/3C94.csv": {
+      "sha256": "80b4ae7b0f78f7c6604c3b4fab9844bfc79c9df6dcc1028989f3f8c97e387cf7",
+      "size": 397445
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/3C95.csv": {
+      "sha256": "b57e04096bb8086c8ea28db927af8c1b4288cceb6b08667010c9e9b0c66e376f",
+      "size": 117404
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/3E6.csv": {
+      "sha256": "94115b00ba08ccd5a5420b14e5c08b4718324b58c3f77a6eacac11c0a308fb35",
+      "size": 35758
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/3F4.csv": {
+      "sha256": "e2b998247b3d9ed151de38ca5693128c5dc892e9bcff6f1a42006381b4e12319",
+      "size": 170432
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/N27.csv": {
+      "sha256": "fc2c7bff60a00300b626c90ff671f0afa7e1edbf999a64573fe57cc5db9c7de0",
+      "size": 147367
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/N30.csv": {
+      "sha256": "0df81f14731012ce8d3caacfe03452307fe43ae1b260a8e5332e28c8540189b2",
+      "size": 63522
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/N49.csv": {
+      "sha256": "45ecef3cd54a4a68959911e07c17b14a113407d327769cb41a4e9b3987f625ce",
+      "size": 166451
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/N87.csv": {
+      "sha256": "eb160e423cf82498ad11847c101a91f3aa5d2682b715251845f0b6ddb1988092",
+      "size": 418733
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/MagNet/T37.csv": {
+      "sha256": "4e266419cc8b60655ea777398cff0e3f3dbb0cb47a35fe4f7e305b3382bd551e",
+      "size": 90729
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/TDK_MDT/N49.csv": {
+      "sha256": "f20b643843b5f1737e3c87e613cb48aba724d9cc43c0f5acf9820574411c8756",
+      "size": 15163
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/TDK_MDT/N87.csv": {
+      "sha256": "b9672be9c0ad3478e6d1dc7459d8759188358ab3e8d571732a9061ae7890f987",
+      "size": 18011
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/TDK_MDT/N95.csv": {
+      "sha256": "4544e5bf04796b43dcf7cd8e92f2d7f669efd2f70f3c793cda0212a498c49623",
+      "size": 17795
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/TDK_MDT/PC200.csv": {
+      "sha256": "8355422a0208a1bd63419c1e1490496fe293513c3775bbe3ab432b62be44a3aa",
+      "size": 2695
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/datasheet/N49.csv": {
+      "sha256": "8c0d585f808a0c01f3a0047b391a206fd820f83e4177b294b6b46fbaba4be9dc",
+      "size": 14671
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/datasheet/N87.csv": {
+      "sha256": "f4e91e4da28249998e06ff209bccf512e4acf2ca0b155e0e53b936f2a6290f47",
+      "size": 17408
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/datasheet/N95.csv": {
+      "sha256": "6d3bc7d68f3e7210c4366f651b4aad21d067e163f2c432238c99075c56d9a63b",
+      "size": 17179
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permeability/datasheet/PC200.csv": {
+      "sha256": "8355422a0208a1bd63419c1e1490496fe293513c3775bbe3ab432b62be44a3aa",
+      "size": 2695
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/3C90.csv": {
+      "sha256": "92994c2dc2494ce6ba367fc1ffc62afa739063918bd3a21cfbe431e58e874f6f",
+      "size": 56360
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/3C92.csv": {
+      "sha256": "09bbd6a257daf84422ded20e5ec2efaf35f963a2e6f6a13599dd3a5aff30b436",
+      "size": 58103
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/3C94.csv": {
+      "sha256": "ee291819237f417072cd3222368179506a69a14e63525a3b7da8b7c99e378f91",
+      "size": 58184
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/3C95.csv": {
+      "sha256": "ea8f5eb8c84296dcf9082be58cc080f0218452354dd6e6bf26f83be74552da04",
+      "size": 56283
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/3F4.csv": {
+      "sha256": "409e0aff041525565f8399ea4a83789314b10a378e11174b9dab55ba43f35d7d",
+      "size": 73528
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/3F46.csv": {
+      "sha256": "3e3dc7290eb53a2e80a068bcbaac352f0bd683f324e87b45b15d95a3768ab260",
+      "size": 10619
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/DMR96A.csv": {
+      "sha256": "5582315102107fd65f7c314cbf7f5d3d7fcac8cf6f262d0771b5fd796368c945",
+      "size": 355190
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/N27.csv": {
+      "sha256": "d327bcf36a486c964b76f3fccf6c7d6bcdeedb37905c53090140757d41c06822",
+      "size": 57478
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/N30.csv": {
+      "sha256": "b18db8de317d4d0afff173da639c033f6d0cce50af6adad2b00f027a5a8b9662",
+      "size": 58299
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/N49.csv": {
+      "sha256": "684aa3ee734634f60b0666342adb6846dde8b6d71f533716b9a8be4f8d741ad5",
+      "size": 14338
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/N87.csv": {
+      "sha256": "e04d059ea9eb9d9855c2a280372b5b5045bb5f9063c1ff702fa5dd49f9c51458",
+      "size": 55920
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/N95.csv": {
+      "sha256": "6675cf0f176d1ba1c9f9ae941e89552d723da79c967f8c03eddf633a53817a69",
+      "size": 4026
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/complex_permittivity/LEA_MTB/PC200.csv": {
+      "sha256": "bf0f2901cf4733416f2240f85187047a6810677900e2041b620130c143705fba",
+      "size": 73219
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/b_over_h_at_f_T.csv": {
+      "sha256": "e5af95ee2b81aaaa3d08f80cad827b16139a6e6ff8a078fe5e4f19dd9c834345",
+      "size": 30297
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/general_information.csv": {
+      "sha256": "23f8c6babb426752db934a4f76048372db76c22eee01d2338db00235c655b43c",
+      "size": 227
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/mu_amplitude_over_b_at_T.csv": {
+      "sha256": "ae85f61b21f00eba86b0078504f1527f472e59219ce8daa711088e817fe9e226",
+      "size": 4943
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/p_v_over_T_at_f_b.csv": {
+      "sha256": "5ce353eaf24736909a9e8ede0d1b2dfc99e0041b2241f16e85cfe57c6a406518",
+      "size": 7858
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/p_v_over_b_at_f_T.csv": {
+      "sha256": "dee3a0af5879c292156aa8e161557ba8bc3e440c197be74b62f44e2d4b2b7c61",
+      "size": 5167
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/p_v_over_f_at_b_T.csv": {
+      "sha256": "2bf06121f8fc921dbe493f2948e5040ef30e8d298f7d53823e0ac70e27744e19",
+      "size": 10
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/small_signal_mu_imag_over_f_at_T.csv": {
+      "sha256": "c944c161e9a0eecda853860635eff09ff6e308026f18125b9c559bbee259a119",
+      "size": 3178
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/small_signal_mu_initial_over_T.csv": {
+      "sha256": "3070ccdc9a0a1b853608f5362f0ce44ddf76fa283d5379d6f6a73b074cbe489f",
+      "size": 2349
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3C95/small_signal_mu_real_over_f_at_T.csv": {
+      "sha256": "c4b71f30bb03ddafe66bb2743b563abca1b0ab7ad5ce97ddc640217aa1f92c7a",
+      "size": 2216
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/3F46/general_information.csv": {
+      "sha256": "54e1c17c20421e18862e533e00a20e9ddce2bb0c2be37cba398b7c7f9e2be4bb",
+      "size": 226
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N27/b_over_h_at_f_T.csv": {
+      "sha256": "aa7538486f9940a6e00f6f84923833fc9efb493b5d7f5152108e5284ce64f57f",
+      "size": 3980
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N27/general_information.csv": {
+      "sha256": "99b8c0f7772f7f1fb047feeefec05fd6585e63d7c782e8d8d9a676a2d4137eac",
+      "size": 226
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N30/b_over_h_at_f_T.csv": {
+      "sha256": "66e4a08c12da8a4b8ec3dcf9b99a4a25d7300c38d2c821c3567edfe429abb843",
+      "size": 3498
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N30/general_information.csv": {
+      "sha256": "0b676c4b2bdf3cf06e4fca6b49a1c9836e9a408567d4cab0d7c0a9f93121feec",
+      "size": 229
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/b_over_h_at_f_T.csv": {
+      "sha256": "72d3cafd4dc8a727dc66e40bde8d7d2dd09bda686dd7ad195d477b1114201618",
+      "size": 8588
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/general_information.csv": {
+      "sha256": "dfbaf5a092ac2f9cc876b1ea2a1fe15ffc425e05831bdcca742683c69d04dd0d",
+      "size": 227
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/mu_amplitude_over_b_at_T.csv": {
+      "sha256": "40554827d9915294fb15cd89fbe105c873ce4ddfd5d3bacbdf7901e9bbb9d685",
+      "size": 6144
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/p_v_over_T_at_f_b.csv": {
+      "sha256": "ffc31582eef60f2dc24f2dc10ee9e84c3b735a8e88d1ea3e977decb923287383",
+      "size": 7085
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/p_v_over_b_at_f_T.csv": {
+      "sha256": "f60018ec1ead334633de6b48ff845c326b3c5ec50a81918c3560a8fe144a720c",
+      "size": 8281
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/p_v_over_f_at_b_T.csv": {
+      "sha256": "14f1418dfb1c7b7c7be09a4c6e9c822f30f2592ca93d7e18538b78407454ae88",
+      "size": 28128
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/small_signal_mu_imag_over_f_at_T.csv": {
+      "sha256": "fef5729af55bd965a5d2a1ea24745e4646a6700ccce77fb31dc8ae139c060608",
+      "size": 910
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/small_signal_mu_initial_over_T.csv": {
+      "sha256": "7e3338b79f9e02a5f15e1f0bbd86bbc54c72a78164fdaf2671a32bfb55e62fca",
+      "size": 3240
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N49/small_signal_mu_real_over_f_at_T.csv": {
+      "sha256": "ac4569435b094ca3ab48f3f04ec72fd24d759496d29d82c09345df15250d2e73",
+      "size": 695
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/b_over_h_at_f_T.csv": {
+      "sha256": "28181018123250e03969637fafdab18de855dc6355fe5de311c24cd129d7771a",
+      "size": 13747
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/general_information.csv": {
+      "sha256": "9dc2d21486baf40921cd7b4d87f74a4ffee4736db2b86186bb1979bdb7258683",
+      "size": 228
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/mu_amplitude_over_b_at_T.csv": {
+      "sha256": "ad11d4e9be9796fa92ce7cced0507dae97a4b36761f5435491ce088f5aac87c7",
+      "size": 2652
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/p_v_over_T_at_f_b.csv": {
+      "sha256": "516a0a1839d310c07f66e67aba7a75a52447031e4992dac45184bb76bae07322",
+      "size": 5226
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/p_v_over_b_at_f_T.csv": {
+      "sha256": "30d4bd686b0a3c1b09e71c1087d7e9769d37f63c10532c7a854240c1f3e722b5",
+      "size": 3593
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/p_v_over_f_at_b_T.csv": {
+      "sha256": "fca394c0262df729be6b569db4ac816ea746349a8f3037687563a1522cf64bbd",
+      "size": 10437
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/small_signal_mu_imag_over_f_at_T.csv": {
+      "sha256": "81f13b5ca92d88dba8fcd82c22b97c7975182504f8413227bfdf5afb94ad1e70",
+      "size": 726
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/small_signal_mu_initial_over_T.csv": {
+      "sha256": "ff39e855e5fe73217b0cf6abea230a36220b761a41ce5c47e656de0ab54a38be",
+      "size": 2097
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N87/small_signal_mu_real_over_f_at_T.csv": {
+      "sha256": "e4139e50f85f8919e3b06a245f9effe7c626c45f2cc2b6d6140337765974c11f",
+      "size": 603
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/b_over_h_at_f_T.csv": {
+      "sha256": "795d8c4e7fdabd7f58338d53818d4866b3bbd71b93b0d9154f8be8cccb93b38c",
+      "size": 14665
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/general_information.csv": {
+      "sha256": "681cd5c9a3e28c06868e113eff2729c0a274558cdac786d3f274201b58185632",
+      "size": 228
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/mu_amplitude_over_b_at_T.csv": {
+      "sha256": "0a34e6ca165b0b4325dc63a93284bf2246358f1de60a7cf577d1377e397745ba",
+      "size": 3016
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/p_v_over_T_at_f_b.csv": {
+      "sha256": "8090187f66590486394b948141fc41ebf24e768c30bbbca2d3b20db3d385bb36",
+      "size": 3656
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/p_v_over_b_at_f_T.csv": {
+      "sha256": "ec48af83c178acfda3c320936698a1251f2d9b3dec700498a5258fcd529afad3",
+      "size": 2826
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/p_v_over_f_at_b_T.csv": {
+      "sha256": "2a64111e8b6f13dca4c1c57f3b29df422c8c29392394515d62fc197bd9b39c44",
+      "size": 10175
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/small_signal_mu_imag_over_f_at_T.csv": {
+      "sha256": "0bcf4640bb9633fb34ae07b8667b1aa4ea707ef6dcdd3020f217057176031677",
+      "size": 980
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/small_signal_mu_initial_over_T.csv": {
+      "sha256": "d47259f69aff7c5dd25e51c86025931698dee2fa1c695bb2628977b62d26f665",
+      "size": 3217
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/N95/small_signal_mu_real_over_f_at_T.csv": {
+      "sha256": "36344dea180fed841ec0f8c1abf6955530ccd2b7d20c052554ab8ada3189eee4",
+      "size": 721
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/T37/b_over_h_at_f_T.csv": {
+      "sha256": "4de6fd7670c19cfc2756c420c3d44a6adcbbd4662b3d545b6c2525ff4fa5149c",
+      "size": 3467
+    },
+    "raw/paderborn_lea_materialdatabase/files/materialdatabase/data/datasheet_curves/T37/general_information.csv": {
+      "sha256": "e77144f226b26dffae0621683a07543a068576acbc099d9ef1144e2725e8a2a2",
+      "size": 229
+    },
+    "raw/princeton_magnet/SOURCES.json": {
+      "sha256": "902dec17999e28c448cd2f77dcc9f308c6ba702f266b98e6cdbf7116cc034a32",
+      "size": 3449
+    },
+    "raw/princeton_magnet/files/src/magnet/data/3C90_database.h5": {
+      "sha256": "421d9fd33e4c1626dd3a22ca26755b2b98a98f4175f44df2622d7ead8d5417f2",
+      "size": 6953888
+    },
+    "raw/princeton_magnet/files/src/magnet/data/3C94_database.h5": {
+      "sha256": "7859a037a0d1225e3d60c61d285c506445b32fbcf642309a5fd18f07c71fdbd5",
+      "size": 7286488
+    },
+    "raw/princeton_magnet/files/src/magnet/data/3E6_database.h5": {
+      "sha256": "7198d2cfddde46f50e85a9d2e320b402b6322677632ff3697f8916e497e47921",
+      "size": 458056
+    },
+    "raw/princeton_magnet/files/src/magnet/data/3F4_database.h5": {
+      "sha256": "bc166e60edf37150d30224f785378c0f1b0160f580402f447cd770617ee20de5",
+      "size": 3250616
+    },
+    "raw/princeton_magnet/files/src/magnet/data/77_database.h5": {
+      "sha256": "7e2a9044b92ab6ebea40fa971747a3b3af491c8f7f66c030e53f5e85ee099a39",
+      "size": 1929376
+    },
+    "raw/princeton_magnet/files/src/magnet/data/78_database.h5": {
+      "sha256": "160643789e6d210cacbe60364ab64a1decab87f5ab321e6cc1d9f083a9434fcd",
+      "size": 1552096
+    },
+    "raw/princeton_magnet/files/src/magnet/data/N27_database.h5": {
+      "sha256": "1fbfe3e94511c70c5c95a3d9bb768d91040321685c6b3cb8e8bd24e3305093c8",
+      "size": 2758992
+    },
+    "raw/princeton_magnet/files/src/magnet/data/N30_database.h5": {
+      "sha256": "f41f08b0516e8bff35968b6b5e0d6730ed713400dd06bdf784e7a09fb8d41b02",
+      "size": 914896
+    },
+    "raw/princeton_magnet/files/src/magnet/data/N49_database.h5": {
+      "sha256": "860319862452636277260a83f214179f4b964b431b63b9f7d630eb312f1c3f82",
+      "size": 2645024
+    },
+    "raw/princeton_magnet/files/src/magnet/data/N87_database.h5": {
+      "sha256": "263c0087f6f43ccfd1b338d105abb6b9432be2cb85c59528539317f99b25bd63",
+      "size": 9154016
+    },
+    "raw/zenodo_10725890_inrim/SOURCES.json": {
+      "sha256": "2ba56afbf9f16e29dd311fbb97f23e7310ab03b5df3b647dd8fa8efb62055572",
+      "size": 732
+    },
+    "raw/zenodo_10725890_inrim/files/HBJ data_file_res_Zenodo.dat": {
+      "sha256": "1fe4d6b98d5309940a8c2db5a94aa3ac3b1a31c69f8c6ddcc4d9f1505791607a",
+      "size": 16705
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/SOURCES.json": {
+      "sha256": "d04c2389fdc73cf2e46e25d0823a2ee72d3baadd19477008a3091a6f8b34ebb4",
+      "size": 2473
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/Ferrite_sin.txt": {
+      "sha256": "018b0267ac4ab1ba56a68c6e508a863b8864ae5103cd511b7d2bdc2c91c97f52",
+      "size": 235
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/Ferrite_tri_100kHz.txt": {
+      "sha256": "7f273218aacbbd1da417e82addc6b8de88e206b95200e37c9431550001eb2af1",
+      "size": 123
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/Ferrite_tri_10kHz.txt": {
+      "sha256": "08bc89e4739a7637937eff407e91ffae853fe7d06c8e6c22db96e31477471d0c",
+      "size": 115
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/Ferrite_tri_1kHz.txt": {
+      "sha256": "32ce229d715433f7bb222404790781b0feaf96aa59e68b26c6568e0f176a0027",
+      "size": 115
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/SMC_sin.txt": {
+      "sha256": "06edbedd4d8777cef53c3ee506c88e704bb94f5d2d04944ceeac0dbe9c806b32",
+      "size": 294
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/SMC_tri_100kHz.txt": {
+      "sha256": "f4ee79a2e3e65c3ac5b4c92a9ff96bcd9ee95b69781a6cf856a75f3fb2f9b447",
+      "size": 108
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/SMC_tri_10kHz.txt": {
+      "sha256": "eb445188b30badc17257d8fa2d95610845286f0c2f85b15aca7f7d8096658a2c",
+      "size": 98
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/SMC_tri_1kHz.txt": {
+      "sha256": "7e71c73658311487d2aa441fc8354deac61aaaed41ba30213957eaf18f9ebd71",
+      "size": 110
+    },
+    "raw/zenodo_21626116_smc_ferrite_triangular/files/readme.txt": {
+      "sha256": "40a8251dfd8b76ab64b6050b7a9053089edff3f0cb13fce4e72223fabdddac27",
+      "size": 758
+    },
+    "raw/zenodo_7368936_cwh_n87/SOURCES.json": {
+      "sha256": "aeb1b4f32ae9e1cc1f2c8bcc86fc5975dcfba3ec7ca9dc8b3198ee2396f5990c",
+      "size": 2803
+    },
+    "raw/zenodo_7368936_cwh_n87/files/N87_ambient_temperature.csv": {
+      "sha256": "fcc76d7f9c5cf3ca3a33d147e6a5f6a29d55df4f5f43665b06219db0535f0eb7",
+      "size": 3218508
+    },
+    "raw/zenodo_7368936_cwh_n87/files/N87_ambient_temperature.h5": {
+      "sha256": "edcc57d3cd76cd9fd09c5449b254491e07d657d5e531ef78598b1a3b83a7d296",
+      "size": 2585557
+    },
+    "raw/zenodo_7368936_cwh_n87/files/N87_ambient_temperature.mat": {
+      "sha256": "d74d390bbe6f728b13dfe2898319ae80be9fc409c1eecc1206fde6b80cb8a263",
+      "size": 986472
+    },
+    "raw/zenodo_7368936_cwh_n87/files/N87_variable_temperature.csv": {
+      "sha256": "83609c3341b5e02d258e238a6114a3b24c69c9de42f5bcd80c0b4ffb49ea9455",
+      "size": 7761548
+    },
+    "raw/zenodo_7368936_cwh_n87/files/N87_variable_temperature.h5": {
+      "sha256": "5c22e9c880934be977c93d8d3ec5989b178b6b092fb6cba91958f232c0c1c871",
+      "size": 4725789
+    },
+    "raw/zenodo_7368936_cwh_n87/files/N87_variable_temperature.mat": {
+      "sha256": "a5cd58ef9bce4c251559aa82a125946cb7c69be40fd8259e668e0b2d2a3b094d",
+      "size": 2524824
+    },
+    "raw/zenodo_7368936_cwh_n87/files/dataset_metadata.csv": {
+      "sha256": "6844cbf62228260de93f62efc98bc2d036d0a2f8c8a0f5bcce84b48c024614cf",
+      "size": 550
+    },
+    "raw/zenodo_7368936_cwh_n87/files/readme.txt": {
+      "sha256": "38516c005e4e7d8193f900c2859d8a4330d754d4a6d9e6cc3f522239f59c0b6b",
+      "size": 2745
+    },
+    "raw/zenodo_7368936_cwh_n87/files/test_matlab.m": {
+      "sha256": "1ee1c87f35fdf1edf207243dcff51354a88ebd0d5f226aade003c6d38c712a68",
+      "size": 880
+    },
+    "raw/zenodo_7368936_cwh_n87/files/test_python.py": {
+      "sha256": "8b84877935b30844f18418597f0c03c07b74bb010fab6f5468050b6e0596d729",
+      "size": 1033
+    },
+    "raw/zenodo_8292861_hefmag/SOURCES.json": {
+      "sha256": "ded164aa9212abab39ebad8193d8998c9b30107815f16804a16bd52510f3ac10",
+      "size": 780
+    },
+    "raw/zenodo_8292861_hefmag/files/EMPIR 19ENG06 HEFMAG dataset Co67 & Fmet.zip": {
+      "sha256": "95c457de0ad4e28a1055772678cfcbbd5791d03efa7c18f73e80966a3004758a",
+      "size": 120075
+    }
+  }
+}

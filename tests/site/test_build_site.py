@@ -115,11 +115,23 @@ def test_large_tables_are_labelled_samples_of_the_real_rows(site):
 def test_uncommitted_sidecars_are_listed_without_rows(site):
     out, _ = site
     db = MagneticDatabase()
+    unrecoverable = {src["id"] for src in db.sources if src.get("raw_unavailable")}
+    seen = {"huggingface": 0, "refresh": 0, "unrecoverable": 0}
     for entry in _json(out, "measurements.json"):
         rec = db.measurement(entry["id"])
         if (rec["extensions"]["aipe.table"].get("rows_file") or "").startswith("tables-local/"):
             page = _json(out, f"measurements/{entry['id']}.json")
-            assert entry["published"] == "none" and page["rows"] == [] and "refresh" in page["unavailable"]
+            assert entry["published"] == "none" and page["rows"] == []  # rows of git-ignored sidecars are never copied onto the site
+            if page["links"].get("huggingface"):  # published: point to the pinned Hugging Face copy
+                assert "Hugging Face" in page["unavailable"] and "/blob/" in page["links"]["huggingface"]
+                seen["huggingface"] += 1
+            elif rec["extensions"]["aipe.data"]["source_id"] in unrecoverable:  # never suggest a refresh that cannot work
+                assert "aipe-magnetics-db refresh" not in page["unavailable"] and "no longer retrievable" in page["unavailable"]
+                seen["unrecoverable"] += 1
+            else:
+                assert "aipe-magnetics-db refresh" in page["unavailable"]
+                seen["refresh"] += 1
+    assert sum(seen.values()) > 0
 
 
 def test_sample_rows_is_deterministic_and_keeps_groups():

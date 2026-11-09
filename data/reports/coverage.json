@@ -339,14 +339,34 @@
       "reason": "Aladdin Free Public Licence restricts redistribution; curves of unclear origin."
     },
     {
-      "id": "princeton_magnet_tutorial_and_scope_data",
-      "title": "Princeton MagNet repository tutorial datasets and raw N87 scope CSVs",
+      "id": "princeton_magnet_scope",
+      "title": "Princeton MagNet raw oscilloscope captures (N87 R34, data processing example)",
       "priority": "A",
+      "status": "integrated",
+      "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
+      "license": "MIT",
+      "redistribution": "permitted (MIT; cite the MagNet TPEL papers)",
+      "record_counts": {
+        "dataset": 1,
+        "magnetic_material": 1,
+        "waveform_dataset": 2
+      },
+      "table_rows": {
+        "waveform_samples": 2000000,
+        "waveform_sequences": 200
+      },
+      "tables_local_only": 0,
+      "exclusions": 865
+    },
+    {
+      "id": "princeton_magnet_tutorial_datasets",
+      "title": "Princeton MagNet tutorial datasets (tutorial/Dataset/Dataset_sine.json, Dataset_tri.json)",
+      "priority": "B",
       "status": "reference",
       "version": "8a6892e91ac622e42f8b9182a6dfe9094ceea97a",
       "license": "MIT",
       "redistribution": "permitted (MIT)",
-      "reason": "tutorial/Dataset/*.json (11 MB) and ~63 MB of raw N87 oscilloscope CSVs exist in the pinned repository but are not yet imported; candidate waveform source for the next cycle."
+      "reason": "Dataset_sine.json (3,495 single-cycle B/H sequences) names no material; Dataset_tri.json (9,754 N87 R22 rows) states no units for Flux_Density / Power_Loss. Not imported rather than guessed; both are processed MagNet data also covered by princeton_magnet."
     },
     {
       "id": "amped_pitt_netl",
@@ -481,14 +501,15 @@
   ],
   "totals_source_records": {
     "core_geometry": 21237,
-    "dataset": 12,
-    "magnetic_material": 1200,
+    "dataset": 13,
+    "magnetic_material": 1201,
     "measurement": 1764,
-    "model_metadata": 664
+    "model_metadata": 664,
+    "waveform_dataset": 2
   },
-  "table_rows_source": 2348037,
+  "table_rows_source": 4348237,
   "canonical": {
-    "source_material_records": 1210,
+    "source_material_records": 1211,
     "canonical_materials": 1164,
     "canonical_materials_with_multiple_sources": 24,
     "measurement_records": 1764,

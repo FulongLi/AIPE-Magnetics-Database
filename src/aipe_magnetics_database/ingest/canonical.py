@@ -37,10 +37,10 @@ from aipe_magnetics_database.ingest.common import dumps_line, dumps_pretty, slug
 
 SOURCE_PRECEDENCE = ["aipe_curated", "openmagnetics_mas", "paderborn_lea_materialdatabase", "princeton_magnet",
                      "zenodo_21626116_smc_ferrite_triangular", "zenodo_8292861_hefmag", "nabih_magneto", "guillod_n87_dielectric",
-                     "zenodo_7368936_cwh_n87", "zenodo_10725890_inrim"]
+                     "zenodo_7368936_cwh_n87", "zenodo_10725890_inrim", "princeton_magnet_scope"]
 ORIGINATING = {"princeton-magnet": "princeton_magnet", "hefmag": "zenodo_8292861_hefmag", "zenodo-21626116": "zenodo_21626116_smc_ferrite_triangular",
                "nabih": "nabih_magneto", "guillod": "guillod_n87_dielectric", "zenodo-7368936": "zenodo_7368936_cwh_n87",
-               "inrim": "zenodo_10725890_inrim"}
+               "inrim": "zenodo_10725890_inrim", "princeton-magnet-scope": "princeton_magnet_scope"}
 MANUFACTURER_ALIASES = {"epcos": "tdk", "tdk electronics": "tdk", "tdk-epcos": "tdk", "fair rite": "fair-rite", "fairrite": "fair-rite",
                         "magnetics inc": "magnetics", "magnetics inc.": "magnetics", "ferroxcube": "ferroxcube", "proterial": "proterial",
                         "hitachi metals": "proterial", "vacuumschmelze": "vac"}
