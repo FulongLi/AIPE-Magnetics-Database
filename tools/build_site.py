@@ -18,7 +18,6 @@ from __future__ import annotations
 import argparse
 import datetime as _dt
 import json
-import math
 import os
 import re
 import shutil
@@ -91,7 +90,11 @@ def headline(prop: Any) -> dict[str, Any] | None:
 
 def sample_rows(columns: list[dict[str, Any]], rows: list[list[Any]], limit: int = PREVIEW_ROWS) -> tuple[list[list[Any]], dict[str, Any]]:
     """Deterministic preview: all rows when ``len(rows) <= limit``, otherwise every k-th row within each group of the
-    categorical condition columns (waveform, temperature, specimen, branch), keeping the upstream row order."""
+    categorical condition columns (waveform, temperature, specimen, branch), keeping the upstream row order.
+
+    The row budget is shared equally between the groups (a group smaller than its share is kept whole and its unused
+    share passes to the larger groups), so a small group such as sinusoidal excitation is not thinned to a few rows by a
+    much larger one. The sample is therefore not proportional to the group sizes of the full table."""
     total = len(rows)
     if total <= limit:
         return rows, {"sampled": False, "total_rows": total, "published_rows": total}
@@ -101,15 +104,19 @@ def sample_rows(columns: list[dict[str, Any]], rows: list[list[Any]], limit: int
     for i, row in enumerate(rows):
         groups[tuple(row[k] for k in keys)].append(i)
     keep: list[int] = []
-    for members in groups.values():
-        quota = min(len(members), max(1, math.floor(len(members) * limit / total)))
+    remaining = limit
+    ordered = sorted(groups.values(), key=len)  # smallest first; ties keep upstream order (stable sort)
+    for n, members in enumerate(ordered):
+        quota = min(len(members), max(1, remaining // (len(ordered) - n)))
+        remaining = max(0, remaining - quota)
         step = len(members) / quota
         keep.extend(members[int(j * step)] for j in range(quota))
     keep.sort()
     return [rows[i] for i in keep], {
         "sampled": True, "total_rows": total, "published_rows": len(keep),
         "method": "Systematic sample: every k-th row within each group of " + (", ".join(c for c in GROUP_COLUMNS if c in names) or "the table")
-                  + f" (upstream order kept, about {limit} rows in total); values are unchanged, rows are omitted",
+                  + f" (upstream order kept, about {limit} rows in total, shared equally between the groups, so the sample is not"
+                    " proportional to group sizes); values are unchanged, rows are omitted",
     }
 
 
@@ -385,7 +392,8 @@ class SiteBuilder:
                        "sources_integrated": sum(1 for s in self.sources if s.get("status") == "integrated"),
                        "tables_published_full": self.stats["tables_full"], "tables_published_sample": self.stats["tables_sample"],
                        "tables_not_published": self.stats["tables_none"]},
-            "huggingface": (self.db.hub.status() if self.db.hub is not None else
+            "huggingface": ({"published": True} | {k: v for k, v in self.db.hub.status().items() if k != "cache_dir"}
+                            if self.db.hub is not None else
                             {"published": False, "repo_id": layout.DEFAULT_REPO_ID,
                              "url": f"https://huggingface.co/datasets/{layout.DEFAULT_REPO_ID}"}),
             "quantities": dict(Counter(e["quantity"] for e in primary).most_common()),
