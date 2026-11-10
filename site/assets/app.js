@@ -33,7 +33,7 @@
   };
   var QTY = { core_loss: "Core loss", mass_core_loss: "Core loss per mass", bh_curve: "B-H curve", complex_permeability: "Complex permeability",
     complex_permittivity: "Complex permittivity", initial_permeability: "Initial permeability", amplitude_permeability: "Amplitude permeability",
-    loss_factor: "Loss factor", energy_loss: "Energy loss per cycle", energy_loss_and_permeability: "Energy loss and permeability" };
+    loss_factor: "Loss factor", dielectric_properties: "Dielectric properties", energy_loss: "Energy loss per cycle", energy_loss_and_permeability: "Energy loss and permeability" };
   var SOURCE = { openmagnetics_mas: "OpenMagnetics MAS", princeton_magnet: "Princeton MagNet", paderborn_lea_materialdatabase: "Paderborn LEA",
     zenodo_8292861_hefmag: "HEFMAG (Zenodo 8292861)", zenodo_21626116_smc_ferrite_triangular: "SMC/ferrite triangular (Zenodo 21626116)",
     aipe_curated: "AIPE curated catalogue" };
@@ -46,6 +46,22 @@
   var PUBLISHED = { full: "All rows", sample: "Sampled preview", none: "Not published" };
   var NA = '<span class="na" title="Not reported by the source">—</span>';
   var COLORS = [1, 2, 3, 4, 5, 6, 7, 8].map(function (i) { return "var(--series-" + i + ")"; });
+  var SEQ = [1, 2, 3, 4, 5].map(function (i) { return "var(--seq-" + i + ")"; }); // one hue, light to dark: ordered groups
+  // display name, display unit and conversion of table columns (stored values stay SI; only the chart converts)
+  var COLDEF = { frequency: ["Frequency f"], temperature: ["Temperature T"], flux_density_peak: ["Peak flux density B̂"],
+    flux_density_peak_to_peak: ["Flux density swing ΔB"], flux_density: ["Flux density B"], field: ["Magnetic field H"],
+    dc_bias_field: ["DC bias field H_DC"], loss_density: ["Core loss Pv"], mass_loss_density: ["Core loss per mass"],
+    energy_density_per_cycle: ["Energy loss per cycle"], mu_real: ["μ′"], mu_imag: ["μ″"], eps_real: ["ε′"], eps_imag: ["ε″"],
+    relative_permeability: ["Relative permeability μr"], amplitude_permeability: ["Amplitude permeability μa"],
+    loss_factor: ["Loss factor"], duty: ["Duty cycle"] };
+  function ident(v) { return v; }
+  function colInfo(c) {
+    var label = (COLDEF[c.name] || [c.name])[0], u = c.unit, conv = ident;
+    if (u === "K") { u = "°C"; conv = function (v) { return v - 273.15; }; }
+    else if (u === "T") { u = "mT"; conv = function (v) { return v * 1e3; }; }
+    return { name: c.name, label: label, unit: u, conv: conv, axis: label + (unit(u) ? " [" + unit(u) + "]" : "") };
+  }
+  function colLabel(n) { return (COLDEF[n] || [n])[0]; }
 
   // -- formatting --------------------------------------------------------------------------------------------
   function esc(s) {
@@ -144,13 +160,14 @@
   var renderToken = 0;
   function render() {
     var r = route(), p = r.parts, token = ++renderToken, view;
-    var section = { materials: "materials", material: "materials", measurements: "measurements", measurement: "measurements", cores: "cores", core: "cores" }[p[0]] || "overview";
+    var section = { compare: "compare", materials: "materials", material: "materials", measurements: "measurements", measurement: "measurements", cores: "cores", core: "cores" }[p[0]] || "overview";
     nav(section);
     if (!p.length) view = overview();
     else if (p[0] === "materials") view = materials(r.q);
     else if (p[0] === "material" && p[1]) view = material(p[1]);
     else if (p[0] === "measurements") view = measurements(r.q);
     else if (p[0] === "measurement" && p[1]) view = measurement(p[1]);
+    else if (p[0] === "compare") view = compare(r.q);
     else if (p[0] === "cores") view = cores(r.q);
     else if (p[0] === "core" && p[1]) view = core(p[1]);
     else view = Promise.reject(new Error("Unknown page."));
@@ -197,6 +214,8 @@
           stat("#/measurements", int(c.measurement_records), "Measurement tables", int(c.independent_measurement_records) + " independent; " + int(c.table_rows_total) + " rows, of which " + int(c.experimental_rows_independent) + " experimental") +
           stat("#sources", int(integrated.length), "Data sources", "integrated, of " + int(c.sources_investigated) + " investigated; " + int(c.fitted_loss_models) + " fitted loss models kept separately") +
           '</div>' +
+          '<h2>Material map</h2><p>Every material that reports an initial permeability and a saturation flux density, coloured by class. ' +
+          '<a href="#/materials?view=map">Filter the map</a> or <a href="#/compare">compare materials</a>.</p><div id="ov-map"><p class="loading" role="status">Loading materials…</p></div>' +
           '<h2>Data classes</h2><p>Values are never mixed across classes. Each table and value is labelled with one of:</p>' +
           '<div class="table-wrap"><table><thead><tr><th>Class</th><th>Meaning</th><th class="num">Tables</th></tr></thead><tbody>' +
           ["experimental_measurement", "manufacturer_datasheet", "manufacturer_tool_export", "derived_from_measurement", "fitted_parameters"].map(function (k) {
@@ -215,7 +234,7 @@
               "</td><td>" + esc(x.license) + (x.licence_files && x.licence_files.length ? "<br>" + x.licence_files.map(function (u) {
                 return '<a class="small" href="' + esc(u) + '">' + esc(u.split("/").pop()) + "</a>"; }).join(" · ") : "") +
               '</td><td class="mono small">' + esc(String(x.version || "").slice(0, 12)) + '</td><td class="num">' + (recs === null ? NA : int(recs)) +
-              '</td><td class="num">' + (x.table_rows === undefined ? NA : int(x.table_rows)) + '</td><td class="small">' + hubCell(x.huggingface) +
+              '</td><td class="num">' + (rowsTotal(x.table_rows) === null ? NA : int(rowsTotal(x.table_rows))) + '</td><td class="small">' + hubCell(x.huggingface) +
               '</td><td class="small">' + esc(x.notes || x.redistribution || "") + "</td></tr>";
           }).join("") + "</tbody></table></div>" +
           "<details><summary>" + other.length + " further sources investigated: reference entries only, no data available here or on Hugging Face</summary>" +
@@ -232,6 +251,9 @@
           '<pre class="json">pip install "aipe-magnetics-database[mcp] @ git+https://github.com/FulongLi/AIPE-Magnetics-Database.git"\naipe-magnetics-db materials get "TDK N87"</pre>' +
           '<p class="small"><a href="' + esc(s.repository) + '#readme">README</a> · <a href="' + esc(s.repository) + '/blob/main/docs/api.md">API, CLI and MCP reference</a> · ' +
           '<a href="' + esc(s.repository) + '/blob/main/docs/data-format.md">data format</a></p></div>';
+        var mapHost = document.getElementById("ov-map");
+        load("data/materials.json").then(function (list) { if (mapHost.isConnected) materialMap(mapHost, list); })
+          .catch(function () { if (mapHost.isConnected) mapHost.innerHTML = '<p class="muted">The material map could not be loaded.</p>'; });
         document.getElementById("qs").addEventListener("submit", function (e) {
           e.preventDefault();
           location.hash = "#/materials?q=" + encodeURIComponent(new FormData(e.target).get("q") || "");
@@ -239,8 +261,37 @@
       };
     });
   }
+  function rowsTotal(t) { // table_rows is a per-quantity map in the source index
+    if (t === undefined || t === null) return null;
+    if (typeof t === "number") return t;
+    return Object.keys(t).reduce(function (n, k) { return n + (Number(t[k]) || 0); }, 0);
+  }
   function stat(href, n, label, sub) {
     return '<a class="stat" href="' + href + '"><div class="label">' + esc(label) + '</div><div class="num">' + esc(n) + '</div><div class="sub">' + esc(sub) + "</div></a>";
+  }
+
+  // -- material map -------------------------------------------------------------------------------------------
+  var CLASS_ORDER = ["ferrite_mnzn", "ferrite_nizn", "powder_alloy", "nanocrystalline", "amorphous", "silicon_steel", "other"]; // fixed colour per class
+  function materialMap(host, rows) {
+    var pts = rows.filter(function (m) { return m.mu_i && m.bsat && m.mu_i.v > 0 && m.bsat.v > 0; });
+    if (!pts.length) { host.className = ""; host.innerHTML = '<div class="notice info">None of these materials reports both an initial permeability and a saturation flux density.</div>'; return; }
+    var series = CLASS_ORDER.map(function (c, k) {
+      return { label: CLASS_LABEL[c], color: COLORS[k], mode: "points", points: pts.filter(function (m) {
+        return c === "other" ? CLASS_ORDER.indexOf(m["class"]) < 0 || m["class"] === "other" : m["class"] === c; }).map(function (m) { return [m.mu_i.v, m.bsat.v * 1e3, m]; }) };
+    }).filter(function (s) { return s.points.length; });
+    MiniPlot.render(host, {
+      ariaLabel: "Saturation flux density versus initial permeability of " + pts.length + " materials",
+      series: series,
+      x: { label: "Initial permeability μi", log: true, format: tick("1") },
+      y: { label: "Saturation flux density Bsat [mT]", log: true, format: tick("mT") },
+      note: int(pts.length) + " of " + int(rows.length) + " materials report both values. Bsat is the value nearest 25 °C; its temperature and field differ between sources. Click a point to open the material.",
+      title: function (m) { return m.name; },
+      extra: function (m) {
+        return (m.bsat.T !== undefined ? '<br><span class="muted">Bsat at ' + esc(shortTemp(m.bsat.T)) + "</span>" : "") +
+          '<br><span class="muted">' + (m.measurements ? int(m.measurements) + (m.measurements === 1 ? " table" : " tables") + (m.experimental ? ", " + m.experimental + " measured" : "") : "no measurement table") + "</span>";
+      },
+      onPick: function (m) { location.hash = "#/material/" + encodeURIComponent(m.id); }
+    });
   }
 
   // -- materials list ----------------------------------------------------------------------------------------
@@ -252,7 +303,7 @@
     return load("data/materials.json").then(function (list) {
       return function () {
         var state = { q: q.get("q") || "", cls: q.get("class") || "", mfr: q.get("manufacturer") || "", source: q.get("source") || "",
-          exp: q.get("experimental") === "1", sort: q.get("sort") || "name" };
+          exp: q.get("experimental") === "1", sort: q.get("sort") || "name", view: q.get("view") === "map" ? "map" : "" };
         var limit = PAGE;
         var mfrs = uniq(list.map(function (m) { return m.manufacturer; }));
         var classes = uniq(list.map(function (m) { return m.class; }));
@@ -265,11 +316,17 @@
           select("f-mfr", "Manufacturer", mfrs, state.mfr) +
           select("f-source", "Source", sources, state.source, src) +
           '<label class="check"><input type="checkbox" id="f-exp"' + (state.exp ? " checked" : "") + "> Has experimental data</label>" +
-          "</div><p id=\"count\" class=\"muted small\" aria-live=\"polite\"></p><div id=\"list\"></div><div class=\"more\" id=\"more\"></div>";
+          '</div><div class="tabs" role="tablist" aria-label="View"><button type="button" role="tab" data-view="">Table</button>' +
+          '<button type="button" role="tab" data-view="map">Map: Bsat vs μi</button></div>' +
+          "<p id=\"count\" class=\"muted small\" aria-live=\"polite\"></p><div id=\"list\"></div><div class=\"more\" id=\"more\"></div>";
+        document.querySelectorAll("#app [data-view]").forEach(function (b) {
+          b.addEventListener("click", function () { state.view = b.getAttribute("data-view"); update(); });
+        });
         var SORTS = { name: null, mu_i: "mu_i", bsat: "bsat", rho: "rho", density: "density", tc: "tc", measurements: "measurements" };
         function update() {
           writeQuery("materials", { q: state.q, "class": state.cls, manufacturer: state.mfr, source: state.source, experimental: state.exp,
-            sort: state.sort === "name" ? "" : state.sort });
+            sort: state.sort === "name" ? "" : state.sort, view: state.view });
+          document.querySelectorAll("#app [data-view]").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-view") === state.view ? "true" : "false"); });
           var needle = state.q.trim().toLowerCase();
           var rows = list.filter(function (m) {
             if (state.cls && m.class !== state.cls) return false;
@@ -288,6 +345,14 @@
             if (x === undefined || x === null) return 1; if (y === undefined || y === null) return -1; return y - x;
           });
           document.getElementById("count").textContent = int(rows.length) + " of " + int(list.length) + " materials" + (key ? ", sorted by " + state.sort + " (descending, missing last)" : "");
+          if (state.view === "map") {
+            document.getElementById("count").textContent = int(rows.length) + " of " + int(list.length) + " materials match the filters.";
+            document.getElementById("more").innerHTML = "";
+            var host = document.getElementById("list");
+            host.innerHTML = '<div id="mat-map"></div>';
+            materialMap(host.firstChild, rows);
+            return;
+          }
           var th = function (k, label, cls) { return '<th class="' + (cls || "") + '"><button class="sort" data-sort="' + k + '" aria-pressed="' + (state.sort === k) + '">' + label + (state.sort === k ? " ▾" : "") + "</button></th>"; };
           document.getElementById("list").innerHTML = rows.length ? '<div class="table-wrap"><table><thead><tr>' + th("name", "Material") +
             '<th class="hide-sm">Class</th>' + th("mu_i", "μi", "num") + th("bsat", "Bsat", "num") + th("rho", "ρ", "num hide-sm") + th("density", "Density", "num hide-sm") +
@@ -366,11 +431,15 @@
     return '<div class="table-wrap"><table><thead><tr><th>Set</th><th>Basis</th><th class="num">k</th><th class="num">α</th><th class="num">β</th><th>f range</th><th>B̂ range</th><th>T</th><th>Excitation</th><th>Fit</th></tr></thead><tbody>' +
       sets.map(function (s) {
         var fr = s.frequency_range || {}, br = s.flux_density_range || {}, fm = s.fit_metrics || {};
-        return '<tr><td class="mono small">' + esc(s.id || "") + "</td><td>" + esc(s.basis || "") + '</td><td class="num">' + esc(num(s.k)) + '</td><td class="num">' + esc(num(s.alpha)) +
+        return '<tr><td class="mono small">' + esc(s.id || "") + "</td><td>" + esc(s.basis || "") + '</td><td class="num">' + coef(s.k) + '</td><td class="num">' + esc(num(s.alpha)) +
           '</td><td class="num">' + esc(num(s.beta)) + "</td><td>" + esc(qty(fr.min, fr.unit) + " – " + qty(fr.max, fr.unit)) + "</td><td>" + esc(qty(br.min, br.unit) + " – " + qty(br.max, br.unit)) +
           "</td><td>" + (s.temperature ? esc(qty(s.temperature.value, s.temperature.unit)) : NA) + "</td><td>" + esc(s.excitation || "") + '</td><td class="small">' +
           (fm.n_points ? esc(fm.n_points + " points, mean |rel. error| " + num(fm.mean_abs_rel_error)) : "") + (s.note ? "<br>" + esc(s.note) : "") + "</td></tr>";
       }).join("") + "</tbody></table></div>";
+  }
+  function coef(k) { // Steinmetz k is stored as {value, unit}; older sets carry a bare number
+    if (k && typeof k === "object") return k.value === undefined || k.value === null ? NA : esc(num(k.value)) + (unit(k.unit) ? ' <span class="muted small">' + esc(unit(k.unit)) + "</span>" : "");
+    return k === undefined || k === null ? NA : esc(num(k));
   }
   function lossPointTable(points) {
     return '<div class="table-wrap"><table><thead><tr><th>Basis</th><th>f</th><th>B̂</th><th>T</th><th>Loss density</th></tr></thead><tbody>' +
@@ -380,11 +449,11 @@
   }
   function measurementTable(list) {
     if (!list.length) return '<p class="muted">No measurement tables.</p>';
-    return '<div class="table-wrap"><table><thead><tr><th>Table</th><th>Quantity</th><th>Data class</th><th class="hide-sm">Conditions</th><th class="num">Rows</th><th>Status</th><th class="hide-sm">On this site</th></tr></thead><tbody>' +
+    return '<div class="table-wrap"><table><thead><tr><th>Table</th><th>Quantity</th><th>Data class</th><th class="hide-sm">Conditions</th><th class="num">Rows</th><th class="hide-sm">On this site</th></tr></thead><tbody>' +
       list.map(function (m) {
-        return '<tr><td><a href="#/measurement/' + encodeURIComponent(m.id) + '">' + esc(m.name) + '</a><div class="small muted">' + esc(src(m.source_id)) + "</div></td><td>" +
-          esc(QTY[m.quantity] || m.quantity) + "</td><td>" + dcBadge(m.data_class) + '</td><td class="small hide-sm">' + conditions(m.conditions) + '</td><td class="num">' + int(m.row_count) +
-          "</td><td>" + (m.status === "primary" ? "Primary" : '<span class="badge warn">' + esc(STATUS[m.status] || m.status) + "</span>") + '</td><td class="small hide-sm">' +
+        return '<tr><td><a href="#/measurement/' + encodeURIComponent(m.id) + '">' + esc(m.name) + '</a><div class="small muted">' + esc(src(m.source_id)) + (m.status === "primary" ? "" : ' <span class="badge warn">' + esc(STATUS[m.status] || m.status) + "</span>") + "</div></td><td>" +
+          esc(QTY[m.quantity] || m.quantity) + "</td><td>" + dcBadge(m.data_class) + '</td><td class="small hide-sm cond">' + conditions(m.conditions) + '</td><td class="num">' + int(m.row_count) +
+          '</td><td class="small hide-sm">' +
           esc(PUBLISHED[m.published] || "") + "</td></tr>";
       }).join("") + "</tbody></table></div>";
   }
@@ -409,6 +478,8 @@
           "<tr><th>Fitted loss models</th><td>" + int(s.loss_models) + "</td></tr>" +
           "<tr><th>Core parts</th><td>" + (s.parts ? '<a href="#/cores?view=parts&material=' + encodeURIComponent(r.id) + '">' + int(s.parts) + " manufacturer parts</a>" : NA) + "</td></tr>" +
           "<tr><th>Quality flags</th><td>" + flags(r.quality.flags) + "</td></tr></tbody></table></div>" +
+          '<div class="more"><a class="btn-pill" href="#/compare?m=' + encodeURIComponent(r.id) + '">Compare with other materials</a></div>' +
+          '<h2>Charts</h2><div id="mcharts"></div>' +
           "<h2>Properties</h2>" + propertyTable(p, r.evidence, { showMissing: true }) +
           (p.permeability_vs_temperature ? '<h3>Permeability vs temperature</h3><div id="pvt"></div>' : "") +
           (p.loss_reference_points ? "<h3>Datasheet loss reference points</h3>" + lossPointTable(p.loss_reference_points) : "") +
@@ -439,11 +510,12 @@
               (rec.properties.steinmetz_parameter_sets ? steinmetzTable(rec.properties.steinmetz_parameter_sets) : "") + "</details></div>";
           }).join("") +
           '<details><summary>Canonical record (JSON)</summary><pre class="json">' + esc(JSON.stringify(r, null, 2)) + "</pre></details>";
+        materialCharts(document.getElementById("mcharts"), d.measurements);
         if (p.permeability_vs_temperature) {
           MiniPlot.render(document.getElementById("pvt"), {
             ariaLabel: "Permeability versus temperature",
-            series: [{ label: "μ", color: COLORS[0], mode: "lines", points: p.permeability_vs_temperature.map(function (e) { return [e.temperature.value, e.value.value]; }) }],
-            x: { label: "temperature [K]", format: tick("K") }, y: { label: "relative permeability", format: tick("1") },
+            series: [{ label: "μ", color: COLORS[0], mode: "lines", points: p.permeability_vs_temperature.map(function (e) { return [e.temperature.value - 273.15, e.value.value]; }) }],
+            x: { label: "Temperature T [°C]", format: tick("°C") }, y: { label: "Relative permeability μr", format: tick("1") },
             note: "Values as published by " + src(canon.members.filter(function (m) { return m.record === canon.properties_from; }).map(function (m) { return m.source_id; })[0]) + "."
           });
         }
@@ -522,7 +594,7 @@
   // -- measurement detail ------------------------------------------------------------------------------------
   var TEXT_COLS = { waveform: 1, specimen: 1, branch: 1 };
   var DEFAULTS = { // x, y list, log x, log y, mode, group preference
-    core_loss: ["flux_density_peak", ["loss_density"], true, true, "points", ["temperature", "frequency", "waveform"]],
+    core_loss: ["flux_density_peak", ["loss_density"], true, true, "points", ["frequency", "temperature", "waveform"]],
     mass_core_loss: ["flux_density_peak", ["mass_loss_density"], true, true, "points", ["frequency", "temperature", "waveform"]],
     complex_permeability: ["frequency", ["mu_real", "mu_imag"], true, true, "lines", ["temperature", "flux_density_peak", "specimen", "dc_bias_field"]],
     complex_permittivity: ["frequency", ["eps_real", "eps_imag"], true, true, "lines", ["temperature", "specimen"]],
@@ -548,12 +620,125 @@
     return out.sort(function (a, b) { return (a === null) - (b === null) || (typeof a === "number" && typeof b === "number" ? a - b : String(a).localeCompare(String(b))); });
   }
 
+  // Groups of one column for colouring: exact values when there are 2-8 of them; otherwise whole-degree temperatures or
+  // up to five value bands (log-spaced when the range spans more than a factor of four). Nothing is averaged: every row
+  // is drawn at its own value and only takes the colour of its band.
+  var NUMERIC_GROUPS = { frequency: 1, temperature: 1, flux_density_peak: 1, flux_density_peak_to_peak: 1, dc_bias_field: 1, duty: 1, field: 1 };
+  function grouper(rows, i, name) {
+    var vals = distinct(rows, i), map = {};
+    if (vals.length < 2) return null;
+    if (vals.length <= 8) {
+      vals.forEach(function (v, k) { map[String(v)] = k; });
+      return { labels: vals.map(function (v) { return groupLabel(name, v); }), of: function (r) { return map[String(r[i])]; },
+        ordered: !!NUMERIC_GROUPS[name], binned: false };
+    }
+    var nums = vals.filter(function (v) { return typeof v === "number"; });
+    if (!NUMERIC_GROUPS[name] || nums.length < 2) return null;
+    if (name === "temperature") {
+      var deg = distinct(nums.map(function (v) { return [Math.round(v - 273.15)]; }), 0);
+      if (deg.length >= 2 && deg.length <= 8) {
+        deg.forEach(function (v, k) { map[v] = k; });
+        return { labels: deg.map(function (v) { return v + " °C"; }), ordered: true, binned: false,
+          of: function (r) { return typeof r[i] === "number" ? map[Math.round(r[i] - 273.15)] : -1; } };
+      }
+    }
+    var lo = nums[0], hi = nums[nums.length - 1], n = SEQ.length, log = lo > 0 && hi / lo > 4, edges = [];
+    for (var k = 0; k <= n; k++) edges.push(parseFloat((log ? lo * Math.pow(hi / lo, k / n) : lo + (hi - lo) * k / n).toPrecision(2)));
+    return { labels: edges.slice(0, n).map(function (a, k) { return groupLabel(name, a) + " – " + groupLabel(name, edges[k + 1]); }),
+      ordered: true, binned: true,
+      of: function (r) {
+        var v = r[i]; if (typeof v !== "number") return -1;
+        for (var k = n - 1; k > 0; k--) if (v >= edges[k]) return k;
+        return 0;
+      } };
+  }
+
+  // Default chart of one table: axes, y columns, colouring and marks.
+  function chartState(d) {
+    var e = d.entry, cols = d.columns, rows = d.rows, names = cols.map(function (c) { return c.name; });
+    var idx = function (n) { return names.indexOf(n); };
+    var numeric = cols.filter(function (c) { return !TEXT_COLS[c.name] && c.unit !== ""; }).map(function (c) { return c.name; });
+    var def = DEFAULTS[e.quantity] || [null, [], false, false, "points", []];
+    // x default: preferred column, else the condition column with the most distinct values
+    var x = def[0] && idx(def[0]) >= 0 ? def[0] : null;
+    if (!x) {
+      var cand = ["temperature", "frequency", "flux_density_peak", "field", "dc_bias_field"].filter(function (n) { return idx(n) >= 0; });
+      cand.sort(function (a, b) { return distinct(rows, idx(b)).length - distinct(rows, idx(a)).length; });
+      x = cand[0] || numeric[0];
+    }
+    var ys = def[1].filter(function (n) { return idx(n) >= 0 && n !== x; });
+    if (!ys.length) ys = [numeric.filter(function (n) { return n !== x; }).slice(-1)[0]].filter(Boolean);
+    var groupers = {};
+    names.forEach(function (n) { var g = grouper(rows, idx(n), n); if (g) groupers[n] = g; });
+    var group = def[5].filter(function (n) { return groupers[n] && n !== x && ys.indexOf(n) < 0; })[0] || "";
+    var st = { x: x, ys: ys, group: group, logx: def[2], logy: def[3], mode: def[4], f: {} };
+    // lines only where x runs monotonically within each series (B-H loops are drawn in upstream traversal order)
+    if (st.mode === "lines" && e.quantity !== "bh_curve") {
+      var xi0 = idx(st.x), G0 = st.group ? groupers[st.group] : null, last = {}, dir = {};
+      var monotonic = rows.every(function (r) {
+        var g = G0 ? G0.of(r) : 0, v = r[xi0];
+        if (v === null) return true;
+        if (g in last && v !== last[g]) {
+          var s = v > last[g] ? 1 : -1;
+          if (dir[g] && dir[g] !== s) return false;
+          dir[g] = s;
+        }
+        last[g] = v;
+        return true;
+      });
+      if (!monotonic) st.mode = "points";
+    }
+    return { st: st, groupers: groupers, numeric: numeric, names: names };
+  }
+
+  // MiniPlot spec of the rows `shown` of one table under chart state `st` (G: grouper of st.group, or null).
+  function plotSpec(d, st, shown, G) {
+    var cols = d.columns, names = cols.map(function (c) { return c.name; }), idx = function (n) { return names.indexOf(n); };
+    var xi = idx(st.x), X = colInfo(cols[xi]), k = G ? G.labels.length : 1;
+    var Y = st.ys.map(function (y) { return colInfo(cols[idx(y)]); }), yi = st.ys.map(idx);
+    var seq = G && G.ordered && st.ys.length === 1 && k <= SEQ.length, series = [];
+    Y.forEach(function (y, yk) {
+      for (var gk = 0; gk < k; gk++) {
+        series.push({ label: (Y.length > 1 || !G ? y.label : "") + (G ? (Y.length > 1 ? ", " : "") + G.labels[gk] : ""), mode: st.mode, points: [],
+          color: seq ? SEQ[k === 1 ? 2 : Math.round(gk * (SEQ.length - 1) / (k - 1))] : COLORS[(G ? gk + yk * k : yk) % 8] });
+      }
+    });
+    shown.forEach(function (r, ri) {
+      var gk = G ? G.of(r) : 0, xv = r[xi];
+      if (gk === undefined || gk < 0) return;
+      Y.forEach(function (y, yk) {
+        var v = r[yi[yk]];
+        series[yk * k + gk].points.push([typeof xv === "number" ? X.conv(xv) : null, typeof v === "number" ? y.conv(v) : null, ri]);
+      });
+    });
+    var drawn = series.filter(function (s) { return s.points.length > 0; });
+    if (!drawn.length) drawn = series.slice(0, 1);
+    var tooMany = drawn.length > 8;
+    if (tooMany) drawn = drawn.slice(0, 8);
+    var yunits = uniq(Y.map(function (y) { return y.unit; }));
+    return {
+      ariaLabel: d.record.name + ": " + Y.map(function (y) { return y.label; }).join(", ") + " versus " + X.label,
+      series: drawn,
+      x: { label: X.axis, log: st.logx, format: tick(X.unit) },
+      y: { label: Y.length === 1 ? Y[0].axis : Y.map(function (y) { return y.label; }).join(", ") + (yunits.length === 1 && unit(yunits[0]) ? " [" + unit(yunits[0]) + "]" : ""),
+        log: st.logy, format: tick(yunits.length === 1 ? yunits[0] : "1") },
+      note: (d.sampling.sampled ? "Sampled preview: " + int(d.sampling.published_rows) + " of " + int(d.sampling.total_rows) + " rows." : "") +
+        (G && G.binned ? " Colour shows the " + colLabel(st.group).toLowerCase() + " band of each row; values are not averaged." : "") +
+        (tooMany ? " Only the first 8 series are drawn; narrow the filters or change the colouring." : ""),
+      extra: function (ri) {
+        var r = shown[ri]; if (!r) return "";
+        return names.filter(function (n) { return n !== st.x && st.ys.indexOf(n) < 0; }).map(function (n) {
+          var c = cols[idx(n)]; return "<br><span class=\"muted\">" + esc(colLabel(n)) + ": " + esc(r[idx(n)] === null ? "not reported" : c.unit ? qty(r[idx(n)], c.unit) : r[idx(n)]) + "</span>";
+        }).join("");
+      }
+    };
+  }
+
   function measurement(id) {
     return load("data/measurements/" + file(id)).then(function (d) {
       var rec = d.record, e = d.entry, cols = d.columns, names = cols.map(function (c) { return c.name; }), props = rec.properties || {};
       setTitle(rec.name);
       return function () {
-        var numeric = cols.filter(function (c) { return !TEXT_COLS[c.name] && c.unit !== ""; }).map(function (c) { return c.name; });
         var smp = d.sampling;
         var head = '<div class="crumbs"><a href="#/measurements">Measurements</a> / ' + esc(rec.name) + "</div><h1>" + esc(rec.name) + "</h1>" +
           '<div class="head-meta">' + dcBadge(e.data_class) + '<span class="badge">' + esc(QTY[e.quantity] || e.quantity) + '</span><span class="badge" title="licence">' + esc(rec.license) + "</span>" +
@@ -585,7 +770,7 @@
           "<h2>Provenance</h2>" + provenance(d) +
           '<details><summary>Record metadata (JSON, rows omitted)</summary><pre class="json">' + esc(JSON.stringify(rec, null, 2)) + "</pre></details>";
         if (d.unavailable) return;
-        dataView(d, names, numeric);
+        dataView(d, names);
       };
     });
   }
@@ -614,39 +799,10 @@
     return '<div class="table-wrap"><table class="kv"><tbody>' + kv.map(function (r) { return "<tr><th>" + esc(r[0]) + "</th><td>" + r[1] + "</td></tr>"; }).join("") + "</tbody></table></div>";
   }
 
-  function dataView(d, names, numeric) {
+  function dataView(d, names) {
     var rec = d.record, e = d.entry, cols = d.columns, rows = d.rows;
     var idx = function (n) { return names.indexOf(n); };
-    var def = DEFAULTS[e.quantity] || [null, [], false, false, "points", []];
-    // x default: preferred column, else the condition column with the most distinct values
-    var x = def[0] && idx(def[0]) >= 0 ? def[0] : null;
-    if (!x) {
-      var cand = ["temperature", "frequency", "flux_density_peak", "field", "dc_bias_field"].filter(function (n) { return idx(n) >= 0; });
-      cand.sort(function (a, b) { return distinct(rows, idx(b)).length - distinct(rows, idx(a)).length; });
-      x = cand[0] || numeric[0];
-    }
-    var ys = def[1].filter(function (n) { return idx(n) >= 0 && n !== x; });
-    if (!ys.length) ys = [numeric.filter(function (n) { return n !== x; }).slice(-1)[0]].filter(Boolean);
-    // group column candidates: 2..8 distinct values over the whole published table (colour follows the value)
-    var groupable = names.filter(function (n) { var k = distinct(rows, idx(n)).length; return n !== x && ys.indexOf(n) < 0 && k >= 2 && k <= 8; });
-    var group = def[5].filter(function (n) { return groupable.indexOf(n) >= 0; })[0] || "";
-    var st = { x: x, ys: ys, group: group, logx: def[2], logy: def[3], mode: def[4], f: {} };
-    // lines only where x runs monotonically within each series (B-H loops are drawn in upstream traversal order)
-    if (st.mode === "lines" && e.quantity !== "bh_curve") {
-      var xi0 = idx(st.x), gi0 = st.group ? idx(st.group) : -1, last = {}, dir = {};
-      var monotonic = rows.every(function (r) {
-        var g = gi0 < 0 ? "" : String(r[gi0]), v = r[xi0];
-        if (v === null) return true;
-        if (g in last && v !== last[g]) {
-          var s = v > last[g] ? 1 : -1;
-          if (dir[g] && dir[g] !== s) return false;
-          dir[g] = s;
-        }
-        last[g] = v;
-        return true;
-      });
-      if (!monotonic) st.mode = "points";
-    }
+    var cs = chartState(d), st = cs.st, groupers = cs.groupers, numeric = cs.numeric;
 
     // row filters
     var fbox = document.getElementById("row-filters"), fhtml = "";
@@ -676,13 +832,14 @@
 
     // chart controls
     var ctl = document.getElementById("controls");
-    function opt(list, cur) { return list.map(function (n) { return '<option value="' + esc(n) + '"' + (n === cur ? " selected" : "") + ">" + esc(n) + "</option>"; }).join(""); }
+    function opt(list, cur) { return list.map(function (n) { return '<option value="' + esc(n) + '"' + (n === cur ? " selected" : "") + ">" + esc(colLabel(n)) + "</option>"; }).join(""); }
     ctl.innerHTML = '<label>x axis<select id="c-x">' + opt(numeric, st.x) + "</select></label>" +
       '<fieldset><legend>y axis</legend>' + numeric.map(function (n) {
-        return '<label class="check"><input type="checkbox" data-y="' + esc(n) + '"' + (st.ys.indexOf(n) >= 0 ? " checked" : "") + "> " + esc(n) + "</label>"; }).join("") + "</fieldset>" +
+        return '<label class="check"><input type="checkbox" data-y="' + esc(n) + '"' + (st.ys.indexOf(n) >= 0 ? " checked" : "") + "> " + esc(colLabel(n)) + "</label>"; }).join("") + "</fieldset>" +
       '<label>colour by<select id="c-g"><option value="">none</option>' + names.filter(function (n) { return n !== st.x; }).map(function (n) {
-        var k = distinct(rows, idx(n)).length, ok = groupable.indexOf(n) >= 0;
-        return '<option value="' + esc(n) + '"' + (n === st.group ? " selected" : "") + (ok ? "" : " disabled") + ">" + esc(n) + (ok ? "" : " (" + k + " values)") + "</option>"; }).join("") + "</select></label>" +
+        var k = distinct(rows, idx(n)).length, g = groupers[n];
+        return '<option value="' + esc(n) + '"' + (n === st.group ? " selected" : "") + (g ? "" : " disabled") + ">" + esc(colLabel(n)) +
+          (g ? (g.binned ? " (" + g.labels.length + " bands)" : "") : " (" + k + " values)") + "</option>"; }).join("") + "</select></label>" +
       '<label>marks<select id="c-mode">' + ["points", "lines"].map(function (m) { return '<option value="' + m + '"' + (m === st.mode ? " selected" : "") + ">" + m + "</option>"; }).join("") + "</select></label>" +
       '<label class="check"><input type="checkbox" id="c-lx"' + (st.logx ? " checked" : "") + "> log x</label>" +
       '<label class="check"><input type="checkbox" id="c-ly"' + (st.logy ? " checked" : "") + "> log y</label>";
@@ -712,43 +869,14 @@
     }
     function draw() {
       shown = filtered();
-      var xi = idx(st.x), gi = st.group ? idx(st.group) : -1;
-      var gvals = gi >= 0 ? distinct(rows, gi) : [null];
-      var series = [];
-      st.ys.forEach(function (y, yk) {
-        var yi = idx(y);
-        gvals.forEach(function (g, gk) {
-          var pts = [];
-          shown.forEach(function (r, ri) { if (gi < 0 || String(r[gi]) === String(g)) pts.push([r[xi], r[yi], ri]); });
-          var label = (st.ys.length > 1 ? y : "") + (gi >= 0 ? (st.ys.length > 1 ? ", " : "") + groupLabel(st.group, g) : "");
-          series.push({ label: label || y, color: COLORS[(gi >= 0 ? gk + yk * gvals.length : yk) % 8], mode: st.mode, points: pts, _n: pts.length });
-        });
-      });
-      var tooMany = series.length > 8;
-      if (tooMany) series = series.slice(0, 8);
-      var xc = cols[xi], yc = cols[idx(st.ys[0])] || {};
-      var yunits = uniq(st.ys.map(function (y) { return cols[idx(y)].unit; }));
       var chart = document.getElementById("chart");
       if (!st.ys.length) { chart.innerHTML = '<div class="notice info">Select at least one y column.</div>'; }
-      else MiniPlot.render(chart, {
-        ariaLabel: rec.name + ": " + st.ys.join(", ") + " versus " + st.x,
-        series: series.filter(function (s) { return s._n > 0 || series.length === 1; }),
-        x: { label: st.x + (xc.unit ? " [" + unit(xc.unit) + "]" : ""), log: st.logx, format: tick(xc.unit) },
-        y: { label: st.ys.join(", ") + (yunits.length === 1 && yunits[0] ? " [" + unit(yunits[0]) + "]" : ""), log: st.logy, format: tick(yunits.length === 1 ? yunits[0] : "1") },
-        note: (d.sampling.sampled ? "Sampled preview: " + int(d.sampling.published_rows) + " of " + int(d.sampling.total_rows) + " rows." : "") +
-          (tooMany ? " Only the first 8 series are drawn; narrow the filters or change the colouring." : ""),
-        extra: function (ri) {
-          var r = shown[ri]; if (!r) return "";
-          return names.filter(function (n) { return n !== st.x && st.ys.indexOf(n) < 0; }).map(function (n) {
-            var c = cols[idx(n)]; return "<br><span class=\"muted\">" + esc(n) + ": " + esc(r[idx(n)] === null ? "not reported" : c.unit ? qty(r[idx(n)], c.unit) : r[idx(n)]) + "</span>";
-          }).join("");
-        }
-      });
+      else MiniPlot.render(chart, plotSpec(d, st, shown, st.group ? groupers[st.group] : null));
       document.getElementById("shown").textContent = int(shown.length) + " of " + int(rows.length) + " published rows match the filters" +
         (d.sampling.sampled ? " (published rows are a sample of " + int(d.sampling.total_rows) + ")." : ".");
       document.getElementById("csv-note").textContent = d.sampling.sampled ? "The CSV contains sampled rows; the file name says so." : "";
       document.getElementById("rows").innerHTML = '<div class="table-wrap" style="max-height:480px"><table><thead><tr>' + cols.map(function (c) {
-        return '<th class="' + (c.unit ? "num" : "") + '">' + esc(c.name) + (c.unit ? ' <span class="muted">[' + esc(unit(c.unit) || "1") + "]</span>" : "") + "</th>"; }).join("") +
+        return '<th class="' + (c.unit ? "num" : "") + '" title="' + esc(colLabel(c.name)) + '">' + esc(c.name) + (c.unit ? ' <span class="muted">[' + esc(unit(c.unit) || "1") + "]</span>" : "") + "</th>"; }).join("") +
         "</tr></thead><tbody>" + shown.slice(0, 200).map(function (r) {
           return "<tr>" + r.map(function (v, i) { return '<td class="' + (cols[i].unit ? "num" : "") + '"' + (typeof v === "number" ? ' title="' + v + '"' : "") + ">" +
             (v === null ? NA : esc(typeof v === "number" ? num(v) : v)) + "</td>"; }).join("") + "</tr>";
@@ -765,6 +893,246 @@
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 0);
     });
     draw();
+  }
+
+  // -- charts shared by the material page and the comparison ---------------------------------------------------
+  var CLASS_RANK = { experimental_measurement: 0, derived_from_measurement: 1, manufacturer_tool_export: 2, manufacturer_datasheet: 3 };
+  var CHART_QTY = ["core_loss", "complex_permeability", "bh_curve", "amplitude_permeability", "initial_permeability", "complex_permittivity"];
+  function rankTables(list) { // independent tables first, measured before datasheet, larger first
+    return list.slice().sort(function (a, b) {
+      return ((a.status !== "primary") - (b.status !== "primary")) || ((CLASS_RANK[a.data_class] || 0) - (CLASS_RANK[b.data_class] || 0)) ||
+        (b.row_count - a.row_count) || a.name.localeCompare(b.name);
+    });
+  }
+  function degrees(rows, i) { // distinct whole-degree temperatures of a table [°C]
+    return distinct(rows.filter(function (r) { return typeof r[i] === "number"; }).map(function (r) { return [Math.round(r[i] - 273.15)]; }), 0);
+  }
+  function nearest(values, target) {
+    return values.reduce(function (best, v) { return best === null || Math.abs(v - target) < Math.abs(best - target) ? v : best; }, null);
+  }
+
+  // One chart per quantity for a material: the best-ranked published table, drawn at one waveform and temperature.
+  function materialCharts(host, meas) {
+    var usable = meas.filter(function (m) { return m.published !== "none" && m.row_count > 1; });
+    var qs = uniq(usable.map(function (m) { return m.quantity; })).sort(function (a, b) {
+      var x = CHART_QTY.indexOf(a), y = CHART_QTY.indexOf(b); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y) || a.localeCompare(b); });
+    if (!qs.length) { host.innerHTML = '<p class="muted">No table of this material has rows published on this site, so there is nothing to plot.</p>'; return; }
+    host.innerHTML = '<div class="tabs" role="tablist" aria-label="Quantity">' + qs.map(function (q) {
+      return '<button type="button" role="tab" data-q="' + esc(q) + '">' + esc(QTY[q] || q) + "</button>"; }).join("") + "</div>" +
+      '<div class="chart-controls" id="mc-ctl"></div><div id="mc-chart"></div><p class="small" id="mc-cap"></p>';
+    var ctl = host.querySelector("#mc-ctl"), chart = host.querySelector("#mc-chart"), cap = host.querySelector("#mc-cap"), token = 0;
+    function pick(q) {
+      host.querySelectorAll("[data-q]").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-q") === q ? "true" : "false"); });
+      var cands = rankTables(usable.filter(function (m) { return m.quantity === q; }));
+      show(cands, cands[0].id);
+    }
+    function show(cands, id) {
+      var mine = ++token, entry = cands.filter(function (c) { return c.id === id; })[0];
+      ctl.innerHTML = ""; cap.textContent = ""; chart.className = ""; chart.innerHTML = '<p class="loading" role="status">Loading table…</p>';
+      load("data/measurements/" + file(id)).then(function (d) {
+        if (mine !== token || !host.isConnected) return;
+        var cs = chartState(d), st = cs.st, rows = d.rows, slices = [], yAll = st.ys.slice();
+        if (yAll.length > 1 && st.group) st.ys = [yAll[0]]; // one quantity at a time, so colour can follow the grouping column
+        ["waveform", "temperature"].forEach(function (n) {
+          var i = cs.names.indexOf(n);
+          if (i < 0 || n === st.x || n === st.group || st.ys.indexOf(n) >= 0) return;
+          var opts = n === "temperature" ? degrees(rows, i) : distinct(rows, i).filter(function (v) { return v !== null; });
+          if (opts.length < 2 || opts.length > 12) return;
+          var value = n === "temperature" ? String(nearest(opts, d.entry.quantity === "core_loss" ? 100 : 25)) : opts.indexOf("sinusoidal") >= 0 ? "sinusoidal" : "";
+          slices.push({ n: n, i: i, opts: opts, value: value });
+        });
+        ctl.innerHTML = (cands.length > 1 ? '<label>Table<select id="mc-table">' + cands.map(function (c) {
+            return '<option value="' + esc(c.id) + '"' + (c.id === id ? " selected" : "") + ">" + esc(c.name + " · " + (DATA_CLASS[c.data_class] || [c.data_class])[0].toLowerCase()) + "</option>"; }).join("") + "</select></label>" : "") +
+          slices.map(function (s, k) {
+            return "<label>" + esc(s.n === "temperature" ? "Temperature" : "Waveform") + '<select data-slice="' + k + '"><option value="">All</option>' + s.opts.map(function (v) {
+              return '<option value="' + esc(v) + '"' + (String(v) === s.value ? " selected" : "") + ">" + esc(s.n === "temperature" ? v + " °C" : v) + "</option>"; }).join("") + "</select></label>"; }).join("") +
+          (yAll.length > st.ys.length ? '<label>Quantity<select id="mc-y">' + yAll.map(function (y) { return '<option value="' + esc(y) + '">' + esc(colLabel(y)) + "</option>"; }).join("") + "</select></label>" : "");
+        function draw() {
+          var shown = rows.filter(function (r) {
+            return slices.every(function (s) {
+              if (s.value === "") return true;
+              return s.n === "temperature" ? typeof r[s.i] === "number" && Math.round(r[s.i] - 273.15) === Number(s.value) : String(r[s.i]) === s.value;
+            });
+          });
+          MiniPlot.render(chart, plotSpec(d, st, shown, st.group ? cs.groupers[st.group] : null));
+          cap.innerHTML = dcBadge(entry.data_class) + " " + esc(src(entry.source_id)) + " · " + int(shown.length) + " of " + int(rows.length) + " published rows drawn" +
+            (d.sampling.sampled ? " (a sample of " + int(d.sampling.total_rows) + ")" : "") + (entry.status !== "primary" ? " · " + esc(STATUS[entry.status] || entry.status) : "") +
+            ' · <a href="#/measurement/' + encodeURIComponent(id) + '">Open the table: filters, all columns, download</a>';
+        }
+        var sel = ctl.querySelector("#mc-table");
+        if (sel) sel.addEventListener("change", function () { show(cands, sel.value); });
+        var ysel = ctl.querySelector("#mc-y");
+        if (ysel) ysel.addEventListener("change", function () { st.ys = [ysel.value]; draw(); });
+        ctl.querySelectorAll("[data-slice]").forEach(function (s) {
+          s.addEventListener("change", function () { slices[Number(s.getAttribute("data-slice"))].value = s.value; draw(); });
+        });
+        draw();
+      }).catch(function (err) {
+        if (mine === token) chart.innerHTML = '<div class="notice">Could not load this table. ' + esc(err && err.message || err) + "</div>";
+      });
+    }
+    host.querySelectorAll("[data-q]").forEach(function (b) { b.addEventListener("click", function () { pick(b.getAttribute("data-q")); }); });
+    pick(qs[0]);
+  }
+
+  // -- comparison ----------------------------------------------------------------------------------------------
+  var CMP = { // x, y choices, log x, log y, marks, frequency condition
+    core_loss: { x: "flux_density_peak", y: ["loss_density"], logx: true, logy: true, mode: "points", f: true },
+    complex_permeability: { x: "frequency", y: ["mu_real", "mu_imag"], logx: true, logy: true, mode: "lines" },
+    amplitude_permeability: { x: "flux_density_peak", y: ["amplitude_permeability"], mode: "lines" },
+    bh_curve: { x: "field", y: ["flux_density"], mode: "lines" }
+  };
+  var CMP_F = [25e3, 50e3, 100e3, 200e3, 300e3, 500e3, 1e6, 2e6], CMP_T = [25, 60, 80, 100, 120], CMP_MAX = 6, F_TOL = 0.1, T_TOL = 10;
+  var CMP_EXAMPLE = ["material.canonical-tdk-n87", "material.canonical-ferroxcube-3c94", "material.canonical-ferroxcube-3f4"];
+
+  // Rows of one table at the requested conditions. Rows are selected, never interpolated: the frequency must lie within
+  // ±10 % of the target, the temperature is the table's nearest whole degree within ±10 °C, sinusoidal excitation is used
+  // where the table distinguishes waveforms, and a further condition column with a few discrete values (DC bias, frequency, flux density) is pinned to one of them.
+  function compareRows(d, cfg, st) {
+    var names = d.columns.map(function (c) { return c.name; }), idx = function (n) { return names.indexOf(n); };
+    var xi = idx(cfg.x), yi = idx(st.y), rows = d.rows, used = [];
+    if (xi < 0 || yi < 0) return { rows: [], used: used };
+    var wi = idx("waveform");
+    if (wi >= 0 && rows.some(function (r) { return r[wi] === "sinusoidal"; })) { rows = rows.filter(function (r) { return r[wi] === "sinusoidal"; }); used.push("sinusoidal"); }
+    var fi = idx("frequency");
+    if (cfg.f && fi >= 0) {
+      rows = rows.filter(function (r) { return typeof r[fi] === "number" && Math.abs(r[fi] - st.f) <= F_TOL * st.f; });
+      if (rows.length) used.push("f " + range("frequency", { min: Math.min.apply(null, rows.map(function (r) { return r[fi]; })), max: Math.max.apply(null, rows.map(function (r) { return r[fi]; })) }));
+    }
+    var ti = idx("temperature");
+    if (ti >= 0 && rows.length) {
+      var deg = degrees(rows, ti), t = nearest(deg, st.t);
+      if (t === null || Math.abs(t - st.t) > T_TOL) return { rows: [], used: used };
+      rows = rows.filter(function (r) { return typeof r[ti] === "number" && Math.round(r[ti] - 273.15) === t; });
+      used.push("T " + t + " °C");
+    } else if (ti < 0) used.push("temperature not stated");
+    ["dc_bias_field", "frequency", "flux_density_peak"].forEach(function (n) { // remaining condition columns: one value
+      var i = idx(n);
+      if (i < 0 || n === cfg.x || n === st.y || (n === "frequency" && cfg.f) || !rows.length) return;
+      var vals = distinct(rows, i);
+      if (vals.length < 2 || vals.length > 8) return; // a swept column (many values) is kept whole and drawn as points
+      var keep;
+      if (n === "dc_bias_field") keep = vals.filter(function (v) { return typeof v === "number"; }).reduce(function (b, v) { return b === null || Math.abs(v) < Math.abs(b) ? v : b; }, null);
+      else {
+        var count = {}; rows.forEach(function (r) { count[String(r[i])] = (count[String(r[i])] || 0) + 1; });
+        keep = vals.slice().sort(function (a, b) { return count[String(b)] - count[String(a)]; })[0];
+      }
+      rows = rows.filter(function (r) { return String(r[i]) === String(keep); });
+      used.push(groupLabel(n, keep));
+    });
+    rows = rows.filter(function (r) { return typeof r[xi] === "number" && typeof r[yi] === "number"; });
+    return { rows: rows, used: used, xi: xi, yi: yi, names: names };
+  }
+
+  function compare(q) {
+    setTitle("Compare materials");
+    return load("data/materials.json").then(function (list) {
+      var byId = {}; list.forEach(function (m) { byId[m.id] = m; });
+      return function () {
+        var st = { m: (q.get("m") || "").split(",").filter(function (id) { return byId[id]; }).slice(0, CMP_MAX), q: CMP[q.get("q")] ? q.get("q") : "core_loss",
+          f: Number(q.get("f")) || 1e5, t: q.get("t") !== null && q.get("t") !== "" && !isNaN(Number(q.get("t"))) ? Number(q.get("t")) : 100, y: q.get("y") || "", dc: q.get("class") || "" };
+        var token = 0;
+        app.innerHTML = '<h1>Compare materials</h1><p class="lead">Overlay up to ' + CMP_MAX + ' materials at the same operating point. Rows are selected from each ' +
+          "material's best published table; nothing is interpolated or fitted, and the data class of every curve is shown.</p>" +
+          '<div class="filters"><label class="wide">Add a material<input type="search" id="cmp-q" list="cmp-list" placeholder="e.g. TDK N87, 3C94, Kool Mu" autocomplete="off"></label>' +
+          '<datalist id="cmp-list">' + list.map(function (m) { return '<option value="' + esc(m.name) + '">'; }).join("") + "</datalist>" +
+          '<div><button type="button" id="cmp-add">Add</button></div><div id="cmp-chips" class="cmp-chips" style="grid-column:1/-1"></div></div>' +
+          '<div class="tabs" role="tablist" aria-label="Quantity">' + Object.keys(CMP).map(function (k) {
+            return '<button type="button" role="tab" data-q="' + k + '">' + esc(QTY[k]) + "</button>"; }).join("") + "</div>" +
+          '<div class="chart-controls" id="cmp-ctl"></div><div id="cmp-chart"></div><div id="cmp-status"></div>';
+        var chart = document.getElementById("cmp-chart"), status = document.getElementById("cmp-status");
+        function add() {
+          var inp = document.getElementById("cmp-q"), needle = inp.value.trim().toLowerCase();
+          if (!needle) return;
+          var hit = list.filter(function (m) { return m.name.toLowerCase() === needle; })[0] || list.filter(function (m) {
+            var hay = [m.name, m.grade, m.manufacturer].join(" ").toLowerCase(); return needle.split(/\s+/).every(function (t) { return hay.indexOf(t) >= 0; }); })[0];
+          if (hit && st.m.indexOf(hit.id) < 0 && st.m.length < CMP_MAX) { st.m.push(hit.id); inp.value = ""; update(); }
+          else if (!hit) inp.setCustomValidity("No material matches."), inp.reportValidity(), inp.setCustomValidity("");
+        }
+        document.getElementById("cmp-add").addEventListener("click", add);
+        document.getElementById("cmp-q").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); add(); } });
+        document.querySelectorAll("#app [data-q]").forEach(function (b) { b.addEventListener("click", function () { st.q = b.getAttribute("data-q"); st.y = ""; update(); }); });
+
+        function update() {
+          var cfg = CMP[st.q], mine = ++token;
+          if (cfg.y.indexOf(st.y) < 0) st.y = cfg.y[0];
+          writeQuery("compare", { m: st.m.join(","), q: st.q === "core_loss" ? "" : st.q, f: cfg.f && st.f !== 1e5 ? st.f : "", t: st.t === 100 ? "" : String(st.t),
+            y: st.y === cfg.y[0] ? "" : st.y, "class": st.dc });
+          document.querySelectorAll("#app [data-q]").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-q") === st.q ? "true" : "false"); });
+          document.getElementById("cmp-chips").innerHTML = st.m.map(function (id, k) {
+            return '<span class="chip"><span class="swatch" style="background:' + COLORS[k] + '"></span><a href="#/material/' + encodeURIComponent(id) + '">' + esc(byId[id].name) +
+              '</a> <button type="button" class="chip-x" data-rm="' + esc(id) + '" aria-label="Remove ' + esc(byId[id].name) + '">×</button></span>'; }).join("") ||
+            '<span class="muted small">No material selected yet. <a href="#/compare?m=' + CMP_EXAMPLE.filter(function (id) { return byId[id]; }).join(",") + '">Try N87, 3C94 and 3F4</a>.</span>';
+          document.querySelectorAll("[data-rm]").forEach(function (b) { b.addEventListener("click", function () { st.m = st.m.filter(function (id) { return id !== b.getAttribute("data-rm"); }); update(); }); });
+          var ctl = document.getElementById("cmp-ctl");
+          ctl.innerHTML = (cfg.f ? "<label>Frequency<select id=\"cmp-f\">" + CMP_F.map(function (f) { return '<option value="' + f + '"' + (f === st.f ? " selected" : "") + ">" + esc(qty(f, "Hz")) + "</option>"; }).join("") + "</select></label>" : "") +
+            '<label>Temperature<select id="cmp-t">' + CMP_T.map(function (v) { return '<option value="' + v + '"' + (v === st.t ? " selected" : "") + ">" + v + " °C</option>"; }).join("") + "</select></label>" +
+            (cfg.y.length > 1 ? '<label>Quantity<select id="cmp-y">' + cfg.y.map(function (y) { return '<option value="' + y + '"' + (y === st.y ? " selected" : "") + ">" + esc(colLabel(y)) + "</option>"; }).join("") + "</select></label>" : "") +
+            '<label>Data class<select id="cmp-dc"><option value="">Best available</option>' + ["experimental_measurement", "manufacturer_datasheet"].map(function (k) {
+              return '<option value="' + k + '"' + (k === st.dc ? " selected" : "") + ">" + esc(DATA_CLASS[k][0]) + " only</option>"; }).join("") + "</select></label>";
+          bind("cmp-f", "change", function (v) { st.f = Number(v); update(); });
+          bind("cmp-t", "change", function (v) { st.t = Number(v); update(); });
+          bind("cmp-y", "change", function (v) { st.y = v; update(); });
+          bind("cmp-dc", "change", function (v) { st.dc = v; update(); });
+          status.innerHTML = "";
+          if (!st.m.length) { chart.className = ""; chart.innerHTML = '<div class="notice info">Add two or more materials to compare them.</div>'; return; }
+          chart.className = ""; chart.innerHTML = '<p class="loading" role="status">Loading tables…</p>';
+          Promise.all(st.m.map(function (id) {
+            return load("data/materials/" + file(id)).then(function (detail) {
+              var cands = rankTables(detail.measurements.filter(function (e) {
+                return e.quantity === st.q && e.published !== "none" && e.status === "primary" && (!st.dc || e.data_class === st.dc); })).slice(0, 6);
+              var tryNext = function (k) {
+                if (k >= cands.length) return { id: id, tried: cands.length };
+                return load("data/measurements/" + file(cands[k].id)).then(function (d) {
+                  var sel = compareRows(d, cfg, st);
+                  return sel.rows.length ? { id: id, entry: cands[k], d: d, sel: sel } : tryNext(k + 1);
+                });
+              };
+              return tryNext(0);
+            });
+          })).then(function (res) {
+            if (mine !== token) return;
+            var X = null, Y = null;
+            var series = res.map(function (r, k) {
+              if (!r.sel) return null;
+              var cols = r.d.columns; X = X || colInfo(cols[r.sel.xi]); Y = Y || colInfo(cols[r.sel.yi]);
+              var cx = colInfo(cols[r.sel.xi]), cy = colInfo(cols[r.sel.yi]);
+              var pts = r.sel.rows.map(function (row) { return [cx.conv(row[r.sel.xi]), cy.conv(row[r.sel.yi]), { row: row, r: r }]; });
+              var mode = cfg.mode, dir = 0;
+              if (mode === "lines" && st.q !== "bh_curve") for (var i = 1; i < pts.length; i++) {
+                var s = pts[i][0] > pts[i - 1][0] ? 1 : pts[i][0] < pts[i - 1][0] ? -1 : 0;
+                if (s && dir && s !== dir) { mode = "points"; break; }
+                dir = s || dir;
+              }
+              return { label: byId[r.id].name + " · " + (DATA_CLASS[r.entry.data_class] || [r.entry.data_class])[0].toLowerCase(), color: COLORS[k], mode: mode, points: pts };
+            }).filter(Boolean);
+            if (!series.length) { chart.innerHTML = '<div class="notice info">No selected material has published ' + esc((QTY[st.q] || st.q).toLowerCase()) + " rows at these conditions. Try another temperature" + (cfg.f ? " or frequency" : "") + ".</div>"; }
+            else MiniPlot.render(chart, {
+              ariaLabel: "Comparison of " + Y.label + " versus " + X.label, series: series,
+              x: { label: X.axis, log: !!cfg.logx, format: tick(X.unit) }, y: { label: Y.axis, log: !!cfg.logy, format: tick(Y.unit) },
+              note: "Each curve shows rows of one table; curves of different data classes or sources are not directly equivalent.",
+              extra: function (o) {
+                return o.r.sel.names.filter(function (n) { return n !== cfg.x && n !== st.y && o.row[o.r.sel.names.indexOf(n)] !== null; }).slice(0, 6).map(function (n) {
+                  var c = o.r.d.columns[o.r.sel.names.indexOf(n)], v = o.row[o.r.sel.names.indexOf(n)];
+                  return '<br><span class="muted">' + esc(colLabel(n)) + ": " + esc(c.unit ? qty(v, c.unit) : v) + "</span>"; }).join("");
+              }
+            });
+            status.innerHTML = '<h2>Tables used</h2><div class="table-wrap"><table><thead><tr><th>Material</th><th>Table</th><th>Data class</th><th>Rows selected at</th><th class="num">Points</th></tr></thead><tbody>' +
+              res.map(function (r, k) {
+                var name = '<span class="swatch" style="background:' + COLORS[k] + '"></span><a href="#/material/' + encodeURIComponent(r.id) + '">' + esc(byId[r.id].name) + "</a>";
+                if (!r.sel) return "<tr><td>" + name + '</td><td colspan="4" class="muted">' + (r.tried ? "None of its " + r.tried + " published " + esc((QTY[st.q] || st.q).toLowerCase()) + " tables has rows at these conditions." :
+                  "No published " + esc((QTY[st.q] || st.q).toLowerCase()) + " table" + (st.dc ? " of this data class" : "") + ".") + "</td></tr>";
+                return "<tr><td>" + name + '</td><td><a href="#/measurement/' + encodeURIComponent(r.entry.id) + '">' + esc(r.entry.name) + '</a><div class="small muted">' + esc(src(r.entry.source_id)) +
+                  (r.d.sampling.sampled ? " · sampled preview, " + int(r.d.sampling.published_rows) + " of " + int(r.d.sampling.total_rows) + " rows" : "") + "</div></td><td>" + dcBadge(r.entry.data_class) +
+                  '</td><td class="small">' + esc(r.sel.used.join(" · ") || "all rows") + '</td><td class="num">' + int(r.sel.rows.length) + "</td></tr>";
+              }).join("") + "</tbody></table></div>" +
+              '<p class="small muted">Selection rule: ' + (cfg.f ? "frequency within ±" + (F_TOL * 100) + " % of the target; " : "") + "the table's nearest temperature within ±" + T_TOL +
+              " °C; sinusoidal excitation where the table distinguishes waveforms; measured tables are preferred over datasheet curves unless a data class is chosen.</p>";
+          }).catch(function (err) { if (mine === token) chart.innerHTML = '<div class="notice">Could not load the tables. ' + esc(err && err.message || err) + "</div>"; });
+        }
+        update();
+      };
+    });
   }
 
   // -- core catalogue ----------------------------------------------------------------------------------------

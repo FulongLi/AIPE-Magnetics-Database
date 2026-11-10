@@ -1,5 +1,5 @@
 /* MiniPlot: a small, dependency-free SVG x-y plotter for the explorer (linear/log axes, points or lines,
-   nearest-point tooltip, legend with series toggling). It draws the values it is given; it never fits,
+   nearest-point tooltip, legend with series toggling, optional click on a point). It draws the values it is given; it never fits,
    smooths or interpolates. */
 (function () {
   "use strict";
@@ -61,7 +61,7 @@
     function draw() {
       svgHost.innerHTML = "";
       var W = Math.max(300, container.clientWidth - 18), H = Math.round(Math.min(440, Math.max(260, W * 0.56)));
-      var m = { l: W < 480 ? 54 : 70, r: 14, t: 12, b: 46 };
+      var m = { l: W < 480 ? 54 : 70, r: 26, t: 12, b: 46 }; // right margin holds half of the last tick label
       var dropped = 0, xs = [], ys = [];
       var series = spec.series.map(function (s, i) {
         var pts = [];
@@ -135,6 +135,7 @@
       hl.style.color = "var(--fg)";
       note.textContent = (spec.note ? spec.note + " " : "") + (dropped ? dropped + " non-positive values are hidden on logarithmic axes." : "");
 
+      var picked = null;
       function move(ev) {
         var r = svg.getBoundingClientRect(), k = W / r.width;
         var mx = (ev.clientX - r.left) * k, my = (ev.clientY - r.top) * k, best = null, bd = 400 * k * k;
@@ -142,9 +143,11 @@
           var q = visiblePts[i], dd = (q.px - mx) * (q.px - mx) + (q.py - my) * (q.py - my);
           if (dd < bd) { bd = dd; best = q; }
         }
-        if (!best) { tip.style.display = "none"; hl.setAttribute("visibility", "hidden"); return; }
+        if (!best) { picked = null; svg.style.cursor = ""; tip.style.display = "none"; hl.setAttribute("visibility", "hidden"); return; }
         hl.setAttribute("cx", best.px); hl.setAttribute("cy", best.py); hl.setAttribute("visibility", "visible");
-        tip.innerHTML = (spec.series.length > 1 ? '<span class="sw" style="background:' + best.s.color + '"></span>' + escapeHtml(best.s.label) + "<br>" : "") +
+        picked = best;
+        svg.style.cursor = spec.onPick ? "pointer" : "";
+        tip.innerHTML = (spec.title && best.p[2] !== undefined ? "<strong>" + escapeHtml(spec.title(best.p[2])) + "</strong><br>" : "") + (spec.series.length > 1 ? '<span class="sw" style="background:' + best.s.color + '"></span>' + escapeHtml(best.s.label) + "<br>" : "") +
           escapeHtml(spec.x.label) + ": " + escapeHtml(fx(best.p[0])) + "<br>" + escapeHtml(spec.y.label) + ": " + escapeHtml(fy(best.p[1])) +
           (spec.extra && best.p[2] !== undefined ? spec.extra(best.p[2]) : "");
         tip.style.display = "block";
@@ -154,7 +157,8 @@
       }
       svg.addEventListener("pointermove", move);
       svg.addEventListener("pointerdown", move);
-      svg.addEventListener("pointerleave", function () { tip.style.display = "none"; hl.setAttribute("visibility", "hidden"); });
+      svg.addEventListener("pointerleave", function () { picked = null; tip.style.display = "none"; hl.setAttribute("visibility", "hidden"); });
+      if (spec.onPick) svg.addEventListener("click", function () { if (picked && picked.p[2] !== undefined) spec.onPick(picked.p[2]); });
     }
 
     function drawLegend() {

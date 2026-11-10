@@ -2,7 +2,7 @@
 
 Static, read-only frontend for <https://fulongli.github.io/AIPE-Magnetics-Database/>. Plain HTML, CSS and JavaScript:
 no framework, no build step, no third-party scripts. `assets/plot.js` is a small SVG plotter; `assets/app.js` holds
-the four sections (overview, materials, measurements, core catalogue) with hash routing, so the site works under the
+the five sections (overview, materials, measurements, comparison, core catalogue) with hash routing, so the site works under the
 `/AIPE-Magnetics-Database/` sub-path.
 
 The look follows [aipel.co.uk](https://aipel.co.uk/): its colour tokens, the AIPE logo and favicon
@@ -25,9 +25,22 @@ The data are generated, never edited by hand. `tools/build_site.py` reads the co
 | `data/cores/shapes.json`, `data/cores/parts.json` | MAS shapes (dimension ranges) and manufacturer parts |
 
 Tables up to 5,000 rows are published in full. Larger tables are published as a deterministic sample (every k-th row
-within each waveform/temperature group, values unchanged), labelled as such on the page and in downloaded file names,
+within each waveform/temperature group, the row budget shared equally between the groups so that small groups such as
+sinusoidal excitation stay plottable; values unchanged), labelled as such on the page and in downloaded file names,
 with a link to the full JSONL at the build commit. MAS B-H loops whose sidecars are not committed (`tables-local/`)
 are listed without rows. Rows are only published for sources whose dataset record permits redistribution.
+
+Charts label axes with the quantity and a display unit (°C, mT, kHz); stored values stay SI and the chart converts only
+for display. A column with more than eight values colours rows by value band (five bands, one hue from light to dark,
+`--seq-1` to `--seq-5`); rows are never averaged. Material pages draw the best-ranked published table of each quantity
+(measured before datasheet) at one waveform and temperature. The comparison (`#/compare`) overlays up to six materials
+by selecting rows at a chosen frequency (±10 %) and temperature (nearest within ±10 °C); it never interpolates and
+lists the table and data class behind every curve.
+
+The dark theme follows the system setting (`prefers-color-scheme`, or `data-theme="dark"` / `"light"` on `<html>`). It
+redefines the same colour roles; its chart colours are the same hues stepped for the dark card surface and were
+validated against it. The material map (overview and Materials → Map) plots Bsat against μi by class; clicking a point
+opens the material.
 
 Local preview:
 

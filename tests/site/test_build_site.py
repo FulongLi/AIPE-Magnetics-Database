@@ -143,3 +143,30 @@ def test_sample_rows_is_deterministic_and_keeps_groups():
     assert {(r[0], r[1]) for r in a} == {(r[0], r[1]) for r in rows}
     small, meta = build_site.sample_rows(columns, rows[:50], limit=100)
     assert small == rows[:50] and meta["sampled"] is False
+
+
+def test_sample_rows_shares_the_budget_equally_between_groups():
+    columns = [{"name": "waveform"}, {"name": "x"}]
+    rows = [["sinusoidal" if i % 50 == 0 else "trapezoidal", float(i)] for i in range(5000)]  # 100 sinusoidal, 4,900 trapezoidal
+    sample, meta = build_site.sample_rows(columns, rows, limit=400)
+    kept = [r for r in sample if r[0] == "sinusoidal"]
+    assert len(kept) == 100, "a group smaller than its share is published whole"
+    assert len(sample) == 400 and "not proportional" in meta["method"]
+    assert sample == sorted(sample, key=lambda r: r[1]), "upstream order is kept"
+
+
+def test_summary_reports_the_recorded_release_without_local_paths(site):
+    out, _ = site
+    hub = _json(out, "summary.json")["huggingface"]
+    assert hub["published"] is (MagneticDatabase().hub is not None)
+    assert "cache_dir" not in hub
+
+
+def test_explorer_has_charts_and_comparison(site):
+    out, _ = site
+    html = (out / "index.html").read_text(encoding="utf-8")
+    js = (out / "assets" / "app.js").read_text(encoding="utf-8")
+    assert 'href="#/compare"' in html and "function compare(" in js and "function materialCharts(" in js
+    css = (out / "assets" / "app.css").read_text(encoding="utf-8")
+    assert all(f"--seq-{i}:" in css for i in range(1, 6))
+    assert "function materialMap(" in js and "prefers-color-scheme: dark" in css

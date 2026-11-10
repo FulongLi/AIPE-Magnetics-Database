@@ -3,6 +3,20 @@
 
 ## Unreleased
 
+- **Data Explorer charts**: axes carry the quantity and a display unit (`Core loss Pv [W/m³]`, `Peak flux density B̂ [mT]`,
+  °C) instead of column names; a column with more than eight values colours rows by value band (core loss by frequency
+  band by default) on a one-hue ramp; material pages open with a chart per quantity drawn from the best-ranked published
+  table at one waveform and temperature; a new comparison view (`#/compare`) overlays up to six materials at a chosen
+  frequency and temperature by selecting rows, without interpolation, and lists the table and data class of each curve.
+- **Data Explorer material map and dark theme**: Bsat against μi for every material that reports both, coloured by class,
+  on the overview and as a view of the filtered Materials list (click a point to open the material); a dark theme that
+  follows the system setting; measurement lists no longer spend a column on "Primary".
+- Data Explorer previews of large tables share the row budget equally between waveform/temperature groups, so sinusoidal
+  rows are no longer thinned to a few dozen (MagNet N87 at 90 °C: 416 rows instead of 33). The sample is not proportional
+  to group sizes; the page says so.
+- Data Explorer fixes: Steinmetz `k` was shown as `[object Object]`; the "Table rows" column of the source table showed
+  `NaN`; the overview claimed no Hugging Face release was recorded; the local cache path is no longer written to
+  `summary.json`.
 - **Hugging Face storage layer** (`aipe_magnetics_database.hub`, [docs/huggingface.md](docs/huggingface.md)): `hub stage` builds
   `raw/`, `normalized/v0.2/`, `manifests/` (sources, dataset-index, checksums, quality-report) and the dataset card;
   `hub publish` uploads to a review branch, `main` or a Hub pull request (resumable, idempotent), refuses to replace raw
